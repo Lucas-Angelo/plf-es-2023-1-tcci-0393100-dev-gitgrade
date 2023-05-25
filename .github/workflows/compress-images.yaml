@@ -21,3 +21,4 @@ jobs:
         uses: calibreapp/image-actions@main
         with:
           githubToken: ${{ github.token }}
+          ignorePaths: "Artefatos/**,Documentacao/**,Divulgacao/**"
