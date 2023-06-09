@@ -28,5 +28,3 @@ Este diretório mantém os artefatos (memoriais, diagramas, documentos, modelos 
 Arquivos:
 1. [**DER.mwb**](https://github.com/ICEI-PUC-Minas-PPLES-TI/plf-es-2023-1-tcci-0393100-dev-plataformaapoioavaliacoesprojetos/blob/master/Artefatos/DER.mwb): Projeto binário que contém o Diagrama e Entidade e Relacionamento do projeto, feito no [MySQL Workbench](https://www.mysql.com/products/workbench/).
 2. [**Diagramas.asta**](https://github.com/ICEI-PUC-Minas-PPLES-TI/plf-es-2023-1-tcci-0393100-dev-plataformaapoioavaliacoesprojetos/blob/master/Artefatos/Diagramas.asta): Projeto binário que contém os Diagramas de Caso de Uso, Classes, Componentes, Comunicação, Estados, Implantação, Pacotes, Sequência e Sequência do Sistema, feito no [Astah](https://astah.net/).
-3. [**README.md**](https://github.com/ICEI-PUC-Minas-PPLES-TI/plf-es-2023-1-tcci-0393100-dev-plataformaapoioavaliacoesprojetos/blob/master/Artefatos/README.md): Contém a explicação dos diretórios e arquivos contidos no diterório `/Artefatos`
-
