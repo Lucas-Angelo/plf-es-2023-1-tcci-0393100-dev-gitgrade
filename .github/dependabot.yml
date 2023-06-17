@@ -6,7 +6,7 @@ updates:
     schedule:
       interval: "daily"
     reviewers:
-      - "ICEI-PUC-Minas-PPLES-TI/plataformaapoioavaliacoesprojetos"
+      - "Lucas-Angelo"
     labels:
       - "auto"
       - "dependency"
@@ -19,7 +19,7 @@ updates:
     schedule:
       interval: "daily"
     reviewers:
-      - "ICEI-PUC-Minas-PPLES-TI/plataformaapoioavaliacoesprojetos"
+      - "Lucas-Angelo"
     labels:
       - "auto"
       - "dependency"
@@ -32,7 +32,7 @@ updates:
     schedule:
       interval: "daily"
     reviewers:
-      - "ICEI-PUC-Minas-PPLES-TI/plataformaapoioavaliacoesprojetos"
+      - "Lucas-Angelo"
     labels:
       - "auto"
       - "dependency"
@@ -45,7 +45,7 @@ updates:
     schedule:
       interval: "daily"
     reviewers:
-      - "ICEI-PUC-Minas-PPLES-TI/plataformaapoioavaliacoesprojetos"
+      - "guizombas"
     labels:
       - "auto"
       - "dependency"
@@ -58,7 +58,7 @@ updates:
     schedule:
       interval: "daily"
     reviewers:
-      - "ICEI-PUC-Minas-PPLES-TI/plataformaapoioavaliacoesprojetos"
+      - "Lucas-Angelo"
     labels:
       - "auto"
       - "dependency"
@@ -72,7 +72,7 @@ updates:
     schedule:
       interval: "daily"
     reviewers:
-      - "ICEI-PUC-Minas-PPLES-TI/plataformaapoioavaliacoesprojetos"
+      - "Lucas-Angelo"
     labels:
       - "auto"
       - "dependency"
@@ -86,7 +86,8 @@ updates:
     schedule:
       interval: "daily"
     reviewers:
-      - "ICEI-PUC-Minas-PPLES-TI/plataformaapoioavaliacoesprojetos"
+      - "Lucas-Angelo"
+      - "guizombas"
     labels:
       - "auto"
       - "dependency"
