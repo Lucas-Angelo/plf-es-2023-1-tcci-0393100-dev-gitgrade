@@ -39,7 +39,7 @@ class File extends Model<IFileAttributes> {
                 },
                 path: {
                     field: "path",
-                    type: DataTypes.STRING(250),
+                    type: DataTypes.STRING(16000),
                     allowNull: false,
                     validate: {
                         notEmpty: true,

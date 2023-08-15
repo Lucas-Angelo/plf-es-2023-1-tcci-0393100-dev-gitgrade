@@ -58,7 +58,7 @@ class PullRequest extends Model<IPullRequestAttributes> {
                 },
                 githubId: {
                     field: "github_id",
-                    type: DataTypes.STRING(255),
+                    type: DataTypes.STRING(250),
                     allowNull: false,
                     unique: true,
                     validate: {
@@ -72,7 +72,7 @@ class PullRequest extends Model<IPullRequestAttributes> {
                 },
                 title: {
                     field: "title",
-                    type: DataTypes.STRING(255),
+                    type: DataTypes.STRING(16000),
                     allowNull: true,
                     validate: {
                         notEmpty: true,
@@ -144,4 +144,4 @@ class PullRequest extends Model<IPullRequestAttributes> {
     }
 }
 
-export { PullRequest, IPullRequestAttributes };
+export { IPullRequestAttributes, PullRequest };

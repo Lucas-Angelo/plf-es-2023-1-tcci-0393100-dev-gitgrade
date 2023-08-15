@@ -54,7 +54,7 @@ class Issue extends Model<IIssueAttributes> {
                 },
                 githubId: {
                     field: "github_id",
-                    type: DataTypes.STRING(255),
+                    type: DataTypes.STRING(250),
                     allowNull: false,
                     unique: true,
                     validate: {
@@ -69,7 +69,7 @@ class Issue extends Model<IIssueAttributes> {
                 },
                 title: {
                     field: "title",
-                    type: DataTypes.STRING(255),
+                    type: DataTypes.STRING(16000),
                     allowNull: true,
                 },
                 githubCreatedAt: {
@@ -128,4 +128,4 @@ class Issue extends Model<IIssueAttributes> {
     }
 }
 
-export { Issue, IIssueAttributes };
+export { IIssueAttributes, Issue };

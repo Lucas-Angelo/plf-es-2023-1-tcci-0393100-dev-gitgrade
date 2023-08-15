@@ -5,40 +5,40 @@ import EnvConfig from "../config/EnvConfig";
 interface IRepositoryAttributes {
     id?: number;
     evaluationMethodId?: number | null;
-    githubId?: string | null;
-    name?: string | null;
+    githubId?: string;
+    name?: string;
     description?: string | null;
-    stargazerCount?: number | null;
-    forkCount?: number | null;
+    stargazerCount?: number;
+    forkCount?: number;
     githubCreatedAt?: Date | null;
     githubUpdatedAt?: Date | null;
-    hasProjectsEnabled?: boolean | null;
-    hasIssuesEnabled?: boolean | null;
+    hasProjectsEnabled?: boolean;
+    hasIssuesEnabled?: boolean;
     primaryLanguage?: string | null;
     licenseName?: string | null;
     defaultBranch?: string | null;
-    automaticSynchronization?: boolean | null;
-    synchronizing?: boolean | null;
+    automaticSynchronization?: boolean;
+    synchronizing?: boolean;
     lastSyncAt?: Date | null;
 }
 
 class Repository extends Model<IRepositoryAttributes> {
     public id!: number;
     public evaluationMethodId!: number | null;
-    public githubId!: string | null;
-    public name!: string | null;
+    public githubId!: string;
+    public name!: string;
     public description!: string | null;
-    public stargazerCount!: number | null;
-    public forkCount!: number | null;
-    public githubCreatedAt!: Date | null;
-    public githubUpdatedAt!: Date | null;
-    public hasProjectsEnabled!: boolean | null;
-    public hasIssuesEnabled!: boolean | null;
+    public stargazerCount!: number;
+    public forkCount!: number;
+    public githubCreatedAt!: Date;
+    public githubUpdatedAt!: Date;
+    public hasProjectsEnabled!: boolean;
+    public hasIssuesEnabled!: boolean;
     public primaryLanguage!: string | null;
     public licenseName!: string | null;
     public defaultBranch!: string | null;
-    public automaticSynchronization!: boolean | null;
-    public synchronizing!: boolean | null;
+    public automaticSynchronization!: boolean;
+    public synchronizing!: boolean;
     public lastSyncAt!: Date | null;
 
     public static initModel(sequelize: Sequelize): void {
@@ -59,7 +59,7 @@ class Repository extends Model<IRepositoryAttributes> {
                 },
                 githubId: {
                     field: "github_id",
-                    type: DataTypes.STRING(255),
+                    type: DataTypes.STRING(250),
                     allowNull: false,
                     unique: true,
                     validate: {
@@ -68,7 +68,7 @@ class Repository extends Model<IRepositoryAttributes> {
                 },
                 name: {
                     field: "name",
-                    type: DataTypes.STRING(255),
+                    type: DataTypes.STRING(1000),
                     allowNull: false,
                     validate: {
                         notEmpty: true,
@@ -117,17 +117,17 @@ class Repository extends Model<IRepositoryAttributes> {
                 },
                 primaryLanguage: {
                     field: "primary_language",
-                    type: DataTypes.STRING(100),
+                    type: DataTypes.STRING(250),
                     allowNull: true,
                 },
                 licenseName: {
                     field: "license_name",
-                    type: DataTypes.STRING(200),
+                    type: DataTypes.STRING(250),
                     allowNull: true,
                 },
                 defaultBranch: {
                     field: "default_branch",
-                    type: DataTypes.STRING(45),
+                    type: DataTypes.STRING(250),
                     allowNull: false,
                     validate: {
                         notEmpty: true,
@@ -164,4 +164,4 @@ class Repository extends Model<IRepositoryAttributes> {
     }
 }
 
-export { Repository, IRepositoryAttributes };
+export { IRepositoryAttributes, Repository };

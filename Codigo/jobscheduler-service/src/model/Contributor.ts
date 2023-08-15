@@ -1,4 +1,4 @@
-import { Model, DataTypes, Sequelize } from "sequelize";
+import { DataTypes, Model, Sequelize } from "sequelize";
 
 import EnvConfig from "../config/EnvConfig";
 
@@ -6,8 +6,8 @@ import { Repository } from "./Repository";
 
 interface IContributorAttributes {
     id?: number;
-    githubId?: string | null;
-    githubLogin?: string | null;
+    githubId?: string;
+    githubLogin?: string;
     githubEmail?: string | null;
     githubName?: string | null;
     githubAvatarUrl?: string | null;
@@ -17,7 +17,7 @@ class Contributor extends Model<IContributorAttributes> {
     public id!: number;
     public githubId!: string;
     public githubLogin!: string;
-    public githubEmail!: string;
+    public githubEmail!: string | null;
     public githubName!: string | null;
     public githubAvatarUrl!: string | null;
 
@@ -34,7 +34,7 @@ class Contributor extends Model<IContributorAttributes> {
                 },
                 githubId: {
                     field: "github_id",
-                    type: DataTypes.STRING(255),
+                    type: DataTypes.STRING(250),
                     allowNull: false,
                     unique: true,
                     validate: {
@@ -43,7 +43,7 @@ class Contributor extends Model<IContributorAttributes> {
                 },
                 githubLogin: {
                     field: "github_login",
-                    type: DataTypes.STRING(45),
+                    type: DataTypes.STRING(50),
                     allowNull: false,
                     unique: true,
                     validate: {
@@ -52,18 +52,18 @@ class Contributor extends Model<IContributorAttributes> {
                 },
                 githubEmail: {
                     field: "github_email",
-                    type: DataTypes.STRING(200),
+                    type: DataTypes.STRING(254),
                     allowNull: true,
                     unique: true,
                 },
                 githubName: {
                     field: "github_name",
-                    type: DataTypes.STRING(255),
+                    type: DataTypes.STRING(1000),
                     allowNull: true,
                 },
                 githubAvatarUrl: {
                     field: "github_avatar_url",
-                    type: DataTypes.STRING(100),
+                    type: DataTypes.STRING(1000),
                     allowNull: true,
                 },
             },

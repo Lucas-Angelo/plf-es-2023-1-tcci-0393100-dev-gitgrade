@@ -1,22 +1,22 @@
-import { Model, DataTypes, Sequelize } from "sequelize";
+import { DataTypes, Model, Sequelize } from "sequelize";
 
 import EnvConfig from "../config/EnvConfig";
 
 interface IUserAttributes {
-    id: number;
-    githubId: string;
-    githubLogin: string;
-    githubEmail: string;
-    githubOrganizationRole: string;
-    githubName: string | null;
-    githubAvatarUrl: string | null;
+    id?: number;
+    githubId?: string;
+    githubLogin?: string;
+    githubEmail?: string | null;
+    githubOrganizationRole?: string;
+    githubName?: string | null;
+    githubAvatarUrl?: string | null;
 }
 
 class User extends Model<IUserAttributes> {
     public id!: number;
     public githubId!: string;
     public githubLogin!: string;
-    public githubEmail!: string;
+    public githubEmail!: string | null;
     public githubOrganizationRole!: string;
     public githubName!: string | null;
     public githubAvatarUrl!: string | null;
@@ -34,7 +34,7 @@ class User extends Model<IUserAttributes> {
                 },
                 githubId: {
                     field: "github_id",
-                    type: DataTypes.STRING(255),
+                    type: DataTypes.STRING(250),
                     allowNull: false,
                     unique: true,
                     validate: {
@@ -43,7 +43,7 @@ class User extends Model<IUserAttributes> {
                 },
                 githubLogin: {
                     field: "github_login",
-                    type: DataTypes.STRING(45),
+                    type: DataTypes.STRING(50),
                     allowNull: false,
                     unique: true,
                     validate: {
@@ -52,7 +52,7 @@ class User extends Model<IUserAttributes> {
                 },
                 githubEmail: {
                     field: "github_email",
-                    type: DataTypes.STRING(200),
+                    type: DataTypes.STRING(254),
                     allowNull: false,
                     unique: true,
                     validate: {
@@ -69,12 +69,12 @@ class User extends Model<IUserAttributes> {
                 },
                 githubName: {
                     field: "github_name",
-                    type: DataTypes.STRING(255),
+                    type: DataTypes.STRING(1000),
                     allowNull: true,
                 },
                 githubAvatarUrl: {
                     field: "github_avatar_url",
-                    type: DataTypes.STRING(100),
+                    type: DataTypes.STRING(1000),
                     allowNull: true,
                 },
             },
@@ -88,4 +88,4 @@ class User extends Model<IUserAttributes> {
     }
 }
 
-export { User, IUserAttributes };
+export { IUserAttributes, User };

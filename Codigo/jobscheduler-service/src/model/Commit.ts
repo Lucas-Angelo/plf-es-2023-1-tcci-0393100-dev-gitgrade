@@ -46,7 +46,7 @@ class Commit extends Model<ICommitAttributes> {
                 },
                 sha: {
                     field: "sha",
-                    type: DataTypes.STRING(255),
+                    type: DataTypes.STRING(250),
                     allowNull: false,
                     unique: false,
                     validate: {

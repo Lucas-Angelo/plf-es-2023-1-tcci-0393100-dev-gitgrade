@@ -1,4 +1,4 @@
-import { Model, DataTypes, Sequelize } from "sequelize";
+import { DataTypes, Model, Sequelize } from "sequelize";
 
 import EnvConfig from "../config/EnvConfig";
 
@@ -38,7 +38,6 @@ class IssueHasAssigneeContributor extends Model {
         Issue: typeof Issue;
         Contributor: typeof Contributor;
     }): void {
-        // Define the associations for the junction table.
         this.belongsTo(models.Issue, {
             foreignKey: "issueId",
             as: "issue",
