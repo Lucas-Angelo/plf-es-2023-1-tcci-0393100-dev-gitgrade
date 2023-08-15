@@ -10,26 +10,28 @@ class CommitService {
     }
 
     async createOrUpdate(data: ICommitAttributes): Promise<Commit> {
-        if (!data.sha) throw new Error("Commit sha is required.");
+        if (!data.sha) {
+            logger.error("Commit sha is required.", { data });
+            throw new Error("Commit sha is required.");
+        }
+        if (!data.branchId) {
+            logger.error("Commit branchId is required.", { data });
+            throw new Error("Commit branchId is required.");
+        }
 
         const existingCommit = await this.findOneByFields({
             branchId: data.branchId,
             sha: data.sha,
         });
 
-        if (existingCommit) {
-            logger.info("Commit already exists. Updating commit:", data);
-            return await this.update(existingCommit, data);
-        } else {
-            logger.info("Commit does not exist. Creating commit:", data);
-            return await this.create(data);
-        }
+        if (existingCommit) return await this.update(existingCommit, data);
+        else return await this.create(data);
     }
 
     async create(data: ICommitAttributes): Promise<Commit> {
         try {
             this.validateNotNullFields(data);
-            logger.info("Creating commit:", data);
+            logger.info("Creating commit:", { data });
             const commit = await Commit.create(data);
             logger.info("Commit created:", {
                 commit,
@@ -69,42 +71,11 @@ class CommitService {
         }
     }
 
-    async findOneByField(
-        field: keyof ICommitAttributes,
-        value: ICommitAttributes[keyof ICommitAttributes]
-    ): Promise<Commit | null> {
-        try {
-            logger.info(`Searching for commit by ${String(field)} ${value}`);
-            const commit = await Commit.findOne({
-                where: { [field]: value },
-            });
-            if (!commit)
-                logger.info(
-                    `Commit not found by ${String(
-                        field
-                    )} ${value}. Returning null.`
-                );
-            else
-                logger.info(
-                    `Commit found by ${String(field)} ${value}:`,
-                    commit
-                );
-
-            return commit;
-        } catch (error) {
-            logger.error(
-                `Error finding commit by ${String(field)} ${value}:`,
-                error
-            );
-            throw error;
-        }
-    }
-
     async findOneByFields(
         fields: Partial<ICommitAttributes>
     ): Promise<Commit | null> {
         try {
-            logger.info(`Searching for commit by fields:`, fields);
+            logger.info(`Searching for commit by fields:`, { fields });
             const commit = await Commit.findOne({
                 where: { ...fields },
             });
@@ -117,13 +88,35 @@ class CommitService {
             else
                 logger.info(
                     `Commit found by fields ${JSON.stringify(fields)}:`,
-                    commit
+                    { commit }
                 );
 
             return commit;
         } catch (error) {
             logger.error(
                 `Error finding commit by fields ${JSON.stringify(fields)}:`,
+                { error }
+            );
+            throw error;
+        }
+    }
+
+    async findAllByField(
+        field: keyof ICommitAttributes,
+        value: ICommitAttributes[keyof ICommitAttributes]
+    ): Promise<Commit[]> {
+        try {
+            logger.info(`Searching for commits by ${String(field)} ${value}`);
+            const commits = await Commit.findAll({
+                where: { [field]: value },
+            });
+            logger.info(`Commits found by ${String(field)} ${value}:`, {
+                commits,
+            });
+            return commits;
+        } catch (error) {
+            logger.error(
+                `Error finding commits by ${String(field)} ${value}:`,
                 error
             );
             throw error;
@@ -137,29 +130,9 @@ class CommitService {
             const errorMessage = `Missing required fields: ${missingFields.join(
                 ", "
             )}`;
-            logger.error(errorMessage, data);
+            logger.error(errorMessage, { data });
             throw new Error(errorMessage);
         } else logger.info("All required fields are present.");
-    }
-
-    async findAllByField(
-        field: keyof ICommitAttributes,
-        value: ICommitAttributes[keyof ICommitAttributes]
-    ): Promise<Commit[]> {
-        try {
-            logger.info(`Searching for commits by ${String(field)} ${value}`);
-            const commits = await Commit.findAll({
-                where: { [field]: value },
-            });
-            logger.info(`Commits found by ${String(field)} ${value}:`, commits);
-            return commits;
-        } catch (error) {
-            logger.error(
-                `Error finding commits by ${String(field)} ${value}:`,
-                error
-            );
-            throw error;
-        }
     }
 }
 

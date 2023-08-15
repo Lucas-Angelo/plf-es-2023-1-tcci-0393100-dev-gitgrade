@@ -10,32 +10,25 @@ class ContributorService {
     }
 
     async createOrUpdate(data: IContributorAttributes): Promise<Contributor> {
-        if (!data.githubId) throw new Error("githubId is required.");
+        if (!data.githubId) {
+            logger.error("githubId is required.", { data });
+            throw new Error("githubId is required.");
+        }
 
         const existingContributor = await this.findOneByField(
             "githubId",
             data.githubId
         );
 
-        if (existingContributor) {
-            logger.info(
-                "Contributor already exists. Updating contributor:",
-                data
-            );
+        if (existingContributor)
             return await this.update(existingContributor, data);
-        } else {
-            logger.info(
-                "Contributor does not exist. Creating contributor:",
-                data
-            );
-            return await this.create(data);
-        }
+        else return await this.create(data);
     }
 
     async create(data: IContributorAttributes): Promise<Contributor> {
         try {
             this.validateNotNullFields(data);
-            logger.info("Creating contributor:", data);
+            logger.info("Creating contributor:", { data });
             const contributor = await Contributor.create(data);
             logger.info("Contributor created:", {
                 contributor,
@@ -95,21 +88,9 @@ class ContributorService {
 
             return contributor;
         } catch (error) {
-            logger.error(
-                `Error finding contributor by ${field} ${value}:`,
-                error
-            );
-            throw error;
-        }
-    }
-
-    async findAll(): Promise<Contributor[]> {
-        try {
-            logger.info("Searching for all contributors");
-            const contributors = await Contributor.findAll();
-            return contributors;
-        } catch (error) {
-            logger.error("Error finding all contributors:", error);
+            logger.error(`Error finding contributor by ${field} ${value}:`, {
+                error,
+            });
             throw error;
         }
     }
@@ -124,7 +105,7 @@ class ContributorService {
             const errorMessage = `Missing required fields: ${missingFields.join(
                 ", "
             )}`;
-            logger.error(errorMessage, data);
+            logger.error(errorMessage, { data });
             throw new Error(errorMessage);
         } else logger.info("All required fields are present.");
     }

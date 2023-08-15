@@ -10,26 +10,24 @@ class IssueService {
     }
 
     async createOrUpdate(data: IIssueAttributes): Promise<Issue> {
-        if (!data.title) throw new Error("Issue title is required.");
+        if (!data.githubId) {
+            logger.error("Issue githubId is required.", { data });
+            throw new Error("Issue githubId is required.");
+        }
 
         const existingIssue = await this.findOneByField(
             "githubId",
             data.githubId
         );
 
-        if (existingIssue) {
-            logger.info("Issue already exists. Updating issue:", data);
-            return await this.update(existingIssue, data);
-        } else {
-            logger.info("Issue does not exist. Creating issue:", data);
-            return await this.create(data);
-        }
+        if (existingIssue) return await this.update(existingIssue, data);
+        else return await this.create(data);
     }
 
     async create(data: IIssueAttributes): Promise<Issue> {
         try {
             this.validateNotNullFields(data);
-            logger.info("Creating issue:", data);
+            logger.info("Creating issue:", { data });
             const issue = await Issue.create(data);
             logger.info("Issue created:", {
                 issue,
@@ -79,10 +77,12 @@ class IssueService {
                 logger.info(
                     `Issue not found by ${field} ${value}. Returning null.`
                 );
-            else logger.info(`Issue found by ${field} ${value}:`, issue);
+            else logger.info(`Issue found by ${field} ${value}:`, { issue });
             return issue;
         } catch (error) {
-            logger.error(`Error finding issue by ${field} ${value}:`, error);
+            logger.error(`Error finding issue by ${field} ${value}:`, {
+                error,
+            });
             throw error;
         }
     }
@@ -94,7 +94,7 @@ class IssueService {
             const errorMessage = `Missing required fields: ${missingFields.join(
                 ", "
             )}`;
-            logger.error(errorMessage, data);
+            logger.error(errorMessage, { data });
             throw new Error(errorMessage);
         } else logger.info("All required fields are present.");
     }

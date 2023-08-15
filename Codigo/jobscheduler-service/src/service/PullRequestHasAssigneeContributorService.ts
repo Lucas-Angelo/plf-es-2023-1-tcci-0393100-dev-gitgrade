@@ -1,7 +1,7 @@
 import logger from "../config/LogConfig";
 import { PullRequestHasAssigneeContributor } from "../model/PullRequestHasAssigneeContributor";
-import { PullRequestService } from "./PullRequestService";
 import { ContributorService } from "./ContributorService";
+import { PullRequestService } from "./PullRequestService";
 
 class PullRequestHasAssigneeContributorService {
     private readonly pullRequestService: PullRequestService;
@@ -47,7 +47,9 @@ class PullRequestHasAssigneeContributorService {
                 });
 
             if (existingAssociation) {
-                logger.info("Association already exists:", existingAssociation);
+                logger.info("Association already exists:", {
+                    existingAssociation,
+                });
                 return;
             }
 
@@ -66,7 +68,7 @@ class PullRequestHasAssigneeContributorService {
 
             logger.info("Association created successfully.");
         } catch (error) {
-            logger.error("Error creating association:", error);
+            logger.error("Error creating association:", { error });
             throw error;
         }
     }

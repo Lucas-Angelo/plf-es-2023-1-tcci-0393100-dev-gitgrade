@@ -10,26 +10,32 @@ class BranchService {
     }
 
     async createOrUpdate(data: IBranchAttributes): Promise<Branch> {
-        if (!data.name) throw new Error("Branch name is required.");
+        if (!data.name) {
+            logger.error("Name is required.", {
+                data,
+            });
+            throw new Error("Name is required.");
+        }
+        if (!data.repositoryId) {
+            logger.error("RepositoryId is required.", {
+                data,
+            });
+            throw new Error("RepositoryId is required.");
+        }
 
         const existingBranch = await this.findOneByFields({
             repositoryId: data.repositoryId,
             name: data.name,
         });
 
-        if (existingBranch) {
-            logger.info("Branch already exists. Updating branch:", data);
-            return await this.update(existingBranch, data);
-        } else {
-            logger.info("Branch does not exist. Creating branch:", data);
-            return await this.create(data);
-        }
+        if (existingBranch) return await this.update(existingBranch, data);
+        else return await this.create(data);
     }
 
     async create(data: IBranchAttributes): Promise<Branch> {
         try {
             this.validateNotNullFields(data);
-            logger.info("Creating branch:", data);
+            logger.info("Creating branch:", { data });
             const branch = await Branch.create(data);
             logger.info("Branch created:", {
                 branch,
@@ -69,42 +75,11 @@ class BranchService {
         }
     }
 
-    async findOneByField(
-        field: keyof IBranchAttributes,
-        value: IBranchAttributes[keyof IBranchAttributes]
-    ): Promise<Branch | null> {
-        try {
-            logger.info(`Searching for branch by ${String(field)} ${value}`);
-            const branch = await Branch.findOne({
-                where: { [field]: value },
-            });
-            if (!branch)
-                logger.info(
-                    `Branch not found by ${String(
-                        field
-                    )} ${value}. Returning null.`
-                );
-            else
-                logger.info(
-                    `Branch found by ${String(field)} ${value}:`,
-                    branch
-                );
-
-            return branch;
-        } catch (error) {
-            logger.error(
-                `Error finding branch by ${String(field)} ${value}:`,
-                error
-            );
-            throw error;
-        }
-    }
-
     async findOneByFields(
         fields: Partial<IBranchAttributes>
     ): Promise<Branch | null> {
         try {
-            logger.info(`Searching for branch by fields:`, fields);
+            logger.info(`Searching for branch by fields:`, { fields });
             const branch = await Branch.findOne({
                 where: { ...fields },
             });
@@ -117,14 +92,14 @@ class BranchService {
             else
                 logger.info(
                     `Branch found by fields ${JSON.stringify(fields)}:`,
-                    branch
+                    { branch }
                 );
 
             return branch;
         } catch (error) {
             logger.error(
                 `Error finding branch by fields ${JSON.stringify(fields)}:`,
-                error
+                { error }
             );
             throw error;
         }
@@ -139,15 +114,14 @@ class BranchService {
             const branches = await Branch.findAll({
                 where: { [field]: value },
             });
-            logger.info(
-                `Branches found by ${String(field)} ${value}:`,
-                branches
-            );
+            logger.info(`Branches found by ${String(field)} ${value}:`, {
+                branches,
+            });
             return branches;
         } catch (error) {
             logger.error(
                 `Error finding branches by ${String(field)} ${value}:`,
-                error
+                { error }
             );
             throw error;
         }
@@ -160,7 +134,7 @@ class BranchService {
             const errorMessage = `Missing required fields: ${missingFields.join(
                 ", "
             )}`;
-            logger.error(errorMessage, data);
+            logger.error(errorMessage, { data });
             throw new Error(errorMessage);
         } else logger.info("All required fields are present.");
     }

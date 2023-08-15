@@ -10,28 +10,34 @@ class FileService {
     }
 
     async createOrUpdate(data: IFileAttributes): Promise<File> {
-        if (!data.path) throw new Error("File path is required.");
+        if (!data.path) {
+            logger.error("File path is required.", { data });
+            throw new Error("File path is required.");
+        }
+        if (!data.commitId) {
+            logger.error("Commit id is required.", { data });
+            throw new Error("Commit id is required.");
+        }
 
         const existingFile = await this.findOneByFields({
             commitId: data.commitId,
             path: data.path,
         });
 
-        if (existingFile) {
-            logger.info("File already exists. Updating file:", data);
-            return await this.update(existingFile, data);
-        } else {
-            logger.info("File does not exist. Creating file:", data);
-            return await this.create(data);
-        }
+        if (existingFile) return await this.update(existingFile, data);
+        else return await this.create(data);
     }
 
     async create(data: IFileAttributes): Promise<File> {
         try {
-            data.additions ? data.additions : (data.additions = 0);
-            data.deletions ? data.deletions : (data.deletions = 0);
             this.validateNotNullFields(data);
-            logger.info("Creating file:", data);
+            data.additions
+                ? (data.additions = data.additions)
+                : (data.additions = 0);
+            data.deletions
+                ? (data.deletions = data.deletions)
+                : (data.deletions = 0);
+            logger.info("Creating file:", { data });
             const file = await File.create(data);
             logger.info("File created:", { file });
             return file;
@@ -43,13 +49,13 @@ class FileService {
 
     async update(existingFile: File, data: IFileAttributes): Promise<File> {
         try {
+            this.validateNotNullFields(data);
             data.additions
                 ? (data.additions += existingFile.additions)
                 : (data.additions = existingFile.additions);
             data.deletions
                 ? (data.deletions += existingFile.deletions)
                 : (data.deletions = existingFile.deletions);
-            this.validateNotNullFields(data);
             logger.info("Updating file:", { existingFile, newData: data });
             const updatedFile = await existingFile.update(data);
             logger.info("File updated:", { updatedFile });
@@ -60,37 +66,11 @@ class FileService {
         }
     }
 
-    async findOneByField(
-        field: keyof IFileAttributes,
-        value: IFileAttributes[keyof IFileAttributes]
-    ): Promise<File | null> {
-        try {
-            logger.info(`Searching for file by ${String(field)} ${value}`);
-            const file = await File.findOne({ where: { [field]: value } });
-
-            if (!file)
-                logger.info(
-                    `File not found by ${String(
-                        field
-                    )} ${value}. Returning null.`
-                );
-            else logger.info(`File found by ${String(field)} ${value}:`, file);
-
-            return file;
-        } catch (error) {
-            logger.error(
-                `Error finding file by ${String(field)} ${value}:`,
-                error
-            );
-            throw error;
-        }
-    }
-
     async findOneByFields(
         fields: Partial<IFileAttributes>
     ): Promise<File | null> {
         try {
-            logger.info(`Searching for file by fields:`, fields);
+            logger.info(`Searching for file by fields:`, { fields });
             const file = await File.findOne({ where: { ...fields } });
 
             if (!file)
@@ -100,16 +80,15 @@ class FileService {
                     )}. Returning null.`
                 );
             else
-                logger.info(
-                    `File found by fields ${JSON.stringify(fields)}:`,
-                    file
-                );
+                logger.info(`File found by fields ${JSON.stringify(fields)}:`, {
+                    file,
+                });
 
             return file;
         } catch (error) {
             logger.error(
                 `Error finding file by fields ${JSON.stringify(fields)}:`,
-                error
+                { error }
             );
             throw error;
         }
@@ -117,7 +96,7 @@ class FileService {
 
     async deleteByFields(fields: Partial<IFileAttributes>): Promise<void> {
         try {
-            logger.info(`Deleting file by fields:`, fields);
+            logger.info(`Deleting file by fields:`, { fields });
             const file = await File.findOne({ where: { ...fields } });
 
             if (!file) {
@@ -129,17 +108,16 @@ class FileService {
                 return;
             }
 
-            logger.info(
-                `File found by fields ${JSON.stringify(fields)}:`,
-                file
-            );
+            logger.info(`File found by fields ${JSON.stringify(fields)}:`, {
+                file,
+            });
 
             await file.destroy();
             logger.info(`File deleted by fields ${JSON.stringify(fields)}:`);
         } catch (error) {
             logger.error(
                 `Error deleting file by fields ${JSON.stringify(fields)}:`,
-                error
+                { error }
             );
             throw error;
         }
@@ -152,7 +130,7 @@ class FileService {
             const errorMessage = `Missing required fields: ${missingFields.join(
                 ", "
             )}`;
-            logger.error(errorMessage, data);
+            logger.error(errorMessage, { data });
             throw new Error(errorMessage);
         } else logger.info("All required fields are present.");
     }

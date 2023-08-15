@@ -1,7 +1,7 @@
 import logger from "../config/LogConfig";
 import { IssueHasAssigneeContributor } from "../model/IssueHasAssigneeContributor";
-import { IssueService } from "./IssueService";
 import { ContributorService } from "./ContributorService";
+import { IssueService } from "./IssueService";
 
 class IssueHasAssigneeContributorService {
     private readonly issueService: IssueService;
@@ -44,7 +44,9 @@ class IssueHasAssigneeContributorService {
                 });
 
             if (existingAssociation) {
-                logger.info("Association already exists:", existingAssociation);
+                logger.info("Association already exists:", {
+                    existingAssociation,
+                });
                 return;
             }
 
@@ -63,7 +65,7 @@ class IssueHasAssigneeContributorService {
 
             logger.info("Association created successfully.");
         } catch (error) {
-            logger.error("Error creating association:", error);
+            logger.error("Error creating association:", { error });
             throw error;
         }
     }

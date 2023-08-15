@@ -32,12 +32,12 @@ class JobExecutor {
 
             const startTime = new Date();
 
-            // await this.repositoryFetcher.createOrUpdateRepositories();
-            // await this.contributorFetcher.fetchContributorsForOrgAndRepositories();
-            // await this.issueFetcher.fetchIssuesForRepositories();
-            // await this.pullRequestFetcher.fetchPullRequestsForRepositories();
-            // await this.branchFetcher.fetchBranchesForRepositories();
-            // await this.commitFetcher.fetchCommitsForRepositories();
+            await this.repositoryFetcher.createOrUpdateRepositories();
+            await this.contributorFetcher.fetchContributorsForOrgAndRepositories();
+            await this.issueFetcher.fetchIssuesForRepositories();
+            await this.pullRequestFetcher.fetchPullRequestsForRepositories();
+            await this.branchFetcher.fetchBranchesForRepositories();
+            await this.commitFetcher.fetchCommitsForRepositories();
             await this.fileFetcher.fetchFilesForRepositories();
 
             const endTime = new Date();

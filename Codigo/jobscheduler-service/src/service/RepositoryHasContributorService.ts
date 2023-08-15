@@ -1,7 +1,7 @@
 import logger from "../config/LogConfig";
 import { RepositoryHasContributor } from "../model/RepositoryHasContributor";
-import { RepositoryService } from "./RepositoryService";
 import { ContributorService } from "./ContributorService";
+import { RepositoryService } from "./RepositoryService";
 
 class RepositoryHasContributorService {
     private readonly repositoryService: RepositoryService;
@@ -45,7 +45,9 @@ class RepositoryHasContributorService {
             });
 
             if (existingAssociation) {
-                logger.info("Association already exists:", existingAssociation);
+                logger.info("Association already exists:", {
+                    existingAssociation,
+                });
                 return;
             }
 
@@ -64,7 +66,7 @@ class RepositoryHasContributorService {
 
             logger.info("Association created successfully.");
         } catch (error) {
-            logger.error("Error creating association:", error);
+            logger.error("Error creating association:", { error });
             throw error;
         }
     }

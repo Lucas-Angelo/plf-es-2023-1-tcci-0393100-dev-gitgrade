@@ -10,32 +10,25 @@ class PullRequestService {
     }
 
     async createOrUpdate(data: IPullRequestAttributes): Promise<PullRequest> {
-        if (!data.title) throw new Error("Pull request title is required.");
+        if (!data.githubId) {
+            logger.error("Pull request githubId is required: ", { data });
+            throw new Error("Pull request githubId is required.");
+        }
 
         const existingPullRequest = await this.findOneByField(
             "githubId",
             data.githubId
         );
 
-        if (existingPullRequest) {
-            logger.info(
-                "Pull request already exists. Updating pull request:",
-                data
-            );
+        if (existingPullRequest)
             return await this.update(existingPullRequest, data);
-        } else {
-            logger.info(
-                "Pull request does not exist. Creating pull request:",
-                data
-            );
-            return await this.create(data);
-        }
+        else return await this.create(data);
     }
 
     async create(data: IPullRequestAttributes): Promise<PullRequest> {
         try {
             this.validateNotNullFields(data);
-            logger.info("Creating pull request:", data);
+            logger.info("Creating pull request:", { data });
             const pullRequest = await PullRequest.create(data);
             logger.info("Pull request created:", {
                 pullRequest,
@@ -89,17 +82,15 @@ class PullRequestService {
                     `Pull request not found by ${field} ${value}. Returning null.`
                 );
             else
-                logger.info(
-                    `Pull request found by ${field} ${value}:`,
-                    pullRequest
-                );
+                logger.info(`Pull request found by ${field} ${value}:`, {
+                    pullRequest,
+                });
 
             return pullRequest;
         } catch (error) {
-            logger.error(
-                `Error finding pull request by ${field} ${value}:`,
-                error
-            );
+            logger.error(`Error finding pull request by ${field} ${value}:`, {
+                error,
+            });
             throw error;
         }
     }
@@ -114,7 +105,7 @@ class PullRequestService {
             const errorMessage = `Missing required fields: ${missingFields.join(
                 ", "
             )}`;
-            logger.error(errorMessage, data);
+            logger.error(errorMessage, { data });
             throw new Error(errorMessage);
         } else logger.info("All required fields are present.");
     }

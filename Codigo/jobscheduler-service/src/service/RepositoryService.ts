@@ -10,32 +10,25 @@ class RepositoryService {
     }
 
     async createOrUpdate(data: IRepositoryAttributes): Promise<Repository> {
-        if (!data.githubId) throw new Error("githubId is required.");
+        if (!data.githubId) {
+            logger.error("githubId is required.", { data });
+            throw new Error("githubId is required.");
+        }
 
         const existingRepository = await this.findOneByField(
             "githubId",
             data.githubId
         );
 
-        if (existingRepository) {
-            logger.info(
-                "Repository already exists. Updating repository:",
-                data
-            );
+        if (existingRepository)
             return await this.update(existingRepository, data);
-        } else {
-            logger.info(
-                "Repository does not exist. Creating repository:",
-                data
-            );
-            return await this.create(data);
-        }
+        else return await this.create(data);
     }
 
     async create(data: IRepositoryAttributes): Promise<Repository> {
         try {
             this.validateNotNullAndEmptyFields(data);
-            logger.info("Creating repository:", data);
+            logger.info("Creating repository:", { data });
             const repository = await Repository.create(data);
             logger.info("Repository created:", {
                 repository,
@@ -94,10 +87,9 @@ class RepositoryService {
                 });
             return repository;
         } catch (error) {
-            logger.error(
-                `Error finding repository by ${field} ${value}:`,
-                error
-            );
+            logger.error(`Error finding repository by ${field} ${value}:`, {
+                error,
+            });
             throw error;
         }
     }
@@ -108,7 +100,7 @@ class RepositoryService {
             const repositories = await Repository.findAll();
             return repositories;
         } catch (error) {
-            logger.error("Error finding all repositories:", error);
+            logger.error("Error finding all repositories:", { error });
             throw error;
         }
     }
@@ -123,7 +115,7 @@ class RepositoryService {
             const errorMessage = `Missing required fields: ${missingFields.join(
                 ", "
             )}`;
-            logger.error(errorMessage, data);
+            logger.error(errorMessage, { data });
             throw new Error(errorMessage);
         } else logger.info("All required fields are present.");
     }
