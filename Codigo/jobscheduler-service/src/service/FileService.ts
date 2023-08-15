@@ -28,6 +28,8 @@ class FileService {
 
     async create(data: IFileAttributes): Promise<File> {
         try {
+            data.additions ? data.additions : (data.additions = 0);
+            data.deletions ? data.deletions : (data.deletions = 0);
             this.validateNotNullFields(data);
             logger.info("Creating file:", data);
             const file = await File.create(data);
@@ -41,6 +43,12 @@ class FileService {
 
     async update(existingFile: File, data: IFileAttributes): Promise<File> {
         try {
+            data.additions
+                ? (data.additions += existingFile.additions)
+                : (data.additions = existingFile.additions);
+            data.deletions
+                ? (data.deletions += existingFile.deletions)
+                : (data.deletions = existingFile.deletions);
             this.validateNotNullFields(data);
             logger.info("Updating file:", { existingFile, newData: data });
             const updatedFile = await existingFile.update(data);

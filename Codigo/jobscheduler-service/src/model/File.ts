@@ -54,11 +54,13 @@ class File extends Model<IFileAttributes> {
                     field: "additions",
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: false,
+                    defaultValue: 0,
                 },
                 deletions: {
                     field: "deletions",
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: false,
+                    defaultValue: 0,
                 },
             },
             {
@@ -68,6 +70,15 @@ class File extends Model<IFileAttributes> {
                 sequelize,
             }
         );
+        {
+            indexes: [
+                {
+                    name: "path_commit_id_UNIQUE",
+                    unique: true,
+                    fields: ["commit_id", "path"],
+                },
+            ];
+        }
     }
 
     static associate(models: { Commit: typeof Commit }): void {
