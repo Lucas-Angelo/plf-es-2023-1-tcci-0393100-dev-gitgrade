@@ -9,12 +9,12 @@
         "lint:fix": "npx eslint --fix --ext .js ./",
         "test": "echo \"Running all tests\"",
         "start": "npx ts-node src/index.ts",
-        "start:dev": "npx ts-node-dev src/index.ts",
-        "build": "npx tsc --outDir dist",
+        "start:dev": "npm run dev",
+        "build": "npx run swagger && npx tsc --outDir dist",
         "start:builded": "npx ts-node --transpile-only dist/index.js",
         "start:prod": "npm run build && npm run start:builded",
         "dev": "concurrently \"ts-node-dev src/index.ts\" \"nodemon -x tsoa spec-and-routes\"",
-        "swagger": "tsoa spec"
+        "swagger": "tsoa spec-and-routes"
     },
     "keywords": [
         "nodejs",
