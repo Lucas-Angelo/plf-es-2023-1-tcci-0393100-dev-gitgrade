@@ -1,0 +1,17 @@
+{
+  "name": "@gitgrade/models",
+  "version": "1.0.0",
+  "description": "database models from @gitgrade project",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "sequelize": "^6.32.1"
+  },
+  "devDependencies": {
+    "@types/sequelize": "^4.28.15"
+  }
+}

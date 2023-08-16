@@ -1,0 +1,220 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"RepositoryDTO": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"evaluationMethod": {
+						"properties": {
+							"name": {
+								"type": "string"
+							},
+							"id": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"name",
+							"id"
+						],
+						"type": "object"
+					},
+					"githubId": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string",
+						"nullable": true
+					},
+					"stargazerCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"forkCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"githubCreatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"githubUpdatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"hasProjectsEnabled": {
+						"type": "boolean"
+					},
+					"hasIssuesEnabled": {
+						"type": "boolean"
+					},
+					"primaryLanguage": {
+						"type": "string",
+						"nullable": true
+					},
+					"licenseName": {
+						"type": "string",
+						"nullable": true
+					},
+					"defaultBranch": {
+						"type": "string",
+						"nullable": true
+					},
+					"automaticSynchronization": {
+						"type": "boolean"
+					},
+					"synchronizing": {
+						"type": "boolean"
+					},
+					"lastSyncAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					}
+				},
+				"required": [
+					"id",
+					"githubId",
+					"name",
+					"description",
+					"stargazerCount",
+					"forkCount",
+					"githubCreatedAt",
+					"githubUpdatedAt",
+					"hasProjectsEnabled",
+					"hasIssuesEnabled",
+					"primaryLanguage",
+					"licenseName",
+					"defaultBranch",
+					"automaticSynchronization",
+					"synchronizing",
+					"lastSyncAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PaginationResponse_RepositoryDTO_": {
+				"properties": {
+					"data": {
+						"items": {
+							"$ref": "#/components/schemas/RepositoryDTO"
+						},
+						"type": "array"
+					},
+					"totalPages": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"data",
+					"totalPages"
+				],
+				"type": "object"
+			},
+			"GetAllRepositoryQuery": {
+				"properties": {
+					"page": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"limit": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"filter": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"page",
+					"limit"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "supportplatform-service",
+		"version": "1.0.0",
+		"description": "SupportPlatform service for GitHub Project Evaluation Support Platform",
+		"license": {
+			"name": "CC-BY-4.0"
+		},
+		"contact": {
+			"name": "Lucas Ângelo Oliveira Martins Rocha ",
+			"url": "https://lucasangelo.com/"
+		}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/repository": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PaginationResponse_RepositoryDTO_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"repository"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "page",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer"
+						}
+					},
+					{
+						"in": "query",
+						"name": "filter",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}

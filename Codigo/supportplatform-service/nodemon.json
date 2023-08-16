@@ -1,0 +1,6 @@
+{
+    "watch": ["src"],
+    "ignore": ["src/swagger/**"],
+    "ext": "ts",
+    "delay": 2500
+}
