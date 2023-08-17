@@ -1,10 +1,13 @@
 import express from 'express';
+var cors = require('cors')
 import { RegisterRoutes } from './swagger/routes';
 
 import swaggerUi from "swagger-ui-express";
 import Database from './database';
 
 const app = express();
+
+app.use(cors())
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

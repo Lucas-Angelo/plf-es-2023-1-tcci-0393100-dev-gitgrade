@@ -1,5 +1,5 @@
 import { Repository } from "@gitgrade/models";
-import { RepositoryDTO } from "../dto/RepositoryDTO";
+import { RepositoryDTO } from "@gitgrade/dtos";
 
 export class RepositoryMapper {
     toDto(model: Repository): RepositoryDTO {

@@ -105,9 +105,9 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"PaginationResponse_RepositoryDTO_": {
+			"PaginationResponseDTO_RepositoryDTO_": {
 				"properties": {
-					"data": {
+					"results": {
 						"items": {
 							"$ref": "#/components/schemas/RepositoryDTO"
 						},
@@ -119,12 +119,12 @@
 					}
 				},
 				"required": [
-					"data",
+					"results",
 					"totalPages"
 				],
 				"type": "object"
 			},
-			"GetAllRepositoryQuery": {
+			"GetAllRepositoryQueryDTO": {
 				"properties": {
 					"page": {
 						"type": "integer",
@@ -171,7 +171,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PaginationResponse_RepositoryDTO_"
+									"$ref": "#/components/schemas/PaginationResponseDTO_RepositoryDTO_"
 								}
 							}
 						}

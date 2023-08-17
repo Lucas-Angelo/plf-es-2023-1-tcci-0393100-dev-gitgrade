@@ -7,7 +7,7 @@ import appRoutes from "../../../../commom/routes/appRoutes";
 interface IRepoCardProps {
     id: number;
     name: string;
-    evaluationMethodName: string;
+    evaluationMethodName?: string;
 }
 
 export default function RepoCard(props: IRepoCardProps) {
@@ -25,9 +25,11 @@ export default function RepoCard(props: IRepoCardProps) {
                     <PrimerLink as="span">{props.name}</PrimerLink>
                 </Link>
             </Card.Title>
-            <Card.Labels>
-                <Label variant="accent">{props.evaluationMethodName}</Label>
-            </Card.Labels>
+            {props.evaluationMethodName && (
+                <Card.Labels>
+                    <Label variant="accent">{props.evaluationMethodName}</Label>
+                </Card.Labels>
+            )}
             <Card.Actions>
                 <Button>Sincronizar</Button>
                 <Link

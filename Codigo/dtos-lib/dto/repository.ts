@@ -20,3 +20,15 @@ export interface RepositoryDTO {
     synchronizing: boolean;
     lastSyncAt: Date | null;
 }
+
+export interface GetAllRepositoryQueryDTO {
+    /**
+     * @isInt page must be an integer
+     */
+    page: number;
+    /**
+     * @isInt page must be an integer
+     */
+    limit: number;
+    filter?: string
+}

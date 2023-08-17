@@ -33,12 +33,12 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "PaginationResponse_RepositoryDTO_": {
+    "PaginationResponseDTO_RepositoryDTO_": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"array","array":{"dataType":"refObject","ref":"RepositoryDTO"},"required":true},"totalPages":{"dataType":"double","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"results":{"dataType":"array","array":{"dataType":"refObject","ref":"RepositoryDTO"},"required":true},"totalPages":{"dataType":"double","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "GetAllRepositoryQuery": {
+    "GetAllRepositoryQueryDTO": {
         "dataType": "refObject",
         "properties": {
             "page": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"page must be an integer"}}},
@@ -64,7 +64,7 @@ export function RegisterRoutes(app: Router) {
 
             function RepositoryController_getAll(request: any, response: any, next: any) {
             const args = {
-                    query: {"in":"queries","name":"query","required":true,"ref":"GetAllRepositoryQuery"},
+                    query: {"in":"queries","name":"query","required":true,"ref":"GetAllRepositoryQueryDTO"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

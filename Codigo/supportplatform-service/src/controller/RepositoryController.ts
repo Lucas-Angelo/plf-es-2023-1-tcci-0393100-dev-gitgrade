@@ -1,25 +1,7 @@
 import { Get, Queries, Route, Tags } from "tsoa";
 import RepositoryService from "../service/RepositoryService";
-import { RepositoryMapper } from "./RepositoryMapper";
-import { PaginationResponse } from "../types/pagination";
-import { RepositoryDTO } from "../dto/RepositoryDTO";
-
-interface GetAllRepositoryQuery {
-    /**
-     * @isInt page must be an integer
-     */
-    page: number;
-    /**
-     * @isInt page must be an integer
-     */
-    limit: number;
-    filter?: string
-}
-
-interface PingResponse {
-    message: string;
-}
-
+import { RepositoryMapper } from "../mapper/RepositoryMapper";
+import { RepositoryDTO, PaginationResponseDTO, GetAllRepositoryQueryDTO } from "@gitgrade/dtos";
 @Route("repository")
 @Tags("repository")
 export class RepositoryController {
@@ -28,13 +10,14 @@ export class RepositoryController {
     constructor() {
         this.repositoryService = new RepositoryService();
     }
+
     @Get("/")
-    public async getAll(@Queries() query: GetAllRepositoryQuery): Promise<PaginationResponse<RepositoryDTO>> {
+    public async getAll(@Queries() query: GetAllRepositoryQueryDTO): Promise<PaginationResponseDTO<RepositoryDTO>> {
         const serviceResponse = await this.repositoryService.findAll(query);
         const mapper = new RepositoryMapper()
         return {
             totalPages: serviceResponse.totalPages,
-            data: serviceResponse.data.map(mapper.toDto),
+            results: serviceResponse.results.map(mapper.toDto),
         }
     }
 }
