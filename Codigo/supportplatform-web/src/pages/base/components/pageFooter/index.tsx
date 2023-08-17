@@ -21,9 +21,11 @@ export default function PageFooter() {
                     <Avatar
                         src={GitGradeLogoPng}
                         size={32}
-                        sx={{ mx: 2, scale: "2.2" }}
+                        sx={{ scale: "1.3" }}
                     />
-                    © 2023 Plataforma de Apoio às Avaliações de Projetos GitHub.
+                    <Box sx={{ display: 'inline', ml: 2 }}>
+                        © 2023 Plataforma de Apoio às Avaliações de Projetos GitHub.
+                    </Box>
                 </Box>
                 <PrimerLink
                     target="_blank"

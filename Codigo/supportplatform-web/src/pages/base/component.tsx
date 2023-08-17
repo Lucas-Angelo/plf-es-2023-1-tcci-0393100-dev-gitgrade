@@ -3,6 +3,7 @@ import { Outlet } from "react-router";
 import PageHeader from "./components/pageHeader";
 import PageFooter from "./components/pageFooter";
 import { memo } from "react";
+import PageLoadingIndicator from "./components/pageLoadingIndicator";
 
 function BasePage() {
     return (
@@ -24,6 +25,7 @@ function BasePage() {
                 }}
             >
                 <PageLayout.Content sx={{ flexGrow: 1, width: "100%" }}>
+                    <PageLoadingIndicator />
                     <Outlet />
                 </PageLayout.Content>
                 <PageFooter />

@@ -33,7 +33,7 @@ export default function PageHeader() {
                         <Avatar
                             src={GitGradeLogoPng}
                             size={32}
-                            sx={{ scale: "2.2" }}
+                            sx={{ scale: "1.3" }}
                         />
                         <Truncate
                             sx={{ ml: 2 }}
