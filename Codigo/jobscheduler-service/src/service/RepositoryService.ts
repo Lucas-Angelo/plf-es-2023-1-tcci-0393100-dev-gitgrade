@@ -94,13 +94,69 @@ class RepositoryService {
         }
     }
 
-    async findAll(): Promise<Repository[]> {
+    async findAllWithAutomaticSynchronizationEnable(): Promise<Repository[]> {
         try {
-            logger.info("Searching for all repositories");
-            const repositories = await Repository.findAll();
+            logger.info(
+                "Searching for repositories with automatic sync true..."
+            );
+            const repositories = await Repository.findAll({
+                where: { automaticSynchronization: true },
+            });
+            logger.info("Repositories found:", { repositories });
             return repositories;
         } catch (error) {
-            logger.error("Error finding all repositories:", { error });
+            logger.error(
+                "Error finding repositories with automatic sync true:",
+                {
+                    error,
+                }
+            );
+            throw error;
+        }
+    }
+
+    // sets all repositories with automaticSynchronization enabled to Synchronizing true
+    async setAllAutomaticSynchronizationEnableRepositoriesToSynchronizingTrue(): Promise<
+        Repository[]
+    > {
+        try {
+            logger.info(
+                "Setting all repositories with automatic sync true to synchronizing true..."
+            );
+            const repositoriesWithAutomaticSynchronizationEnabled =
+                await this.findAllWithAutomaticSynchronizationEnable();
+            for (const repository of repositoriesWithAutomaticSynchronizationEnabled)
+                await repository.update({ synchronizing: true });
+            logger.info(
+                "All repositories with automatic sync true set to synchronizing true."
+            );
+            return repositoriesWithAutomaticSynchronizationEnabled;
+        } catch (error) {
+            logger.error(
+                "Error setting all repositories with automatic sync true to synchronizing true:",
+                {
+                    error,
+                }
+            );
+            throw error;
+        }
+    }
+
+    async setAllRepositoriesToSynchronizingFalse(
+        repositories: Repository[]
+    ): Promise<void> {
+        try {
+            logger.info("Setting all repositories to synchronizing false...");
+            for (const repository of repositories)
+                await repository.update({ synchronizing: false });
+            logger.info("All repositories set to synchronizing false.");
+        } catch (error) {
+            logger.error(
+                "Error setting all repositories to synchronizing false:",
+                {
+                    error,
+                }
+            );
             throw error;
         }
     }

@@ -44,7 +44,8 @@ class PullRequestFetcher {
             logger.info("Starting Pull Request Fetcher...");
 
             // TODO: Fetch only repositories with automatic sync enabled
-            const repositories = await this.repositoryService.findAll();
+            const repositories =
+                await this.repositoryService.findAllWithAutomaticSynchronizationEnable();
 
             for (const repository of repositories) {
                 const pullRequests = await this.fetchPullRequestsWithRetry(

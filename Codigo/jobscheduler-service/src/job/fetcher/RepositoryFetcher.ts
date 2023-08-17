@@ -75,7 +75,7 @@ class RepositoryFetcher {
             licenseName: repoData.license ? repoData.license.name : null,
             defaultBranch: repoData.default_branch,
             automaticSynchronization: undefined,
-            synchronizing: true,
+            synchronizing: undefined,
             lastSyncAt: new Date(),
         };
     }

@@ -47,7 +47,7 @@ class ContributorFetcher {
 
             // TODO: Fetch only repositories with automatic sync enabled
             const repositories: Repository[] =
-                await this.repositoryService.findAll();
+                await this.repositoryService.findAllWithAutomaticSynchronizationEnable();
 
             for (const repository of repositories)
                 try {
