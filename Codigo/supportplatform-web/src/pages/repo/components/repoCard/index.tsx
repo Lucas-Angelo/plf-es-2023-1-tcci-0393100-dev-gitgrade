@@ -1,0 +1,42 @@
+import { Link } from "react-router-dom";
+import Card from "../../../../commom/components/card";
+import { Button, Label, Link as PrimerLink, Octicon } from "@primer/react";
+import { RepoIcon } from "@primer/octicons-react";
+import appRoutes from "../../../../commom/routes/appRoutes";
+
+interface IRepoCardProps {
+    id: number;
+    name: string;
+    evaluationMethodName: string;
+}
+
+export default function RepoCard(props: IRepoCardProps) {
+    return (
+        <Card.Root>
+            <Card.Title>
+                <Octicon
+                    icon={RepoIcon}
+                    sx={{ mr: 2 }}
+                />
+                <Link
+                    to={appRoutes.repo[":id"].link(props.id)}
+                    style={{ textDecoration: "none" }}
+                >
+                    <PrimerLink as="span">{props.name}</PrimerLink>
+                </Link>
+            </Card.Title>
+            <Card.Labels>
+                <Label variant="accent">{props.evaluationMethodName}</Label>
+            </Card.Labels>
+            <Card.Actions>
+                <Button>Sincronizar</Button>
+                <Link
+                    to={appRoutes.repo[":id"].link(props.id)}
+                    style={{ textDecoration: "none" }}
+                >
+                    <Button variant="primary">Abrir</Button>
+                </Link>
+            </Card.Actions>
+        </Card.Root>
+    );
+}

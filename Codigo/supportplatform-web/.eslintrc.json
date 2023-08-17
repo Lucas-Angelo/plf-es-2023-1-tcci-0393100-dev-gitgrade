@@ -1,29 +1,28 @@
 {
     "env": {
-        "commonjs": true,
         "es2021": true,
-        "node": true
+        "browser": true
     },
-    "extends": ["prettier", "eslint:recommended", "plugin:node/recommended"],
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:react-hooks/recommended",
+        "prettier"
+    ],
+    "ignorePatterns": ["dist"],
     "parserOptions": {
-        "ecmaVersion": 12,
-        "sourceType": "module"
+        "ecmaFeatures": {
+            "jsx": true
+        }
     },
-    "plugins": ["prettier"],
+    "parser": "@typescript-eslint/parser",
     "rules": {
-        "prettier/prettier": "error",
-        "node/exports-style": ["error", "module.exports"],
-        "node/file-extension-in-import": ["error", "always"],
-        "node/prefer-global/buffer": ["error", "always"],
-        "node/prefer-global/console": ["error", "always"],
-        "node/prefer-global/process": ["error", "always"],
-        "node/prefer-global/url-search-params": ["error", "always"],
-        "node/prefer-global/url": ["error", "always"],
-        "node/prefer-promises/dns": "error",
-        "node/prefer-promises/fs": "error",
-        "node/no-unsupported-features/es-syntax": [
-            "error",
-            { "ignores": ["modules"] }
-        ]
+        "react/react-in-jsx-scope": "off"
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
     }
 }
