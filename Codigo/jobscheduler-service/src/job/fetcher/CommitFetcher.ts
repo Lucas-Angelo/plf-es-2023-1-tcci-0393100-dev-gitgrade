@@ -41,6 +41,8 @@ class CommitFetcher {
     async fetchCommitsForRepositories() {
         try {
             logger.info("Starting Commit Fetcher...");
+
+            // TODO: Fetch only repositories with automatic sync enabled
             const repositories = await this.repositoryService.findAll();
 
             for (const repository of repositories) {
@@ -56,33 +58,41 @@ class CommitFetcher {
                     );
 
                     for (const commitData of commits) {
-                        if (
-                            !commitData.sha ||
-                            !commitData.commit ||
-                            !commitData.author ||
-                            !commitData.author.login
-                        )
+                        if (!commitData.sha || !commitData.commit) {
+                            logger.error(
+                                "Error on fetching commit, commit without sha or commit data:",
+                                { commitData }
+                            );
                             continue;
+                        }
 
-                        const authorDetails =
-                            await this.fetchUserDetailsWithRetry(
-                                commitData.author.login
-                            );
+                        let authorContributorId: number | null = null;
 
-                        if (!authorDetails || !authorDetails.id) continue;
+                        if (commitData.author && commitData.author.login) {
+                            const authorDetails =
+                                await this.fetchUserDetailsWithRetry(
+                                    commitData.author.login
+                                );
 
-                        const authorAttributes: IContributorAttributes =
-                            this.mapContributorAttributes(authorDetails);
-                        const authorContributor =
-                            await this.getOrCreateContributorWithRetry(
-                                authorAttributes
-                            );
+                            if (authorDetails && authorDetails.id) {
+                                const authorAttributes: IContributorAttributes =
+                                    this.mapContributorAttributes(
+                                        authorDetails
+                                    );
+                                const authorContributor =
+                                    await this.getOrCreateContributorWithRetry(
+                                        authorAttributes
+                                    );
+
+                                authorContributorId = authorContributor.id!;
+                            }
+                        }
 
                         const commitAttributes: ICommitAttributes =
                             this.mapCommitAttributes(
                                 branch.id!,
                                 commitData,
-                                authorContributor.id!
+                                authorContributorId
                             );
                         await this.createOrUpdateCommitWithRetry(
                             commitAttributes
@@ -93,7 +103,7 @@ class CommitFetcher {
 
             logger.info("Commits fetched and created successfully!");
         } catch (error) {
-            logger.error("Error fetching or creating commits:", error);
+            logger.error("Error fetching or creating commits:", { error });
             throw error;
         }
     }
@@ -173,9 +183,8 @@ class CommitFetcher {
     private mapCommitAttributes(
         branchId: number,
         commitData: CommitGitHub,
-        authorContributorId: number
+        authorContributorId?: number | null
     ): ICommitAttributes {
-        logger.info("Commit data:", commitData);
         const commitAttributes = {
             branchId: branchId,
             contributorId: authorContributorId,

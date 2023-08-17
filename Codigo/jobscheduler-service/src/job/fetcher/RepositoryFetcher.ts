@@ -25,19 +25,28 @@ class RepositoryFetcher {
                 () => this.gitHubRepositoryService.getAllRepositories(),
                 "Error fetching repositories"
             );
+            if (repositories.length == 0) logger.warn("No repositories found");
 
-            for (const repoData of repositories) {
-                await this.fetchAndCreateOrUpdateRepository(repoData);
-            }
+            for (const repoData of repositories)
+                try {
+                    await this.fetchAndCreateOrUpdateRepository(repoData);
+                } catch (error) {
+                    logger.error("Error fetching repository:", { error });
+                }
         } catch (error) {
-            logger.error("Error fetching repositories:", error);
+            logger.error("Error fetching repositories:", { error });
             throw error;
         }
     }
 
     private async fetchAndCreateOrUpdateRepository(repoData: RepositoryGitHub) {
-        const repositoryAttributes: IRepositoryAttributes =
-            this.mapRepositoryAttributes(repoData);
+        let repositoryAttributes: IRepositoryAttributes;
+        try {
+            repositoryAttributes = this.mapRepositoryAttributes(repoData);
+        } catch (error) {
+            logger.error("Error mapping repository attributes:", { error });
+            throw error;
+        }
 
         await this.fetchUtil.retry(
             () => this.repositoryService.createOrUpdate(repositoryAttributes),
@@ -66,8 +75,8 @@ class RepositoryFetcher {
             licenseName: repoData.license ? repoData.license.name : null,
             defaultBranch: repoData.default_branch,
             automaticSynchronization: undefined,
-            synchronizing: undefined,
-            lastSyncAt: undefined,
+            synchronizing: true,
+            lastSyncAt: new Date(),
         };
     }
 }

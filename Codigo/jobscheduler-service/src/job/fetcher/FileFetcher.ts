@@ -23,6 +23,7 @@ class FileFetcher {
     }
 
     async fetchFilesForRepositories() {
+        // TODO: Fetch only repositories with automatic sync enabled
         const repositories = await this.repositoryService.findAll();
 
         for (const repository of repositories) {
@@ -45,23 +46,25 @@ class FileFetcher {
                         )) || [];
 
                     for (const fileData of files) {
-                        const fileAttributes = {
-                            commitId: commit.id!,
-                            path: fileData.filename,
-                            extension: this.getFileExtension(fileData.filename),
-                            additions: fileData.additions,
-                            deletions: fileData.deletions,
-                        };
-
-                        if (fileData.status === "removed")
+                        if (fileData.status === "removed") {
                             await this.fileService.deleteByFields({
                                 commitId: commit.id!,
                                 path: fileData.filename,
                             });
-                        else
+                        } else {
+                            const fileAttributes = {
+                                commitId: commit.id!,
+                                path: fileData.filename,
+                                extension: this.getFileExtension(
+                                    fileData.filename
+                                ),
+                                additions: fileData.additions,
+                                deletions: fileData.deletions,
+                            };
                             await this.fileService.createOrUpdate(
                                 fileAttributes
                             );
+                        }
                     }
                 }
             }
@@ -81,13 +84,6 @@ class FileFetcher {
     }
 
     private getFileExtension(filename: string): string {
-        if (!filename.includes("/")) {
-            if (filename.includes(".")) {
-                return filename.split(".").pop()!;
-            }
-            return filename;
-        }
-
         const lastSegment = filename.split("/").pop() || "";
         return lastSegment.includes(".")
             ? lastSegment.split(".").pop()!

@@ -36,14 +36,12 @@ class GitHubContributorService {
                     ? linkHeader.includes('rel="next"')
                     : false;
 
-                if (hasNextPage) {
-                    page += 1;
-                }
+                if (hasNextPage) page += 1;
             }
 
             return allMembers;
         } catch (error: unknown) {
-            logger.error("Error fetching organization members:", error);
+            logger.error("Error fetching organization members:", { error });
             throw new Error(
                 "Error fetching organization members: " +
                     (error as Error).message
@@ -85,7 +83,7 @@ class GitHubContributorService {
 
             return allContributors;
         } catch (error: unknown) {
-            logger.error("Error fetching contributors:", error);
+            logger.error("Error fetching contributors:", { error });
             throw new Error(
                 "Error fetching contributors: " + (error as Error).message
             );
@@ -93,4 +91,4 @@ class GitHubContributorService {
     }
 }
 
-export { GitHubContributorService, ContributorGitHub, MemberGitHub };
+export { ContributorGitHub, GitHubContributorService, MemberGitHub };

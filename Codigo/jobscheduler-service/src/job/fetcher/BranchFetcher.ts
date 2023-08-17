@@ -24,6 +24,8 @@ class BranchFetcher {
     async fetchBranchesForRepositories() {
         try {
             logger.info("Starting Branch Fetcher...");
+
+            // TODO: Fetch only repositories with automatic sync enabled
             const repositories = await this.repositoryService.findAll();
 
             for (const repository of repositories) {
@@ -32,7 +34,13 @@ class BranchFetcher {
                 );
 
                 for (const branchData of branches) {
-                    if (!branchData.name || !branchData.commit) continue;
+                    if (!branchData.name) {
+                        logger.error(
+                            "Error on fetching branch, branch without name:",
+                            { branchData }
+                        );
+                        continue;
+                    }
 
                     const branchAttributes: IBranchAttributes =
                         this.mapBranchAttributes(repository.id!, branchData);
@@ -42,7 +50,7 @@ class BranchFetcher {
 
             logger.info("Branches fetched and created successfully!");
         } catch (error) {
-            logger.error("Error fetching or creating branches:", error);
+            logger.error("Error fetching or creating branches:", { error });
             throw error;
         }
     }

@@ -15,7 +15,7 @@ class Database {
             await this.sequelizeDatabase.connect();
             logger.info("Database connection established.");
         } catch (error) {
-            logger.error("Error during database connection:", error);
+            logger.error("Error during database connection:", { error });
             throw error;
         }
     }
@@ -25,7 +25,7 @@ class Database {
             await this.sequelizeDatabase.close();
             logger.info("Database disconnected.");
         } catch (error) {
-            logger.error("Error during database disconnection:", error);
+            logger.error("Error during database disconnection:", { error });
             throw error;
         }
     }
@@ -52,10 +52,9 @@ class ApplicationInitializer {
 
             logger.info("Application finished with success!");
         } catch (error) {
-            logger.error(
-                "Error occurred during application initialization:",
-                error
-            );
+            logger.error("Error occurred during application initialization:", {
+                error,
+            });
             throw error;
         }
     }

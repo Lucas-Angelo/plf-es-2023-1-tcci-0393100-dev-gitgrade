@@ -1,4 +1,4 @@
-import { createConnection, Connection } from "mysql2/promise";
+import { Connection, createConnection } from "mysql2/promise";
 import EnvConfig from "../config/EnvConfig";
 import logger from "../config/LogConfig";
 
@@ -25,7 +25,7 @@ class MySqlDatabase {
         try {
             return await createConnection(this.connectionConfig);
         } catch (error) {
-            logger.error("Error creating database connection:", error);
+            logger.error("Error creating database connection:", { error });
             throw error;
         }
     }
@@ -40,7 +40,7 @@ class MySqlDatabase {
 
             await connection.end();
         } catch (error) {
-            logger.error("Error creating database:", error);
+            logger.error("Error creating database:", { error });
             throw error;
         }
     }
@@ -55,7 +55,7 @@ class MySqlDatabase {
 
             await connection.end();
         } catch (error) {
-            logger.error("Error dropping database:", error);
+            logger.error("Error dropping database:", { error });
             throw error;
         }
     }

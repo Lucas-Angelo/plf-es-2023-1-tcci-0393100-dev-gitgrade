@@ -40,14 +40,12 @@ class GitHubCommitService {
                     ? linkHeader.includes('rel="next"')
                     : false;
 
-                if (hasNextPage) {
-                    page += 1;
-                }
+                if (hasNextPage) page += 1;
             }
 
             return allCommits.reverse(); // .reverse() To get the oldest commits first (cronological order)
         } catch (error: unknown) {
-            logger.error("Error fetching commits:", error);
+            logger.error("Error fetching commits:", { error });
             throw new Error(
                 "Error fetching commits: " + (error as Error).message
             );

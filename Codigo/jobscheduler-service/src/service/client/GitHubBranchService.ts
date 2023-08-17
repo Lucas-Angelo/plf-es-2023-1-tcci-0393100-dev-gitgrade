@@ -36,14 +36,13 @@ class GitHubBranchService {
                     ? linkHeader.includes('rel="next"')
                     : false;
 
-                if (hasNextPage) {
-                    page += 1;
-                }
+                if (hasNextPage) page += 1;
             }
 
             return allBranches;
         } catch (error: unknown) {
-            logger.error("Error fetching branches:", error);
+            logger.error("Error fetching branches:", { error });
+
             throw new Error(
                 "Error fetching branches: " + (error as Error).message
             );

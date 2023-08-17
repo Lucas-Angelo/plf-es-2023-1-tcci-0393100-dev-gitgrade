@@ -4,6 +4,7 @@ import EnvConfig from "./EnvConfig";
 
 class AppLogger {
     private fileTransport = new transports.File({
+        level: "warn",
         format: format.combine(
             format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
             format.errors({ stack: true }),
@@ -44,7 +45,7 @@ class AppLogger {
     });
 
     public getLogger(): Logger {
-        const logLevel: string = EnvConfig.APP_DEBUG ? "debug" : "error"; // debug, info, warn, error
+        const logLevel: string = EnvConfig.APP_DEBUG ? "debug" : "warn"; // debug, info, warn, error
 
         return createLogger({
             level: logLevel,

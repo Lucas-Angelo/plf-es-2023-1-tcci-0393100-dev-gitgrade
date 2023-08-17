@@ -9,7 +9,7 @@ import { Repository } from "./Repository";
 interface IPullRequestAttributes {
     id?: number;
     repositoryId?: number;
-    authorContributorId?: number;
+    authorContributorId?: number | null;
     githubId?: string | null;
     number?: number;
     title?: string | null;
@@ -24,7 +24,7 @@ interface IPullRequestAttributes {
 class PullRequest extends Model<IPullRequestAttributes> {
     public id!: number;
     public repositoryId!: number;
-    public authorContributorId!: number;
+    public authorContributorId!: number | null;
     public githubId!: string;
     public number!: number;
     public title!: string | null;
@@ -54,7 +54,7 @@ class PullRequest extends Model<IPullRequestAttributes> {
                 authorContributorId: {
                     field: "author_contributor_id",
                     type: DataTypes.BIGINT.UNSIGNED,
-                    allowNull: false,
+                    allowNull: true,
                 },
                 githubId: {
                     field: "github_id",

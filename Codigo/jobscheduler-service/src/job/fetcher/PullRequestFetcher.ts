@@ -1,6 +1,7 @@
 import logger from "../../config/LogConfig";
 import { IContributorAttributes } from "../../model/Contributor";
 import { IPullRequestAttributes } from "../../model/PullRequest";
+import { IRepositoryAttributes } from "../../model/Repository";
 import {
     GitHubPullRequestService,
     PullRequestGitHub,
@@ -41,74 +42,107 @@ class PullRequestFetcher {
     async fetchPullRequestsForRepositories() {
         try {
             logger.info("Starting Pull Request Fetcher...");
+
+            // TODO: Fetch only repositories with automatic sync enabled
             const repositories = await this.repositoryService.findAll();
 
             for (const repository of repositories) {
                 const pullRequests = await this.fetchPullRequestsWithRetry(
                     repository.name!
                 );
-
-                for (const pullRequestData of pullRequests) {
-                    if (
-                        !pullRequestData.id ||
-                        !pullRequestData.number ||
-                        !pullRequestData.user
-                    )
-                        continue;
-
-                    const authorDetails = await this.fetchUserDetailsWithRetry(
-                        pullRequestData.user.login
+                if (pullRequests.length === 0) {
+                    logger.warn(
+                        `No pull requests found for repository "${repository.name}"`
                     );
-                    const authorAttributes: IContributorAttributes =
-                        this.mapContributorAttributes(authorDetails);
-                    const authorContributor =
-                        await this.getOrCreateContributorWithRetry(
-                            authorAttributes
-                        );
-
-                    const pullRequestAttributes: IPullRequestAttributes =
-                        this.mapPullRequestAttributes(
-                            repository.id!,
-                            pullRequestData,
-                            authorContributor.id!
-                        );
-                    const pullRequest =
-                        await this.createOrUpdatePullRequestWithRetry(
-                            pullRequestAttributes
-                        );
-
-                    if (
-                        pullRequestData.assignees &&
-                        pullRequestData.assignees.length > 0
-                    ) {
-                        for (const assigneeData of pullRequestData.assignees) {
-                            if (!assigneeData.id || !assigneeData.login)
-                                continue;
-
-                            const assigneeDetails =
-                                await this.fetchUserDetailsWithRetry(
-                                    assigneeData.login
-                                );
-                            const assigneeAttributes: IContributorAttributes =
-                                this.mapContributorAttributes(assigneeDetails);
-                            const assigneeContributor =
-                                await this.getOrCreateContributorWithRetry(
-                                    assigneeAttributes
-                                );
-
-                            await this.createPullRequestAssigneeAssociationWithRetry(
-                                pullRequest.id!,
-                                assigneeContributor.id!
-                            );
-                        }
-                    }
+                    continue;
                 }
+                await this.processPullRequests(repository, pullRequests);
             }
-
             logger.info("Pull Requests fetched and created successfully!");
         } catch (error) {
-            logger.error("Error fetching or creating pull requests:", error);
+            logger.error("Error fetching or creating pull requests:", {
+                error,
+            });
             throw error;
+        }
+    }
+
+    private async processPullRequests(
+        repository: IRepositoryAttributes,
+        pullRequests: PullRequestGitHub[]
+    ) {
+        for (const pullRequestData of pullRequests) {
+            if (!pullRequestData.id || !pullRequestData.number) {
+                logger.error(
+                    "Pull request data is missing required fields: id, number",
+                    { pullRequestData }
+                );
+                continue;
+            }
+
+            const authorContributorId = await this.handleAuthor(
+                pullRequestData
+            );
+            await this.handlePullRequest(
+                repository,
+                pullRequestData,
+                authorContributorId
+            );
+        }
+    }
+
+    private async handleAuthor(pullRequestData: PullRequestGitHub) {
+        let authorContributorId = null;
+        if (pullRequestData.user && pullRequestData.user.login) {
+            const authorDetails = await this.fetchUserDetailsWithRetry(
+                pullRequestData.user!.login
+            );
+            const authorAttributes =
+                this.mapContributorAttributes(authorDetails);
+            const authorContributor =
+                await this.getOrCreateContributorWithRetry(authorAttributes);
+            authorContributorId = authorContributor.id;
+        }
+        return authorContributorId;
+    }
+
+    private async handlePullRequest(
+        repository: IRepositoryAttributes,
+        pullRequestData: PullRequestGitHub,
+        authorContributorId?: number | null
+    ) {
+        const pullRequestAttributes = this.mapPullRequestAttributes(
+            repository.id!,
+            pullRequestData,
+            authorContributorId
+        );
+
+        const pullRequest = await this.createOrUpdatePullRequestWithRetry(
+            pullRequestAttributes
+        );
+        await this.handleAssignees(pullRequest, pullRequestData);
+    }
+
+    private async handleAssignees(
+        pullRequest: IPullRequestAttributes,
+        pullRequestData: PullRequestGitHub
+    ) {
+        if (pullRequestData.assignees && pullRequestData.assignees.length > 0) {
+            for (const assigneeData of pullRequestData.assignees) {
+                const assigneeDetails = await this.fetchUserDetailsWithRetry(
+                    assigneeData.login
+                );
+                const assigneeAttributes =
+                    this.mapContributorAttributes(assigneeDetails);
+                const assigneeContributor =
+                    await this.getOrCreateContributorWithRetry(
+                        assigneeAttributes
+                    );
+                await this.createPullRequestAssigneeAssociationWithRetry(
+                    pullRequest.id!,
+                    assigneeContributor.id!
+                );
+            }
         }
     }
 
@@ -128,9 +162,8 @@ class PullRequestFetcher {
         const cacheKey = username.toLowerCase();
 
         // Check if userDetails is already in the cache
-        if (this.userDetailsCache[cacheKey]) {
+        if (this.userDetailsCache[cacheKey])
             return this.userDetailsCache[cacheKey];
-        }
 
         // Not in the cache, fetch userDetails
         const userDetails = await this.fetchUtil.retry<UserDetailsGitHub>(
@@ -151,9 +184,8 @@ class PullRequestFetcher {
         const cacheKey = contributorAttributes.githubLogin!.toLowerCase();
 
         // Check if contributor is already in the cache
-        if (this.contributorCache[cacheKey]) {
+        if (this.contributorCache[cacheKey])
             return this.contributorCache[cacheKey];
-        }
 
         // Not in the cache, create or update contributor
         const contributor = await this.fetchUtil.retry<IContributorAttributes>(
@@ -185,7 +217,7 @@ class PullRequestFetcher {
     private mapPullRequestAttributes(
         repositoryId: number,
         pullRequestData: PullRequestGitHub,
-        authorContributorId: number
+        authorContributorId?: number | null
     ): IPullRequestAttributes {
         return {
             repositoryId: repositoryId,

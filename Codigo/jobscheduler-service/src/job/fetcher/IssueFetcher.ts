@@ -1,17 +1,18 @@
 import logger from "../../config/LogConfig";
 import { IContributorAttributes } from "../../model/Contributor";
-import { IIssueAttributes } from "../../model/Issue";
+import { IIssueAttributes } from "../../model/Issue"; // Assuming you have a similar structure for Issues
+import { IRepositoryAttributes } from "../../model/Repository";
 import {
     GitHubIssueService,
-    IssueGitHub,
+    IssueGitHub, // New model
 } from "../../service/client/GitHubIssueService";
 import {
     GitHubUserService,
     UserDetailsGitHub,
 } from "../../service/client/GitHubUserService";
 import { ContributorService } from "../../service/ContributorService";
-import { IssueHasAssigneeContributorService } from "../../service/IssueHasAssigneeContributorService";
-import { IssueService } from "../../service/IssueService";
+import { IssueHasAssigneeContributorService } from "../../service/IssueHasAssigneeContributorService"; // Updated service name
+import { IssueService } from "../../service/IssueService"; // New service
 import { RepositoryService } from "../../service/RepositoryService";
 import FetchUtil from "../../util/FetchUtil";
 
@@ -23,8 +24,9 @@ class IssueFetcher {
     private contributorService: ContributorService;
     private issueHasAssigneeContributorService: IssueHasAssigneeContributorService;
     private fetchUtil: FetchUtil;
-    private contributorCache: { [key: string]: IContributorAttributes } = {};
+
     private userDetailsCache: { [key: string]: UserDetailsGitHub } = {};
+    private contributorCache: { [key: string]: IContributorAttributes } = {};
 
     constructor() {
         this.gitHubIssueService = new GitHubIssueService();
@@ -40,21 +42,97 @@ class IssueFetcher {
     async fetchIssuesForRepositories() {
         try {
             logger.info("Starting Issue Fetcher...");
+
+            // TODO: Fetch only repositories with automatic sync enabled
             const repositories = await this.repositoryService.findAll();
 
             for (const repository of repositories) {
                 const issues = await this.fetchIssuesWithRetry(
                     repository.name!
                 );
-                for (const issueData of issues) {
-                    await this.fetchAndCreateIssue(repository.id!, issueData);
+                if (issues.length === 0) {
+                    logger.warn(
+                        `No issues found for repository "${repository.name}"`
+                    );
+                    continue;
                 }
+                await this.processIssues(repository, issues);
             }
-
             logger.info("Issues fetched and created successfully!");
         } catch (error) {
-            logger.error("Error fetching or creating issues:", error);
+            logger.error("Error fetching or creating issues:", { error });
             throw error;
+        }
+    }
+
+    private async processIssues(
+        repository: IRepositoryAttributes,
+        issues: IssueGitHub[]
+    ) {
+        for (const issueData of issues) {
+            if (!issueData.id || !issueData.number) {
+                logger.error(
+                    "Issue data is missing required fields: id, number",
+                    { issueData }
+                );
+                continue;
+            }
+
+            const authorContributorId = await this.handleAuthor(issueData);
+            await this.handleIssue(repository, issueData, authorContributorId);
+        }
+    }
+
+    private async handleAuthor(issueData: IssueGitHub) {
+        let authorContributorId = null;
+        if (issueData.user && issueData.user.login) {
+            const authorDetails = await this.fetchUserDetailsWithRetry(
+                issueData.user!.login
+            );
+            const authorAttributes =
+                this.mapContributorAttributes(authorDetails);
+            const authorContributor =
+                await this.getOrCreateContributorWithRetry(authorAttributes);
+            authorContributorId = authorContributor.id;
+        }
+        return authorContributorId;
+    }
+
+    private async handleIssue(
+        repository: IRepositoryAttributes,
+        issueData: IssueGitHub,
+        authorContributorId?: number | null
+    ) {
+        const issueAttributes = this.mapIssueAttributes(
+            repository.id!,
+            issueData,
+            authorContributorId
+        );
+
+        const issue = await this.createOrUpdateIssueWithRetry(issueAttributes);
+        await this.handleAssignees(issue, issueData);
+    }
+
+    private async handleAssignees(
+        issue: IIssueAttributes,
+        issueData: IssueGitHub
+    ) {
+        if (issueData.assignees && issueData.assignees.length > 0) {
+            for (const assigneeData of issueData.assignees) {
+                const assigneeDetails = await this.fetchUserDetailsWithRetry(
+                    assigneeData.login
+                );
+                const assigneeAttributes =
+                    this.mapContributorAttributes(assigneeDetails);
+                const assigneeContributor =
+                    await this.getOrCreateContributorWithRetry(
+                        assigneeAttributes
+                    );
+                await this.createIssueAssigneeAssociationWithRetry(
+                    issue.id!,
+                    assigneeContributor.id!
+                );
+            }
         }
     }
 
@@ -165,7 +243,7 @@ class IssueFetcher {
     private mapIssueAttributes(
         repositoryId: number,
         issueData: IssueGitHub,
-        authorContributorId: number
+        authorContributorId?: number | null
     ): IIssueAttributes {
         return {
             repositoryId: repositoryId,

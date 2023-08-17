@@ -49,7 +49,7 @@ class JobExecutor {
                 }))`
             );
         } catch (error) {
-            logger.error("Error executing fetchers:", error);
+            logger.error("Error executing fetchers:", { error });
             throw error;
         }
     }
