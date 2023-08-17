@@ -27,6 +27,8 @@ class RepositoryService {
 
     async create(data: IRepositoryAttributes): Promise<Repository> {
         try {
+            data.automaticSynchronization = true;
+            data.synchronizing = true;
             this.validateNotNullAndEmptyFields(data);
             logger.info("Creating repository:", { data });
             const repository = await Repository.create(data);
