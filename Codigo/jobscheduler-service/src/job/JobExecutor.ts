@@ -45,8 +45,8 @@ class JobExecutor {
             await this.issueFetcher.fetchIssuesForRepositories();
             await this.pullRequestFetcher.fetchPullRequestsForRepositories();
             await this.branchFetcher.fetchBranchesForRepositories();
-            // await this.commitFetcher.fetchCommitsForRepositories();
-            // await this.fileFetcher.fetchFilesForRepositories();
+            await this.commitFetcher.fetchCommitsForRepositories();
+            await this.fileFetcher.fetchFilesForRepositories();
 
             await this.repositoryService.setAllRepositoriesToSynchronizingFalse(
                 repositoriesSyncing
