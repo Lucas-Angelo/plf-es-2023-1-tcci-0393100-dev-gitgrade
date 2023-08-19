@@ -41,7 +41,7 @@ class GitHubIssueService {
 
             return allIssues;
         } catch (error: unknown) {
-            logger.error("Error fetching issues:", error);
+            logger.error("Error fetching issues:", { error });
             throw new Error(
                 "Error fetching issues: " + (error as Error).message
             );

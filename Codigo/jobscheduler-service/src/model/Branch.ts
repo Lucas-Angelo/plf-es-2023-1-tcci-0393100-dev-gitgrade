@@ -1,19 +1,21 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
-
 import EnvConfig from "../config/EnvConfig";
-
 import { Repository } from "./Repository";
 
 interface IBranchAttributes {
     id?: number;
     repositoryId?: number;
     name?: string;
+    commitAutomaticSynchronization?: boolean;
+    fileAutomaticSynchronization?: boolean;
 }
 
 class Branch extends Model<IBranchAttributes> {
     public id!: number;
     public repositoryId!: number;
     public name!: string;
+    public commitAutomaticSynchronization!: boolean;
+    public fileAutomaticSynchronization!: boolean;
 
     static initModel(sequelize: Sequelize): void {
         this.init(
@@ -39,23 +41,33 @@ class Branch extends Model<IBranchAttributes> {
                         notEmpty: true,
                     },
                 },
+                commitAutomaticSynchronization: {
+                    field: "commit_automatic_synchronization",
+                    type: DataTypes.BOOLEAN,
+                    allowNull: false,
+                    defaultValue: false,
+                },
+                fileAutomaticSynchronization: {
+                    field: "file_automatic_synchronization",
+                    type: DataTypes.BOOLEAN,
+                    allowNull: false,
+                    defaultValue: false,
+                },
             },
             {
                 tableName: "branch",
                 charset: EnvConfig.DB_CHARSET,
                 collate: EnvConfig.DB_COLLATE,
                 sequelize,
+                indexes: [
+                    {
+                        name: "branch_repository_id_name_UNIQUE",
+                        unique: true,
+                        fields: ["repository_id", "name"],
+                    },
+                ],
             }
         );
-        {
-            indexes: [
-                {
-                    name: "branch_repository_id_name_UNIQUE",
-                    unique: true,
-                    fields: ["repository_id", "name"],
-                },
-            ];
-        }
     }
 
     static associate(models: { Repository: typeof Repository }): void {

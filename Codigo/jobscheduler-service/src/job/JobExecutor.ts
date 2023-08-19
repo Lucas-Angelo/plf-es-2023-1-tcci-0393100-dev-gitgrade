@@ -1,4 +1,5 @@
 import logger from "../config/LogConfig";
+import { RepositoryService } from "../service/RepositoryService";
 import { BranchFetcher } from "./fetcher/BranchFetcher";
 import { CommitFetcher } from "./fetcher/CommitFetcher";
 import { ContributorFetcher } from "./fetcher/ContributorFetcher";
@@ -8,6 +9,8 @@ import { PullRequestFetcher } from "./fetcher/PullRequestFetcher";
 import { RepositoryFetcher } from "./fetcher/RepositoryFetcher";
 
 class JobExecutor {
+    private repositoryService: RepositoryService;
+
     private repositoryFetcher: RepositoryFetcher;
     private contributorFetcher: ContributorFetcher;
     private issueFetcher: IssueFetcher;
@@ -17,6 +20,8 @@ class JobExecutor {
     private fileFetcher: FileFetcher;
 
     constructor() {
+        this.repositoryService = new RepositoryService();
+
         this.repositoryFetcher = new RepositoryFetcher();
         this.contributorFetcher = new ContributorFetcher();
         this.issueFetcher = new IssueFetcher();
@@ -32,6 +37,9 @@ class JobExecutor {
 
             const startTime = new Date();
 
+            const repositoriesSyncing =
+                await this.repositoryService.setAllAutomaticSynchronizationEnableRepositoriesToSynchronizingTrue();
+
             await this.repositoryFetcher.createOrUpdateRepositories();
             await this.contributorFetcher.fetchContributorsForOrgAndRepositories();
             await this.issueFetcher.fetchIssuesForRepositories();
@@ -39,6 +47,10 @@ class JobExecutor {
             await this.branchFetcher.fetchBranchesForRepositories();
             await this.commitFetcher.fetchCommitsForRepositories();
             await this.fileFetcher.fetchFilesForRepositories();
+
+            await this.repositoryService.setAllRepositoriesToSynchronizingFalse(
+                repositoriesSyncing
+            );
 
             const endTime = new Date();
             const executionTime = endTime.getTime() - startTime.getTime();
@@ -49,7 +61,7 @@ class JobExecutor {
                 }))`
             );
         } catch (error) {
-            logger.error("Error executing fetchers:", error);
+            logger.error("Error executing fetchers:", { error });
             throw error;
         }
     }

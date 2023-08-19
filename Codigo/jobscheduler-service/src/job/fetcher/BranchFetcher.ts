@@ -24,7 +24,10 @@ class BranchFetcher {
     async fetchBranchesForRepositories() {
         try {
             logger.info("Starting Branch Fetcher...");
-            const repositories = await this.repositoryService.findAll();
+
+            // TODO: Fetch only repositories with automatic sync enabled
+            const repositories =
+                await this.repositoryService.findAllWithAutomaticSynchronizationEnable();
 
             for (const repository of repositories) {
                 const branches = await this.fetchBranchesWithRetry(
@@ -32,17 +35,27 @@ class BranchFetcher {
                 );
 
                 for (const branchData of branches) {
-                    if (!branchData.name || !branchData.commit) continue;
+                    if (!branchData.name) {
+                        logger.error(
+                            "Error on fetching branch, branch without name:",
+                            { branchData }
+                        );
+                        continue;
+                    }
 
                     const branchAttributes: IBranchAttributes =
-                        this.mapBranchAttributes(repository.id!, branchData);
+                        this.mapBranchAttributes(
+                            repository.id!,
+                            repository.defaultBranch!,
+                            branchData
+                        );
                     await this.createOrUpdateBranchWithRetry(branchAttributes);
                 }
             }
 
             logger.info("Branches fetched and created successfully!");
         } catch (error) {
-            logger.error("Error fetching or creating branches:", error);
+            logger.error("Error fetching or creating branches:", { error });
             throw error;
         }
     }
@@ -59,11 +72,16 @@ class BranchFetcher {
 
     private mapBranchAttributes(
         repositoryId: number,
+        defaultBranch: string,
         branchData: BranchGitHub
     ): IBranchAttributes {
         return {
             repositoryId: repositoryId,
             name: branchData.name,
+            commitAutomaticSynchronization:
+                branchData.name === defaultBranch ? true : undefined,
+            fileAutomaticSynchronization:
+                branchData.name === defaultBranch ? true : undefined,
         };
     }
 

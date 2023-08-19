@@ -1,3 +1,4 @@
+import EnvConfig from "../../config/EnvConfig";
 import logger from "../../config/LogConfig";
 import { IContributorAttributes } from "../../model/Contributor";
 import { Repository } from "../../model/Repository";
@@ -22,6 +23,7 @@ class ContributorFetcher {
     private repositoryHasContributorService: RepositoryHasContributorService;
     private repositoryService: RepositoryService;
     private fetchUtil: FetchUtil;
+    private organizationMembersCache: MemberGitHub[] = [];
 
     constructor() {
         this.gitHubContributorService = new GitHubContributorService();
@@ -31,30 +33,37 @@ class ContributorFetcher {
         this.repositoryHasContributorService =
             new RepositoryHasContributorService();
         this.fetchUtil = new FetchUtil();
+
+        this.organizationMembersCache = [];
     }
 
     async fetchContributorsForOrgAndRepositories() {
         try {
             logger.info("Starting Contributor Fetcher...");
 
-            // Fetch and create contributors for the organization
-            const organizationMembers =
-                await this.fetchAndCreateContributorsForOrganization();
+            this.organizationMembersCache.push(
+                ...(await this.fetchAndCreateContributorsForOrganization())
+            );
 
-            // Fetch and create contributors for each repository
+            // TODO: Fetch only repositories with automatic sync enabled
             const repositories: Repository[] =
-                await this.repositoryService.findAll();
+                await this.repositoryService.findAllWithAutomaticSynchronizationEnable();
 
-            for (const repository of repositories) {
-                await this.fetchAndCreateContributorsForRepository(
-                    repository,
-                    organizationMembers
-                );
-            }
+            for (const repository of repositories)
+                try {
+                    await this.fetchAndCreateContributorsForEachRepository(
+                        repository
+                    );
+                } catch (error) {
+                    logger.error(
+                        "Error fetching contributors for repository:",
+                        { error }
+                    );
+                }
 
             logger.info("Contributors fetched and created successfully!");
         } catch (error) {
-            logger.error("Error fetching or creating contributors:", error);
+            logger.error("Error fetching or creating contributors:", { error });
             throw error;
         }
     }
@@ -68,15 +77,36 @@ class ContributorFetcher {
             );
             const organizationMembers: MemberGitHub[] =
                 await this.gitHubContributorService.getAllOrganizationMembers();
+            if (organizationMembers.length === 0)
+                logger.warn("No members found for organization", {
+                    organizationName:
+                        EnvConfig.GITHUB_ORGANIZATION_NAME ||
+                        "organization not defined",
+                });
 
             for (const memberData of organizationMembers) {
-                if (!memberData.login) continue;
+                if (!memberData.login) {
+                    logger.error("Error fetching member data, without login", {
+                        memberData,
+                    });
+                    continue;
+                }
 
                 const userDetails = await this.fetchUserDetailsWithRetry(
                     memberData.login
                 );
-                const contributorAttributes: IContributorAttributes =
-                    this.mapContributorAttributes(userDetails);
+
+                let contributorAttributes: IContributorAttributes;
+                try {
+                    contributorAttributes =
+                        this.mapContributorAttributes(userDetails);
+                } catch (error) {
+                    logger.error("Error mapping contributor attributes:", {
+                        userDetails,
+                        error,
+                    });
+                    continue;
+                }
 
                 await this.createOrUpdateContributorWithRetry(
                     contributorAttributes
@@ -90,25 +120,33 @@ class ContributorFetcher {
         } catch (error) {
             logger.error(
                 "Error fetching or creating contributors for the organization:",
-                error
+                { error }
             );
             throw error;
         }
     }
 
-    private async fetchAndCreateContributorsForRepository(
-        repository: Repository,
-        organizationMembers: MemberGitHub[]
+    private async fetchAndCreateContributorsForEachRepository(
+        repository: Repository
     ) {
         const contributors = await this.fetchContributorsWithRetry(
             repository.name!
         );
+        if (contributors.length === 0)
+            logger.warn(
+                `No contributors found for repository "${repository.name}"`
+            );
 
         for (const contributorData of contributors) {
-            if (!contributorData.login) continue;
+            if (!contributorData.login) {
+                logger.error("Error fetching contributor data, without login", {
+                    contributorData,
+                });
+                continue;
+            }
 
             // Check if contributor is already added as a member of the organization
-            const isOrganizationMember = organizationMembers.some(
+            const isOrganizationMember = this.organizationMembersCache.some(
                 (member) => member.login === contributorData.login
             );
 
@@ -117,8 +155,17 @@ class ContributorFetcher {
                 const userDetails = await this.fetchUserDetailsWithRetry(
                     contributorData.login
                 );
-                const contributorAttributes: IContributorAttributes =
-                    this.mapContributorAttributes(userDetails);
+                let contributorAttributes: IContributorAttributes;
+                try {
+                    contributorAttributes =
+                        this.mapContributorAttributes(userDetails);
+                } catch (error) {
+                    logger.error("Error mapping contributor attributes:", {
+                        userDetails,
+                        error,
+                    });
+                    continue;
+                }
 
                 await this.createOrUpdateContributorWithRetry(
                     contributorAttributes

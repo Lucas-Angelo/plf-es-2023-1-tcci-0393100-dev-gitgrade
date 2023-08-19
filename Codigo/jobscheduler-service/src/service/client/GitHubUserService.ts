@@ -17,7 +17,7 @@ class GitHubUserService {
 
             return userDetails.data;
         } catch (error: unknown) {
-            logger.error("Error fetching user by username:", error);
+            logger.error("Error fetching user by username:", { error });
             throw new Error(
                 "Error fetching user by username: " + (error as Error).message
             );

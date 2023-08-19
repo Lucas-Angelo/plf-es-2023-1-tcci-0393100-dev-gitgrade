@@ -7,18 +7,18 @@ const organizationName =
 
 import { Endpoints } from "@octokit/types";
 
-type CommitFilesResponse =
+type GitHubFile =
     Endpoints["GET /repos/{owner}/{repo}/commits/{ref}"]["response"]["data"]["files"];
 
 class GitHubFileService {
     async getAllFilesFromCommit(
         repo: string,
         ref: string
-    ): Promise<CommitFilesResponse> {
+    ): Promise<GitHubFile> {
         try {
             let page = 1;
             let hasNextPage = true;
-            const allFiles: CommitFilesResponse = [];
+            const allFiles: GitHubFile = [];
 
             while (hasNextPage) {
                 const response = await GitHubApi.request(
@@ -45,7 +45,7 @@ class GitHubFileService {
 
             return allFiles;
         } catch (error: unknown) {
-            logger.error("Error fetching files from commit:", error);
+            logger.error("Error fetching files from commit:", { error });
             throw new Error(
                 "Error fetching files from commit: " + (error as Error).message
             );
@@ -53,4 +53,4 @@ class GitHubFileService {
     }
 }
 
-export { CommitFilesResponse as CommitFile, GitHubFileService };
+export { GitHubFile, GitHubFileService };

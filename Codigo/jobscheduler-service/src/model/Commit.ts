@@ -9,7 +9,7 @@ import { File } from "./File";
 interface ICommitAttributes {
     id?: number;
     branchId?: number;
-    contributorId?: number;
+    contributorId?: number | null;
     sha?: string;
     message?: string | null;
     committedDate?: Date;
@@ -18,7 +18,7 @@ interface ICommitAttributes {
 class Commit extends Model<ICommitAttributes> {
     public id!: number;
     public branchId!: number;
-    public contributorId!: number;
+    public contributorId!: number | null;
     public sha!: string;
     public message!: string | null;
     public committedDate!: Date;
@@ -42,7 +42,7 @@ class Commit extends Model<ICommitAttributes> {
                 contributorId: {
                     field: "contributor_id",
                     type: DataTypes.BIGINT.UNSIGNED,
-                    allowNull: false,
+                    allowNull: true,
                 },
                 sha: {
                     field: "sha",
@@ -72,17 +72,15 @@ class Commit extends Model<ICommitAttributes> {
                 charset: EnvConfig.DB_CHARSET,
                 collate: EnvConfig.DB_COLLATE,
                 sequelize,
+                indexes: [
+                    {
+                        name: "sha_branch_id_UNIQUE",
+                        unique: true,
+                        fields: ["branch_id", "sha"],
+                    },
+                ],
             }
         );
-        {
-            indexes: [
-                {
-                    name: "sha_branch_id_UNIQUE",
-                    unique: true,
-                    fields: ["branch_id", "sha"],
-                },
-            ];
-        }
     }
 
     static associate(models: {

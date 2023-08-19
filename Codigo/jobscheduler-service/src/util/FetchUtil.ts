@@ -22,7 +22,7 @@ class FetchUtil {
                     `[${errorMessage}] (Attempt ${retryAttempt + 1} of ${
                         this.maxRetryAttempts
                     }):`,
-                    error
+                    { error }
                 );
                 await TimeUtil.sleep(this.retryDelayMilliseconds);
                 retryAttempt++;

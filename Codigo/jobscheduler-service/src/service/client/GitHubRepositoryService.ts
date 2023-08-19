@@ -24,6 +24,8 @@ class GitHubRepositoryService {
                         org: organizationName,
                         page,
                         per_page: 100,
+                        type: "all",
+                        state: "all",
                     }
                 );
 
@@ -35,14 +37,12 @@ class GitHubRepositoryService {
                     ? linkHeader.includes('rel="next"')
                     : false;
 
-                if (hasNextPage) {
-                    page += 1;
-                }
+                if (hasNextPage) page += 1;
             }
 
             return allRepositories;
         } catch (error: unknown) {
-            logger.error("Error fetching repositories:", error);
+            logger.error("Error fetching repositories:", { error });
             throw new Error(
                 "Error fetching repositories: " + (error as Error).message
             );

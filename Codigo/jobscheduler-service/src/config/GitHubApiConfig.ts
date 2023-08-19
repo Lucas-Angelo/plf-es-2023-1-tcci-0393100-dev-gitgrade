@@ -71,14 +71,16 @@ class GitHubApiConfig {
                 );
                 await this.sleep(sleepTime);
             } else {
-                logger.error("Error while checking rate limit:", error);
+                logger.error("Error while checking rate limit:", { error });
                 throw error;
             }
         }
     }
 
     public async request(endpoint: string, options?: RequestParameters) {
-        logger.info(`Requesting endpoint: ${endpoint} with options:`, options);
+        logger.info(`Requesting endpoint: ${endpoint} with options:`, {
+            options,
+        });
         await this.checkRateLimitAndSleep();
         return this.octokit.request(endpoint, options);
     }

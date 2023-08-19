@@ -46,6 +46,7 @@ class EnvironmentConfig {
             DB_CHARSET: process.env.DB_CHARSET,
             DB_COLLATE: process.env.DB_COLLATE,
             DB_TIMEZONE: process.env.DB_TIMEZONE,
+            SYNC_TIME: process.env.SYNC_TIME,
             GITHUB_PERSONAL_ACCESS_TOKEN:
                 process.env.GITHUB_PERSONAL_ACCESS_TOKEN,
             GITHUB_ORGANIZATION_NAME: process.env.GITHUB_ORGANIZATION_NAME,

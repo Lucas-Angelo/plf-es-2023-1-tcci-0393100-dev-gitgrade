@@ -43,7 +43,7 @@ class GitHubPullRequestService {
 
             return allPullRequests;
         } catch (error: unknown) {
-            logger.error("Error fetching pull requests:", error);
+            logger.error("Error fetching pull requests:", { error });
             throw new Error(
                 "Error fetching pull requests: " + (error as Error).message
             );
