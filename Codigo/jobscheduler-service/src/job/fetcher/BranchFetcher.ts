@@ -44,7 +44,11 @@ class BranchFetcher {
                     }
 
                     const branchAttributes: IBranchAttributes =
-                        this.mapBranchAttributes(repository.id!, branchData);
+                        this.mapBranchAttributes(
+                            repository.id!,
+                            repository.defaultBranch!,
+                            branchData
+                        );
                     await this.createOrUpdateBranchWithRetry(branchAttributes);
                 }
             }
@@ -68,11 +72,16 @@ class BranchFetcher {
 
     private mapBranchAttributes(
         repositoryId: number,
+        defaultBranch: string,
         branchData: BranchGitHub
     ): IBranchAttributes {
         return {
             repositoryId: repositoryId,
             name: branchData.name,
+            commitAutomaticSynchronization:
+                branchData.name === defaultBranch ? true : undefined,
+            fileAutomaticSynchronization:
+                branchData.name === defaultBranch ? true : undefined,
         };
     }
 

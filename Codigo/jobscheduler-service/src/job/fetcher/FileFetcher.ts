@@ -28,10 +28,10 @@ class FileFetcher {
             await this.repositoryService.findAllWithAutomaticSynchronizationEnable();
 
         for (const repository of repositories) {
-            const branches = await this.branchService.findAllByField(
-                "repositoryId",
-                repository.id!
-            );
+            const branches = await this.branchService.findAllByFields({
+                repositoryId: repository.id,
+                fileAutomaticSynchronization: true,
+            });
 
             for (const branch of branches) {
                 const commits = await this.commitService.findAllByField(

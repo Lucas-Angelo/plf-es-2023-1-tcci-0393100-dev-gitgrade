@@ -72,17 +72,15 @@ class Commit extends Model<ICommitAttributes> {
                 charset: EnvConfig.DB_CHARSET,
                 collate: EnvConfig.DB_COLLATE,
                 sequelize,
+                indexes: [
+                    {
+                        name: "sha_branch_id_UNIQUE",
+                        unique: true,
+                        fields: ["branch_id", "sha"],
+                    },
+                ],
             }
         );
-        {
-            indexes: [
-                {
-                    name: "sha_branch_id_UNIQUE",
-                    unique: true,
-                    fields: ["branch_id", "sha"],
-                },
-            ];
-        }
     }
 
     static associate(models: {

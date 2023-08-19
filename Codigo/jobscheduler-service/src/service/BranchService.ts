@@ -105,22 +105,19 @@ class BranchService {
         }
     }
 
-    async findAllByField(
-        field: keyof IBranchAttributes,
-        value: IBranchAttributes[keyof IBranchAttributes]
+    async findAllByFields(
+        fields: Partial<IBranchAttributes>
     ): Promise<Branch[]> {
         try {
-            logger.info(`Searching for branches by ${String(field)} ${value}`);
+            logger.info(`Searching for branches by fields:`, { fields });
             const branches = await Branch.findAll({
-                where: { [field]: value },
+                where: { ...fields },
             });
-            logger.info(`Branches found by ${String(field)} ${value}:`, {
-                branches,
-            });
+            logger.info(`Branches found by fields:`, { branches });
             return branches;
         } catch (error) {
             logger.error(
-                `Error finding branches by ${String(field)} ${value}:`,
+                `Error finding branches by fields ${JSON.stringify(fields)}:`,
                 { error }
             );
             throw error;
