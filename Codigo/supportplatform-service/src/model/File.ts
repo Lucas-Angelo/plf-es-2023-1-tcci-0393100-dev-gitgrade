@@ -1,7 +1,8 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 
+import EnvConfig from "../config/EnvConfig";
+
 import { Commit } from "./Commit";
-import { DatabaseConfig } from "../types/DatabaseConfig";
 
 interface IFileAttributes {
     id?: number;
@@ -20,7 +21,7 @@ class File extends Model<IFileAttributes> {
     public additions!: number;
     public deletions!: number;
 
-    static initModel(sequelize: Sequelize, databaseConfig: DatabaseConfig): void {
+    static initModel(sequelize: Sequelize): void {
         this.init(
             {
                 id: {
@@ -64,7 +65,8 @@ class File extends Model<IFileAttributes> {
             },
             {
                 tableName: "file",
-                ...databaseConfig,
+                charset: EnvConfig.DB_CHARSET,
+                collate: EnvConfig.DB_COLLATE,
                 sequelize,
             }
         );

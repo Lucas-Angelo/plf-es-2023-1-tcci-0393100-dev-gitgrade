@@ -45,7 +45,7 @@ class EnvironmentConfig {
             DB_DIALECT: process.env.DB_DIALECT,
             DB_CHARSET: process.env.DB_CHARSET,
             DB_COLLATE: process.env.DB_COLLATE,
-            DB_TIMEZONE: process.env.DB_TIMEZONE
+            DB_TIMEZONE: process.env.DB_TIMEZONE,
         };
     }
 

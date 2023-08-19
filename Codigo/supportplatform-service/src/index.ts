@@ -1,13 +1,14 @@
-import express from 'express';
-var cors = require('cors')
-import { RegisterRoutes } from './swagger/routes';
+import express from "express";
+import cors from "cors";
+import { RegisterRoutes } from "./swagger/routes";
 
 import swaggerUi from "swagger-ui-express";
-import Database from './database';
+import Database from "./database";
+import AppError from "./error/AppError";
 
 const app = express();
 
-app.use(cors())
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -25,6 +26,33 @@ app.use(
 );
 
 RegisterRoutes(app);
+
+app.use([
+    (err, _request, response, _) => {
+        if (err instanceof AppError) {
+            console.log(err);
+            return response.status(err.statusCode).json({
+                message: err.message,
+                error: err.error ?? err,
+            });
+        }
+
+        // Caso seja outro erro
+        if (process.env.APP_DEBUG) {
+            console.log(err);
+            return response.status(500).json({
+                error: err.error,
+                message: err.message,
+                stack: err.stack,
+            });
+        } else {
+            return response.status(500).json({
+                message: `Erro interno no servidor!`,
+                error: err,
+            });
+        }
+    },
+]);
 
 const database = new Database();
 database.connect().catch(database.disconnect);

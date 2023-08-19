@@ -1,7 +1,9 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 
+import EnvConfig from "../config/EnvConfig";
+
 import { Repository } from "./Repository";
-import { DatabaseConfig } from "../types/DatabaseConfig";
+import { Commit } from "./Commit";
 
 interface IBranchAttributes {
     id?: number;
@@ -14,7 +16,7 @@ class Branch extends Model<IBranchAttributes> {
     public repositoryId!: number;
     public name!: string;
 
-    static initModel(sequelize: Sequelize, databaseConfig: DatabaseConfig): void {
+    static initModel(sequelize: Sequelize): void {
         this.init(
             {
                 id: {
@@ -41,25 +43,31 @@ class Branch extends Model<IBranchAttributes> {
             },
             {
                 tableName: "branch",
-                ...databaseConfig,
+                charset: EnvConfig.DB_CHARSET,
+                collate: EnvConfig.DB_COLLATE,
                 sequelize,
+                indexes: [
+                    {
+                        name: "branch_repository_id_name_UNIQUE",
+                        unique: true,
+                        fields: ["repository_id", "name"],
+                    },
+                ],
             }
-        )
-        {
-            indexes: [
-                {
-                    name: "branch_repository_id_name_UNIQUE",
-                    unique: true,
-                    fields: ["repository_id", "name"],
-                },
-            ];
-        }
+        );
     }
 
-    static associate(models: { Repository: typeof Repository }): void {
+    static associate(models: {
+        Repository: typeof Repository;
+        Commit: typeof Commit;
+    }): void {
         this.belongsTo(models.Repository, {
-            foreignKey: "repositoryId",
+            foreignKey: "repository_id",
             as: "repository",
+        });
+        this.hasMany(models.Commit, {
+            foreignKey: "branch_id",
+            as: "commits",
         });
     }
 }

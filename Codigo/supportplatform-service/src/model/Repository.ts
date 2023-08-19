@@ -1,5 +1,6 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
-import { DatabaseConfig } from "../types/DatabaseConfig";
+
+import EnvConfig from "../config/EnvConfig";
 
 interface IRepositoryAttributes {
     id?: number;
@@ -40,7 +41,7 @@ class Repository extends Model<IRepositoryAttributes> {
     public synchronizing!: boolean;
     public lastSyncAt!: Date | null;
 
-    public static initModel(sequelize: Sequelize, databaseConfig: DatabaseConfig): void {
+    public static initModel(sequelize: Sequelize): void {
         this.init(
             {
                 id: {
@@ -152,7 +153,8 @@ class Repository extends Model<IRepositoryAttributes> {
             },
             {
                 tableName: "repository",
-                ...databaseConfig,
+                charset: EnvConfig.DB_CHARSET,
+                collate: EnvConfig.DB_COLLATE,
                 timestamps: true, // Enable default timestamps (createdAt and updatedAt)
                 createdAt: false, // Disable createdAt field if not needed
                 updatedAt: "lastSyncAt", // Use lastSyncAt as the updatedAt field

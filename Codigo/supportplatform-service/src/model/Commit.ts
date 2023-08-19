@@ -1,9 +1,10 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 
+import EnvConfig from "../config/EnvConfig";
+
 import { Branch } from "./Branch";
 import { Contributor } from "./Contributor";
 import { File } from "./File";
-import { DatabaseConfig } from "../types/DatabaseConfig";
 
 interface ICommitAttributes {
     id?: number;
@@ -22,7 +23,7 @@ class Commit extends Model<ICommitAttributes> {
     public message!: string | null;
     public committedDate!: Date;
 
-    static initModel(sequelize: Sequelize, databaseConfig: DatabaseConfig): void {
+    static initModel(sequelize: Sequelize): void {
         this.init(
             {
                 id: {
@@ -68,19 +69,18 @@ class Commit extends Model<ICommitAttributes> {
             },
             {
                 tableName: "commit",
-                ...databaseConfig,
+                charset: EnvConfig.DB_CHARSET,
+                collate: EnvConfig.DB_COLLATE,
                 sequelize,
+                indexes: [
+                    {
+                        name: "sha_branch_id_UNIQUE",
+                        unique: true,
+                        fields: ["branch_id", "sha"],
+                    },
+                ],
             }
         );
-        {
-            indexes: [
-                {
-                    name: "sha_branch_id_UNIQUE",
-                    unique: true,
-                    fields: ["branch_id", "sha"],
-                },
-            ];
-        }
     }
 
     static associate(models: {

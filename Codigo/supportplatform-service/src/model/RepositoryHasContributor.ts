@@ -1,14 +1,15 @@
 import { Model, DataTypes, Sequelize } from "sequelize";
 
+import EnvConfig from "../config/EnvConfig";
+
 import { Contributor } from "./Contributor";
 import { Repository } from "./Repository";
-import { DatabaseConfig } from "../types/DatabaseConfig";
 
 class RepositoryHasContributor extends Model {
     public repositoryId!: number;
     public contributorId!: number;
 
-    static initModel(sequelize: Sequelize, databaseConfig: DatabaseConfig): void {
+    static initModel(sequelize: Sequelize): void {
         this.init(
             {
                 repositoryId: {
@@ -24,7 +25,8 @@ class RepositoryHasContributor extends Model {
             },
             {
                 tableName: "repository_has_contributor",
-                ...databaseConfig,
+                charset: EnvConfig.DB_CHARSET,
+                collate: EnvConfig.DB_COLLATE,
                 sequelize,
             }
         );

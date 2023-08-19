@@ -1,7 +1,9 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 
+import EnvConfig from "../config/EnvConfig";
+
 import { Repository } from "./Repository";
-import { DatabaseConfig } from "../types/DatabaseConfig";
+import { Commit } from "./Commit";
 
 interface IContributorAttributes {
     id?: number;
@@ -20,7 +22,7 @@ class Contributor extends Model<IContributorAttributes> {
     public githubName!: string | null;
     public githubAvatarUrl!: string | null;
 
-    static initModel(sequelize: Sequelize, databaseConfig: DatabaseConfig): void {
+    static initModel(sequelize: Sequelize): void {
         this.init(
             {
                 id: {
@@ -68,17 +70,25 @@ class Contributor extends Model<IContributorAttributes> {
             },
             {
                 tableName: "contributor",
-                ...databaseConfig,
+                charset: EnvConfig.DB_CHARSET,
+                collate: EnvConfig.DB_COLLATE,
                 sequelize,
             }
         );
     }
 
-    static associate(models: { Repository: typeof Repository }): void {
+    static associate(models: {
+        Repository: typeof Repository;
+        Commit: typeof Commit;
+    }): void {
         this.belongsToMany(models.Repository, {
-            foreignKey: "contributorId",
+            foreignKey: "contributor_id",
             as: "repositories",
             through: "repository_has_contributor",
+        });
+        this.hasMany(models.Commit, {
+            foreignKey: "contributor_id",
+            as: "commits",
         });
     }
 }

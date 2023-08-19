@@ -1,5 +1,6 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
-import { DatabaseConfig } from "../types/DatabaseConfig";
+
+import EnvConfig from "../config/EnvConfig";
 
 interface IUserAttributes {
     id?: number;
@@ -20,7 +21,7 @@ class User extends Model<IUserAttributes> {
     public githubName!: string | null;
     public githubAvatarUrl!: string | null;
 
-    static initModel(sequelize: Sequelize, databaseConfig: DatabaseConfig): void {
+    static initModel(sequelize: Sequelize): void {
         this.init(
             {
                 id: {
@@ -79,7 +80,8 @@ class User extends Model<IUserAttributes> {
             },
             {
                 tableName: "user",
-                ...databaseConfig,
+                charset: EnvConfig.DB_CHARSET,
+                collate: EnvConfig.DB_COLLATE,
                 sequelize,
             }
         );

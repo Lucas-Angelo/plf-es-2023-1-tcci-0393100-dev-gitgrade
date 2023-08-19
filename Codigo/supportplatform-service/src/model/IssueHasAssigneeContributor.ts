@@ -1,14 +1,15 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 
+import EnvConfig from "../config/EnvConfig";
+
 import { Contributor } from "./Contributor";
 import { Issue } from "./Issue";
-import { DatabaseConfig } from "../types/DatabaseConfig";
 
 class IssueHasAssigneeContributor extends Model {
     public issueId!: number;
     public assigneeContributorId!: number;
 
-    static initModel(sequelize: Sequelize, databaseConfig: DatabaseConfig): void {
+    static initModel(sequelize: Sequelize): void {
         this.init(
             {
                 issueId: {
@@ -26,7 +27,8 @@ class IssueHasAssigneeContributor extends Model {
             },
             {
                 tableName: "issue_has_assignee_contributor",
-                ...databaseConfig,
+                charset: EnvConfig.DB_CHARSET,
+                collate: EnvConfig.DB_COLLATE,
                 sequelize,
             }
         );

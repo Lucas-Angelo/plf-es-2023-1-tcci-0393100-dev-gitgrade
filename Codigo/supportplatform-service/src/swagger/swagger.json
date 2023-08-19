@@ -144,6 +144,49 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"CommitMetricsDTO": {
+				"properties": {
+					"contribuitor": {
+						"properties": {
+							"githubAvatarUrl": {
+								"type": "string"
+							},
+							"githubLogin": {
+								"type": "string"
+							},
+							"githubName": {
+								"type": "string"
+							},
+							"id": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"githubAvatarUrl",
+							"githubLogin",
+							"githubName",
+							"id"
+						],
+						"type": "object"
+					},
+					"commitCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"commtiPercentage": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"contribuitor",
+					"commitCount",
+					"commtiPercentage"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -203,6 +246,49 @@
 					{
 						"in": "query",
 						"name": "filter",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/repository/{repositoryId}/metric/commit": {
+			"get": {
+				"operationId": "GetCommitMetrics",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/CommitMetricsDTO"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"metrics"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "branchName",
 						"required": false,
 						"schema": {
 							"type": "string"

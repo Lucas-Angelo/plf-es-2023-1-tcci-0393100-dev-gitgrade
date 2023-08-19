@@ -1,4 +1,4 @@
-import { Repository } from "@gitgrade/models";
+import { Repository } from "../model/Repository";
 import { RepositoryDTO } from "@gitgrade/dtos";
 
 export class RepositoryMapper {
@@ -20,7 +20,7 @@ export class RepositoryMapper {
             primaryLanguage: model.primaryLanguage,
             stargazerCount: model.stargazerCount,
             synchronizing: model.synchronizing,
-            evaluationMethod: undefined
-        }
+            evaluationMethod: undefined,
+        };
     }
 }

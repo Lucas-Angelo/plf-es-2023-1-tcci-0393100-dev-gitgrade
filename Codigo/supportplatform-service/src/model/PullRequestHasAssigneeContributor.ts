@@ -1,14 +1,15 @@
 import { Model, DataTypes, Sequelize } from "sequelize";
 
+import EnvConfig from "../config/EnvConfig";
+
 import { Contributor } from "./Contributor";
 import { PullRequest } from "./PullRequest";
-import { DatabaseConfig } from "../types/DatabaseConfig";
 
 class PullRequestHasAssigneeContributor extends Model {
     public pullRequestId!: number;
     public assigneeContributorId!: number;
 
-    static initModel(sequelize: Sequelize, databaseConfig: DatabaseConfig): void {
+    static initModel(sequelize: Sequelize): void {
         this.init(
             {
                 pullRequestId: {
@@ -26,7 +27,8 @@ class PullRequestHasAssigneeContributor extends Model {
             },
             {
                 tableName: "pull_request_has_assignee_contributor",
-                ...databaseConfig,
+                charset: EnvConfig.DB_CHARSET,
+                collate: EnvConfig.DB_COLLATE,
                 sequelize,
             }
         );

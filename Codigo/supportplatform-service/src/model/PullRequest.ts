@@ -1,11 +1,12 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 
-import { Contributor } from "./Contributor";
-import { IssueHasAssigneeContributor } from "./IssueHasAssigneeContributor";
-import { Repository } from "./Repository";
-import { DatabaseConfig } from "../types/DatabaseConfig";
+import EnvConfig from "../config/EnvConfig";
 
-interface IIssueAttributes {
+import { Contributor } from "./Contributor";
+import { PullRequestHasAssigneeContributor } from "./PullRequestHasAssigneeContributor";
+import { Repository } from "./Repository";
+
+interface IPullRequestAttributes {
     id?: number;
     repositoryId?: number;
     authorContributorId?: number;
@@ -15,10 +16,12 @@ interface IIssueAttributes {
     githubCreatedAt?: Date;
     githubUpdatedAt?: Date;
     githubClosedAt?: Date | null;
+    githubMergedAt?: Date | null;
     closed?: boolean;
+    merged?: boolean;
 }
 
-class Issue extends Model<IIssueAttributes> {
+class PullRequest extends Model<IPullRequestAttributes> {
     public id!: number;
     public repositoryId!: number;
     public authorContributorId!: number;
@@ -28,9 +31,11 @@ class Issue extends Model<IIssueAttributes> {
     public githubCreatedAt!: Date;
     public githubUpdatedAt!: Date;
     public githubClosedAt!: Date | null;
+    public githubMergedAt!: Date | null;
     public closed!: boolean;
+    public merged!: boolean;
 
-    static initModel(sequelize: Sequelize, databaseConfig: DatabaseConfig): void {
+    static initModel(sequelize: Sequelize): void {
         this.init(
             {
                 id: {
@@ -62,14 +67,16 @@ class Issue extends Model<IIssueAttributes> {
                 },
                 number: {
                     field: "number",
-                    type: DataTypes.BIGINT.UNSIGNED,
+                    type: DataTypes.BIGINT,
                     allowNull: false,
-                    unique: true,
                 },
                 title: {
                     field: "title",
                     type: DataTypes.STRING(16000),
                     allowNull: true,
+                    validate: {
+                        notEmpty: true,
+                    },
                 },
                 githubCreatedAt: {
                     field: "github_created_at",
@@ -92,15 +99,26 @@ class Issue extends Model<IIssueAttributes> {
                     type: DataTypes.DATE,
                     allowNull: true,
                 },
+                githubMergedAt: {
+                    field: "github_merged_at",
+                    type: DataTypes.DATE,
+                    allowNull: true,
+                },
                 closed: {
                     field: "closed",
                     type: DataTypes.BOOLEAN,
                     allowNull: false,
                 },
+                merged: {
+                    field: "merged",
+                    type: DataTypes.BOOLEAN,
+                    allowNull: false,
+                },
             },
             {
-                tableName: "issue",
-                ...databaseConfig,
+                tableName: "pull_request",
+                charset: EnvConfig.DB_CHARSET,
+                collate: EnvConfig.DB_COLLATE,
                 sequelize,
             }
         );
@@ -119,11 +137,11 @@ class Issue extends Model<IIssueAttributes> {
             as: "author",
         });
         this.belongsToMany(models.Contributor, {
-            through: IssueHasAssigneeContributor,
-            foreignKey: "issueId",
+            through: PullRequestHasAssigneeContributor,
+            foreignKey: "pullRequestId",
             as: "assignees",
         });
     }
 }
 
-export { IIssueAttributes, Issue };
+export { IPullRequestAttributes, PullRequest };

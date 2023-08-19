@@ -41,10 +41,7 @@ class AppLogger {
 
         return createLogger({
             level: logLevel,
-            transports: [
-                this.fileTransport,
-                this.consoleTransport,
-            ],
+            transports: [this.fileTransport, this.consoleTransport],
         });
     }
 }

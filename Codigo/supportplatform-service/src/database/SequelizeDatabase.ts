@@ -1,24 +1,21 @@
-import { Sequelize, Options } from "sequelize";
+import { Options, Sequelize } from "sequelize";
 import MySqlDatabase from "./MySqlDatabase";
 
 import SequelizeConfig from "../config/SequelizeConfig";
 import EnvConfig from "../config/EnvConfig";
 import logger from "../config/LogConfig";
 
-import { 
-    User, 
-    Repository, 
-    Contributor, 
-    Issue, 
-    PullRequest, 
-    Branch, 
-    Commit, 
-    File, 
-    RepositoryHasContributor, 
-    IssueHasAssigneeContributor, 
-    PullRequestHasAssigneeContributor, 
-    DatabaseCaseConfig
-} from "@gitgrade/models";
+import { User } from "../model/User";
+import { Repository } from "../model/Repository";
+import { Contributor } from "../model/Contributor";
+import { Issue } from "../model/Issue";
+import { PullRequest } from "../model/PullRequest";
+import { Branch } from "../model/Branch";
+import { Commit } from "../model/Commit";
+import { File } from "../model/File";
+import { RepositoryHasContributor } from "../model/RepositoryHasContributor";
+import { IssueHasAssigneeContributor } from "../model/IssueHasAssigneeContributor";
+import { PullRequestHasAssigneeContributor } from "../model/PullRequestHasAssigneeContributor";
 
 class SequelizeDatabase {
     private sequelize: Sequelize;
@@ -36,7 +33,7 @@ class SequelizeDatabase {
 
         return new Sequelize(
             SequelizeConfig?.database ?? "gitgrade",
-            
+
             SequelizeConfig?.username ?? "root",
             SequelizeConfig?.password ?? "root",
             sequelizeOptions
@@ -60,29 +57,41 @@ class SequelizeDatabase {
     }
 
     private initModels() {
-        const databaseCaseConfig: DatabaseCaseConfig = {
-            charset: EnvConfig.DB_CHARSET,
-            collate: EnvConfig.DB_COLLATE
-        }
-        User.initModel(this.sequelize, databaseCaseConfig);
-        Repository.initModel(this.sequelize, databaseCaseConfig);
-        Contributor.initModel(this.sequelize, databaseCaseConfig);
-        RepositoryHasContributor.initModel(this.sequelize, databaseCaseConfig);
-        Issue.initModel(this.sequelize, databaseCaseConfig);
-        IssueHasAssigneeContributor.initModel(this.sequelize, databaseCaseConfig);
-        PullRequest.initModel(this.sequelize, databaseCaseConfig);
-        PullRequestHasAssigneeContributor.initModel(this.sequelize, databaseCaseConfig);
-        Branch.initModel(this.sequelize, databaseCaseConfig);
-        Commit.initModel(this.sequelize, databaseCaseConfig);
-        File.initModel(this.sequelize, databaseCaseConfig);
+        Branch.initModel(this.sequelize);
+        User.initModel(this.sequelize);
+        Repository.initModel(this.sequelize);
+        Contributor.initModel(this.sequelize);
+        RepositoryHasContributor.initModel(this.sequelize);
+        Issue.initModel(this.sequelize);
+        IssueHasAssigneeContributor.initModel(this.sequelize);
+        PullRequest.initModel(this.sequelize);
+        PullRequestHasAssigneeContributor.initModel(this.sequelize);
+        Commit.initModel(this.sequelize);
+        File.initModel(this.sequelize);
+    }
+
+    private associateModels() {
+        Branch.associate({ Repository, Commit });
+        Contributor.associate({ Repository, Commit });
+        RepositoryHasContributor.associate({ Contributor, Repository });
+        Issue.associate({ Contributor, Repository });
+        IssueHasAssigneeContributor.associate({ Contributor, Issue });
+        PullRequest.associate({ Contributor, Repository });
+        PullRequestHasAssigneeContributor.associate({
+            Contributor,
+            PullRequest,
+        });
+        Commit.associate({ Branch, Contributor, File });
+        File.associate({ Commit });
     }
 
     async connect() {
         await MySqlDatabase.createDatabaseIfNotExists();
 
         try {
-            this.initModels();
             await this.sequelize.authenticate();
+            this.initModels();
+            this.associateModels();
             this.logConnectionSuccess();
         } catch (error) {
             this.logConnectionError(error);
