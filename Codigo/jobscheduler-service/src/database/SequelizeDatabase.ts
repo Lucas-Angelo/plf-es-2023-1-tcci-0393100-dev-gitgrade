@@ -1,10 +1,10 @@
-import { Options, Sequelize } from "sequelize";
+import { Sequelize } from "sequelize";
 import MySqlDatabase from "./MySqlDatabase";
 
 import EnvConfig from "../config/EnvConfig";
 import logger from "../config/LogConfig";
-import SequelizeConfig from "../config/SequelizeConfig";
 
+import SequelizeOptions from "../config/SequelizeOptions";
 import { Branch } from "../model/Branch";
 import { Commit } from "../model/Commit";
 import { Contributor } from "../model/Contributor";
@@ -25,17 +25,11 @@ class SequelizeDatabase {
     }
 
     private initializeSequelize(): Sequelize {
-        const defaultOptions: Options = {};
-        const sequelizeOptions: Options = {
-            ...defaultOptions,
-            ...(SequelizeConfig?.options as Options),
-        };
-
         return new Sequelize(
-            SequelizeConfig?.database ?? "gitgrade",
-            SequelizeConfig?.username ?? "root",
-            SequelizeConfig?.password ?? "root",
-            sequelizeOptions
+            EnvConfig.DB_NAME || "error",
+            EnvConfig.DB_USER || "error",
+            EnvConfig.DB_PASSWORD || "error",
+            SequelizeOptions
         );
     }
 

@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  mysql_gitgrade:
+    image: mysql:8.1.0
+    restart: unless-stopped
+    environment:
+      - TZ=$DB_TIMEZONE
+      - MYSQL_DATABASE=$DB_NAME
+      - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
+      - MYSQL_PASSWORD=$DB_PASSWORD
+    ports:
+      - $DB_PORT:$DB_PORT
+    networks:
+      - gitgrade-network
+    volumes:
+      - mysql_gitgrade_data:/var/lib/mysql
+
+  jobscheduler-service:
+    build:
+      context: ./jobscheduler-service/
+      dockerfile: Dockerfile
+    working_dir: /usr/src/gitgrade/jobscheduler_service
+    restart: unless-stopped
+    depends_on:
+      - mysql_gitgrade
+    environment:
+      - NODE_ENV=$NODE_ENV
+      - DB_HOST=mysql_gitgrade
+    volumes:
+      - jobscheduler_src:/usr/src/gitgrade/jobscheduler_service
+      - jobscheduler_node_modules:/usr/src/gitgrade/jobscheduler_service/node_modules
+    command: /bin/bash -c "/usr/local/bin/wait-for-it.sh --timeout=600 mysql_gitgrade:$DB_PORT && npm run start:dev"
+    stdin_open: true
+    tty: true
+    ports:
+      - $NODE_PORT:$NODE_PORT
+    networks:
+      - gitgrade-network
+
+volumes:
+  mysql_gitgrade_data:
+    driver: local
+  jobscheduler_src:
+    driver: local
+  jobscheduler_node_modules:
+    driver: local
+
+networks:
+  gitgrade-network:
+    driver: bridge
