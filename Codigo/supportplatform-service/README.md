@@ -18,7 +18,7 @@ Para gerar os arquivos do Swagger (documentação da API), basta executar o coma
 
 ```npm run swagger```
 
-Para ter um ambiente de desenvolvimeto mais dinâmico, que atualiza o servidor e o Swagger a cada alteração de código, basta executar o comando abaixo:
+Para ter um ambiente de desenvolvimeto mais dinâmico, que atualiza o servidor, o Swagger, e faz análisa estática do código (eslint) a cada alteração de código, basta executar o comando abaixo:
 
 ```npm run dev```
 

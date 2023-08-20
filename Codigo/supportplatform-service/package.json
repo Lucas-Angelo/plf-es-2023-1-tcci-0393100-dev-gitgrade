@@ -6,6 +6,7 @@
     "main": "src/index.ts",
     "scripts": {
         "lint:check": "npx eslint . --ext .ts --report-unused-disable-directives --max-warnings 0",
+        "lint:watch": "nodemon -x \"npm run lint:check\"",
         "lint:fix": "npx eslint . --fix --ext .ts --report-unused-disable-directives --max-warnings 0",
         "test": "echo \"Running all tests\"",
         "start": "npx ts-node src/index.ts",
@@ -13,7 +14,7 @@
         "build": "npm run swagger && npx tsc --outDir dist",
         "start:builded": "npx ts-node --transpile-only dist/index.js",
         "start:prod": "npm run build && npm run start:builded",
-        "dev": "concurrently \"npm run start:dev\" \"npm run swagger:watch\"",
+        "dev": "concurrently \"npm run start:dev\" \"npm run swagger:watch\" \"npm run lint:watch\"",
         "swagger": "tsoa spec-and-routes",
         "swagger:watch": "nodemon -x tsoa spec-and-routes",
         "prettify": "npx prettier -w .",
