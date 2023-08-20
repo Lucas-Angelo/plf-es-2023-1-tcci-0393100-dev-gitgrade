@@ -23,8 +23,9 @@ export default function PageFooter() {
                         size={32}
                         sx={{ scale: "1.3" }}
                     />
-                    <Box sx={{ display: 'inline', ml: 2 }}>
-                        © 2023 Plataforma de Apoio às Avaliações de Projetos GitHub.
+                    <Box sx={{ display: "inline", ml: 2 }}>
+                        © 2023 Plataforma de Apoio às Avaliações de Projetos
+                        GitHub.
                     </Box>
                 </Box>
                 <PrimerLink

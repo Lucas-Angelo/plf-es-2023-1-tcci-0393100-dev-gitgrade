@@ -2,7 +2,7 @@ import {
     ActionList,
     ActionMenu,
     FilteredSearch,
-    TextInput
+    TextInput,
 } from "@primer/react";
 import { SearchIcon } from "@primer/octicons-react";
 import { useRef } from "react";
@@ -14,7 +14,8 @@ const pageSearchParams = appRoutes.repo.list.search;
 export default function RepoFilter() {
     const inputRef = useRef<HTMLInputElement>(null);
     const [searchParams, setSearchParams] = useSearchParams();
-    const defaultFilter = searchParams.get(pageSearchParams.filter) ?? undefined;
+    const defaultFilter =
+        searchParams.get(pageSearchParams.filter) ?? undefined;
 
     function handleSearch(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -42,7 +43,10 @@ export default function RepoFilter() {
                     </ActionList>
                 </ActionMenu.Overlay>
             </ActionMenu>
-            <form onSubmit={handleSearch} style={{flexGrow: 1}}>
+            <form
+                onSubmit={handleSearch}
+                style={{ flexGrow: 1 }}
+            >
                 <TextInput
                     leadingVisual={SearchIcon}
                     placeholder="ma:TI5-2023"
@@ -52,5 +56,5 @@ export default function RepoFilter() {
                 />
             </form>
         </FilteredSearch>
-    )
+    );
 }

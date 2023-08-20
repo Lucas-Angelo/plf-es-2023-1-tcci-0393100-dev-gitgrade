@@ -1,8 +1,4 @@
-import {
-    PageLayout,
-    Pagination,
-    Box,
-} from "@primer/react";
+import { PageLayout, Pagination, Box } from "@primer/react";
 import { useLoaderData, useSearchParams } from "react-router-dom";
 import appRoutes from "../../../commom/routes/appRoutes";
 import RepoCard from "../components/repoCard";
@@ -26,17 +22,14 @@ export default function RepoListPage() {
     }
     return (
         <PageLayout containerWidth="large">
-            
             <RepoFilter />
 
             <Box sx={{ width: "100%", my: 5 }}>
-                {
-                    loaderData.results.length === 0 && (
-                        <Box sx={{ textAlign: "center", color: 'gray' }}>
-                            Nenhum repositório encontrado
-                        </Box>
-                    )
-                }
+                {loaderData.results.length === 0 && (
+                    <Box sx={{ textAlign: "center", color: "gray" }}>
+                        Nenhum repositório encontrado
+                    </Box>
+                )}
                 {loaderData.results.map((repo) => (
                     <Box
                         sx={{ mb: 3 }}

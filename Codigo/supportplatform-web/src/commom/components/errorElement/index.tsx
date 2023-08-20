@@ -5,7 +5,12 @@ export default function ErrorElement() {
     const error = useRouteError() as Error;
     return (
         <PageLayout>
-            <Flash variant="danger" sx={{width: "100%"}}>{error.message}</Flash>
+            <Flash
+                variant="danger"
+                sx={{ width: "100%" }}
+            >
+                {error.message}
+            </Flash>
         </PageLayout>
     );
 }

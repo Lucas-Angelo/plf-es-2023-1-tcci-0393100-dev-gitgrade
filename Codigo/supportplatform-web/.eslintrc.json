@@ -6,7 +6,8 @@
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended",
-        "plugin:@typescript-eslint/recommended",
+        "plugin:react/jsx-runtime",
+        "plugin:@typescript-eslint/recommended-type-checked",
         "plugin:react-hooks/recommended",
         "prettier"
     ],
@@ -14,7 +15,9 @@
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
-        }
+        },
+        "ecmaVersion": "latest",
+        "project": ["./tsconfig.json", "./tsconfig.node.json"]
     },
     "parser": "@typescript-eslint/parser",
     "rules": {

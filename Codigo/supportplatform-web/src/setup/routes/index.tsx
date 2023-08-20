@@ -47,7 +47,9 @@ const routes = createRoutesFromElements(
                     <Route
                         path=""
                         element={
-                            <Navigate to={appRoutes.evaluationMethod.list.link()} />
+                            <Navigate
+                                to={appRoutes.evaluationMethod.list.link()}
+                            />
                         }
                     />
                 </Route>
