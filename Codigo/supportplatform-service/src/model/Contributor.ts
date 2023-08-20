@@ -82,7 +82,7 @@ class Contributor extends Model<IContributorAttributes> {
         Commit: typeof Commit;
     }): void {
         this.belongsToMany(models.Repository, {
-            foreignKey: "contributor_id",
+            foreignKey: "contributorId",
             as: "repositories",
             through: "repository_has_contributor",
         });

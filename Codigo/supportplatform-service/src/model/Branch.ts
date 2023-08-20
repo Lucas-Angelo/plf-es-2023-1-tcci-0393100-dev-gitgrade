@@ -1,7 +1,5 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
-
 import EnvConfig from "../config/EnvConfig";
-
 import { Repository } from "./Repository";
 import { Commit } from "./Commit";
 
@@ -9,12 +7,16 @@ interface IBranchAttributes {
     id?: number;
     repositoryId?: number;
     name?: string;
+    commitAutomaticSynchronization?: boolean;
+    fileAutomaticSynchronization?: boolean;
 }
 
 class Branch extends Model<IBranchAttributes> {
     public id!: number;
     public repositoryId!: number;
     public name!: string;
+    public commitAutomaticSynchronization!: boolean;
+    public fileAutomaticSynchronization!: boolean;
 
     static initModel(sequelize: Sequelize): void {
         this.init(
@@ -40,6 +42,18 @@ class Branch extends Model<IBranchAttributes> {
                         notEmpty: true,
                     },
                 },
+                commitAutomaticSynchronization: {
+                    field: "commit_automatic_synchronization",
+                    type: DataTypes.BOOLEAN,
+                    allowNull: false,
+                    defaultValue: false,
+                },
+                fileAutomaticSynchronization: {
+                    field: "file_automatic_synchronization",
+                    type: DataTypes.BOOLEAN,
+                    allowNull: false,
+                    defaultValue: false,
+                },
             },
             {
                 tableName: "branch",
@@ -62,7 +76,7 @@ class Branch extends Model<IBranchAttributes> {
         Commit: typeof Commit;
     }): void {
         this.belongsTo(models.Repository, {
-            foreignKey: "repository_id",
+            foreignKey: "repositoryId",
             as: "repository",
         });
         this.hasMany(models.Commit, {

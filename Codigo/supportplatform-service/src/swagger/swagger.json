@@ -147,43 +147,149 @@
 			},
 			"CommitMetricsDTO": {
 				"properties": {
-					"contribuitor": {
-						"properties": {
-							"githubAvatarUrl": {
-								"type": "string"
+					"totalCommitCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"commitsPerContributor": {
+						"items": {
+							"properties": {
+								"commtiPercentage": {
+									"type": "number",
+									"format": "double"
+								},
+								"commitCount": {
+									"type": "number",
+									"format": "double"
+								},
+								"contribuitor": {
+									"properties": {
+										"githubAvatarUrl": {
+											"type": "string"
+										},
+										"githubLogin": {
+											"type": "string"
+										},
+										"githubName": {
+											"type": "string"
+										},
+										"id": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"githubAvatarUrl",
+										"githubLogin",
+										"githubName",
+										"id"
+									],
+									"type": "object"
+								}
 							},
-							"githubLogin": {
-								"type": "string"
-							},
-							"githubName": {
-								"type": "string"
-							},
-							"id": {
-								"type": "number",
-								"format": "double"
-							}
+							"required": [
+								"commtiPercentage",
+								"commitCount",
+								"contribuitor"
+							],
+							"type": "object"
 						},
-						"required": [
-							"githubAvatarUrl",
-							"githubLogin",
-							"githubName",
-							"id"
-						],
-						"type": "object"
-					},
-					"commitCount": {
-						"type": "number",
-						"format": "double"
-					},
-					"commtiPercentage": {
-						"type": "number",
-						"format": "double"
+						"type": "array"
 					}
 				},
 				"required": [
-					"contribuitor",
-					"commitCount",
-					"commtiPercentage"
+					"totalCommitCount",
+					"commitsPerContributor"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FileChangeMetricsDTO": {
+				"properties": {
+					"totalAdditions": {
+						"type": "number",
+						"format": "double"
+					},
+					"totalDeletions": {
+						"type": "number",
+						"format": "double"
+					},
+					"fileChangesPerContributor": {
+						"items": {
+							"properties": {
+								"deletions": {
+									"properties": {
+										"percentage": {
+											"type": "number",
+											"format": "double"
+										},
+										"sum": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"percentage",
+										"sum"
+									],
+									"type": "object"
+								},
+								"addtions": {
+									"properties": {
+										"percentage": {
+											"type": "number",
+											"format": "double"
+										},
+										"sum": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"percentage",
+										"sum"
+									],
+									"type": "object"
+								},
+								"contribuitor": {
+									"properties": {
+										"githubAvatarUrl": {
+											"type": "string"
+										},
+										"githubLogin": {
+											"type": "string"
+										},
+										"githubName": {
+											"type": "string"
+										},
+										"id": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"githubAvatarUrl",
+										"githubLogin",
+										"githubName",
+										"id"
+									],
+									"type": "object"
+								}
+							},
+							"required": [
+								"deletions",
+								"addtions",
+								"contribuitor"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"totalAdditions",
+					"totalDeletions",
+					"fileChangesPerContributor"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -263,10 +369,47 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/CommitMetricsDTO"
-									},
-									"type": "array"
+									"$ref": "#/components/schemas/CommitMetricsDTO"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"metrics"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "branchName",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/repository/{repositoryId}/metric/changes": {
+			"get": {
+				"operationId": "GetChangesMetrics",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FileChangeMetricsDTO"
 								}
 							}
 						}

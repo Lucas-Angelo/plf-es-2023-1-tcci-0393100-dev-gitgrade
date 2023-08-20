@@ -7,6 +7,7 @@ class EnvironmentConfig {
 
     constructor() {
         this.envDirectory = path.join(path.resolve("."), "/env/");
+        // eslint-disable-next-line no-console
         console.log("\nCurrent environment directory:", this.envDirectory);
 
         this.envFiles = {
@@ -46,6 +47,7 @@ class EnvironmentConfig {
             DB_CHARSET: process.env.DB_CHARSET,
             DB_COLLATE: process.env.DB_COLLATE,
             DB_TIMEZONE: process.env.DB_TIMEZONE,
+            PORT: process.env.PORT,
         };
     }
 
@@ -59,6 +61,7 @@ envConfig.load();
 envConfig.enableTelegramAttachmentFix();
 const EnvConfig = envConfig.getAppConfig();
 
+// eslint-disable-next-line no-console
 if (EnvConfig.APP_DEBUG) console.log("Environment Config:", EnvConfig, "\n");
 
 export default EnvConfig;

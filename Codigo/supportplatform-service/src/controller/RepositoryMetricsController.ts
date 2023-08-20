@@ -2,33 +2,41 @@ import { Get, Query, Route, Tags } from "tsoa";
 import CommitService from "../service/CommitService";
 import { CommitMetricsDTO } from "@gitgrade/dtos";
 import { CommitMetricsMapper } from "../mapper/CommitMetricsMapper";
+import FileService from "../service/FileService";
+import { FileChangeMetricsMapper } from "../mapper/FileChangeMetricsMapper";
 
 @Route("repository/{repositoryId}/metric")
 @Tags("metrics")
 export class RepositoryMetricsController {
-    service: CommitService;
+    commitService: CommitService;
+    fileService: FileService;
 
     constructor() {
-        this.service = new CommitService();
+        this.commitService = new CommitService();
+        this.fileService = new FileService();
     }
 
     @Get("commit")
     async getCommitMetrics(
         repositoryId: number,
         @Query() branchName?: string
-    ): Promise<CommitMetricsDTO[]> {
-        const serviceResponse = await this.service.getCommitMetrics(
+    ): Promise<CommitMetricsDTO> {
+        const serviceResponse = await this.commitService.getCommitMetrics(
             repositoryId,
             branchName ?? "master"
         );
-        return serviceResponse.map((item) =>
-            new CommitMetricsMapper().toDto(
-                item,
-                serviceResponse.reduce(
-                    (sum, item) => sum + Number(item.commitCount),
-                    0
-                )
-            )
+        return new CommitMetricsMapper().toDto(serviceResponse);
+    }
+
+    @Get("changes")
+    async getChangesMetrics(
+        repositoryId: number,
+        @Query() branchName?: string
+    ) {
+        const serviceResponse = await this.fileService.getChangesMetrics(
+            repositoryId,
+            branchName ?? "master"
         );
+        return new FileChangeMetricsMapper().toDto(serviceResponse);
     }
 }

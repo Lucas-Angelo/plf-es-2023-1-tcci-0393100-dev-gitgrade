@@ -2,21 +2,22 @@ import { CommitMetricsDTO } from "@gitgrade/dtos";
 import { CommitMetricsServiceResponse } from "../interface/CommitMetrics";
 
 export class CommitMetricsMapper {
-    toDto(
-        serviceResponse: CommitMetricsServiceResponse,
-        totalCommits: number
-    ): CommitMetricsDTO {
-        console.log(serviceResponse.commitCount);
+    toDto(serviceResponse: CommitMetricsServiceResponse): CommitMetricsDTO {
         return {
-            contribuitor: {
-                id: Number(serviceResponse.id),
-                githubName: serviceResponse.githubName,
-                githubLogin: serviceResponse.githubLogin,
-                githubAvatarUrl: serviceResponse.githubAvatarUrl,
-            },
-            commitCount: Number(serviceResponse.commitCount),
-            commtiPercentage:
-                (Number(serviceResponse.commitCount) / totalCommits) * 100,
+            totalCommitCount: serviceResponse.totalCommitCount,
+            commitsPerContributor: serviceResponse.results.map((item) => ({
+                contribuitor: {
+                    id: Number(item.id),
+                    githubName: item.githubName,
+                    githubLogin: item.githubLogin,
+                    githubAvatarUrl: item.githubAvatarUrl,
+                },
+                commitCount: Number(item.commitCount),
+                commtiPercentage:
+                    (Number(item.commitCount) /
+                        serviceResponse.totalCommitCount) *
+                    100,
+            })),
         };
     }
 }

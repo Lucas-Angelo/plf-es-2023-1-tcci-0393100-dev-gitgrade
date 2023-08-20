@@ -53,9 +53,18 @@ const models: TsoaRoute.Models = {
     "CommitMetricsDTO": {
         "dataType": "refObject",
         "properties": {
-            "contribuitor": {"dataType":"nestedObjectLiteral","nestedProperties":{"githubAvatarUrl":{"dataType":"string","required":true},"githubLogin":{"dataType":"string","required":true},"githubName":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"required":true},
-            "commitCount": {"dataType":"double","required":true},
-            "commtiPercentage": {"dataType":"double","required":true},
+            "totalCommitCount": {"dataType":"double","required":true},
+            "commitsPerContributor": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"commtiPercentage":{"dataType":"double","required":true},"commitCount":{"dataType":"double","required":true},"contribuitor":{"dataType":"nestedObjectLiteral","nestedProperties":{"githubAvatarUrl":{"dataType":"string","required":true},"githubLogin":{"dataType":"string","required":true},"githubName":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"required":true}}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "FileChangeMetricsDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "totalAdditions": {"dataType":"double","required":true},
+            "totalDeletions": {"dataType":"double","required":true},
+            "fileChangesPerContributor": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"deletions":{"dataType":"nestedObjectLiteral","nestedProperties":{"percentage":{"dataType":"double","required":true},"sum":{"dataType":"double","required":true}},"required":true},"addtions":{"dataType":"nestedObjectLiteral","nestedProperties":{"percentage":{"dataType":"double","required":true},"sum":{"dataType":"double","required":true}},"required":true},"contribuitor":{"dataType":"nestedObjectLiteral","nestedProperties":{"githubAvatarUrl":{"dataType":"string","required":true},"githubLogin":{"dataType":"string","required":true},"githubName":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"required":true}}},"required":true},
         },
         "additionalProperties": false,
     },
@@ -115,6 +124,32 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.getCommitMetrics.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/repository/:repositoryId/metric/changes',
+            ...(fetchMiddlewares<RequestHandler>(RepositoryMetricsController)),
+            ...(fetchMiddlewares<RequestHandler>(RepositoryMetricsController.prototype.getChangesMetrics)),
+
+            function RepositoryMetricsController_getChangesMetrics(request: any, response: any, next: any) {
+            const args = {
+                    repositoryId: {"in":"path","name":"repositoryId","required":true,"dataType":"double"},
+                    branchName: {"in":"query","name":"branchName","dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new RepositoryMetricsController();
+
+
+              const promise = controller.getChangesMetrics.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);

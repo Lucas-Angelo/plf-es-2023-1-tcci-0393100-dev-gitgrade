@@ -18,7 +18,8 @@
                 "varsIgnorePattern": "^_",
                 "caughtErrorsIgnorePattern": "^_"
             }
-        ]
+        ],
+        "no-console": "warn"
     },
     "parser": "@typescript-eslint/parser"
 }

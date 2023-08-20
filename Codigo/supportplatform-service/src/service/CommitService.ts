@@ -2,7 +2,10 @@ import sequelize from "sequelize";
 import { Branch } from "../model/Branch";
 import { Commit } from "../model/Commit";
 import { Contributor } from "../model/Contributor";
-import { CommitMetricsServiceResponse } from "../interface/CommitMetrics";
+import {
+    CommitMetricsServiceQueryDataValues,
+    CommitMetricsServiceResponse,
+} from "../interface/CommitMetrics";
 
 export default class CommitService {
     async getCommitMetrics(repositoryId: number, branchName: string) {
@@ -39,8 +42,18 @@ export default class CommitService {
             group: ["Contributor.id"],
         });
 
-        return commitCounts.map(
-            (item) => item.dataValues as unknown as CommitMetricsServiceResponse
+        const dataValues = commitCounts.map(
+            (item) =>
+                item.dataValues as unknown as CommitMetricsServiceQueryDataValues
         );
+
+        const response: CommitMetricsServiceResponse = {
+            totalCommitCount: dataValues.reduce(
+                (sum, item) => sum + Number(item.commitCount),
+                0
+            ),
+            results: dataValues,
+        };
+        return response;
     }
 }

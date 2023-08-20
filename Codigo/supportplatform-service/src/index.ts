@@ -5,6 +5,7 @@ import { RegisterRoutes } from "./swagger/routes";
 import swaggerUi from "swagger-ui-express";
 import Database from "./database";
 import AppError from "./error/AppError";
+import EnvConfig from "./config/EnvConfig";
 
 const app = express();
 
@@ -30,6 +31,7 @@ RegisterRoutes(app);
 app.use([
     (err, _request, response, _) => {
         if (err instanceof AppError) {
+            // eslint-disable-next-line no-console
             console.log(err);
             return response.status(err.statusCode).json({
                 message: err.message,
@@ -39,6 +41,7 @@ app.use([
 
         // Caso seja outro erro
         if (process.env.APP_DEBUG) {
+            // eslint-disable-next-line no-console
             console.log(err);
             return response.status(500).json({
                 error: err.error,
@@ -57,7 +60,8 @@ app.use([
 const database = new Database();
 database.connect().catch(database.disconnect);
 
-const port = process.env.PORT || 3001;
+const port = EnvConfig.PORT || 3001;
 app.listen(port, () => {
+    // eslint-disable-next-line no-console
     console.log(`Server is running on port ${port}`);
 });

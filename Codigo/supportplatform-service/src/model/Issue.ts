@@ -9,7 +9,7 @@ import { Repository } from "./Repository";
 interface IIssueAttributes {
     id?: number;
     repositoryId?: number;
-    authorContributorId?: number;
+    authorContributorId?: number | null;
     githubId?: string | null;
     number?: number;
     title?: string | null;
@@ -22,7 +22,7 @@ interface IIssueAttributes {
 class Issue extends Model<IIssueAttributes> {
     public id!: number;
     public repositoryId!: number;
-    public authorContributorId!: number;
+    public authorContributorId!: number | null;
     public githubId!: string;
     public number!: number;
     public title!: string | null;
@@ -50,7 +50,7 @@ class Issue extends Model<IIssueAttributes> {
                 authorContributorId: {
                     field: "author_contributor_id",
                     type: DataTypes.BIGINT.UNSIGNED,
-                    allowNull: false,
+                    allowNull: true,
                 },
                 githubId: {
                     field: "github_id",
