@@ -30,6 +30,12 @@ Para executar uma analise estática do código, basta executar o comando abaixo:
 
 ```npm run lint```
 
+## Documentação
+
+A documentação da API é feita utilizando o Swagger, e gerada automaticamente. Para acessar a documentação, basta acessar o endereço abaixo:
+
+```http://localhost:3001/docs```
+
 ## Executando o projeto com Docker
 
 ... [to do]
