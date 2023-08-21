@@ -69,6 +69,9 @@ class SequelizeDatabase {
         try {
             this.initModels();
             await this.sequelize.authenticate();
+            // TODO: create migrations
+            if (EnvConfig.NODE_ENV == "development")
+                await this.sequelize.sync();
             this.logConnectionSuccess();
         } catch (error) {
             this.logConnectionError(error);
