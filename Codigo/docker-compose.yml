@@ -5,12 +5,11 @@ services:
     image: mysql:8.1.0
     restart: unless-stopped
     environment:
-      - TZ=$DB_TIMEZONE
       - MYSQL_DATABASE=$DB_NAME
       - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
       - MYSQL_PASSWORD=$DB_PASSWORD
     ports:
-      - $DB_PORT:$DB_PORT
+      - $DB_PORT:3306
     networks:
       - gitgrade-network
     volumes:
@@ -31,10 +30,12 @@ services:
       - jobscheduler_src:/usr/src/gitgrade/jobscheduler_service
       - jobscheduler_node_modules:/usr/src/gitgrade/jobscheduler_service/node_modules
     command: /bin/bash -c "/usr/local/bin/wait-for-it.sh --timeout=600 mysql_gitgrade:$DB_PORT && npm run start:dev"
+    expose:
+      - $JOBSCHEDULER_NODE_PORT
+    ports:
+      - $JOBSCHEDULER_NODE_PORT:3000
     stdin_open: true
     tty: true
-    ports:
-      - $NODE_PORT:$NODE_PORT
     networks:
       - gitgrade-network
 
@@ -48,4 +49,3 @@ volumes:
 
 networks:
   gitgrade-network:
-    driver: bridge

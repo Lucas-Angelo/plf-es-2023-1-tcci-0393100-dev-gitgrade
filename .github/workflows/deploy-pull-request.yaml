@@ -1,0 +1,186 @@
+name: Deploy Review App
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    paths:
+      - "Codigo/**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Sanitize branch name
+        run: |
+          echo "SANITIZED_BRANCH_NAME=$(echo "${{ github.head_ref }}" | sed 's/\//-/g')" >> $GITHUB_ENV
+
+      - name: Set BRANCH_DIR variable
+        run: |
+          echo "BRANCH_DIR=/${{ secrets.SSH_USER }}/app/temp/gitgrade/branch-${{ env.SANITIZED_BRANCH_NAME }}" >> $GITHUB_ENV
+
+      - name: Stop and remove containers, images, volumes and project files from VPS based on Pull Request branch if OPENED, UPDATED, REOPENED or CLOSED
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            BRANCH_FILTER="gitgrade_${{ env.SANITIZED_BRANCH_NAME }}"
+
+            # Stop and remove containers
+            CONTAINERS=$(sudo docker ps -a -q --filter="name=$BRANCH_FILTER")
+            if [ "$CONTAINERS" != "" ]; then
+                sudo docker stop $CONTAINERS
+                sudo docker rm -vf $CONTAINERS
+            fi
+
+            # Remove images
+            IMAGES=$(sudo docker images -aq $BRANCH_FILTER)
+            if [ "$IMAGES" != "" ]; then
+                sudo docker rmi -f $IMAGES
+            fi
+
+            # Remove volumes
+            VOLUMES=$(sudo docker volume ls -q --filter="name=$BRANCH_FILTER")
+            if [ "$VOLUMES" != "" ]; then
+                sudo docker volume rm $VOLUMES
+            fi
+
+            rm -rf /${{ secrets.SSH_USER }}/app/temp/gitgrade/branch-${{ env.SANITIZED_BRANCH_NAME }}
+
+      - name: Generate DB_PORT and Set in env
+        if: github.event.action != 'closed'
+        run: |
+          DB_PORT=$(sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -o "StrictHostKeyChecking=no" -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
+            DB_PORT=$((RANDOM % 1000 + 4001))
+            while sudo lsof -Pi :$DB_PORT -sTCP:LISTEN -t >/dev/null; do
+                DB_PORT=$((RANDOM % 1000 + 4001))
+            done
+            echo $DB_PORT
+          ')
+          echo "DB_PORT=$DB_PORT" >> $GITHUB_ENV
+
+      - name: Generate JOBSCHEDULER_NODE_PORT and Set in env
+        if: github.event.action != 'closed'
+        run: |
+          JOBSCHEDULER_NODE_PORT=$(sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -o "StrictHostKeyChecking=no" -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
+            JOBSCHEDULER_NODE_PORT=$((RANDOM % 1000 + 5001))
+            while sudo lsof -Pi :$JOBSCHEDULER_NODE_PORT -sTCP:LISTEN -t >/dev/null; do
+                JOBSCHEDULER_NODE_PORT=$((RANDOM % 1000 + 5001))
+            done
+            echo $JOBSCHEDULER_NODE_PORT
+          ')
+          echo "JOBSCHEDULER_NODE_PORT=$JOBSCHEDULER_NODE_PORT" >> $GITHUB_ENV
+
+      - name: Generate docker-compose .env
+        if: github.event.action != 'closed'
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            DB_PORT=${{ env.DB_PORT }}
+            JOBSCHEDULER_NODE_PORT=${{ env.JOBSCHEDULER_NODE_PORT }}
+
+            CODE_DIR=${{ env.BRANCH_DIR }}/Codigo
+            mkdir -p "$CODE_DIR"
+
+            cd "$CODE_DIR"
+
+            rm .env
+            touch .env
+
+            echo "JOBSCHEDULER_NODE_PORT=$JOBSCHEDULER_NODE_PORT" >> "$CODE_DIR/.env"
+            echo "NODE_ENV=development" >> "$CODE_DIR/.env"
+
+            echo "DB_HOST=${{ secrets.DB_HOST }}" >> "$CODE_DIR/.env"
+            echo "DB_USER=${{ secrets.DB_USER }}" >> "$CODE_DIR/.env"
+            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> "$CODE_DIR/.env"
+            echo "DB_NAME=${{ secrets.DB_NAME }}" >> "$CODE_DIR/.env"
+            echo "DB_PORT=$DB_PORT" >> "$CODE_DIR/.env"
+
+      - name: Generate .env and .env.development files based on Pull Request branch if OPENED, UPDATED or REOPENED
+        if: github.event.action != 'closed'
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            DB_PORT=${{ env.DB_PORT }}
+            JOBSCHEDULER_NODE_PORT=${{ env.JOBSCHEDULER_NODE_PORT }}
+
+            JOBSCHEDULER_ENV_DIR=${{ env.BRANCH_DIR }}/Codigo/jobscheduler-service/env
+            mkdir -p "$JOBSCHEDULER_ENV_DIR"
+
+            cd "$JOBSCHEDULER_ENV_DIR"
+
+            rm .env
+            rm .env.development
+            touch .env
+            touch .env.development
+
+            echo "APP_TIMEZONE=${{ secrets.APP_TIMEZONE }}" >> "$JOBSCHEDULER_ENV_DIR/.env"
+
+            echo "DB_DIALECT=${{ secrets.DB_DIALECT }}" >> "$JOBSCHEDULER_ENV_DIR/.env"
+            echo "DB_CHARSET=${{ secrets.DB_CHARSET }}" >> "$JOBSCHEDULER_ENV_DIR/.env"
+            echo "DB_COLLATE=${{ secrets.DB_COLLATE }}" >> "$JOBSCHEDULER_ENV_DIR/.env"
+            echo "DB_TIMEZONE=${{ secrets.DB_TIMEZONE }}" >> "$JOBSCHEDULER_ENV_DIR/.env"
+
+            echo "SYNC_TIME=${{ secrets.SYNC_TIME }}" >> "$JOBSCHEDULER_ENV_DIR/.env"
+
+            echo "JOBSCHEDULER_NODE_PORT=$JOBSCHEDULER_NODE_PORT" >> "$JOBSCHEDULER_ENV_DIR/.env.development"
+            echo "NODE_ENV=development" >> "$JOBSCHEDULER_ENV_DIR/.env.development"
+            echo "APP_DEBUG=true" >> "$JOBSCHEDULER_ENV_DIR/.env.development"
+
+            echo "DB_HOST=${{ secrets.DB_HOST }}" >> "$JOBSCHEDULER_ENV_DIR/.env.development"
+            echo "DB_USER=${{ secrets.DB_USER }}" >> "$JOBSCHEDULER_ENV_DIR/.env.development"
+            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> "$JOBSCHEDULER_ENV_DIR/.env.development"
+            echo "DB_NAME=${{ secrets.DB_NAME }}" >> "$JOBSCHEDULER_ENV_DIR/.env.development"
+            echo "DB_PORT=$DB_PORT" >> "$JOBSCHEDULER_ENV_DIR/.env.development"
+
+            echo "GITHUB_PERSONAL_ACCESS_TOKEN=${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}" >> "$JOBSCHEDULER_ENV_DIR/.env.development"
+            echo "GITHUB_ORGANIZATION_NAME=${{ secrets.GH_ORGANIZATION_NAME }}" >> "$JOBSCHEDULER_ENV_DIR/.env.development"
+
+            echo "TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}" >> "$JOBSCHEDULER_ENV_DIR/.env.development"
+            echo "TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}" >> "$JOBSCHEDULER_ENV_DIR/.env.development"
+
+      - name: Copy project files to VPS based on Pull Request branch if OPENED, UPDATED or REOPENED
+        if: github.event.action != 'closed'
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          source: "./Codigo/"
+          target: "/${{ secrets.SSH_USER }}/app/temp/gitgrade/branch-${{ env.SANITIZED_BRANCH_NAME }}"
+
+      - name: Comment PR with port details if OPENED, UPDATED or REOPENED
+        if: github.event.action != 'closed'
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            Services were started with the following port details:
+            - **DB_PORT**: ${{ env.DB_PORT }}
+            - **JOBSCHEDULER_NODE_PORT**: ${{ env.JOBSCHEDULER_NODE_PORT }}
+
+      - name: Deploy to VM on Pull Request if OPENED, UPDATED or REOPENED
+        if: github.event.action != 'closed'
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            cd /${{ secrets.SSH_USER }}/app/temp/gitgrade/branch-${{ env.SANITIZED_BRANCH_NAME }}/Codigo/
+            bash run-docker.sh -dev --d --branch ${{ github.head_ref }}
