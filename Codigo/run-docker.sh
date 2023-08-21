@@ -53,7 +53,7 @@ build_docker_command() {
     BRANCH="$1"
     DETACHED="$2"
     
-    cmd="docker-compose --env-file .env -p gitgrade_$BRANCH up $DETACHED"
+    cmd="docker-compose build --no-cache && docker-compose --env-file .env -p gitgrade_$BRANCH up $DETACHED --force-recreate"
     echo "$cmd"
 }
 
