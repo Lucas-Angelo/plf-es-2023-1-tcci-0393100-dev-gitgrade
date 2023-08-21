@@ -17,6 +17,7 @@ RUN npm install -g nodemon && \
     npm install
 
 # Bundle app source
+COPY tsconfig.json .
 COPY . .
 
 # Change ownership of the application directory to our appuser
