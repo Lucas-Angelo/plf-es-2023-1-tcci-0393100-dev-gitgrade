@@ -23,9 +23,9 @@ services:
     restart: unless-stopped
     depends_on:
       - mysql_gitgrade
-    environment:
-      - NODE_ENV=$NODE_ENV
-      - DB_HOST=mysql_gitgrade
+    # environment:
+    #   - NODE_ENV=$NODE_ENV
+    #   - DB_HOST=mysql_gitgrade
     volumes:
       - jobscheduler_src:/usr/src/gitgrade/jobscheduler_service
       - jobscheduler_node_modules:/usr/src/gitgrade/jobscheduler_service/node_modules
