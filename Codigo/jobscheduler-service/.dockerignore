@@ -9,6 +9,5 @@
 **/dist
 **/logs/
 package-lock.json
-tsconfig.json
 .dockerignore
 logs/
