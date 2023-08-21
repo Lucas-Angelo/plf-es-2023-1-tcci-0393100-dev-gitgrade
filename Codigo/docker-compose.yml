@@ -29,7 +29,7 @@ services:
     volumes:
       - jobscheduler_src:/usr/src/gitgrade/jobscheduler_service
       - jobscheduler_node_modules:/usr/src/gitgrade/jobscheduler_service/node_modules
-    command: /bin/bash -c "/usr/local/bin/wait-for-it.sh --timeout=600 mysql_gitgrade:$DB_PORT && npm run start:prod"
+    command: /bin/bash -c "/usr/local/bin/wait-for-it.sh --timeout=600 mysql_gitgrade:$DB_PORT && npm run start:dev"
     expose:
       - $JOBSCHEDULER_NODE_PORT
     ports:
