@@ -171,4 +171,4 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             cd ${{ env.CODE_DIR }}
-            sudo docker-compose up -p {{ env.BRANCH_FILTER }} -d
+            sudo docker-compose -p {{ env.BRANCH_FILTER }} up -d
