@@ -53,7 +53,14 @@ build_docker_command() {
     BRANCH="$1"
     DETACHED="$2"
     
-    cmd="docker-compose -p gitgrade_$BRANCH down -v && docker system prune -f && docker-compose build --no-cache && docker-compose -p gitgrade_$BRANCH up $DETACHED --force-recreate"
+    containers_exist=$(docker ps -a -q -f "name=gitgrade_$BRANCH")
+
+    if [ ! -z "$containers_exist" ]; then
+        cmd="docker-compose -p gitgrade_$BRANCH down -v && docker system prune -f && docker-compose build --no-cache && docker-compose -p gitgrade_$BRANCH up $DETACHED --force-recreate"
+    else
+        cmd="docker system prune -f && docker-compose build --no-cache && docker-compose -p gitgrade_$BRANCH up $DETACHED --force-recreate"
+    fi
+
     echo "$cmd"
 }
 
