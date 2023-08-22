@@ -56,7 +56,7 @@ jobs:
                 sudo docker volume rm $VOLUMES
             fi
 
-            rm -rf /${{ secrets.SSH_USER }}/app/temp/gitgrade/branch-${{ env.SANITIZED_BRANCH_NAME }}
+            sudo rm -rf /${{ secrets.SSH_USER }}/app/temp/gitgrade/branch-${{ env.SANITIZED_BRANCH_NAME }}
 
       - name: Generate DB_PORT and Set in env
         if: github.event.action != 'closed'
