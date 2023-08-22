@@ -14,8 +14,6 @@ services:
       - $DB_PORT
     networks:
       - gitgrade-network
-    volumes:
-      - mysql_gitgrade_data:/var/lib/mysql
     env_file:
       - .env
 
@@ -53,16 +51,8 @@ services:
       - $JOBSCHEDULER_NODE_PORT
     networks:
       - gitgrade-network
-    volumes:
-      - jobscheduler_node_modules:/usr/src/gitgrade/jobscheduler_service/node_modules
     env_file:
       - .env
-
-volumes:
-  mysql_gitgrade_data:
-    driver: local
-  jobscheduler_node_modules:
-    driver: local
 
 networks:
   gitgrade-network:
