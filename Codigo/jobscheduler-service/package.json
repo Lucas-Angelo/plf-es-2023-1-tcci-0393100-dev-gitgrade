@@ -9,8 +9,7 @@
         "lint:fix": "npx eslint --ignore-path --fix --ext .js,.ts ./",
         "test": "echo \"Running all tests\"",
         "start": "npx ts-node src/index.ts",
-        "start:force": "npx ts-node-dev src/index.dev.ts",
-        "start:dev": "npx ts-node-dev src/index.js",
+        "start:dev": "npx ts-node-dev src/index.dev.ts",
         "build": "npx tsc --outDir dist",
         "start:builded": "npx ts-node --transpile-only dist/index.js",
         "start:prod": "npm run build && npm run start:builded"
