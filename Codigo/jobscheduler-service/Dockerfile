@@ -16,5 +16,6 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-# To wait for the database to be ready
-RUN chmod +x /usr/src/gitgrade/jobscheduler_service/wait-for-it.sh
+# To await for the database to be ready
+COPY wait-for-it.sh /usr/wait-for-it.sh
+RUN chmod +x /usr/wait-for-it.sh

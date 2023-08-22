@@ -46,7 +46,7 @@ services:
       - GITHUB_ORGANIZATION_NAME=$GITHUB_ORGANIZATION_NAME
       - TELEGRAM_BOT_TOKEN=$TELEGRAM_BOT_TOKEN
       - TELEGRAM_CHAT_ID=$TELEGRAM_CHAT_ID
-    command: /bin/bash -c "/usr/src/gitgrade/jobscheduler_service/wait-for-it.sh --timeout=600 mysql_gitgrade:$DB_DOCKER_PORT && npm run start:dev"
+    command: /bin/bash -c "/usr/wait-for-it.sh --timeout=600 mysql_gitgrade:$DB_DOCKER_PORT && npm run start:dev"
     ports:
       - $JOBSCHEDULER_NODE_PORT:3000
     expose:
