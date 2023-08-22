@@ -65,7 +65,7 @@ class Issue extends Model<IIssueAttributes> {
                     field: "number",
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: false,
-                    unique: true,
+                    unique: false,
                 },
                 title: {
                     field: "title",
