@@ -53,6 +53,7 @@
         "prettier": "^2.8.4",
         "ts-node": "^10.9.1",
         "ts-node-dev": "^2.0.0",
+        "tsc-files": "^1.1.4",
         "typescript": "^5.1.6"
     },
     "homepage": "https://github.com/ICEI-PUC-Minas-PPLES-TI/plf-es-2023-1-tcci-0393100-dev-plataformaapoioavaliacoesprojetos",

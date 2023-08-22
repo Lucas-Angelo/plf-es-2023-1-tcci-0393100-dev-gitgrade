@@ -22,7 +22,8 @@
         "react-dom": "^18.2.0",
         "react-router": "^6.14.2",
         "react-router-dom": "^6.14.2",
-        "styled-components": "^5.3.11"
+        "styled-components": "^5.3.11",
+        "tsc-files": "^1.1.4"
     },
     "devDependencies": {
         "@gitgrade/dtos": "file:../dtos-lib",
