@@ -7,31 +7,31 @@ on:
       - "Codigo/**"
 
 jobs:
-  setup:
-    name: Setup Environment Variables
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Sanitize branch name
+      # Sanitize branch name removing special characters and replacing slashes with dashes
       - name: Sanitize branch name
-        run: echo "SANITIZED_BRANCH_NAME=$(echo "${{ github.head_ref }}" | tr '[:upper:]' '[:lower:]' | sed 's/\//-/g' | sed 's/[^a-z0-9_-]//g')" >> $GITHUB_ENV
-
-      # Set various directories and filters based on sanitized branch name
-      - name: Set BRANCH_DIR, CODE_DIR, and BRANCH_FILTER variables
         run: |
-          echo "BRANCH_DIR=/${{ secrets.SSH_USER }}/app/temp/gitgrade/branch-$SANITIZED_BRANCH_NAME" >> $GITHUB_ENV
-          echo "CODE_DIR=$BRANCH_DIR/Codigo" >> $GITHUB_ENV
-          echo "BRANCH_FILTER=gitgrade_$SANITIZED_BRANCH_NAME" >> $GITHUB_ENV
+          echo "SANITIZED_BRANCH_NAME=$(echo "${{ github.head_ref }}" | tr '[:upper:]' '[:lower:]' | sed 's/\//-/g' | sed 's/[^a-z0-9_-]//g')" >> $GITHUB_ENV
 
-  cleanup:
-    name: Cleanup VM Resources based on PR Status
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      # Cleanup containers, images, volumes, networks, and project files
-      - name: Cleanup VM Resources
+      - name: Set BRANCH_DIR variable
+        run: |
+          echo "BRANCH_DIR=/${{ secrets.SSH_USER }}/app/temp/gitgrade/branch-${{ env.SANITIZED_BRANCH_NAME }}" >> $GITHUB_ENV
+
+      - name: Set CODE_DIR variable
+        run: |
+          echo "CODE_DIR=${{ env.BRANCH_DIR }}/Codigo" >> $GITHUB_ENV
+
+      - name: Set BRANCH_FILTER variable
+        run: |
+          echo "BRANCH_FILTER=gitgrade_${{ env.SANITIZED_BRANCH_NAME }}" >> $GITHUB_ENV
+
+      - name: Stop and remove containers, images, volumes and project files from VPS based on Pull Request branch if OPENED, UPDATED, REOPENED or CLOSED
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -39,6 +39,8 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
+            BRANCH_FILTER=${{ env.BRANCH_FILTER }}
+
             # Stop and remove containers
             CONTAINERS=$(sudo docker ps -a -q --filter="name=$BRANCH_FILTER")
             if [ "$CONTAINERS" != "" ]; then
@@ -65,20 +67,13 @@ jobs:
             fi
 
             # Clean Dangling networks
-            DANGLING_NETWORKS=$(sudo docker network ls -q -f "dangling=true" $BRANCH_FILTER)
+            DANGLING_NETWORKS=$(sudo docker network ls -q -f "dangling=true" --filter="name=$BRANCH_FILTER")
             if [ "$DANGLING_NETWORKS" != "" ]; then
                 sudo docker network rm $DANGLING_NETWORKS
             fi
 
-            sudo rm -rf $BRANCH_DIR
+            sudo rm -rf /${{ secrets.SSH_USER }}/app/temp/gitgrade/branch-${{ env.SANITIZED_BRANCH_NAME }}
 
-  deploy:
-    name: Deploy based on PR Status
-    needs: setup
-    if: github.event.action != 'closed'
-    runs-on: ubuntu-latest
-    steps:
-      # Generate ports
       - name: Generate DB_PORT and Set in env
         if: github.event.action != 'closed'
         run: |
@@ -103,18 +98,20 @@ jobs:
           ')
           echo "JOBSCHEDULER_NODE_PORT=$JOBSCHEDULER_NODE_PORT" >> $GITHUB_ENV
 
-      # Create Code Directory on VM
-      - name: Mkdir CODE_DIR on VM
+      - name: Mkdir CODE_DIR
+        if: github.event.action != 'closed'
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           port: ${{ secrets.SSH_PORT }}
           password: ${{ secrets.SSH_PASSWORD }}
-          script: mkdir -p "$CODE_DIR"
+          script: |
+            CODE_DIR=${{ env.CODE_DIR }}
+            mkdir -p "$CODE_DIR"
 
-      # Generate docker-compose .env
-      - name: Generate docker-compose .env on VM
+      - name: Generate docker-compose .env
+        if: github.event.action != 'closed'
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -155,8 +152,8 @@ jobs:
             echo "TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}" >> "$CODE_DIR/.env"
             echo "TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}" >> "$CODE_DIR/.env"
 
-      # Copy project files to VM
-      - name: Copy project files to VM
+      - name: Copy project files to VPS based on Pull Request branch if OPENED, UPDATED or REOPENED
+        if: github.event.action != 'closed'
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -164,10 +161,10 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           password: ${{ secrets.SSH_PASSWORD }}
           source: "./Codigo/"
-          target: "$BRANCH_DIR"
+          target: "${{ env.BRANCH_DIR }}"
 
-      # Comment on the PR with port details
-      - name: Comment PR with port details
+      - name: Comment PR with port details if OPENED, UPDATED or REOPENED
+        if: github.event.action != 'closed'
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
@@ -175,8 +172,8 @@ jobs:
             - **DB_PORT**: ${{ env.DB_PORT }}
             - **JOBSCHEDULER_NODE_PORT**: ${{ env.JOBSCHEDULER_NODE_PORT }}
 
-      # Deploy to VM
-      - name: Deploy to VM
+      - name: Deploy to VM on Pull Request if OPENED, UPDATED or REOPENED
+        if: github.event.action != 'closed'
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -184,5 +181,6 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
-            cd $CODE_DIR
+            cd ${{ env.CODE_DIR }}
+            BRANCH_FILTER=${{ env.BRANCH_FILTER }}
             sudo docker-compose -p $BRANCH_FILTER up -d --build
