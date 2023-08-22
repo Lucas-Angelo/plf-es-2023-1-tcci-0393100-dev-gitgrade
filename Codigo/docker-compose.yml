@@ -10,8 +10,8 @@ services:
       - MYSQL_PASSWORD=$DB_PASSWORD
     ports:
       - $DB_PORT:$DB_DOCKER_PORT
-    expose:
-      - $DB_PORT
+    volumes:
+      - gitgrade-mysql-data:/var/lib/mysql
     networks:
       - gitgrade-network
     env_file:
@@ -44,15 +44,21 @@ services:
       - GITHUB_ORGANIZATION_NAME=$GITHUB_ORGANIZATION_NAME
       - TELEGRAM_BOT_TOKEN=$TELEGRAM_BOT_TOKEN
       - TELEGRAM_CHAT_ID=$TELEGRAM_CHAT_ID
-    command: /bin/bash -c "./wait-for-it.sh --timeout=600 mysql_gitgrade:$DB_DOCKER_PORT && npm run start:dev"
+    command: /bin/bash -c "./wait-for-it.sh --timeout=600 mysql_gitgrade:$DB_DOCKER_PORT && npm run start:prod"
     ports:
       - $JOBSCHEDULER_NODE_PORT:3000
-    expose:
-      - $JOBSCHEDULER_NODE_PORT
+    volumes:
+      - gitgrade-jobscheduler-service:/usr/src/gitgrade/jobscheduler_service
+      - gitgrade-node-modules:/usr/src/gitgrade/jobscheduler_service/node_modules
     networks:
       - gitgrade-network
     env_file:
       - .env
+
+volumes:
+  gitgrade-mysql-data:
+  gitgrade-jobscheduler-service:
+  gitgrade-node-modules:
 
 networks:
   gitgrade-network:

@@ -16,18 +16,9 @@ Este diretório mantém todo o código produzido no projeto.
 
 ## Docker-compose development run:
 
-```bash
-$ bash run-docker.sh -dev
-```
-
-## Docker-compose test run:
+- `--branch` is optional
+- `--d` is optional
 
 ```bash
-$ bash run-docker.sh -test
-```
-
-## Docker-compose production run:
-
-```bash
-$ bash run-docker.sh -prod -d
+$ bash run-docker-local.sh --branch YOUR_BRANCH_NAME --d
 ```

@@ -1,4 +1,4 @@
-name: Deploy Review App
+name: Deploy Pull Request
 
 on:
   pull_request:
@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # Sanitize branch name removing special characters and replacing slashes with dashes
       - name: Sanitize branch name
@@ -49,7 +49,7 @@ jobs:
             fi
 
             # Remove images
-            IMAGES=$(sudo docker images -aq $BRANCH_FILTER)
+            IMAGES=$(sudo docker images -q -f "dangling=true" $BRANCH_FILTER)
             if [ "$IMAGES" != "" ]; then
                 sudo docker rmi -f $IMAGES
             fi
@@ -58,6 +58,18 @@ jobs:
             VOLUMES=$(sudo docker volume ls -q --filter="name=$BRANCH_FILTER")
             if [ "$VOLUMES" != "" ]; then
                 sudo docker volume rm $VOLUMES
+            fi
+
+            # Remove networks
+            NETWORKS=$(sudo docker network ls -q --filter="name=$BRANCH_FILTER")
+            if [ "$NETWORKS" != "" ]; then
+                sudo docker network rm $NETWORKS
+            fi
+
+            # Clean Dangling networks
+            DANGLING_NETWORKS=$(sudo docker network ls -q -f "dangling=true" --filter="name=$BRANCH_FILTER")
+            if [ "$DANGLING_NETWORKS" != "" ]; then
+                sudo docker network rm $DANGLING_NETWORKS
             fi
 
             sudo rm -rf /${{ secrets.SSH_USER }}/app/temp/gitgrade/branch-${{ env.SANITIZED_BRANCH_NAME }}
@@ -114,7 +126,7 @@ jobs:
 
             cd "$CODE_DIR"
 
-            rm .env
+            rm -f .env
             touch .env
 
             echo "# MySQL docker service envs" >> "$CODE_DIR/.env"
