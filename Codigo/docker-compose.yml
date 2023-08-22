@@ -2,6 +2,7 @@ version: "3.9"
 
 services:
   mysql_gitgrade:
+    container_name: mysql_gitgrade
     image: mysql:8.1.0
     restart: unless-stopped
     environment:
