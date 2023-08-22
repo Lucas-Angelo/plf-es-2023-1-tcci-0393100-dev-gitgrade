@@ -91,7 +91,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
-            CODE_DIR=${{ env.CODE_DIR }}}
+            CODE_DIR=${{ env.CODE_DIR }}
             mkdir -p "$CODE_DIR"
 
       - name: Generate docker-compose .env
@@ -106,7 +106,7 @@ jobs:
             DB_PORT=${{ env.DB_PORT }}
             JOBSCHEDULER_NODE_PORT=${{ env.JOBSCHEDULER_NODE_PORT }}
 
-            CODE_DIR=${{ env.CODE_DIR }}}
+            CODE_DIR=${{ env.CODE_DIR }}
 
             cd "$CODE_DIR"
 
@@ -166,5 +166,5 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
-            cd "${{ env.CODE_DIR }}}}"
+            cd ${{ env.CODE_DIR }}
             bash run-docker.sh --d --branch ${{ env.SANITIZED_BRANCH_NAME }}
