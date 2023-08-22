@@ -17,5 +17,4 @@ RUN npm install
 COPY . .
 
 # To await for the database to be ready
-COPY wait-for-it.sh /usr/wait-for-it.sh
-RUN chmod +x /usr/wait-for-it.sh
+RUN chmod +x ./wait-for-it.sh
