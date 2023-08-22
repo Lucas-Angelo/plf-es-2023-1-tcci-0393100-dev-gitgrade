@@ -6,12 +6,6 @@ on:
     paths:
       - "Codigo/**"
 
-env:
-  SSH_USER: ${{ secrets.SSH_USER }}
-  SSH_HOST: ${{ secrets.SSH_HOST }}
-  SSH_PORT: ${{ secrets.SSH_PORT }}
-  SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
-
 jobs:
   setup:
     name: Setup Environment Variables
@@ -27,7 +21,7 @@ jobs:
       # Set various directories and filters based on sanitized branch name
       - name: Set BRANCH_DIR, CODE_DIR, and BRANCH_FILTER variables
         run: |
-          echo "BRANCH_DIR=/$SSH_USER/app/temp/gitgrade/branch-$SANITIZED_BRANCH_NAME" >> $GITHUB_ENV
+          echo "BRANCH_DIR=/${{ secrets.SSH_USER }}/app/temp/gitgrade/branch-$SANITIZED_BRANCH_NAME" >> $GITHUB_ENV
           echo "CODE_DIR=$BRANCH_DIR/Codigo" >> $GITHUB_ENV
           echo "BRANCH_FILTER=gitgrade_$SANITIZED_BRANCH_NAME" >> $GITHUB_ENV
 
@@ -40,10 +34,10 @@ jobs:
       - name: Cleanup VM Resources
         uses: appleboy/ssh-action@master
         with:
-          host: $SSH_HOST
-          username: $SSH_USER
-          port: $SSH_PORT
-          password: $SSH_PASSWORD
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          password: ${{ secrets.SSH_PASSWORD }}
           script: |
             # Stop and remove containers
             CONTAINERS=$(sudo docker ps -a -q --filter="name=$BRANCH_FILTER")
@@ -113,20 +107,20 @@ jobs:
       - name: Mkdir CODE_DIR on VM
         uses: appleboy/ssh-action@master
         with:
-          host: $SSH_HOST
-          username: $SSH_USER
-          port: $SSH_PORT
-          password: $SSH_PASSWORD
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          password: ${{ secrets.SSH_PASSWORD }}
           script: mkdir -p "$CODE_DIR"
 
       # Generate docker-compose .env
       - name: Generate docker-compose .env on VM
         uses: appleboy/ssh-action@master
         with:
-          host: $SSH_HOST
-          username: $SSH_USER
-          port: $SSH_PORT
-          password: $SSH_PASSWORD
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          password: ${{ secrets.SSH_PASSWORD }}
           script: |
             DB_PORT=${{ env.DB_PORT }}
             JOBSCHEDULER_NODE_PORT=${{ env.JOBSCHEDULER_NODE_PORT }}
@@ -165,10 +159,10 @@ jobs:
       - name: Copy project files to VM
         uses: appleboy/scp-action@master
         with:
-          host: $SSH_HOST
-          username: $SSH_USER
-          port: $SSH_PORT
-          password: $SSH_PASSWORD
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          password: ${{ secrets.SSH_PASSWORD }}
           source: "./Codigo/"
           target: "$BRANCH_DIR"
 
@@ -185,10 +179,10 @@ jobs:
       - name: Deploy to VM
         uses: appleboy/ssh-action@master
         with:
-          host: $SSH_HOST
-          username: $SSH_USER
-          port: $SSH_PORT
-          password: $SSH_PASSWORD
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          password: ${{ secrets.SSH_PASSWORD }}
           script: |
             cd $CODE_DIR
             sudo docker-compose -p $BRANCH_FILTER up -d --build
