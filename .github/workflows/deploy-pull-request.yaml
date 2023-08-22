@@ -27,6 +27,10 @@ jobs:
         run: |
           echo "CODE_DIR=${{ env.BRANCH_DIR }}/Codigo" >> $GITHUB_ENV
 
+      - name: Set BRANCH_FILTER variable
+        run: |
+          echo "BRANCH_FILTER=gitgrade_${{ env.SANITIZED_BRANCH_NAME }}" >> $GITHUB_ENV
+
       - name: Stop and remove containers, images, volumes and project files from VPS based on Pull Request branch if OPENED, UPDATED, REOPENED or CLOSED
         uses: appleboy/ssh-action@master
         with:
@@ -35,7 +39,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
-            BRANCH_FILTER="gitgrade_${{ env.SANITIZED_BRANCH_NAME }}"
+            BRANCH_FILTER=${{ env.BRANCH_FILTER }}
 
             # Stop and remove containers
             CONTAINERS=$(sudo docker ps -a -q --filter="name=$BRANCH_FILTER")
@@ -167,4 +171,4 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             cd ${{ env.CODE_DIR }}
-            bash run-docker.sh --d --branch ${{ env.SANITIZED_BRANCH_NAME }}
+            sudo docker-compose up -p {{ env.BRANCH_FILTER }} -d

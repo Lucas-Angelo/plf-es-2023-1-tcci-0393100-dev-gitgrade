@@ -53,14 +53,28 @@ build_docker_command() {
     BRANCH="$1"
     DETACHED="$2"
     
+    # Verificar se containers existem
     containers_exist=$(docker ps -a -q -f "name=gitgrade_$BRANCH")
 
+    # Parar e remover containers, imagens, volumes e redes com o prefixo gitgrade_$BRANCH
     if [ ! -z "$containers_exist" ]; then
-        cmd="docker-compose -p gitgrade_$BRANCH down -v && docker system prune -f && docker-compose build --no-cache && docker-compose -p gitgrade_$BRANCH up $DETACHED --force-recreate"
-    else
-        cmd="docker system prune -f && docker-compose build --no-cache && docker-compose -p gitgrade_$BRANCH up $DETACHED --force-recreate"
+        # Parar e remover containers
+        docker ps -a | grep "gitgrade_$BRANCH" | awk '{print $1}' | xargs -r docker stop > /dev/null 2>&1
+        docker ps -a | grep "gitgrade_$BRANCH" | awk '{print $1}' | xargs -r docker rm > /dev/null 2>&1
+        
+        # Remover imagens
+        docker images | grep "gitgrade_$BRANCH" | awk '{print $3}' | xargs -r docker rmi > /dev/null 2>&1
+        
+        # Remover volumes
+        docker volume ls | grep "gitgrade_$BRANCH" | awk '{print $2}' | xargs -r docker volume rm > /dev/null 2>&1
+        
+        # Remover redes
+        docker network ls | grep "gitgrade_$BRANCH" | awk '{print $2}' | xargs -r docker network rm > /dev/null 2>&1
     fi
-
+    
+    # Define o comando solicitado
+    cmd="docker-compose -p gitgrade_$BRANCH up $DETACHED"
+    
     echo "$cmd"
 }
 
