@@ -1,0 +1,67 @@
+version: "3.9"
+
+services:
+  mysql_gitgrade:
+    image: mysql:8.1.0
+    restart: unless-stopped
+    environment:
+      - TZ=$APP_TIMEZONE
+      - MYSQL_DATABASE=$DB_NAME
+      - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
+      - MYSQL_PASSWORD=$DB_PASSWORD
+    ports:
+      - $DB_PORT:$DB_DOCKER_PORT
+    volumes:
+      - gitgrade-mysql-data:/var/lib/mysql
+    networks:
+      - gitgrade-network
+    env_file:
+      - .env
+
+  jobscheduler-service:
+    build:
+      context: ./jobscheduler-service/
+      dockerfile: Dockerfile
+    working_dir: /usr/src/gitgrade/jobscheduler_service/
+    restart: unless-stopped
+    depends_on:
+      - mysql_gitgrade
+    environment:
+      - TZ=$APP_TIMEZONE
+      - DB_HOST=mysql_gitgrade
+      - DB_USER=$DB_USER
+      - DB_PASSWORD=$DB_PASSWORD
+      - DB_NAME=$DB_NAME
+      - DB_PORT=$DB_DOCKER_PORT
+      - JOBSCHEDULER_NODE_PORT=$JOBSCHEDULER_NODE_PORT
+      - NODE_ENV=$NODE_ENV
+      - APP_TIMEZONE=$APP_TIMEZONE
+      - DB_DIALECT=$DB_DIALECT
+      - DB_CHARSET=$DB_CHARSET
+      - DB_COLLATE=$DB_COLLATE
+      - DB_TIMEZONE=$DB_TIMEZONE
+      - SYNC_TIME=$SYNC_TIME
+      - APP_DEBUG=$APP_DEBUG
+      - GITHUB_PERSONAL_ACCESS_TOKEN=$GITHUB_PERSONAL_ACCESS_TOKEN
+      - GITHUB_ORGANIZATION_NAME=$GITHUB_ORGANIZATION_NAME
+      - TELEGRAM_BOT_TOKEN=$TELEGRAM_BOT_TOKEN
+      - TELEGRAM_CHAT_ID=$TELEGRAM_CHAT_ID
+    command: /bin/bash -c "./wait-for-it.sh --timeout=600 mysql_gitgrade:$DB_DOCKER_PORT && npm run start:prod"
+    ports:
+      - $JOBSCHEDULER_NODE_PORT:3000
+    volumes:
+      - gitgrade-jobscheduler-service:/usr/src/gitgrade/jobscheduler_service
+      - gitgrade-node-modules:/usr/src/gitgrade/jobscheduler_service/node_modules
+    networks:
+      - gitgrade-network
+    env_file:
+      - .env
+
+volumes:
+  gitgrade-mysql-data:
+  gitgrade-jobscheduler-service:
+  gitgrade-node-modules:
+
+networks:
+  gitgrade-network:
+    driver: bridge

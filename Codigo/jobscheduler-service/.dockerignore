@@ -1,0 +1,14 @@
+**/node_modules
+**/.git
+**/README.md
+**/LICENSE
+**/.vscode
+**/coverage
+**/.editorconfig
+**/.aws
+**/dist
+**/logs
+logs/
+env/
+package-lock.json
+.dockerignore
