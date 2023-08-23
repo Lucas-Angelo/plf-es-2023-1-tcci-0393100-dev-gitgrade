@@ -7,7 +7,11 @@ WORKDIR /usr/src/gitgrade/jobscheduler_service
 # Update and install dependency
 RUN apk update && \
     apk upgrade && \
-    apk add --no-cache git bash inotify-tools
+    apk add --no-cache git bash inotify-tools tzdata
+
+# Set timezone
+RUN ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && \
+    echo "America/Sao_Paulo" > /etc/timezone
 
 # Install app dependencies
 COPY ./package.json .

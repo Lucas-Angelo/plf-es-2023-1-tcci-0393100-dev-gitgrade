@@ -5,6 +5,7 @@ services:
     image: mysql:8.1.0
     restart: unless-stopped
     environment:
+      - TZ=$APP_TIMEZONE
       - MYSQL_DATABASE=$DB_NAME
       - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
       - MYSQL_PASSWORD=$DB_PASSWORD
@@ -26,6 +27,7 @@ services:
     depends_on:
       - mysql_gitgrade
     environment:
+      - TZ=$APP_TIMEZONE
       - DB_HOST=mysql_gitgrade
       - DB_USER=$DB_USER
       - DB_PASSWORD=$DB_PASSWORD
