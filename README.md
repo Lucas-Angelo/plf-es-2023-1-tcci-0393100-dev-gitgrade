@@ -114,6 +114,44 @@ interdisciplinar.
 
 ---
 
+## 💬 Padrão de commits
+
+Esse projeto utiliza o padrão de commits do [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+
+Ele padroniza os commits a partir da seguinte estrutura: 
+
+```
+
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+
+```
+
+O `type` é obrigatório e deve ser um dos seguintes:
+
+ - build: Mudanças que afetam o build do sistema ou dependências externas.
+ - ci: Mudanças nos arquivos e scripts de configuração do CI.
+ - docs: Mudanças apenas na documentação.
+ - feat: Adição de uma nova feature.
+ - fix: Correção de um bug. 
+ - perf: Melhoria de performance.
+ - refactor: Mudança de código que não corrige um bug e nem adiciona uma feature.
+ - style: Mudanças que não afetam o significado do código (espaços em branco, formatação, ponto e vírgula faltando, etc).
+  - test: Adição de testes ou correção de testes existentes.
+  
+Essas opções são baseadas no [Angular Commit Message Guidelines](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines). 
+
+O `scope` é opcional e deve ser usado para indicar o escopo da mudança. Ele deve vir entre parenteses, por exemplo: `feat(parser): add ability to parse arrays`.
+
+O `description` é obrigatório e deve ser uma descrição curta da mudança.
+
+O `body` é opcional e deve ser usado para explicar a mudança de forma mais detalhada. Ele deve vir após uma linha em branco do `description`.
+
+O `footer` é opcional e deve ser usado para adicionar informações adicionais como links para issues ou pull requests. Ele deve vir após uma linha em branco do `body`.
+
 ## ⤵ Instruções de utilização 
 (Deve-se atualizar ao fim do projeto)
 
