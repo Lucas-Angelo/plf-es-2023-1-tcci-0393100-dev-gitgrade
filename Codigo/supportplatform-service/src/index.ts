@@ -3,9 +3,8 @@ import cors from "cors";
 import { RegisterRoutes } from "./swagger/routes";
 
 import swaggerUi from "swagger-ui-express";
-import Database from "./database";
 import AppError from "./error/AppError";
-import EnvConfig from "./config/EnvConfig";
+import { ValidateError } from "tsoa";
 
 const app = express();
 
@@ -39,6 +38,15 @@ app.use([
             });
         }
 
+        if (err instanceof ValidateError) {
+            // eslint-disable-next-line no-console
+            console.log(err);
+            return response.status(422).json({
+                message: "Erro de validação",
+                details: err?.fields,
+            });
+        }
+
         // Caso seja outro erro
         if (process.env.APP_DEBUG) {
             // eslint-disable-next-line no-console
@@ -57,11 +65,4 @@ app.use([
     },
 ]);
 
-const database = new Database();
-database.connect().catch(database.disconnect);
-
-const port = EnvConfig.PORT || 3001;
-app.listen(port, () => {
-    // eslint-disable-next-line no-console
-    console.log(`Server is running on port ${port}`);
-});
+export default app;

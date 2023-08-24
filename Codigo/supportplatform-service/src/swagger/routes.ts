@@ -43,8 +43,8 @@ const models: TsoaRoute.Models = {
     "GetAllRepositoryQueryDTO": {
         "dataType": "refObject",
         "properties": {
-            "page": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"page must be an integer"}}},
-            "limit": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"page must be an integer"}}},
+            "page": {"dataType":"integer","validators":{"isInt":{"errorMsg":"page must be an integer"},"minimum":{"errorMsg":"page must be greater than or equal to 1","value":1}}},
+            "limit": {"dataType":"integer","validators":{"isInt":{"errorMsg":"limit must be an integer"},"minimum":{"errorMsg":"limit must be greater than or equal to 1","value":1}}},
             "filter": {"dataType":"string"},
         },
         "additionalProperties": false,
