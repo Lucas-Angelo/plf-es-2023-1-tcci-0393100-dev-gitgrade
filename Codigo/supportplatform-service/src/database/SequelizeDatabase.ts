@@ -1,21 +1,21 @@
-import { Options, Sequelize } from "sequelize";
+import { Sequelize } from "sequelize";
 import MySqlDatabase from "./MySqlDatabase";
 
-import SequelizeConfig from "../config/SequelizeConfig";
 import EnvConfig from "../config/EnvConfig";
 import logger from "../config/LogConfig";
 
-import { User } from "../model/User";
-import { Repository } from "../model/Repository";
-import { Contributor } from "../model/Contributor";
-import { Issue } from "../model/Issue";
-import { PullRequest } from "../model/PullRequest";
+import SequelizeOptions from "../config/SequelizeConfig";
 import { Branch } from "../model/Branch";
 import { Commit } from "../model/Commit";
+import { Contributor } from "../model/Contributor";
 import { File } from "../model/File";
-import { RepositoryHasContributor } from "../model/RepositoryHasContributor";
+import { Issue } from "../model/Issue";
 import { IssueHasAssigneeContributor } from "../model/IssueHasAssigneeContributor";
+import { PullRequest } from "../model/PullRequest";
 import { PullRequestHasAssigneeContributor } from "../model/PullRequestHasAssigneeContributor";
+import { Repository } from "../model/Repository";
+import { RepositoryHasContributor } from "../model/RepositoryHasContributor";
+import { User } from "../model/User";
 
 class SequelizeDatabase {
     private sequelize: Sequelize;
@@ -25,18 +25,11 @@ class SequelizeDatabase {
     }
 
     private initializeSequelize(): Sequelize {
-        const defaultOptions: Options = {};
-        const sequelizeOptions: Options = {
-            ...defaultOptions,
-            ...(SequelizeConfig?.options as Options),
-        };
-
         return new Sequelize(
-            SequelizeConfig?.database ?? "gitgrade",
-
-            SequelizeConfig?.username ?? "root",
-            SequelizeConfig?.password ?? "root",
-            sequelizeOptions
+            EnvConfig.DB_NAME || "error",
+            EnvConfig.DB_USER || "error",
+            EnvConfig.DB_PASSWORD || "error",
+            SequelizeOptions
         );
     }
 
@@ -50,14 +43,13 @@ class SequelizeDatabase {
 
     private logConnectionError(error: unknown) {
         logger.error(
-            `Unable to establish, check, or re-sync connection with '${EnvConfig.DB_HOST}:${EnvConfig.DB_PORT}/${EnvConfig.DB_NAME}' with user '${EnvConfig.DB_USER}' and password '${EnvConfig.DB_PASSWORD}.'`
+            `Unable to establish, check, or re-sync connection with '${EnvConfig.DB_HOST}:${EnvConfig.DB_PORT}/${EnvConfig.DB_NAME}' with user '${EnvConfig.DB_USER}' and password '${EnvConfig.DB_PASSWORD}.'`,
+            { error }
         );
-        logger.error(error);
         throw error;
     }
 
     private initModels() {
-        Branch.initModel(this.sequelize);
         User.initModel(this.sequelize);
         Repository.initModel(this.sequelize);
         Contributor.initModel(this.sequelize);
@@ -66,6 +58,7 @@ class SequelizeDatabase {
         IssueHasAssigneeContributor.initModel(this.sequelize);
         PullRequest.initModel(this.sequelize);
         PullRequestHasAssigneeContributor.initModel(this.sequelize);
+        Branch.initModel(this.sequelize);
         Commit.initModel(this.sequelize);
         File.initModel(this.sequelize);
     }
@@ -89,9 +82,12 @@ class SequelizeDatabase {
         await MySqlDatabase.createDatabaseIfNotExists();
 
         try {
-            await this.sequelize.authenticate();
             this.initModels();
             this.associateModels();
+            await this.sequelize.authenticate();
+            // TODO: create migrations
+            if (EnvConfig.NODE_ENV == "development")
+                await this.sequelize.sync();
             this.logConnectionSuccess();
         } catch (error) {
             this.logConnectionError(error);
