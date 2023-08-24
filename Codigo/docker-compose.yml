@@ -33,7 +33,7 @@ services:
       - DB_PASSWORD=$DB_PASSWORD
       - DB_NAME=$DB_NAME
       - DB_PORT=$DB_DOCKER_PORT
-      - JOBSCHEDULER_NODE_PORT=$JOBSCHEDULER_NODE_PORT
+      - PORT=$JOBSCHEDULER_SERVICE_NODE_PORT
       - NODE_ENV=$NODE_ENV
       - APP_TIMEZONE=$APP_TIMEZONE
       - DB_DIALECT=$DB_DIALECT
@@ -48,7 +48,7 @@ services:
       - TELEGRAM_CHAT_ID=$TELEGRAM_CHAT_ID
     command: /bin/bash -c "./wait-for-it.sh --timeout=600 mysql_gitgrade:$DB_DOCKER_PORT && npm run start:prod"
     ports:
-      - $JOBSCHEDULER_NODE_PORT:3000
+      - $JOBSCHEDULER_SERVICE_NODE_PORT:$JOBSCHEDULER_SERVICE_NODE_PORT
     volumes:
       - gitgrade-jobscheduler-service:/usr/src/gitgrade/jobscheduler_service
       - gitgrade-jobscheduler-service-node-modules:/usr/src/gitgrade/jobscheduler_service/node_modules
@@ -82,10 +82,36 @@ services:
       - APP_DEBUG=$APP_DEBUG
     command: /bin/bash -c "./wait-for-it.sh --timeout=600 mysql_gitgrade:$DB_DOCKER_PORT && npm run start:prod"
     ports:
-      - $SUPPORTPLATFORM_SERVICE_NODE_PORT:3000
+      - $SUPPORTPLATFORM_SERVICE_NODE_PORT:$SUPPORTPLATFORM_SERVICE_NODE_PORT
     volumes:
       - gitgrade-supportplataform-service:/usr/src/gitgrade/supportplataform_service
       - gitgrade-supportplataform-service-node-modules:/usr/src/gitgrade/supportplataform_service/node_modules
+    networks:
+      - gitgrade-network
+    env_file:
+      - .env
+
+  supportplataform-web:
+    build:
+      context: .
+      dockerfile: ./supportplatform-web/Dockerfile
+    working_dir: /usr/src/gitgrade/supportplatform_web/
+    restart: unless-stopped
+    depends_on:
+      - mysql_gitgrade
+    environment:
+      - TZ=$APP_TIMEZONE
+      - PORT=$SUPPORTPLATAFORM_WEB_NODE_PORT
+      - NODE_ENV=$NODE_ENV
+      - APP_TIMEZONE=$APP_TIMEZONE
+      - APP_DEBUG=$APP_DEBUG
+      - VITE_API_URL=http://$supportplataform-service:$SUPPORTPLATFORM_SERVICE_NODE_PORT
+    command: /bin/bash -c "./wait-for-it.sh --timeout=600 mysql_gitgrade:$DB_DOCKER_PORT && npm run dev"
+    ports:
+      - $SUPPORTPLATAFORM_WEB_NODE_PORT:$SUPPORTPLATAFORM_WEB_NODE_PORT
+    volumes:
+      - gitgrade-supportplataform-web:/usr/src/gitgrade/supportplataform_web
+      - gitgrade-supportplataform-web-node-modules:/usr/src/gitgrade/supportplataform_web/node_modules
     networks:
       - gitgrade-network
     env_file:
@@ -97,6 +123,8 @@ volumes:
   gitgrade-jobscheduler-service-node-modules:
   gitgrade-supportplataform-service:
   gitgrade-supportplataform-service-node-modules:
+  gitgrade-supportplataform-web:
+  gitgrade-supportplataform-web-node-modules:
 
 networks:
   gitgrade-network:

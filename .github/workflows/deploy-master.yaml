@@ -112,6 +112,7 @@ jobs:
             touch .env
 
             echo "# MySQL docker service envs" >> "$CODE_DIR/.env"
+            echo "HOST=${{ secrets.HOST }}" >> "$CODE_DIR/.env"
             echo "DB_HOST=${{ secrets.DB_HOST }}" >> "$CODE_DIR/.env"
             echo "DB_USER=${{ secrets.DB_USER }}" >> "$CODE_DIR/.env"
             echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> "$CODE_DIR/.env"
@@ -120,7 +121,7 @@ jobs:
             echo "DB_DOCKER_PORT=3306" >> "$CODE_DIR/.env"
 
             echo "# Jobscheduler docker service envs" >> "$CODE_DIR/.env"
-            echo "JOBSCHEDULER_NODE_PORT=${{ secrets.JOBSCHEDULER_NODE_PORT }}" >> "$CODE_DIR/.env"
+            echo "JOBSCHEDULER_SERVICE_NODE_PORT=${{ secrets.JOBSCHEDULER_SERVICE_NODE_PORT }}" >> "$CODE_DIR/.env"
             echo "NODE_ENV=development" >> "$CODE_DIR/.env"
             echo "APP_TIMEZONE=${{ secrets.APP_TIMEZONE }}" >> "$CODE_DIR/.env"
             echo "DB_DIALECT=${{ secrets.DB_DIALECT }}" >> "$CODE_DIR/.env"
@@ -133,6 +134,13 @@ jobs:
             echo "GITHUB_ORGANIZATION_NAME=${{ secrets.GH_ORGANIZATION_NAME }}" >> "$CODE_DIR/.env"
             echo "TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}" >> "$CODE_DIR/.env"
             echo "TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}" >> "$CODE_DIR/.env"
+
+            echo "# SupportPlataform service docker service envs" >> "$CODE_DIR/.env"
+            echo "SUPPORTPLATFORM_SERVICE_NODE_PORT=${{ secrets.SUPPORTPLATFORM_SERVICE_NODE_PORT }}" >> "$CODE_DIR/.env"
+
+            echo "# SupportPlataform web docker service envs" >> "$CODE_DIR/.env"
+            echo "SUPPORTPLATAFORM_WEB_NODE_PORT=${{ secrets.SUPPORTPLATAFORM_WEB_NODE_PORT }}" >> "$CODE_DIR/.env"
+            echo "VITE_API_URL=http://${{ secrets.HOST }}:${{ secrets.SUPPORTPLATFORM_SERVICE_NODE_PORT }}" >> "$CODE_DIR/.env"
 
       - name: Copy project files to VPS based on Pull Request branch if OPENED, UPDATED or REOPENED
         uses: appleboy/scp-action@master

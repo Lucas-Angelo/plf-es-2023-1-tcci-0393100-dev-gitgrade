@@ -86,25 +86,25 @@ jobs:
           ')
           echo "DB_PORT=$DB_PORT" >> $GITHUB_ENV
 
-      - name: Generate JOBSCHEDULER_NODE_PORT and Set in env
+      - name: Generate JOBSCHEDULER_SERVICE_NODE_PORT and Set in env
         if: github.event.action != 'closed'
         run: |
-          JOBSCHEDULER_NODE_PORT=$(sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -o "StrictHostKeyChecking=no" -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
-            JOBSCHEDULER_NODE_PORT=$((RANDOM % 1000 + 5001))
-            while sudo lsof -Pi :$JOBSCHEDULER_NODE_PORT -sTCP:LISTEN -t >/dev/null; do
-                JOBSCHEDULER_NODE_PORT=$((RANDOM % 1000 + 5001))
+          JOBSCHEDULER_SERVICE_NODE_PORT=$(sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -o "StrictHostKeyChecking=no" -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
+            JOBSCHEDULER_SERVICE_NODE_PORT=$((RANDOM % 1000 + 5001))
+            while sudo lsof -Pi :$JOBSCHEDULER_SERVICE_NODE_PORT -sTCP:LISTEN -t >/dev/null; do
+                JOBSCHEDULER_SERVICE_NODE_PORT=$((RANDOM % 1000 + 5001))
             done
-            echo $JOBSCHEDULER_NODE_PORT
+            echo $JOBSCHEDULER_SERVICE_NODE_PORT
           ')
-          echo "JOBSCHEDULER_NODE_PORT=$JOBSCHEDULER_NODE_PORT" >> $GITHUB_ENV
+          echo "JOBSCHEDULER_SERVICE_NODE_PORT=$JOBSCHEDULER_SERVICE_NODE_PORT" >> $GITHUB_ENV
 
       - name: Generate SUPPORTPLATFORM_SERVICE_NODE_PORT and Set in env
         if: github.event.action != 'closed'
         run: |
           SUPPORTPLATFORM_SERVICE_NODE_PORT=$(sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -o "StrictHostKeyChecking=no" -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
-            SUPPORTPLATFORM_SERVICE_NODE_PORT=$((RANDOM % 1000 + 4001))
+            SUPPORTPLATFORM_SERVICE_NODE_PORT=$((RANDOM % 1000 + 6001))
             while sudo lsof -Pi :$SUPPORTPLATFORM_SERVICE_NODE_PORT -sTCP:LISTEN -t >/dev/null; do
-                SUPPORTPLATFORM_SERVICE_NODE_PORT=$((RANDOM % 1000 + 4001))
+                SUPPORTPLATFORM_SERVICE_NODE_PORT=$((RANDOM % 1000 + 6001))
             done
             echo $SUPPORTPLATFORM_SERVICE_NODE_PORT
           ')
@@ -114,9 +114,9 @@ jobs:
         if: github.event.action != 'closed'
         run: |
           SUPPORTPLATAFORM_WEB_NODE_PORT=$(sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -o "StrictHostKeyChecking=no" -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
-            SUPPORTPLATAFORM_WEB_NODE_PORT=$((RANDOM % 1000 + 4001))
+            SUPPORTPLATAFORM_WEB_NODE_PORT=$((RANDOM % 1000 + 7001))
             while sudo lsof -Pi :$SUPPORTPLATAFORM_WEB_NODE_PORT -sTCP:LISTEN -t >/dev/null; do
-                SUPPORTPLATAFORM_WEB_NODE_PORT=$((RANDOM % 1000 + 4001))
+                SUPPORTPLATAFORM_WEB_NODE_PORT=$((RANDOM % 1000 + 7001))
             done
             echo $SUPPORTPLATAFORM_WEB_NODE_PORT
           ')
@@ -144,7 +144,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             DB_PORT=${{ env.DB_PORT }}
-            JOBSCHEDULER_NODE_PORT=${{ env.JOBSCHEDULER_NODE_PORT }}
+            JOBSCHEDULER_SERVICE_NODE_PORT=${{ env.JOBSCHEDULER_SERVICE_NODE_PORT }}
             SUPPORTPLATFORM_SERVICE_NODE_PORT=${{ env.SUPPORTPLATFORM_SERVICE_NODE_PORT }}
             SUPPORTPLATAFORM_WEB_NODE_PORT=${{ env.SUPPORTPLATAFORM_WEB_NODE_PORT }}
 
@@ -156,6 +156,7 @@ jobs:
             touch .env
 
             echo "# Common docker services envs" >> "$CODE_DIR/.env"
+            echo "HOST=${{ secrets.HOST }}" >> "$CODE_DIR/.env"
             echo "NODE_ENV=development" >> "$CODE_DIR/.env"
             echo "APP_DEBUG=${{ secrets.APP_DEBUG }}" >> "$CODE_DIR/.env"
             echo "APP_TIMEZONE=${{ secrets.APP_TIMEZONE }}" >> "$CODE_DIR/.env"
@@ -173,7 +174,7 @@ jobs:
             echo "DB_DOCKER_PORT=3306" >> "$CODE_DIR/.env"
 
             echo "# Jobscheduler docker service envs" >> "$CODE_DIR/.env"
-            echo "JOBSCHEDULER_NODE_PORT=$JOBSCHEDULER_NODE_PORT" >> "$CODE_DIR/.env"
+            echo "JOBSCHEDULER_SERVICE_NODE_PORT=$JOBSCHEDULER_SERVICE_NODE_PORT" >> "$CODE_DIR/.env"
             echo "SYNC_TIME=${{ secrets.SYNC_TIME }}" >> "$CODE_DIR/.env"
             echo "GITHUB_PERSONAL_ACCESS_TOKEN=${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}" >> "$CODE_DIR/.env"
             echo "GITHUB_ORGANIZATION_NAME=${{ secrets.GH_ORGANIZATION_NAME }}" >> "$CODE_DIR/.env"
@@ -185,6 +186,7 @@ jobs:
 
             echo "# SupportPlataform web docker service envs" >> "$CODE_DIR/.env"
             echo "SUPPORTPLATAFORM_WEB_NODE_PORT=$SUPPORTPLATAFORM_WEB_NODE_PORT" >> "$CODE_DIR/.env"
+            echo "VITE_API_URL=http://${{ secrets.HOST }}:$SUPPORTPLATFORM_SERVICE_NODE_PORT" >> "$CODE_DIR/.env"
 
       - name: Copy project files to VPS based on Pull Request branch if OPENED, UPDATED or REOPENED
         if: github.event.action != 'closed'
@@ -204,7 +206,7 @@ jobs:
           message: |
             Services were started with the following port details:
             - **DB_PORT**: ${{ env.DB_PORT }}
-            - **JOBSCHEDULER_NODE_PORT**: ${{ env.JOBSCHEDULER_NODE_PORT }}
+            - **JOBSCHEDULER_SERVICE_NODE_PORT**: ${{ env.JOBSCHEDULER_SERVICE_NODE_PORT }}
             - **SUPPORTPLATFORM_SERVICE_NODE_PORT**: ${{ env.SUPPORTPLATFORM_SERVICE_NODE_PORT }}
             - **SUPPORTPLATAFORM_WEB_NODE_PORT**: ${{ env.SUPPORTPLATAFORM_WEB_NODE_PORT }}
 
