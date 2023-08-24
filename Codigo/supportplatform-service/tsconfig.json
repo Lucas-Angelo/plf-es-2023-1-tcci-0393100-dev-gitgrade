@@ -8,7 +8,7 @@
         "strict": true, // Recommended: Enable all strict type-checking options. https://www.typescriptlang.org/tsconfig#strict
         "esModuleInterop": true, // Recommended: Emit additional JavaScript to ease support for importing CommonJS modules. https://www.typescriptlang.org/tsconfig#esModuleInterop
         "forceConsistentCasingInFileNames": true, // Recommended: Disallow inconsistently-cased references to the same file. https://www.typescriptlang.org/tsconfig#forceConsistentCasingInFileNames
-        "skipLibCheck": false, // Recommended: Skip type checking of declaration files. https://www.typescriptlang.org/tsconfig#skipLibCheck
+        "skipLibCheck": true, // Recommended: Skip type checking of declaration files. https://www.typescriptlang.org/tsconfig#skipLibCheck
         "noImplicitAny": true, // Recommended: Compiler complains about expressions implicitly typed as 'any' https://www.typescriptlang.org/tsconfig#noImplicitAny
         "experimentalDecorators": true, // Enable Decorators https://www.typescriptlang.org/tsconfig#experimentalDecorators
         "emitDecoratorMetadata": true // Emit design-type metadata for decorated declarations in source files. https://www.typescriptlang.org/tsconfig#emitDecoratorMetadata
