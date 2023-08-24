@@ -106,7 +106,7 @@ services:
       - APP_TIMEZONE=$APP_TIMEZONE
       - APP_DEBUG=$APP_DEBUG
       - VITE_API_URL=http://$supportplataform-service:$SUPPORTPLATFORM_SERVICE_NODE_PORT
-    command: /bin/bash -c "./wait-for-it.sh --timeout=600 mysql_gitgrade:$DB_DOCKER_PORT && npm run dev"
+    command: /bin/bash -c "./wait-for-it.sh --timeout=600 mysql_gitgrade:$DB_DOCKER_PORT && npm run dev -- --host 0.0.0.0"
     ports:
       - $SUPPORTPLATAFORM_WEB_NODE_PORT:$SUPPORTPLATAFORM_WEB_NODE_PORT
     volumes:
