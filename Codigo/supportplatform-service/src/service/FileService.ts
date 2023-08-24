@@ -9,7 +9,10 @@ import {
 } from "../interface/FileMetrics";
 
 export default class FileService {
-    async getChangesMetrics(repositoryId: number, branchName: string) {
+    async getFileChangeMetricsGroupedByContributor(
+        repositoryId: number,
+        branchName: string
+    ) {
         const changesCounts = await Contributor.findAll({
             attributes: [
                 "id",

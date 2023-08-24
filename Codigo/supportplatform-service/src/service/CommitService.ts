@@ -8,7 +8,10 @@ import {
 } from "../interface/CommitMetrics";
 
 export default class CommitService {
-    async getCommitMetrics(repositoryId: number, branchName: string) {
+    async getCommitMetricsGroupedByContributor(
+        repositoryId: number,
+        branchName: string
+    ) {
         const commitCounts = await Contributor.findAll({
             attributes: [
                 "id",
