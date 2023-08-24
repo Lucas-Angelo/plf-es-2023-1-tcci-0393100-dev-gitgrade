@@ -80,7 +80,7 @@ services:
       - DB_COLLATE=$DB_COLLATE
       - DB_TIMEZONE=$DB_TIMEZONE
       - APP_DEBUG=$APP_DEBUG
-    command: /bin/bash -c "./wait-for-it.sh --timeout=600 mysql_gitgrade:$DB_DOCKER_PORT && npm run start:dev"
+    command: /bin/bash -c "./wait-for-it.sh --timeout=600 mysql_gitgrade:$DB_DOCKER_PORT && npm run start:prod"
     ports:
       - $SUPPORTPLATFORM_SERVICE_NODE_PORT:3000
     volumes:
