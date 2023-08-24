@@ -51,7 +51,41 @@ services:
       - $JOBSCHEDULER_NODE_PORT:3000
     volumes:
       - gitgrade-jobscheduler-service:/usr/src/gitgrade/jobscheduler_service
-      - gitgrade-node-modules:/usr/src/gitgrade/jobscheduler_service/node_modules
+      - gitgrade-jobscheduler-service-node-modules:/usr/src/gitgrade/jobscheduler_service/node_modules
+    networks:
+      - gitgrade-network
+    env_file:
+      - .env
+
+  supportplataform-service:
+    build:
+      context: .
+      dockerfile: ./supportplatform-service/Dockerfile
+    working_dir: /usr/src/gitgrade/supportplatform_service/
+    restart: unless-stopped
+    depends_on:
+      - mysql_gitgrade
+    environment:
+      - TZ=$APP_TIMEZONE
+      - DB_HOST=mysql_gitgrade
+      - DB_USER=$DB_USER
+      - DB_PASSWORD=$DB_PASSWORD
+      - DB_NAME=$DB_NAME
+      - DB_PORT=$DB_DOCKER_PORT
+      - PORT=$SUPPORTPLATFORM_SERVICE_NODE_PORT
+      - NODE_ENV=$NODE_ENV
+      - APP_TIMEZONE=$APP_TIMEZONE
+      - DB_DIALECT=$DB_DIALECT
+      - DB_CHARSET=$DB_CHARSET
+      - DB_COLLATE=$DB_COLLATE
+      - DB_TIMEZONE=$DB_TIMEZONE
+      - APP_DEBUG=$APP_DEBUG
+    command: /bin/bash -c "./wait-for-it.sh --timeout=600 mysql_gitgrade:$DB_DOCKER_PORT && npm run start:dev"
+    ports:
+      - $SUPPORTPLATFORM_SERVICE_NODE_PORT:3000
+    volumes:
+      - gitgrade-supportplataform-service:/usr/src/gitgrade/supportplataform_service
+      - gitgrade-supportplataform-service-node-modules:/usr/src/gitgrade/supportplataform_service/node_modules
     networks:
       - gitgrade-network
     env_file:
@@ -60,7 +94,9 @@ services:
 volumes:
   gitgrade-mysql-data:
   gitgrade-jobscheduler-service:
-  gitgrade-node-modules:
+  gitgrade-jobscheduler-service-node-modules:
+  gitgrade-supportplataform-service:
+  gitgrade-supportplataform-service-node-modules:
 
 networks:
   gitgrade-network:
