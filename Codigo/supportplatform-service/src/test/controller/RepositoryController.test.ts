@@ -109,4 +109,14 @@ describe("GET /repository", () => {
         expect(response.body.results).toHaveLength(1);
         expect(response.body.totalPages).toBe(2);
     });
+
+    it("should return 200 OK and have 0 results with a page that doesn'st exists", async () => {
+        const response = await supertest(app)
+            .get("/repository?limit=10&page=3000")
+            .expect(200)
+            .send();
+
+        expect(response.body.results).toHaveLength(0);
+        expect(response.body.totalPages).toBe(2);
+    });
 });
