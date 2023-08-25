@@ -16,7 +16,7 @@
     "ts-node": {
         "esm": true
     },
-    "include": ["./src", "../supportplatform-service/api"],
+    "include": ["./src", "index.ts"],
     "exclude": ["./node_modules"],
     "types": ["node", "mysql2", "node-cron", "winston"] // https://www.typescriptlang.org/tsconfig#types
 }
