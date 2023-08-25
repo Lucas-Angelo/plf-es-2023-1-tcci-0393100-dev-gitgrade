@@ -102,11 +102,12 @@ services:
     environment:
       - TZ=$APP_TIMEZONE
       - PORT=$SUPPORTPLATAFORM_WEB_NODE_PORT
+      - HOST=$SUPPORTPLATFORM_WEB_HOST
       - NODE_ENV=$NODE_ENV
       - APP_TIMEZONE=$APP_TIMEZONE
       - APP_DEBUG=$APP_DEBUG
       - VITE_API_URL=http://$HOST:$SUPPORTPLATFORM_SERVICE_NODE_PORT
-    command: /bin/bash -c "./wait-for-it.sh --timeout=600 mysql_gitgrade:$DB_DOCKER_PORT && npm run dev -- --host 0.0.0.0"
+    command: /bin/bash -c "./wait-for-it.sh --timeout=600 mysql_gitgrade:$DB_DOCKER_PORT && npm run dev"
     ports:
       - $SUPPORTPLATAFORM_WEB_NODE_PORT:$SUPPORTPLATAFORM_WEB_NODE_PORT
     volumes:

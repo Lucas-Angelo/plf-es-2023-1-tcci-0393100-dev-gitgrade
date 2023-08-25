@@ -11,6 +11,8 @@ export default defineConfig(({ mode }) => {
     process.env = Object.assign(process.env, loadedEnv);
     const PORT = process.env.PORT as string;
     const port = Number(PORT) || 3000;
+    const HOST = process.env.HOST as string;
+    const host = HOST || "0.0.0.0";
 
     return {
         plugins: [
@@ -27,6 +29,7 @@ export default defineConfig(({ mode }) => {
         envDir: "./env",
         server: {
             port,
+            host,
         },
     };
 });
