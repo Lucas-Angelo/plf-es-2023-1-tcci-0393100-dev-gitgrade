@@ -19,7 +19,11 @@ export class RepositoryController {
     public async getAll(
         @Queries() query: GetAllRepositoryQueryDTO
     ): Promise<PaginationResponseDTO<RepositoryDTO>> {
-        const serviceResponse = await this.repositoryService.findAll(query);
+        const serviceResponse = await this.repositoryService.findAll({
+            limit: query.limit ?? 10,
+            page: query.page ?? 1,
+            filter: query.filter,
+        });
         const mapper = new RepositoryMapper();
         return {
             totalPages: serviceResponse.totalPages,

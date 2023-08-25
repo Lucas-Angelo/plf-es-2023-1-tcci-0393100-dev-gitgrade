@@ -1,3 +1,4 @@
+import { SyncOptions } from "sequelize";
 import logger from "../config/LogConfig";
 import SequelizeDatabase from "./SequelizeDatabase";
 
@@ -27,5 +28,9 @@ export default class Database {
             logger.error("Error during database disconnection:", error);
             throw error;
         }
+    }
+
+    async sync(options?: SyncOptions) {
+        return this.sequelizeDatabase.sync(options);
     }
 }

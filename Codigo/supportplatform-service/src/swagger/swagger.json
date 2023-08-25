@@ -128,20 +128,18 @@
 				"properties": {
 					"page": {
 						"type": "integer",
-						"format": "int32"
+						"format": "int32",
+						"minimum": 1
 					},
 					"limit": {
 						"type": "integer",
-						"format": "int32"
+						"format": "int32",
+						"minimum": 1
 					},
 					"filter": {
 						"type": "string"
 					}
 				},
-				"required": [
-					"page",
-					"limit"
-				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -334,19 +332,21 @@
 					{
 						"in": "query",
 						"name": "page",
-						"required": true,
+						"required": false,
 						"schema": {
 							"format": "int32",
-							"type": "integer"
+							"type": "integer",
+							"minimum": 1
 						}
 					},
 					{
 						"in": "query",
 						"name": "limit",
-						"required": true,
+						"required": false,
 						"schema": {
 							"format": "int32",
-							"type": "integer"
+							"type": "integer",
+							"minimum": 1
 						}
 					},
 					{

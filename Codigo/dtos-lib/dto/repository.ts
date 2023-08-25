@@ -24,11 +24,13 @@ export interface RepositoryDTO {
 export interface GetAllRepositoryQueryDTO {
     /**
      * @isInt page must be an integer
+     * @minimum 1 page must be greater than or equal to 1
      */
-    page: number;
+    page?: number;
     /**
-     * @isInt page must be an integer
+     * @isInt limit must be an integer
+     * @minimum 1 limit must be greater than or equal to 1
      */
-    limit: number;
+    limit?: number;
     filter?: string
 }

@@ -2,6 +2,7 @@ import { Repository } from "../model/Repository";
 import logger from "../config/LogConfig";
 import { sequelizePagination } from "../utils/pagination";
 import { PaginationResponseDTO } from "@gitgrade/dtos";
+import { Sequelize } from "sequelize";
 import { Op } from "sequelize";
 
 export default class RepositoryService {
@@ -12,14 +13,17 @@ export default class RepositoryService {
     }): Promise<PaginationResponseDTO<Repository>> {
         try {
             logger.info("Searching for all repositories");
+            const loweredFilter = search.filter?.toLowerCase();
             const { rows, count } = await Repository.findAndCountAll({
                 ...sequelizePagination(search.page, search.limit),
-                where: search.filter
-                    ? {
-                          name: {
-                              [Op.like]: `%${search.filter}%`,
-                          },
-                      }
+                where: loweredFilter
+                    ? [
+                          Sequelize.where(
+                              Sequelize.fn("lower", Sequelize.col("name")),
+                              Op.like,
+                              `%${loweredFilter}%`
+                          ),
+                      ]
                     : undefined,
             });
             return {

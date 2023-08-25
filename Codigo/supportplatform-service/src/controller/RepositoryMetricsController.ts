@@ -21,10 +21,11 @@ export class RepositoryMetricsController {
         repositoryId: number,
         @Query() branchName?: string
     ): Promise<CommitMetricsDTO> {
-        const serviceResponse = await this.commitService.getCommitMetrics(
-            repositoryId,
-            branchName ?? "master"
-        );
+        const serviceResponse =
+            await this.commitService.getCommitMetricsGroupedByContributor(
+                repositoryId,
+                branchName ?? "master"
+            );
         return new CommitMetricsMapper().toDto(serviceResponse);
     }
 
@@ -33,10 +34,11 @@ export class RepositoryMetricsController {
         repositoryId: number,
         @Query() branchName?: string
     ) {
-        const serviceResponse = await this.fileService.getChangesMetrics(
-            repositoryId,
-            branchName ?? "master"
-        );
+        const serviceResponse =
+            await this.fileService.getFileChangeMetricsGroupedByContributor(
+                repositoryId,
+                branchName ?? "master"
+            );
         return new FileChangeMetricsMapper().toDto(serviceResponse);
     }
 }

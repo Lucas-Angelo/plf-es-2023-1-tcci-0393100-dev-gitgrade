@@ -1,4 +1,4 @@
-import { Sequelize } from "sequelize";
+import { Sequelize, SyncOptions } from "sequelize";
 import MySqlDatabase from "./MySqlDatabase";
 
 import EnvConfig from "../config/EnvConfig";
@@ -86,8 +86,7 @@ class SequelizeDatabase {
             this.associateModels();
             await this.sequelize.authenticate();
             // TODO: create migrations
-            if (EnvConfig.NODE_ENV == "development")
-                await this.sequelize.sync();
+            if (EnvConfig.NODE_ENV == "development") await this.sync();
             this.logConnectionSuccess();
         } catch (error) {
             this.logConnectionError(error);
@@ -96,6 +95,10 @@ class SequelizeDatabase {
 
     async close() {
         await this.sequelize.close();
+    }
+
+    async sync(options?: SyncOptions) {
+        return this.sequelize.sync(options);
     }
 }
 

@@ -2,7 +2,7 @@
     "compilerOptions": {
         "typeRoots": ["node_modules/@types"],
         "outDir": "dist", // where to put the compiled JS files
-        "rootDir": "./src", // where to find the source TS files
+        "rootDir": ".", // where to find the source TS files
         "target": "ES2020", // which level of JS support to target [ES3, ES5, ES6, ES2015, ES2016, ES2017, ES2018, ES2019, ES2020] https://www.typescriptlang.org/tsconfig#target
         "module": "CommonJS", // which system for the program AMD, UMD, System, CommonJS or ES2015 https://www.typescriptlang.org/tsconfig#module
         "strict": true, // Recommended: Enable all strict type-checking options. https://www.typescriptlang.org/tsconfig#strict
