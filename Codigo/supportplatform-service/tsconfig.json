@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "typeRoots": ["node_modules/@types"],
+        "outDir": "dist", // where to put the compiled JS files
+        "rootDir": ".", // where to find the source TS files
+        "target": "ES2020", // which level of JS support to target [ES3, ES5, ES6, ES2015, ES2016, ES2017, ES2018, ES2019, ES2020] https://www.typescriptlang.org/tsconfig#target
+        "module": "CommonJS", // which system for the program AMD, UMD, System, CommonJS or ES2015 https://www.typescriptlang.org/tsconfig#module
+        "strict": true, // Recommended: Enable all strict type-checking options. https://www.typescriptlang.org/tsconfig#strict
+        "esModuleInterop": true, // Recommended: Emit additional JavaScript to ease support for importing CommonJS modules. https://www.typescriptlang.org/tsconfig#esModuleInterop
+        "forceConsistentCasingInFileNames": true, // Recommended: Disallow inconsistently-cased references to the same file. https://www.typescriptlang.org/tsconfig#forceConsistentCasingInFileNames
+        "skipLibCheck": true, // Recommended: Skip type checking of declaration files. https://www.typescriptlang.org/tsconfig#skipLibCheck
+        "noImplicitAny": true, // Recommended: Compiler complains about expressions implicitly typed as 'any' https://www.typescriptlang.org/tsconfig#noImplicitAny
+        "experimentalDecorators": true, // Enable Decorators https://www.typescriptlang.org/tsconfig#experimentalDecorators
+        "emitDecoratorMetadata": true // Emit design-type metadata for decorated declarations in source files. https://www.typescriptlang.org/tsconfig#emitDecoratorMetadata
+    },
+    "ts-node": {
+        "esm": true
+    },
+    "include": ["./src", "index.ts"],
+    "exclude": ["./node_modules"],
+    "types": ["node", "mysql2", "node-cron", "winston"] // https://www.typescriptlang.org/tsconfig#types
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@gitgrade/dtos",
+  "version": "1.0.0",
+  "description": "api dtos from @gitgrade project",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "dto"
+  ],
+  "author": "guizombas",
+  "license": "ISC"
+}

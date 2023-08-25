@@ -1,50 +1,69 @@
 {
-  "name": "supportplatform-web",
-  "version": "1.0.0",
-  "description": "SupportPlatform web for app frontend",
-  "author": "Guilherme Gabriel Silva Pereira (https://github.com/guizombas)",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "lint:check": "npx eslint --ext .js ./",
-    "lint:fix": "npx eslint --fix --ext .js ./",
-    "test": "echo \"Running all tests\"",
-    "start": "node index.js",
-    "start:dev": "nodemon -L index.js"
-  },
-  "keywords": [
-    "nodejs",
-    "dotenv",
-    "editorconfig"
-  ],
-  "license": "CC-BY-4.0",
-  "dependencies": {
-    "dotenv": "^16.0.3"
-  },
-  "devDependencies": {
-    "eslint": "^8.35.0",
-    "eslint-config-prettier": "^8.6.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "nodemon": "^3.0.1",
-    "prettier": "^2.8.4"
-  },
-  "homepage": "https://github.com/ICEI-PUC-Minas-PPLES-TI/plf-es-2023-1-tcci-0393100-dev-plataformaapoioavaliacoesprojetos",
-  "bugs": "https://github.com/ICEI-PUC-Minas-PPLES-TI/plf-es-2023-1-tcci-0393100-dev-plataformaapoioavaliacoesprojetos/issues",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ICEI-PUC-Minas-PPLES-TI/plf-es-2023-1-tcci-0393100-dev-plataformaapoioavaliacoesprojetos.git"
-  },
-  "contributors": [
-    {
-      "name": "Guilherme Gabriel Silva Pereira",
-      "email": "ggspereira@sga.pucminas.br",
-      "url": "https://github.com/guizombas"
+    "name": "supportplatform-web",
+    "version": "1.0.0",
+    "description": "SupportPlatform web for app frontend",
+    "author": "Guilherme Gabriel Silva Pereira (https://github.com/guizombas)",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc && vite build",
+        "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+        "lint:fix": "eslint . --fix --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+        "prettify": "npx prettier -w .",
+        "prettify:check": "npx prettier -c .",
+        "preview": "vite preview"
     },
-    {
-      "name": "Lucas Ângelo Oliveira Martins Rocha",
-      "email": "laomrocha@sga.pucminas.br",
-      "url": "https://lucasangelo.com/"
-    }
-  ]
+    "dependencies": {
+        "@primer/react": "^35.26.1",
+        "@tanstack/react-query": "^4.32.6",
+        "axios": "^1.4.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-router": "^6.14.2",
+        "react-router-dom": "^6.14.2",
+        "styled-components": "^5.3.11",
+        "tsc-files": "^1.1.4"
+    },
+    "devDependencies": {
+        "@gitgrade/dtos": "file:../dtos-lib",
+        "@types/react": "^18.2.15",
+        "@types/react-dom": "^18.2.7",
+        "@typescript-eslint/eslint-plugin": "^6.0.0",
+        "@typescript-eslint/parser": "^6.0.0",
+        "@vitejs/plugin-react": "^4.0.3",
+        "eslint": "^8.46.0",
+        "eslint-config-prettier": "^9.0.0",
+        "eslint-plugin-react": "^7.33.1",
+        "eslint-plugin-react-hooks": "^4.6.0",
+        "eslint-plugin-react-refresh": "^0.4.3",
+        "prettier": "^2.8.8",
+        "typescript": "^5.0.2",
+        "vite": "^4.4.5",
+        "vite-plugin-checker": "^0.6.1"
+    },
+    "keywords": [
+        "nodejs",
+        "dotenv",
+        "editorconfig"
+    ],
+    "license": "CC-BY-4.0",
+    "homepage": "https://github.com/ICEI-PUC-Minas-PPLES-TI/plf-es-2023-1-tcci-0393100-dev-plataformaapoioavaliacoesprojetos",
+    "bugs": "https://github.com/ICEI-PUC-Minas-PPLES-TI/plf-es-2023-1-tcci-0393100-dev-plataformaapoioavaliacoesprojetos/issues",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ICEI-PUC-Minas-PPLES-TI/plf-es-2023-1-tcci-0393100-dev-plataformaapoioavaliacoesprojetos.git"
+    },
+    "contributors": [
+        {
+            "name": "Guilherme Gabriel Silva Pereira",
+            "email": "ggspereira@sga.pucminas.br",
+            "url": "https://github.com/guizombas"
+        },
+        {
+            "name": "Lucas Ângelo Oliveira Martins Rocha",
+            "email": "laomrocha@sga.pucminas.br",
+            "url": "https://lucasangelo.com/"
+        }
+    ]
 }

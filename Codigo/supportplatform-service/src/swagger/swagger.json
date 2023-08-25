@@ -1,0 +1,449 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"RepositoryDTO": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"evaluationMethod": {
+						"properties": {
+							"name": {
+								"type": "string"
+							},
+							"id": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"name",
+							"id"
+						],
+						"type": "object"
+					},
+					"githubId": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string",
+						"nullable": true
+					},
+					"stargazerCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"forkCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"githubCreatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"githubUpdatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"hasProjectsEnabled": {
+						"type": "boolean"
+					},
+					"hasIssuesEnabled": {
+						"type": "boolean"
+					},
+					"primaryLanguage": {
+						"type": "string",
+						"nullable": true
+					},
+					"licenseName": {
+						"type": "string",
+						"nullable": true
+					},
+					"defaultBranch": {
+						"type": "string",
+						"nullable": true
+					},
+					"automaticSynchronization": {
+						"type": "boolean"
+					},
+					"synchronizing": {
+						"type": "boolean"
+					},
+					"lastSyncAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					}
+				},
+				"required": [
+					"id",
+					"githubId",
+					"name",
+					"description",
+					"stargazerCount",
+					"forkCount",
+					"githubCreatedAt",
+					"githubUpdatedAt",
+					"hasProjectsEnabled",
+					"hasIssuesEnabled",
+					"primaryLanguage",
+					"licenseName",
+					"defaultBranch",
+					"automaticSynchronization",
+					"synchronizing",
+					"lastSyncAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PaginationResponseDTO_RepositoryDTO_": {
+				"properties": {
+					"results": {
+						"items": {
+							"$ref": "#/components/schemas/RepositoryDTO"
+						},
+						"type": "array"
+					},
+					"totalPages": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"results",
+					"totalPages"
+				],
+				"type": "object"
+			},
+			"GetAllRepositoryQueryDTO": {
+				"properties": {
+					"page": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"limit": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"filter": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CommitMetricsDTO": {
+				"properties": {
+					"totalCommitCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"commitsPerContributor": {
+						"items": {
+							"properties": {
+								"commtiPercentage": {
+									"type": "number",
+									"format": "double"
+								},
+								"commitCount": {
+									"type": "number",
+									"format": "double"
+								},
+								"contribuitor": {
+									"properties": {
+										"githubAvatarUrl": {
+											"type": "string"
+										},
+										"githubLogin": {
+											"type": "string"
+										},
+										"githubName": {
+											"type": "string"
+										},
+										"id": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"githubAvatarUrl",
+										"githubLogin",
+										"githubName",
+										"id"
+									],
+									"type": "object"
+								}
+							},
+							"required": [
+								"commtiPercentage",
+								"commitCount",
+								"contribuitor"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"totalCommitCount",
+					"commitsPerContributor"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FileChangeMetricsDTO": {
+				"properties": {
+					"totalAdditions": {
+						"type": "number",
+						"format": "double"
+					},
+					"totalDeletions": {
+						"type": "number",
+						"format": "double"
+					},
+					"fileChangesPerContributor": {
+						"items": {
+							"properties": {
+								"deletions": {
+									"properties": {
+										"percentage": {
+											"type": "number",
+											"format": "double"
+										},
+										"sum": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"percentage",
+										"sum"
+									],
+									"type": "object"
+								},
+								"addtions": {
+									"properties": {
+										"percentage": {
+											"type": "number",
+											"format": "double"
+										},
+										"sum": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"percentage",
+										"sum"
+									],
+									"type": "object"
+								},
+								"contribuitor": {
+									"properties": {
+										"githubAvatarUrl": {
+											"type": "string"
+										},
+										"githubLogin": {
+											"type": "string"
+										},
+										"githubName": {
+											"type": "string"
+										},
+										"id": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"githubAvatarUrl",
+										"githubLogin",
+										"githubName",
+										"id"
+									],
+									"type": "object"
+								}
+							},
+							"required": [
+								"deletions",
+								"addtions",
+								"contribuitor"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"totalAdditions",
+					"totalDeletions",
+					"fileChangesPerContributor"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "supportplatform-service",
+		"version": "1.0.0",
+		"description": "SupportPlatform service for GitHub Project Evaluation Support Platform",
+		"license": {
+			"name": "CC-BY-4.0"
+		},
+		"contact": {
+			"name": "Lucas Ângelo Oliveira Martins Rocha ",
+			"url": "https://lucasangelo.com/"
+		}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/repository": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PaginationResponseDTO_RepositoryDTO_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"repository"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "filter",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/repository/{repositoryId}/metric/commit": {
+			"get": {
+				"operationId": "GetCommitMetrics",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CommitMetricsDTO"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"metrics"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "branchName",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/repository/{repositoryId}/metric/changes": {
+			"get": {
+				"operationId": "GetChangesMetrics",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FileChangeMetricsDTO"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"metrics"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "branchName",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}
