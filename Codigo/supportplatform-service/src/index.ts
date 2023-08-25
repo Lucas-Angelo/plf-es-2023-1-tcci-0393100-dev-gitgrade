@@ -3,10 +3,8 @@ import express from "express";
 import { RegisterRoutes } from "./swagger/routes";
 
 import swaggerUi from "swagger-ui-express";
-import EnvConfig from "./config/EnvConfig";
-import Database from "./database";
-import AppError from "./error/AppError";
 import { ValidateError } from "tsoa";
+import AppError from "./error/AppError";
 
 const app = express();
 
