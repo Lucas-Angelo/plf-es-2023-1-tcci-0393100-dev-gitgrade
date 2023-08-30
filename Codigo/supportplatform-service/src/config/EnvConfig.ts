@@ -35,19 +35,24 @@ class EnvironmentConfig {
 
     getAppConfig() {
         return {
-            APP_DEBUG: process.env.APP_DEBUG === "true",
             NODE_ENV: process.env.NODE_ENV,
             APP_TIMEZONE: process.env.APP_TIMEZONE,
-            DB_HOST: process.env.DB_HOST,
-            DB_USER: process.env.DB_USER,
-            DB_PASSWORD: process.env.DB_PASSWORD,
-            DB_NAME: process.env.DB_NAME,
-            DB_PORT: process.env.DB_PORT,
             DB_DIALECT: process.env.DB_DIALECT,
             DB_CHARSET: process.env.DB_CHARSET,
             DB_COLLATE: process.env.DB_COLLATE,
             DB_TIMEZONE: process.env.DB_TIMEZONE,
             PORT: process.env.PORT,
+            APP_DEBUG: process.env.APP_DEBUG === "true",
+            DB_HOST: process.env.DB_HOST,
+            DB_USER: process.env.DB_USER,
+            DB_PASSWORD: process.env.DB_PASSWORD,
+            DB_NAME: process.env.DB_NAME,
+            DB_PORT: process.env.DB_PORT,
+            GITHUB_ORGANIZATION_NAME: process.env.GITHUB_ORGANIZATION_NAME,
+            GITHUB_APP_CLIENT_ID: process.env.GITHUB_APP_CLIENT_ID,
+            GITHUB_APP_CLIENT_SECRET: process.env.GITHUB_APP_CLIENT_SECRET,
+            JWT_SECRET: process.env.JWT_SECRET,
+            SESSION_SECRET: process.env.SESSION_SECRET,
         };
     }
 
