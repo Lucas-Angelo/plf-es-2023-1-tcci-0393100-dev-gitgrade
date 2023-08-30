@@ -139,10 +139,10 @@ jobs:
 
             echo "# SupportPlataform service docker service envs" >> "$CODE_DIR/.env"
             echo "SUPPORTPLATFORM_SERVICE_NODE_PORT=${{ secrets.SUPPORTPLATFORM_SERVICE_NODE_PORT }}" >> "$CODE_DIR/.env"
-            echo "GITHUB_APP_CLIENT_ID={{ secrets.GH_APP_CLIENT_ID }}" >> "$CODE_DIR/.env"
-            echo "GITHUB_APP_CLIENT_SECRET={{ secrets.GH_APP_CLIENT_SECRET }}" >> "$CODE_DIR/.env"
-            echo "JWT_SECRET={{ secrets.JWT_SECRET }}" >> "$CODE_DIR/.env"
-            echo "SESSION_SECRET={{ secrets.SESSION_SECRET }}" >> "$CODE_DIR/.env"
+            echo "GITHUB_APP_CLIENT_ID=${{ secrets.GH_APP_CLIENT_ID }}" >> "$CODE_DIR/.env"
+            echo "GITHUB_APP_CLIENT_SECRET=${{ secrets.GH_APP_CLIENT_SECRET }}" >> "$CODE_DIR/.env"
+            echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> "$CODE_DIR/.env"
+            echo "SESSION_SECRET=${{ secrets.SESSION_SECRET }}" >> "$CODE_DIR/.env"
 
             echo "# SupportPlataform web docker service envs" >> "$CODE_DIR/.env"
             echo "SUPPORTPLATAFORM_WEB_NODE_PORT=${{ secrets.SUPPORTPLATAFORM_WEB_NODE_PORT }}" >> "$CODE_DIR/.env"
