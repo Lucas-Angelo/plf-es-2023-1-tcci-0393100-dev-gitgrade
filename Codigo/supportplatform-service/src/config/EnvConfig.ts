@@ -41,6 +41,7 @@ class EnvironmentConfig {
             DB_CHARSET: process.env.DB_CHARSET,
             DB_COLLATE: process.env.DB_COLLATE,
             DB_TIMEZONE: process.env.DB_TIMEZONE,
+            HOST: process.env.HOST,
             PORT: process.env.PORT,
             APP_DEBUG: process.env.APP_DEBUG === "true",
             DB_HOST: process.env.DB_HOST,

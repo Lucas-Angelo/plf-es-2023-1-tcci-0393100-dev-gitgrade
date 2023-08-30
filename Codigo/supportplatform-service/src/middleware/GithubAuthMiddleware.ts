@@ -122,7 +122,7 @@ class GithubAuth {
                 {
                     clientID: EnvConfig.GITHUB_APP_CLIENT_ID || "",
                     clientSecret: EnvConfig.GITHUB_APP_CLIENT_SECRET || "",
-                    callbackURL: `http://localhost:${EnvConfig.PORT}/auth/github/callback`,
+                    callbackURL: `http://${EnvConfig.HOST}:${EnvConfig.PORT}/oauth/github/callback`,
                     scope: ["read:user", "user:email", "read:org"],
                 },
                 this.authenticate.bind(this)
@@ -166,9 +166,9 @@ export function applyGithubAuthMiddleware(app: Express) {
     app.use(sessionConfig);
     app.use(passport.initialize());
     app.use(passport.session());
-    app.get("/auth/github", githubAuth.authenticateMiddleware());
+    app.get("/oauth/github", githubAuth.authenticateMiddleware());
     app.get(
-        "/auth/github/callback",
+        "/oauth/github/callback",
         githubAuth.authenticateMiddleware(),
         (req, res) => {
             res.json({ token: (req.user as AuthUser).token });
