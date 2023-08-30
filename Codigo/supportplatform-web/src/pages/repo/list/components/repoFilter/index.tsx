@@ -6,7 +6,7 @@ import {
 } from "@primer/react";
 import { SearchIcon } from "@primer/octicons-react";
 import { useRef } from "react";
-import appRoutes from "../../../../commom/routes/appRoutes";
+import appRoutes from "../../../../../commom/routes/appRoutes";
 import { useSearchParams } from "react-router-dom";
 
 const pageSearchParams = appRoutes.repo.list.search;

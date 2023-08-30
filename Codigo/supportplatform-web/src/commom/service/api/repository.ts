@@ -18,4 +18,8 @@ export class RepositoryService {
             "repository?".concat(searchParams.toString())
         );
     }
+
+    getById(id: string) {
+        return api.get<RepositoryDTO>(`repository/${id}`);
+    }
 }

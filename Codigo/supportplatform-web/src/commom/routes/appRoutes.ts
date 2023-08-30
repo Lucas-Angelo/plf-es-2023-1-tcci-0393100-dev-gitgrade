@@ -30,6 +30,38 @@ const appRoutes = {
                 const path = this.path.replace(":id", id.toString());
                 return `${appRoutes.repo.link()}/${path}`;
             },
+
+            //nested routes
+            metrics: {
+                path: "metrics" as const,
+                link(id: number) {
+                    return `${appRoutes.repo[":id"].link(id)}/${this.path}`;
+                },
+            },
+            quality: {
+                path: "quality" as const,
+                link(id: number) {
+                    return `${appRoutes.repo[":id"].link(id)}/${this.path}`;
+                },
+            },
+            commits: {
+                path: "commits" as const,
+                link(id: number) {
+                    return `${appRoutes.repo[":id"].link(id)}/${this.path}`;
+                },
+            },
+            consistency: {
+                path: "consistency" as const,
+                link(id: number) {
+                    return `${appRoutes.repo[":id"].link(id)}/${this.path}`;
+                },
+            },
+            config: {
+                path: "config" as const,
+                link(id: number) {
+                    return `${appRoutes.repo[":id"].link(id)}/${this.path}`;
+                },
+            },
         },
     },
 

@@ -19,7 +19,12 @@ const routes = createRoutesFromElements(
             <Route errorElement={<ErrorElement />}>
                 <Route
                     path=""
-                    element={<Navigate to={appRoutes.repo.link()} />}
+                    element={
+                        <Navigate
+                            replace
+                            to={appRoutes.repo.link()}
+                        />
+                    }
                 />
 
                 <Route path={appRoutes.repo.path}>
@@ -29,11 +34,47 @@ const routes = createRoutesFromElements(
                     />
                     <Route
                         path={appRoutes.repo[":id"].path}
-                        element={<div>repo</div>}
-                    />
+                        lazy={() => import("../../pages/repo/detail/index")}
+                    >
+                        <Route
+                            path={appRoutes.repo[":id"].metrics.path}
+                            element={<>metrics</>}
+                        />
+                        <Route
+                            path={appRoutes.repo[":id"].quality.path}
+                            element={<>quality</>}
+                        />
+                        <Route
+                            path={appRoutes.repo[":id"].commits.path}
+                            element={<>commits</>}
+                        />
+                        <Route
+                            path={appRoutes.repo[":id"].consistency.path}
+                            element={<>consistency</>}
+                        />
+                        <Route
+                            path={appRoutes.repo[":id"].config.path}
+                            element={<>config</>}
+                        />
+
+                        <Route
+                            path=""
+                            element={
+                                <Navigate
+                                    replace
+                                    to={appRoutes.repo[":id"].metrics.path}
+                                />
+                            }
+                        />
+                    </Route>
                     <Route
                         path=""
-                        element={<Navigate to={appRoutes.repo.list.link()} />}
+                        element={
+                            <Navigate
+                                replace
+                                to={appRoutes.repo.list.link()}
+                            />
+                        }
                     />
                 </Route>
 
@@ -48,6 +89,7 @@ const routes = createRoutesFromElements(
                         path=""
                         element={
                             <Navigate
+                                replace
                                 to={appRoutes.evaluationMethod.list.link()}
                             />
                         }

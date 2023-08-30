@@ -11,3 +11,12 @@ export const getRepoQuery = (filterOptions?: GetAllRepositoryQueryDTO) => ({
 
 export const useRepoList = (filterOptions?: GetAllRepositoryQueryDTO) =>
     useQuery(getRepoQuery(filterOptions));
+
+export const getRepoByIdQuery = (id: string) => ({
+    queryKey: ["repo", id],
+    queryFn: async () =>
+        new RepositoryService().getById(id).then((res) => res.data),
+    staleTime: Number.MAX_VALUE,
+});
+
+export const useRepoById = (id: string) => useQuery(getRepoByIdQuery(id));

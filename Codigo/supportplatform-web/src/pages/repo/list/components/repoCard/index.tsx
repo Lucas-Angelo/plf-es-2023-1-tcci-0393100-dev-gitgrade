@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import Card from "../../../../commom/components/card";
+import Card from "../../../../../commom/components/card";
 import { Button, Label, Link as PrimerLink, Octicon } from "@primer/react";
 import { RepoIcon } from "@primer/octicons-react";
-import appRoutes from "../../../../commom/routes/appRoutes";
+import appRoutes from "../../../../../commom/routes/appRoutes";
 
 interface IRepoCardProps {
     id: number;
