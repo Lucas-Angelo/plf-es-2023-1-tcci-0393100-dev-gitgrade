@@ -37,6 +37,56 @@ const appRoutes = {
                 link(id: number) {
                     return `${appRoutes.repo[":id"].link(id)}/${this.path}`;
                 },
+
+                // nested routes
+                commits: {
+                    path: "commits" as const,
+                    link(id: number) {
+                        return `${appRoutes.repo[":id"].metrics.link(id)}/${
+                            this.path
+                        }`;
+                    },
+                },
+                fileTypes: {
+                    path: "file-types" as const,
+                    link(id: number) {
+                        return `${appRoutes.repo[":id"].metrics.link(id)}/${
+                            this.path
+                        }`;
+                    },
+                },
+                linesOfCode: {
+                    path: "lines-of-code" as const,
+                    link(id: number) {
+                        return `${appRoutes.repo[":id"].metrics.link(id)}/${
+                            this.path
+                        }`;
+                    },
+                },
+                fileContributions: {
+                    path: "file-contributions" as const,
+                    link(id: number) {
+                        return `${appRoutes.repo[":id"].metrics.link(id)}/${
+                            this.path
+                        }`;
+                    },
+                },
+                commitQuality: {
+                    path: "commit-quality" as const,
+                    link(id: number) {
+                        return `${appRoutes.repo[":id"].metrics.link(id)}/${
+                            this.path
+                        }`;
+                    },
+                },
+                closedIssues: {
+                    path: "closed-issues" as const,
+                    link(id: number) {
+                        return `${appRoutes.repo[":id"].metrics.link(id)}/${
+                            this.path
+                        }`;
+                    },
+                },
             },
             quality: {
                 path: "quality" as const,

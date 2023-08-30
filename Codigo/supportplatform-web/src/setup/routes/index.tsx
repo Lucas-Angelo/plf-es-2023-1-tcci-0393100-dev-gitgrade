@@ -38,8 +38,64 @@ const routes = createRoutesFromElements(
                     >
                         <Route
                             path={appRoutes.repo[":id"].metrics.path}
-                            element={<>metrics</>}
-                        />
+                            lazy={() =>
+                                import("../../pages/repo/detail/metrics/index")
+                            }
+                        >
+                            <Route
+                                path={
+                                    appRoutes.repo[":id"].metrics.commits.path
+                                }
+                                element={<>commits</>}
+                            />
+                            <Route
+                                path={
+                                    appRoutes.repo[":id"].metrics.fileTypes.path
+                                }
+                                element={<>fileTypes</>}
+                            />
+                            <Route
+                                path={
+                                    appRoutes.repo[":id"].metrics.linesOfCode
+                                        .path
+                                }
+                                element={<>linesOfCode</>}
+                            />
+                            <Route
+                                path={
+                                    appRoutes.repo[":id"].metrics
+                                        .fileContributions.path
+                                }
+                                element={<>fileContributions</>}
+                            />
+                            <Route
+                                path={
+                                    appRoutes.repo[":id"].metrics.commitQuality
+                                        .path
+                                }
+                                element={<>commitQuality</>}
+                            />
+                            <Route
+                                path={
+                                    appRoutes.repo[":id"].metrics.closedIssues
+                                        .path
+                                }
+                                element={<>closedIssues</>}
+                            />
+
+                            <Route
+                                path=""
+                                element={
+                                    <Navigate
+                                        replace
+                                        to={
+                                            appRoutes.repo[":id"].metrics
+                                                .commits.path
+                                        }
+                                    />
+                                }
+                            />
+                        </Route>
                         <Route
                             path={appRoutes.repo[":id"].quality.path}
                             element={<>quality</>}
