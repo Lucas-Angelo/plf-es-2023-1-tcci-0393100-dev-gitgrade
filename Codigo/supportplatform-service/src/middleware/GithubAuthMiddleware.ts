@@ -87,7 +87,10 @@ class GithubAuth {
         logger.info("orgs", orgs);
 
         // Check if user is a member of the organization
-        if (!loopLessOrg) return done(null, false);
+        if (!loopLessOrg)
+            return done(
+                new AppError("User is not an member of the organization", 401)
+            );
 
         // Get user details
         const user = await this.getUserDetails(token);
@@ -133,7 +136,7 @@ class GithubAuth {
             if ("token" in user) {
                 const authUser = user as AuthUser;
                 done(null, authUser.token);
-            } else done(new Error("User is not AuthUser"), 500);
+            } else done(new AppError("User is not AuthUser", 500));
         });
 
         passport.deserializeUser(async (token: string, done) => {
