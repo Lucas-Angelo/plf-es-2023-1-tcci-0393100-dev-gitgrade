@@ -26,9 +26,10 @@ interface IRepoHeadProps {
     orgName: string;
     repoName: string;
     evaluationMethodName?: string;
-    constributors?: Array<{
-        username: string;
-        avatarUrl: string;
+    contributors?: Array<{
+        githubName?: string | null;
+        githubLogin: string | null;
+        githubAvatarUrl: string | null;
     }>;
 }
 
@@ -86,12 +87,16 @@ export default function RepoHead(props: IRepoHeadProps) {
                         flexGrow: 1,
                     }}
                 >
-                    {props.constributors?.map((contributor) => (
+                    {props.contributors?.map((contributor) => (
                         <Avatar
-                            src={contributor.avatarUrl}
-                            key={contributor.username}
+                            src={contributor.githubAvatarUrl!}
+                            key={contributor.githubLogin}
                             size={20}
-                            title={contributor.username}
+                            title={
+                                (contributor.githubName ||
+                                    contributor.githubLogin) ??
+                                "Sem nome"
+                            }
                         />
                     ))}
                 </Box>

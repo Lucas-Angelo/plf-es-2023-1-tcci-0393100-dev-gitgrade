@@ -1,8 +1,21 @@
-import { Outlet } from "react-router";
+import { Outlet, useParams } from "react-router";
 import RepoHead from "./components/repoHead";
 import { Box } from "@primer/react";
+import appRoutes from "../../../commom/routes/appRoutes";
+import { useRepositoryById } from "../../../commom/data/repo";
+import { useContributorsByRepositoryId } from "../../../commom/data/contributor";
+
+const pageRouteParams = appRoutes.repo[":id"].params;
+type PageRouteParams = (typeof pageRouteParams)[number];
 
 export default function RepoPage() {
+    const params = useParams<PageRouteParams>();
+    const id = Number(params.id);
+
+    const { data: repositoryData } = useRepositoryById(id);
+    const { data: repositoryContributorsData } =
+        useContributorsByRepositoryId(id);
+
     return (
         <Box
             sx={{
@@ -12,24 +25,8 @@ export default function RepoPage() {
         >
             <RepoHead
                 orgName="ICEI-PUC-Minas-PPLES-TI"
-                repoName="plf-es-2023-1-tcci-0393100-dev-plataformaapoioavaliacoesprojetos"
-                constributors={[
-                    {
-                        avatarUrl:
-                            "https://avatars.githubusercontent.com/u/60052506?v=4",
-                        username: "gabrielmelo00",
-                    },
-                    {
-                        avatarUrl:
-                            "https://avatars.githubusercontent.com/u/60052505?v=4",
-                        username: "jonesmoura858",
-                    },
-                    {
-                        avatarUrl:
-                            "https://avatars.githubusercontent.com/u/60052504?v=4",
-                        username: "pererajulio",
-                    },
-                ]}
+                repoName={repositoryData!.name}
+                contributors={repositoryContributorsData!.results}
             />
 
             <Box

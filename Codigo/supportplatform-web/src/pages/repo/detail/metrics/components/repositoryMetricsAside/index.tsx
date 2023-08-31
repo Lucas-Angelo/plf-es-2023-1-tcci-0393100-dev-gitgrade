@@ -1,10 +1,21 @@
-import { ActionList, ActionMenu, Box, NavList, Text } from "@primer/react";
+import { Box, NavList, Text } from "@primer/react";
 import NavListItem from "../../../../../../commom/components/navListItem";
 import appRoutes from "../../../../../../commom/routes/appRoutes";
+import BranchSelector from "../branchSelector";
+import { useRepositoryById } from "../../../../../../commom/data/repo";
+import { useParams } from "react-router";
 
 const repositoryMetricsRoutes = appRoutes.repo[":id"].metrics;
 
+const pageRouteParams = appRoutes.repo[":id"].params;
+type PageRouteParams = (typeof pageRouteParams)[number];
+
 export default function RepositoryMetricsAside() {
+    const params = useParams<PageRouteParams>();
+    const id = Number(params.id);
+
+    const { data: repositoryData } = useRepositoryById(id);
+
     return (
         <Box
             as={"aside"}
@@ -72,20 +83,12 @@ export default function RepositoryMetricsAside() {
                 >
                     Branch
                 </Text>
-                <ActionMenu>
-                    <ActionMenu.Button>master</ActionMenu.Button>
-
-                    <ActionMenu.Overlay>
-                        <ActionList>
-                            <ActionList.Item>
-                                <Text sx={{ fontWeight: "bold" }}>master</Text>
-                            </ActionList.Item>
-                            <ActionList.Item>
-                                <Text sx={{ fontWeight: "bold" }}>dev</Text>
-                            </ActionList.Item>
-                        </ActionList>
-                    </ActionMenu.Overlay>
-                </ActionMenu>
+                <BranchSelector
+                    defaultBranchName={
+                        repositoryData!.defaultBranch ?? "master"
+                    }
+                    repositoryId={id}
+                />
             </Box>
         </Box>
     );

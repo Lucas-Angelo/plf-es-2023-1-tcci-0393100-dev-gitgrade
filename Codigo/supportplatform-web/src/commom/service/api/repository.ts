@@ -19,7 +19,7 @@ export class RepositoryService {
         );
     }
 
-    getById(id: string) {
+    getById(id: number) {
         return api.get<RepositoryDTO>(`repository/${id}`);
     }
 }

@@ -1,3 +1,5 @@
+import { PaginationRequestDTO } from "../utils/pagination";
+
 export interface RepositoryDTO {
     id: number;
     evaluationMethod?: {
@@ -21,16 +23,6 @@ export interface RepositoryDTO {
     lastSyncAt: Date | null;
 }
 
-export interface GetAllRepositoryQueryDTO {
-    /**
-     * @isInt page must be an integer
-     * @minimum 1 page must be greater than or equal to 1
-     */
-    page?: number;
-    /**
-     * @isInt limit must be an integer
-     * @minimum 1 limit must be greater than or equal to 1
-     */
-    limit?: number;
+export interface GetAllRepositoryQueryDTO  extends PaginationRequestDTO{
     filter?: string
 }

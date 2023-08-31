@@ -6,6 +6,7 @@ import {
     PaginationResponseDTO,
     GetAllRepositoryQueryDTO,
 } from "@gitgrade/dtos";
+
 @Route("repository")
 @Tags("repository")
 export class RepositoryController {
@@ -29,5 +30,12 @@ export class RepositoryController {
             totalPages: serviceResponse.totalPages,
             results: serviceResponse.results.map(mapper.toDto),
         };
+    }
+
+    @Get("/{id}")
+    public async getById(id: number): Promise<RepositoryDTO> {
+        const serviceResponse = await this.repositoryService.findById(id);
+        const mapper = new RepositoryMapper();
+        return mapper.toDto(serviceResponse);
     }
 }

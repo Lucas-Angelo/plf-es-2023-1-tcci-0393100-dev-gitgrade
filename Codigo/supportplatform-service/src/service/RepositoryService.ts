@@ -1,6 +1,6 @@
 import { Repository } from "../model/Repository";
 import logger from "../config/LogConfig";
-import { sequelizePagination } from "../utils/pagination";
+import { getTotalPages, sequelizePagination } from "../utils/pagination";
 import { PaginationResponseDTO } from "@gitgrade/dtos";
 import { Sequelize } from "sequelize";
 import { Op } from "sequelize";
@@ -28,10 +28,24 @@ export default class RepositoryService {
             });
             return {
                 results: rows,
-                totalPages: Math.ceil(count / search.limit) || 1,
+                totalPages: getTotalPages(count, search.limit),
             };
         } catch (error) {
             logger.error("Error finding all repositories:", { error });
+            throw error;
+        }
+    }
+
+    async findById(id: number): Promise<Repository> {
+        try {
+            logger.info("Searching for repository by id:", { id });
+            const repository = await Repository.findByPk(id);
+            if (!repository) {
+                throw new Error("Repository not found");
+            }
+            return repository;
+        } catch (error) {
+            logger.error("Error finding repository by id:", { error });
             throw error;
         }
     }

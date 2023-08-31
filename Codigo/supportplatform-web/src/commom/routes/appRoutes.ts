@@ -30,6 +30,7 @@ const appRoutes = {
                 const path = this.path.replace(":id", id.toString());
                 return `${appRoutes.repo.link()}/${path}`;
             },
+            params: ["id"] as const,
 
             //nested routes
             metrics: {
