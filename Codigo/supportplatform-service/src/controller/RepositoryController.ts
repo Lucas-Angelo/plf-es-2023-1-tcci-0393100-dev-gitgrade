@@ -1,12 +1,14 @@
-import { Get, Queries, Route, Tags } from "tsoa";
-import RepositoryService from "../service/RepositoryService";
-import { RepositoryMapper } from "../mapper/RepositoryMapper";
 import {
-    RepositoryDTO,
-    PaginationResponseDTO,
     GetAllRepositoryQueryDTO,
+    PaginationResponseDTO,
+    RepositoryDTO,
 } from "@gitgrade/dtos";
+import { Get, Queries, Route, Security, Tags } from "tsoa";
+import { RepositoryMapper } from "../mapper/RepositoryMapper";
+import RepositoryService from "../service/RepositoryService";
+
 @Route("repository")
+@Security("bearer", ["admin"])
 @Tags("repository")
 export class RepositoryController {
     private repositoryService: RepositoryService;
