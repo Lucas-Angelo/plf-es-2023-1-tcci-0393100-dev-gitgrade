@@ -46,7 +46,11 @@ const routes = createRoutesFromElements(
                                 path={
                                     appRoutes.repo[":id"].metrics.commits.path
                                 }
-                                element={<>commits</>}
+                                lazy={() =>
+                                    import(
+                                        "../../pages/repo/detail/metrics/commits/index"
+                                    )
+                                }
                             />
                             <Route
                                 path={
