@@ -1,6 +1,9 @@
 import { useParams } from "react-router";
 import { useCommitMetricsGroupedByContributorByRepositoryId } from "../../../../../commom/data/repo/metrics/commits";
 import appRoutes from "../../../../../commom/routes/appRoutes";
+import { Box } from "@primer/react";
+import Divider from "../../../../../commom/components/divider";
+import DateFilter from "./components/dateFilter";
 
 const pageRouteParams = appRoutes.repo[":id"].params;
 type PageRouteParams = (typeof pageRouteParams)[number];
@@ -12,7 +15,9 @@ export default function RepositoryCommitMetricsPage() {
     const { data: commitMetricsData } =
         useCommitMetricsGroupedByContributorByRepositoryId(id);
     return (
-        <div>
+        <Box sx={{ width: "100%" }}>
+            <DateFilter />
+            <Divider />
             {commitMetricsData?.commitsPerContributor.map(
                 (contributorAndCommitMetrics) => {
                     return (
@@ -33,6 +38,6 @@ export default function RepositoryCommitMetricsPage() {
                 }
             )}
             total: {commitMetricsData?.totalCommitCount}
-        </div>
+        </Box>
     );
 }

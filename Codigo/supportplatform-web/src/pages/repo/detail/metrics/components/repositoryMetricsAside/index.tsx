@@ -4,6 +4,7 @@ import appRoutes from "../../../../../../commom/routes/appRoutes";
 import BranchSelector from "../branchSelector";
 import { useRepositoryById } from "../../../../../../commom/data/repo";
 import { useParams } from "react-router";
+import Divider from "../../../../../../commom/components/divider";
 
 const repositoryMetricsRoutes = appRoutes.repo[":id"].metrics;
 
@@ -67,14 +68,7 @@ export default function RepositoryMetricsAside() {
             </Box>
 
             {/* divider box */}
-            <Box
-                sx={{
-                    height: 1,
-                    width: "100%",
-                    bg: "border.default",
-                    my: 3,
-                }}
-            ></Box>
+            <Divider />
 
             <Box>
                 <Text
