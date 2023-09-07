@@ -8,6 +8,7 @@ import SequelizeOptions from "../config/SequelizeConfig";
 import { Branch } from "../model/Branch";
 import { Commit } from "../model/Commit";
 import { Contributor } from "../model/Contributor";
+import { EvaluationMethod } from "../model/EvaluationMethod";
 import { File } from "../model/File";
 import { Issue } from "../model/Issue";
 import { IssueHasAssigneeContributor } from "../model/IssueHasAssigneeContributor";
@@ -61,6 +62,7 @@ class SequelizeDatabase {
         Branch.initModel(this.sequelize);
         Commit.initModel(this.sequelize);
         File.initModel(this.sequelize);
+        EvaluationMethod.initModel(this.sequelize);
     }
 
     private associateModels() {

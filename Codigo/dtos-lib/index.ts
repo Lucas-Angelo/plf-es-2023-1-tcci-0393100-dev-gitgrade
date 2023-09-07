@@ -1,12 +1,24 @@
+import {
+  EvaluationMethodCreateDTO,
+  EvaluationMethodFindOneDTO,
+  EvaluationMethodResponseDTO,
+  EvaluationMethodSearchDTO,
+  EvaluationMethodUpdateDTO,
+} from "./dto/EvaluationMethod";
 import { CommitMetricsDTO } from "./dto/commitMetrics";
+import { FileChangeMetricsDTO } from "./dto/fileMetrics";
 import { GetAllRepositoryQueryDTO, RepositoryDTO } from "./dto/repository";
 import { PaginationResponseDTO } from "./utils/pagination";
-import { FileChangeMetricsDTO } from "./dto/fileMetrics";
 
 export type {
-    RepositoryDTO,
-    PaginationResponseDTO,
-    GetAllRepositoryQueryDTO,
-    CommitMetricsDTO,
-    FileChangeMetricsDTO
-}
+  CommitMetricsDTO,
+  EvaluationMethodCreateDTO,
+  EvaluationMethodFindOneDTO,
+  EvaluationMethodResponseDTO,
+  EvaluationMethodSearchDTO,
+  EvaluationMethodUpdateDTO,
+  FileChangeMetricsDTO,
+  GetAllRepositoryQueryDTO,
+  PaginationResponseDTO,
+  RepositoryDTO,
+};

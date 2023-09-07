@@ -6,6 +6,159 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"EvaluationMethodResponseDTO": {
+				"description": "EvaluationMethodResponseDTO - Could be used to structure the response object when sending EvaluationMethods to the client.",
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"description": {
+						"type": "string"
+					},
+					"semester": {
+						"type": "number",
+						"format": "double"
+					},
+					"year": {
+						"type": "number",
+						"format": "double"
+					},
+					"disabledAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					}
+				},
+				"required": [
+					"id",
+					"description",
+					"semester",
+					"year"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"EvaluationMethodCreateDTO": {
+				"description": "EvaluationMethodCreateDTO - Used for creating a new EvaluationMethod.",
+				"properties": {
+					"description": {
+						"type": "string",
+						"maxLength": 255
+					},
+					"semester": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"year": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"disabledAt": {
+						"type": "string",
+						"format": "date",
+						"nullable": true,
+						"default": "null"
+					}
+				},
+				"required": [
+					"description",
+					"semester",
+					"year"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"EvaluationMethodUpdateDTO": {
+				"description": "EvaluationMethodUpdateDTO - Used for updating an existing EvaluationMethod.",
+				"properties": {
+					"description": {
+						"type": "string",
+						"maxLength": 255
+					},
+					"semester": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"year": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"disabledAt": {
+						"type": "string",
+						"format": "date",
+						"nullable": true
+					}
+				},
+				"required": [
+					"description",
+					"semester",
+					"year",
+					"disabledAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PaginationResponseDTO_EvaluationMethodResponseDTO_": {
+				"properties": {
+					"results": {
+						"items": {
+							"$ref": "#/components/schemas/EvaluationMethodResponseDTO"
+						},
+						"type": "array"
+					},
+					"totalPages": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"results",
+					"totalPages"
+				],
+				"type": "object"
+			},
+			"EvaluationMethodSearchDTO": {
+				"description": "EvaluationMethodSearchDTO - Used for searching through EvaluationMethods with pagination and filters.",
+				"properties": {
+					"page": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"limit": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"description": {
+						"type": "string"
+					},
+					"semester": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"year": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"disabledAt": {
+						"type": "string",
+						"format": "date",
+						"nullable": true
+					},
+					"forceDisabled": {
+						"type": "boolean",
+						"default": "false"
+					}
+				},
+				"required": [
+					"page",
+					"limit"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"RepositoryDTO": {
 				"properties": {
 					"id": {
@@ -315,12 +468,295 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
+		"/evaluation-method": {
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"201": {
+						"description": "EvaluationMethod created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/EvaluationMethodResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"description": "First evaluation method",
+											"semester": 2,
+											"year": 2023,
+											"disabledAt": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a new EvaluationMethod.",
+				"tags": [
+					"evaluation-method"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/EvaluationMethodCreateDTO"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Found evaluation methods",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PaginationResponseDTO_EvaluationMethodResponseDTO_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"totalPages": 1,
+											"results": [
+												{
+													"id": 1,
+													"description": "First evaluation method",
+													"semester": 2,
+													"year": 2023,
+													"disabledAt": "2023-09-01T00:00:00.000Z"
+												},
+												{
+													"id": 2,
+													"description": "Second evaluation method",
+													"semester": 2,
+													"year": 2023,
+													"disabledAt": null
+												}
+											]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all EvaluationMethods with pagination and filter.\nCan filter by description, semester, year and disabledAt.",
+				"tags": [
+					"evaluation-method"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "page",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "description",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "semester",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer"
+						}
+					},
+					{
+						"in": "query",
+						"name": "year",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer"
+						}
+					},
+					{
+						"in": "query",
+						"name": "disabledAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "forceDisabled",
+						"required": false,
+						"schema": {
+							"default": "false",
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/evaluation-method/{id}": {
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "EvaluationMethod updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/EvaluationMethodResponseDTO"
+										}
+									],
+									"nullable": true
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"description": "First evaluation method",
+											"semester": 2,
+											"year": 2023,
+											"disabledAt": "2023-09-01T00:00:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Update an existing EvaluationMethod by id.\nNeed body with all fields.",
+				"tags": [
+					"evaluation-method"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/EvaluationMethodUpdateDTO"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetOne",
+				"responses": {
+					"200": {
+						"description": "Found evaluation method",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/EvaluationMethodResponseDTO"
+										}
+									],
+									"nullable": true
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"description": "First evaluation method",
+											"semester": 2,
+											"year": 2023,
+											"disabledAt": "2023-09-01T00:00:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Get an existing EvaluationMethod by id.",
+				"tags": [
+					"evaluation-method"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
 		"/repository": {
 			"get": {
 				"operationId": "GetAll",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "Found repositories",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -377,7 +813,7 @@
 				"operationId": "GetCommitMetrics",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "Commit metrics",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -423,7 +859,7 @@
 				"operationId": "GetChangesMetrics",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "File change metrics",
 						"content": {
 							"application/json": {
 								"schema": {

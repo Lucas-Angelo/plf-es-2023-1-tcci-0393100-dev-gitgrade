@@ -6,7 +6,7 @@ import AppError from "../error/AppError";
 export async function expressAuthentication(
     request: express.Request,
     securityName: string,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     scopes?: string[]
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> {
