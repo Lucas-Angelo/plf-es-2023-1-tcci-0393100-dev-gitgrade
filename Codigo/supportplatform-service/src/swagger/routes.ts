@@ -8,6 +8,8 @@ import { EvaluationMethodController } from './../controller/EvaluationMethodCont
 import { RepositoryController } from './../controller/RepositoryController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { RepositoryMetricsController } from './../controller/RepositoryMetricsController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { SprintController } from './../controller/SprintController';
 import { expressAuthentication } from './../middleware/ExpressAuthentication';
 // @ts-ignore - no great way to install types from subpackage
 const promiseAny = require('promise.any');
@@ -123,6 +125,54 @@ const models: TsoaRoute.Models = {
             "totalAdditions": {"dataType":"double","required":true},
             "totalDeletions": {"dataType":"double","required":true},
             "fileChangesPerContributor": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"deletions":{"dataType":"nestedObjectLiteral","nestedProperties":{"percentage":{"dataType":"double","required":true},"sum":{"dataType":"double","required":true}},"required":true},"addtions":{"dataType":"nestedObjectLiteral","nestedProperties":{"percentage":{"dataType":"double","required":true},"sum":{"dataType":"double","required":true}},"required":true},"contribuitor":{"dataType":"nestedObjectLiteral","nestedProperties":{"githubAvatarUrl":{"dataType":"string","required":true},"githubLogin":{"dataType":"string","required":true},"githubName":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"required":true}}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SprintResponseDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "start_date": {"dataType":"datetime","required":true},
+            "end_date": {"dataType":"datetime","required":true},
+            "evaluation_method_id": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SprintCreateDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "start_date": {"dataType":"date","required":true,"validators":{"isDate":{"errorMsg":"start_date must be a Date"}}},
+            "end_date": {"dataType":"date","required":true,"validators":{"isDate":{"errorMsg":"end_date must be a Date"}}},
+            "evaluation_method_id": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"evaluation_method_id must be an integer"}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SprintUpdateDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "start_date": {"dataType":"date","required":true,"validators":{"isDate":{"errorMsg":"start_date must be a Date"}}},
+            "end_date": {"dataType":"date","required":true,"validators":{"isDate":{"errorMsg":"end_date must be a Date"}}},
+            "evaluation_method_id": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"evaluation_method_id must be an integer"}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PaginationResponseDTO_SprintResponseDTO_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"results":{"dataType":"array","array":{"dataType":"refObject","ref":"SprintResponseDTO"},"required":true},"totalPages":{"dataType":"double","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SprintSearchDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "page": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"page must be an integer"},"minimum":{"errorMsg":"page must be greater than or equal to 1","value":1}}},
+            "limit": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"limit must be an integer"},"minimum":{"errorMsg":"limit must be greater than or equal to 1","value":1}}},
+            "start_date": {"dataType":"date","validators":{"isDate":{"errorMsg":"start_date must be a Date"}}},
+            "end_date": {"dataType":"date","validators":{"isDate":{"errorMsg":"end_date must be a Date"}}},
+            "evaluation_method_id": {"dataType":"integer","validators":{"isInt":{"errorMsg":"evaluation_method_id must be an integer"}}},
         },
         "additionalProperties": false,
     },
@@ -316,6 +366,111 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.getChangesMetrics.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 200, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/sprint',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(SprintController)),
+            ...(fetchMiddlewares<RequestHandler>(SprintController.prototype.create)),
+
+            function SprintController_create(request: any, response: any, next: any) {
+            const args = {
+                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"SprintCreateDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new SprintController();
+
+
+              const promise = controller.create.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 201, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.put('/sprint/:id',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(SprintController)),
+            ...(fetchMiddlewares<RequestHandler>(SprintController.prototype.update)),
+
+            function SprintController_update(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"SprintUpdateDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new SprintController();
+
+
+              const promise = controller.update.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 200, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/sprint',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(SprintController)),
+            ...(fetchMiddlewares<RequestHandler>(SprintController.prototype.getAll)),
+
+            function SprintController_getAll(request: any, response: any, next: any) {
+            const args = {
+                    query: {"in":"queries","name":"query","required":true,"ref":"SprintSearchDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new SprintController();
+
+
+              const promise = controller.getAll.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 200, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/sprint/:id',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(SprintController)),
+            ...(fetchMiddlewares<RequestHandler>(SprintController.prototype.getOne)),
+
+            function SprintController_getOne(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new SprintController();
+
+
+              const promise = controller.getOne.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, 200, next);
             } catch (err) {
                 return next(err);

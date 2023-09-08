@@ -8,6 +8,13 @@ import {
 import { CommitMetricsDTO } from "./dto/commitMetrics";
 import { FileChangeMetricsDTO } from "./dto/fileMetrics";
 import { GetAllRepositoryQueryDTO, RepositoryDTO } from "./dto/repository";
+import {
+  SprintCreateDTO,
+  SprintFindOneDTO,
+  SprintResponseDTO,
+  SprintSearchDTO,
+  SprintUpdateDTO,
+} from "./dto/sprint";
 import { PaginationResponseDTO } from "./utils/pagination";
 
 export type {
@@ -21,4 +28,9 @@ export type {
   GetAllRepositoryQueryDTO,
   PaginationResponseDTO,
   RepositoryDTO,
+  SprintCreateDTO,
+  SprintFindOneDTO,
+  SprintResponseDTO,
+  SprintSearchDTO,
+  SprintUpdateDTO,
 };
