@@ -7,7 +7,7 @@ import {
     getIfDateRangeIsValid,
     getTimeZoneAdjustedDate,
     getIfDateIsValid,
-} from "../../../../../../../commom/utils/date";
+} from "../../../../../../commom/utils/date";
 
 const dateTimeFormat = new Intl.DateTimeFormat("pt-BR", {
     year: "numeric",

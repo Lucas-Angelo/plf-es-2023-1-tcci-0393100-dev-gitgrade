@@ -29,3 +29,12 @@ body {
     min-height: 100vh;
     height: 100%;
 }
+
+/* general use rules */
+
+.one-line-truncate {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}

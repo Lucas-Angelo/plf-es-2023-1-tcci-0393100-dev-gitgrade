@@ -1,0 +1,6 @@
+.judit {
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    box-flex: 1;
+    width: 0;
+}

@@ -20,9 +20,12 @@ export default function RepositoryMetricsAside() {
     return (
         <Box
             as={"aside"}
+            display={["block", "block", "block", "table-cell"]}
             sx={{
-                width: ["100%", "100%", "300px"],
+                width: ["100%", "100%", "100%", "300px"],
             }}
+            mr={[0, 0, 0, 3]}
+            mb={[6, 6, 6, 0]}
         >
             <Box>
                 <NavList>
