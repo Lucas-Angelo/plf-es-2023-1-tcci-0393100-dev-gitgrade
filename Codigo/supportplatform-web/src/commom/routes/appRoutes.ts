@@ -47,6 +47,24 @@ const appRoutes = {
                             this.path
                         }`;
                     },
+
+                    // nested routes
+                    absolute: {
+                        path: "absolute" as const,
+                        link(id: number) {
+                            return `${appRoutes.repo[
+                                ":id"
+                            ].metrics.commits.link(id)}/${this.path}`;
+                        },
+                    },
+                    percentual: {
+                        path: "percentual" as const,
+                        link(id: number) {
+                            return `${appRoutes.repo[
+                                ":id"
+                            ].metrics.commits.link(id)}/${this.path}`;
+                        },
+                    },
                 },
                 fileTypes: {
                     path: "file-types" as const,

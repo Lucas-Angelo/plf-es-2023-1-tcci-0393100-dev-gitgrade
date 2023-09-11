@@ -51,7 +51,42 @@ const routes = createRoutesFromElements(
                                         "../../pages/repo/detail/metrics/commits/index"
                                     )
                                 }
-                            />
+                            >
+                                <Route
+                                    path={
+                                        appRoutes.repo[":id"].metrics.commits
+                                            .absolute.path
+                                    }
+                                    lazy={() =>
+                                        import(
+                                            "../../pages/repo/detail/metrics/commits/absolute/index"
+                                        )
+                                    }
+                                />
+                                <Route
+                                    path={
+                                        appRoutes.repo[":id"].metrics.commits
+                                            .percentual.path
+                                    }
+                                    lazy={() =>
+                                        import(
+                                            "../../pages/repo/detail/metrics/commits/percentual/index"
+                                        )
+                                    }
+                                />
+                                <Route
+                                    path=""
+                                    element={
+                                        <Navigate
+                                            to={
+                                                appRoutes.repo[":id"].metrics
+                                                    .commits.absolute.path
+                                            }
+                                            replace
+                                        />
+                                    }
+                                />
+                            </Route>
                             <Route
                                 path={
                                     appRoutes.repo[":id"].metrics.fileTypes.path

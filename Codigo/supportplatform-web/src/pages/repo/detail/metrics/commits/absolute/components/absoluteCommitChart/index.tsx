@@ -10,14 +10,14 @@ import {
     Tooltip as ChartTooltip,
     Cell,
 } from "recharts";
-import ContribuitorsLegend from "../../../../../../../commom/components/contribuitorsLegend";
-import { getChartColor } from "../../../../../../../commom/style/colors";
+import ContribuitorsLegend from "../../../../../../../../commom/components/contribuitorsLegend";
+import { getChartColor } from "../../../../../../../../commom/style/colors";
 
-interface ICommitChartProps {
+interface IAbsoluteCommitChartProps {
     commitMetrics: CommitMetricsDTO;
 }
 
-export default function CommitChart(props: ICommitChartProps) {
+export default function AbsoluteCommitChart(props: IAbsoluteCommitChartProps) {
     const chartData = useMemo(
         () =>
             props.commitMetrics.commitsPerContributor.map(
@@ -38,11 +38,7 @@ export default function CommitChart(props: ICommitChartProps) {
                 width="100%"
                 aspect={7 / 3}
             >
-                <BarChart
-                    width={600}
-                    height={300}
-                    data={chartData}
-                >
+                <BarChart data={chartData}>
                     <CartesianGrid
                         stroke="#ccc"
                         strokeDasharray="5 5"
