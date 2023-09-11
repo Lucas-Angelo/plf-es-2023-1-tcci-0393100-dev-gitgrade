@@ -13,7 +13,7 @@ export default function UnderlineNavItemLink({
     ...rest
 }: IUnderlineNavItemLinkProps) {
     const resolved = useResolvedPath(to);
-    const isCurrent = useMatch({ path: resolved.pathname, end: true });
+    const isCurrent = useMatch({ path: resolved.pathname, end: false });
     return (
         <UnderlineNav2.Item
             as={Link}

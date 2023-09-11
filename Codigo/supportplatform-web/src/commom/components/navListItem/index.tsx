@@ -12,7 +12,7 @@ export default function NavListItem({
     ...rest
 }: INavListItemProps) {
     const resolved = useResolvedPath(to);
-    const isCurrent = useMatch({ path: resolved.pathname, end: true });
+    const isCurrent = useMatch({ path: resolved.pathname, end: false });
     return (
         <NavList.Item
             as={Link}

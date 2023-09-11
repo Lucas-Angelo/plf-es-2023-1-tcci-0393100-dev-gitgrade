@@ -17,7 +17,7 @@ export default function SegmentedButtonLink({
     ...rest
 }: ISegmentedButtonLinkProps) {
     const resolved = useResolvedPath(to);
-    const isCurrent = useMatch({ path: resolved.pathname, end: true });
+    const isCurrent = useMatch({ path: resolved.pathname, end: false });
 
     return (
         <Link
