@@ -6,11 +6,18 @@ import {
     CommitMetricsServiceQueryDataValues,
     CommitMetricsServiceResponse,
 } from "../interface/CommitMetrics";
+import {
+    getDateInDayEnd,
+    getDateInDayStart,
+    getDateInServerTimeZone,
+} from "../utils/date";
 
 export default class CommitService {
     async getCommitMetricsGroupedByContributor(
         repositoryId: number,
-        branchName: string
+        branchName: string,
+        startedAt: Date,
+        endedAt: Date
     ) {
         const commitCounts = await Contributor.findAll({
             attributes: [
@@ -40,6 +47,18 @@ export default class CommitService {
                             attributes: [],
                         },
                     ],
+                    where: {
+                        committedDate: {
+                            [sequelize.Op.between]: [
+                                getDateInDayStart(
+                                    getDateInServerTimeZone(startedAt)
+                                ),
+                                getDateInDayEnd(
+                                    getDateInServerTimeZone(endedAt)
+                                ),
+                            ],
+                        },
+                    },
                 },
             ],
             group: ["Contributor.id"],

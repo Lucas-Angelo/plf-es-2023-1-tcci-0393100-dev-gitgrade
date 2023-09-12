@@ -4,7 +4,7 @@ import { RepositoryDTO } from "@gitgrade/dtos";
 export class RepositoryMapper {
     toDto(model: Repository): RepositoryDTO {
         return {
-            id: model.id,
+            id: Number(model.id),
             name: model.name,
             automaticSynchronization: model.automaticSynchronization,
             defaultBranch: model.defaultBranch,

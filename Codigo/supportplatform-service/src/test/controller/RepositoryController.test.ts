@@ -2,6 +2,10 @@ import supertest from "supertest";
 import app from "../..";
 import Database from "../../database";
 
+beforeAll(async () => {
+    await new Database().connect();
+});
+
 describe("GET /repository", () => {
     beforeAll(async () => {
         await new Database().connect();
@@ -118,5 +122,47 @@ describe("GET /repository", () => {
 
         expect(response.body.results).toHaveLength(0);
         expect(response.body.totalPages).toBe(2);
+    });
+});
+
+describe("GET /repository/:id", () => {
+    it("should return 422 when id is not a number", async () => {
+        const response = await supertest(app)
+            .get("/repository/abc")
+            .expect(422)
+            .send();
+
+        expect(response.body.details?.["id"]?.message).toBe(
+            "id must be an integer"
+        );
+    });
+
+    it("should return 422 when id is lesser than 1", async () => {
+        const response = await supertest(app)
+            .get("/repository/0")
+            .expect(422)
+            .send();
+
+        expect(response.body.details?.["id"]?.message).toBe(
+            "id must be greater than or equal to 1"
+        );
+    });
+
+    it("should return 404 when id is not found", async () => {
+        const response = await supertest(app)
+            .get("/repository/999999")
+            .expect(404)
+            .send();
+
+        expect(response.body.message).toBe("Repository not found");
+    });
+
+    it("should return 200 OK when id is found", async () => {
+        const response = await supertest(app)
+            .get("/repository/1")
+            .expect(200)
+            .send();
+
+        expect(response.body.id).toBe(1);
     });
 });

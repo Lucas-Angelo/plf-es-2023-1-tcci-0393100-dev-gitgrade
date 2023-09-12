@@ -284,6 +284,46 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"CommitMetricsQueryDTO": {
+				"properties": {
+					"startedAt": {
+						"type": "string",
+						"format": "date"
+					},
+					"endedAt": {
+						"type": "string",
+						"format": "date"
+					},
+					"branchName": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Record_string._message-string--value-any_-or-undefined_": {
+				"properties": {},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"ErrorResponseDTO": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"details": {
+						"$ref": "#/components/schemas/Record_string._message-string--value-any_-or-undefined_"
+					},
+					"stack": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"FileChangeMetricsDTO": {
 				"properties": {
 					"totalAdditions": {
@@ -591,6 +631,24 @@
 								}
 							}
 						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
@@ -603,8 +661,9 @@
 						"name": "id",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
 						}
 					}
 				]
@@ -623,6 +682,26 @@
 								}
 							}
 						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponseDTO"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponseDTO"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
@@ -635,8 +714,27 @@
 						"name": "repositoryId",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "startedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "endedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
 						}
 					},
 					{

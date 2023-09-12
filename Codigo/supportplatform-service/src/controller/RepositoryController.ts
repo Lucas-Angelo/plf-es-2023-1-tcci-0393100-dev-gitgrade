@@ -1,4 +1,4 @@
-import { Get, Queries, Route, Tags } from "tsoa";
+import { Get, Queries, Res, Route, Tags, TsoaResponse } from "tsoa";
 import RepositoryService from "../service/RepositoryService";
 import { RepositoryMapper } from "../mapper/RepositoryMapper";
 import {
@@ -32,9 +32,21 @@ export class RepositoryController {
         };
     }
 
+    /**
+     * @param id @isInt id id must be an integer
+     * @param id @minimum id 1 id must be greater than or equal to 1
+     */
     @Get("/{id}")
-    public async getById(id: number): Promise<RepositoryDTO> {
+    public async getById(
+        id: number,
+        @Res() notFoundResponse: TsoaResponse<404, { message: string }>
+    ): Promise<RepositoryDTO> {
         const serviceResponse = await this.repositoryService.findById(id);
+
+        if (!serviceResponse) {
+            return notFoundResponse(404, { message: "Repository not found" });
+        }
+
         const mapper = new RepositoryMapper();
         return mapper.toDto(serviceResponse);
     }

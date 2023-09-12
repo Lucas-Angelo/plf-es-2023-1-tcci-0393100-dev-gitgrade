@@ -36,13 +36,11 @@ export default class RepositoryService {
         }
     }
 
-    async findById(id: number): Promise<Repository> {
+    async findById(id: number): Promise<Repository | null> {
         try {
             logger.info("Searching for repository by id:", { id });
             const repository = await Repository.findByPk(id);
-            if (!repository) {
-                throw new Error("Repository not found");
-            }
+
             return repository;
         } catch (error) {
             logger.error("Error finding repository by id:", { error });

@@ -102,6 +102,31 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CommitMetricsQueryDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "startedAt": {"dataType":"date","validators":{"isDate":{"errorMsg":"startedAt must be a valid date"}}},
+            "endedAt": {"dataType":"date","validators":{"isDate":{"errorMsg":"endedAt must be a valid date"}}},
+            "branchName": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Record_string._message-string--value-any_-or-undefined_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ErrorResponseDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "message": {"dataType":"string","required":true},
+            "details": {"ref":"Record_string._message-string--value-any_-or-undefined_"},
+            "stack": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "FileChangeMetricsDTO": {
         "dataType": "refObject",
         "properties": {
@@ -205,7 +230,8 @@ export function RegisterRoutes(app: Router) {
 
             function RepositoryController_getById(request: any, response: any, next: any) {
             const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"id must be an integer"},"minimum":{"errorMsg":"id must be greater than or equal to 1","value":1}}},
+                    notFoundResponse: {"in":"res","name":"404","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"message":{"dataType":"string","required":true}}},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -230,8 +256,10 @@ export function RegisterRoutes(app: Router) {
 
             function RepositoryMetricsController_getCommitMetrics(request: any, response: any, next: any) {
             const args = {
-                    repositoryId: {"in":"path","name":"repositoryId","required":true,"dataType":"double"},
-                    branchName: {"in":"query","name":"branchName","dataType":"string"},
+                    repositoryId: {"in":"path","name":"repositoryId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"repositoryId must be an integer"},"minimum":{"errorMsg":"repositoryId must be greater than or equal to 1","value":1}}},
+                    query: {"in":"queries","name":"query","required":true,"ref":"CommitMetricsQueryDTO"},
+                    notFoundResponse: {"in":"res","name":"404","required":true,"ref":"ErrorResponseDTO"},
+                    unprocessableEntityResponse: {"in":"res","name":"422","required":true,"ref":"ErrorResponseDTO"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
