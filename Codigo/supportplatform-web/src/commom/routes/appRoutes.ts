@@ -38,6 +38,12 @@ const appRoutes = {
                 link(id: number) {
                     return `${appRoutes.repo[":id"].link(id)}/${this.path}`;
                 },
+                // necessary to map query string param name per a trustable variable
+                search: {
+                    branch: "branch",
+                    startedAt: "startedAt",
+                    endedAt: "endedAt",
+                },
 
                 // nested routes
                 commits: {

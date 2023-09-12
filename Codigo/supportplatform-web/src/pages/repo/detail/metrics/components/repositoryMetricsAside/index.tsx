@@ -1,10 +1,10 @@
 import { Box, NavList, Text } from "@primer/react";
 import NavListItem from "../../../../../../commom/components/navListItem";
 import appRoutes from "../../../../../../commom/routes/appRoutes";
-import BranchSelector from "../branchSelector";
 import { useRepositoryById } from "../../../../../../commom/data/repo";
 import { useParams } from "react-router";
 import Divider from "../../../../../../commom/components/divider";
+import BranchQueryNavigationMenu from "../branchQueryNavigationMenu";
 
 const repositoryMetricsRoutes = appRoutes.repo[":id"].metrics;
 
@@ -80,10 +80,8 @@ export default function RepositoryMetricsAside() {
                 >
                     Branch
                 </Text>
-                <BranchSelector
-                    defaultBranchName={
-                        repositoryData!.defaultBranch ?? "master"
-                    }
+                <BranchQueryNavigationMenu
+                    defaultBranchName={repositoryData!.defaultBranch}
                     repositoryId={id}
                 />
             </Box>

@@ -1,20 +1,20 @@
 import { ActionList, ActionMenu, Text, Truncate } from "@primer/react";
-import { useBranchesByRepositoryId } from "../../../../../../commom/data/branch";
-import { useMemo, useState } from "react";
+import { useBranchesByRepositoryId } from "../../../commom/data/branch";
+import { useMemo } from "react";
 
 interface IBranchSelectorProps {
     repositoryId: number;
-    defaultBranchName: string;
+    selectedBranch: string;
+    onSelectedBranchChange?: (branchName: string) => void;
+
+    defaultBranchName?: string;
 }
 
 export default function BranchSelector(props: IBranchSelectorProps) {
-    const [selectedBranch, setSelectedBranch] = useState(
-        props.defaultBranchName
-    );
-
     const { data: branchesData } = useBranchesByRepositoryId(
         props.repositoryId
     );
+
     const orderedBranches = useMemo(
         () =>
             branchesData?.results?.sort((a, b) => {
@@ -28,7 +28,9 @@ export default function BranchSelector(props: IBranchSelectorProps) {
     return (
         <ActionMenu>
             <ActionMenu.Button>
-                <Truncate title={selectedBranch}>{selectedBranch}</Truncate>
+                <Truncate title={props.selectedBranch}>
+                    {props.selectedBranch}
+                </Truncate>
             </ActionMenu.Button>
 
             <ActionMenu.Overlay>
@@ -36,7 +38,9 @@ export default function BranchSelector(props: IBranchSelectorProps) {
                     {orderedBranches?.map((branch) => (
                         <ActionList.Item
                             key={branch.id}
-                            onSelect={() => setSelectedBranch(branch.name)}
+                            onSelect={() =>
+                                props.onSelectedBranchChange?.(branch.name)
+                            }
                         >
                             <Text sx={{ fontWeight: "bold" }}>
                                 {branch.name}

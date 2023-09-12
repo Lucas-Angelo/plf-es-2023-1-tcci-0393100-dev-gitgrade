@@ -8,6 +8,11 @@ import {
     getTimeZoneAdjustedDate,
     getIfDateIsValid,
 } from "../../../../../../commom/utils/date";
+import appRoutes from "../../../../../../commom/routes/appRoutes";
+
+interface IDateFilterProps {
+    repositoryGithubCreatedAt?: Date;
+}
 
 const dateTimeFormat = new Intl.DateTimeFormat("pt-BR", {
     year: "numeric",
@@ -17,43 +22,55 @@ const dateTimeFormat = new Intl.DateTimeFormat("pt-BR", {
 
 export function formatDateRange(
     startedAt: Date | undefined,
-    endedAt: Date | undefined
+    endedAt: Date | undefined,
+    fallbackStartedAt: Date,
+    fallbackEndedAt: Date
 ) {
-    if (
-        startedAt &&
-        getIfDateIsValid(startedAt) &&
-        endedAt &&
-        getIfDateIsValid(endedAt)
-    )
-        return dateTimeFormat.formatRange(startedAt, endedAt);
+    const isRangeValid =
+        !startedAt || !endedAt || getIfDateRangeIsValid(startedAt, endedAt);
+    const finalStartedAt =
+        startedAt && getIfDateIsValid(startedAt) && isRangeValid
+            ? startedAt
+            : fallbackStartedAt;
+    const finalEndedAt =
+        endedAt && getIfDateIsValid(endedAt) && isRangeValid
+            ? endedAt
+            : fallbackEndedAt;
 
-    let startedAtFormatted = "Início";
-    if (startedAt && getIfDateIsValid(startedAt))
-        startedAtFormatted = dateTimeFormat.format(startedAt);
-
-    let endedAtFormatted = "Hoje";
-    if (endedAt && getIfDateIsValid(endedAt))
-        endedAtFormatted = dateTimeFormat.format(endedAt);
-
-    return `${startedAtFormatted} - ${endedAtFormatted}`;
+    return dateTimeFormat.formatRange(finalStartedAt, finalEndedAt);
 }
 
-export default function DateFilter() {
+const pageRouteSearchParams = appRoutes.repo[":id"].metrics.search;
+
+export default function DateFilter(props: IDateFilterProps) {
     const [isOpen, setIsOpen] = useState(false);
     const openOverlay = React.useCallback(() => setIsOpen(true), [setIsOpen]);
     const closeOverlay = React.useCallback(() => setIsOpen(false), [setIsOpen]);
 
     const [searchParams, setSearchParams] = useSearchParams();
-    const startedAt = searchParams.get("startedAt") ?? "";
-    const endedAt = searchParams.get("endedAt") ?? "";
+    const startedAt = searchParams.get(pageRouteSearchParams.startedAt) ?? "";
+    const endedAt = searchParams.get(pageRouteSearchParams.endedAt) ?? "";
 
     const startedAtDate = getTimeZoneAdjustedDate(startedAt);
     const endedAtDate = getTimeZoneAdjustedDate(endedAt);
 
     const isDateRangeValid = getIfDateRangeIsValid(startedAtDate, endedAtDate);
 
+    const fallbackStartedAt = props.repositoryGithubCreatedAt
+        ? new Date(props.repositoryGithubCreatedAt)
+        : new Date("2008-11-15");
+    const fallbackEndedAt = new Date();
+
     function handleDateFilterFormSubmit(startedAt: string, endedAt: string) {
-        setSearchParams({ startedAt, endedAt });
+        setSearchParams((previousSearchParams) => {
+            previousSearchParams.set(
+                pageRouteSearchParams.startedAt,
+                startedAt
+            );
+            previousSearchParams.set(pageRouteSearchParams.endedAt, endedAt);
+
+            return previousSearchParams;
+        });
         closeOverlay();
     }
 
@@ -66,11 +83,12 @@ export default function DateFilter() {
                 mb: 2,
             }}
         >
-            {!getIfDateIsValid(startedAtDate) ||
-            !getIfDateIsValid(endedAtDate) ||
-            isDateRangeValid
-                ? formatDateRange(startedAtDate, endedAtDate)
-                : formatDateRange(undefined, undefined)}
+            {formatDateRange(
+                startedAtDate,
+                endedAtDate,
+                fallbackStartedAt,
+                fallbackEndedAt
+            )}
             <AnchoredOverlay
                 renderAnchor={(anchorProps) => (
                     <IconButton
