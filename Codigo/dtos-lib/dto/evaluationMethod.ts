@@ -4,12 +4,12 @@
 export interface EvaluationMethodCreateDTO {
   /**
    * @isString description must be a string
-   * @isNotEmpty description must not be empty
+   * @minLength 1 description must have a minimum length of 1
    * @maxLength 255 description must have a maximum length of 255
    */
   description: string;
   /**
-   * @isInt year must be an integer
+   * @isInt semester must be an integer
    */
   semester: number;
   /**
@@ -30,12 +30,12 @@ export interface EvaluationMethodCreateDTO {
 export interface EvaluationMethodUpdateDTO {
   /**
    * @isString description must be a string
-   * @isNotEmpty description must not be empty
+   * @minLength 1 description must have a minimum length of 1
    * @maxLength 255 description must have a maximum length of 255
    */
   description: string;
   /**
-   * @isInt year must be an integer
+   * @isInt semester must be an integer
    */
   semester: number;
   /**
@@ -55,13 +55,17 @@ export interface EvaluationMethodSearchDTO {
   /**
    * @isInt page must be an integer
    * @minimum 1 page must be greater than or equal to 1
+   * @isOptional page is optional, if not provided, default to 1
+   * @default 1
    */
-  page: number;
+  page?: number;
   /**
    * @isInt limit must be an integer
    * @minimum 1 limit must be greater than or equal to 1
+   * @isOptional limit is optional, if not provided, default to 10
+   * @default 10
    */
-  limit: number;
+  limit?: number;
   /**
    * @isString description must be a string
    * @isOptional
@@ -73,7 +77,7 @@ export interface EvaluationMethodSearchDTO {
    */
   semester?: number;
   /**
-   * @isInt semester must be an integer
+   * @isInt year must be an integer
    * @isOptional
    */
   year?: number;
@@ -88,37 +92,6 @@ export interface EvaluationMethodSearchDTO {
    * @default false
    */
   forceDisabled?: boolean;
-}
-
-/**
- * EvaluationMethodFindOneDTO - Used for filtering to find a single EvaluationMethod.
- */
-export interface EvaluationMethodFindOneDTO {
-  /**
-   * @isInt id must be an integer
-   * @isOptional
-   */
-  id?: number;
-  /**
-   * @isString description must be a string
-   * @isOptional
-   */
-  description?: string;
-  /**
-   * @isInt semester must be an integer
-   * @isOptional
-   */
-  semester?: number;
-  /**
-   * @isInt semester must be an integer
-   * @isOptional
-   */
-  year?: number;
-  /**
-   * @isDate disabledAt must be a Date
-   * @isOptional
-   */
-  disabledAt?: Date | null;
 }
 
 /**

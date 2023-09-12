@@ -34,7 +34,7 @@ export class EvaluationMethodController extends Controller {
     }
     /**
      * Create a new EvaluationMethod.
-     * @body requestBody EvaluationMethodCreateDTO data to create.
+     * @body body EvaluationMethodCreateDTO data to create.
      */
     @Example<EvaluationMethodResponseDTO>({
         id: 1,
@@ -46,11 +46,10 @@ export class EvaluationMethodController extends Controller {
     @Post("/")
     @SuccessResponse("201", "EvaluationMethod created")
     public async create(
-        @Body() requestBody: EvaluationMethodCreateDTO
+        @Body() body: EvaluationMethodCreateDTO
     ): Promise<EvaluationMethodResponseDTO> {
         this.setStatus(201);
-        const serviceResponse =
-            await this.evaluationMethodService.create(requestBody);
+        const serviceResponse = await this.evaluationMethodService.create(body);
         const mapper = new EvaluationMethodMapper();
         return mapper.toDto(serviceResponse);
     }
@@ -59,7 +58,7 @@ export class EvaluationMethodController extends Controller {
      * Update an existing EvaluationMethod by id.
      * Need body with all fields.
      * @path id Id of the EvaluationMethod to update.
-     * @body requestBody EvaluationMethodUpdateDTO data to update.
+     * @body body EvaluationMethodUpdateDTO data to update.
      */
     @Example<EvaluationMethodResponseDTO>({
         id: 1,
@@ -72,14 +71,13 @@ export class EvaluationMethodController extends Controller {
     @SuccessResponse("200", "EvaluationMethod updated")
     public async update(
         @Path() id: number,
-        @Body() requestBody: EvaluationMethodUpdateDTO
+        @Body() body: EvaluationMethodUpdateDTO
     ): Promise<EvaluationMethodResponseDTO | null> {
         this.setStatus(200);
         const serviceResponse = await this.evaluationMethodService.update(
             id,
-            requestBody
+            body
         );
-        if (!serviceResponse) return null;
         const mapper = new EvaluationMethodMapper();
         return mapper.toDto(serviceResponse);
     }
@@ -137,13 +135,13 @@ export class EvaluationMethodController extends Controller {
     @Get("/{id}")
     @SuccessResponse("200", "Found evaluation method")
     public async getOne(
-        @Path() id: number
+        @Path()
+        id: number
     ): Promise<EvaluationMethodResponseDTO | null> {
         this.setStatus(200);
-        const serviceResponse = await this.evaluationMethodService.findOne({
-            id,
+        const serviceResponse = await this.evaluationMethodService.findOneBy({
+            id: id,
         });
-        if (!serviceResponse) return null;
         const mapper = new EvaluationMethodMapper();
         return mapper.toDto(serviceResponse);
     }
