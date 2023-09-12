@@ -44,6 +44,7 @@
 				"properties": {
 					"description": {
 						"type": "string",
+						"minLength": 1,
 						"maxLength": 255
 					},
 					"semester": {
@@ -74,6 +75,7 @@
 				"properties": {
 					"description": {
 						"type": "string",
+						"minLength": 1,
 						"maxLength": 255
 					},
 					"semester": {
@@ -124,11 +126,13 @@
 					"page": {
 						"type": "integer",
 						"format": "int32",
+						"default": "1",
 						"minimum": 1
 					},
 					"limit": {
 						"type": "integer",
 						"format": "int32",
+						"default": "10",
 						"minimum": 1
 					},
 					"description": {
@@ -152,10 +156,6 @@
 						"default": "false"
 					}
 				},
-				"required": [
-					"page",
-					"limit"
-				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -569,8 +569,9 @@
 					{
 						"in": "query",
 						"name": "page",
-						"required": true,
+						"required": false,
 						"schema": {
+							"default": "1",
 							"format": "int32",
 							"type": "integer",
 							"minimum": 1
@@ -579,8 +580,9 @@
 					{
 						"in": "query",
 						"name": "limit",
-						"required": true,
+						"required": false,
 						"schema": {
+							"default": "10",
 							"format": "int32",
 							"type": "integer",
 							"minimum": 1

@@ -31,8 +31,8 @@ const models: TsoaRoute.Models = {
     "EvaluationMethodCreateDTO": {
         "dataType": "refObject",
         "properties": {
-            "description": {"dataType":"string","required":true,"validators":{"isString":{"errorMsg":"description must be a string"},"maxLength":{"errorMsg":"description must have a maximum length of 255","value":255}}},
-            "semester": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"year must be an integer"}}},
+            "description": {"dataType":"string","required":true,"validators":{"isString":{"errorMsg":"description must be a string"},"minLength":{"errorMsg":"description must have a minimum length of 1","value":1},"maxLength":{"errorMsg":"description must have a maximum length of 255","value":255}}},
+            "semester": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"semester must be an integer"}}},
             "year": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"year must be an integer"}}},
             "disabledAt": {"dataType":"union","subSchemas":[{"dataType":"date"},{"dataType":"enum","enums":[null]}],"default":"null","validators":{"isDate":{"errorMsg":"disabledAt must be a Date"}}},
         },
@@ -42,8 +42,8 @@ const models: TsoaRoute.Models = {
     "EvaluationMethodUpdateDTO": {
         "dataType": "refObject",
         "properties": {
-            "description": {"dataType":"string","required":true,"validators":{"isString":{"errorMsg":"description must be a string"},"maxLength":{"errorMsg":"description must have a maximum length of 255","value":255}}},
-            "semester": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"year must be an integer"}}},
+            "description": {"dataType":"string","required":true,"validators":{"isString":{"errorMsg":"description must be a string"},"minLength":{"errorMsg":"description must have a minimum length of 1","value":1},"maxLength":{"errorMsg":"description must have a maximum length of 255","value":255}}},
+            "semester": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"semester must be an integer"}}},
             "year": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"year must be an integer"}}},
             "disabledAt": {"dataType":"union","subSchemas":[{"dataType":"date"},{"dataType":"enum","enums":[null]}],"required":true,"validators":{"isDate":{"errorMsg":"disabledAt must be a Date"}}},
         },
@@ -58,11 +58,11 @@ const models: TsoaRoute.Models = {
     "EvaluationMethodSearchDTO": {
         "dataType": "refObject",
         "properties": {
-            "page": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"page must be an integer"},"minimum":{"errorMsg":"page must be greater than or equal to 1","value":1}}},
-            "limit": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"limit must be an integer"},"minimum":{"errorMsg":"limit must be greater than or equal to 1","value":1}}},
+            "page": {"dataType":"integer","default":"1","validators":{"isInt":{"errorMsg":"page must be an integer"},"minimum":{"errorMsg":"page must be greater than or equal to 1","value":1}}},
+            "limit": {"dataType":"integer","default":"10","validators":{"isInt":{"errorMsg":"limit must be an integer"},"minimum":{"errorMsg":"limit must be greater than or equal to 1","value":1}}},
             "description": {"dataType":"string","validators":{"isString":{"errorMsg":"description must be a string"}}},
             "semester": {"dataType":"integer","validators":{"isInt":{"errorMsg":"semester must be an integer"}}},
-            "year": {"dataType":"integer","validators":{"isInt":{"errorMsg":"semester must be an integer"}}},
+            "year": {"dataType":"integer","validators":{"isInt":{"errorMsg":"year must be an integer"}}},
             "disabledAt": {"dataType":"union","subSchemas":[{"dataType":"date"},{"dataType":"enum","enums":[null]}],"validators":{"isDate":{"errorMsg":"disabledAt must be a Date"}}},
             "forceDisabled": {"dataType":"boolean","default":"false","validators":{"isBoolean":{"errorMsg":"forceDisabled must be a boolean"}}},
         },
@@ -144,7 +144,7 @@ export function RegisterRoutes(app: Router) {
 
             function EvaluationMethodController_create(request: any, response: any, next: any) {
             const args = {
-                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"EvaluationMethodCreateDTO"},
+                    body: {"in":"body","name":"body","required":true,"ref":"EvaluationMethodCreateDTO"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -171,7 +171,7 @@ export function RegisterRoutes(app: Router) {
             function EvaluationMethodController_update(request: any, response: any, next: any) {
             const args = {
                     id: {"in":"path","name":"id","required":true,"dataType":"double"},
-                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"EvaluationMethodUpdateDTO"},
+                    body: {"in":"body","name":"body","required":true,"ref":"EvaluationMethodUpdateDTO"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

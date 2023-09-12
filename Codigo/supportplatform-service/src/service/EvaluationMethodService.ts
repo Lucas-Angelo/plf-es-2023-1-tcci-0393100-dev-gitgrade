@@ -1,6 +1,5 @@
 import {
     EvaluationMethodCreateDTO,
-    EvaluationMethodFindOneDTO,
     EvaluationMethodSearchDTO,
     EvaluationMethodUpdateDTO,
     PaginationResponseDTO,
@@ -9,7 +8,10 @@ import { Op } from "sequelize";
 import logger from "../config/LogConfig";
 import AppError from "../error/AppError";
 import { EvaluationMethodWhereClauseType } from "../interface/EvaluationMethod";
-import { EvaluationMethod } from "../model/EvaluationMethod";
+import {
+    EvaluationMethod,
+    IEvaluationMethodAttributes,
+} from "../model/EvaluationMethod";
 import { SequelizeUtil } from "../utils/SequelizeUtil";
 import { sequelizePagination } from "../utils/pagination";
 
@@ -52,7 +54,7 @@ export default class EvaluationMethodService {
     async update(
         id: number,
         data: EvaluationMethodUpdateDTO
-    ): Promise<EvaluationMethod | null> {
+    ): Promise<EvaluationMethod> {
         try {
             if (!id) {
                 logger.error("Id not provided", { id });
@@ -62,12 +64,16 @@ export default class EvaluationMethodService {
             this.validateNotNullAndEmptyFields(data);
 
             logger.info(`Updating evaluation method with id: ${id}`);
-            const evaluationMethod = await EvaluationMethod.findByPk(id);
+            const evaluationMethod = await EvaluationMethod.findOne({
+                where: { id },
+                paranoid: false,
+            });
 
             if (!evaluationMethod) {
                 logger.error(`Evaluation method with id: ${id} not found`);
                 throw new AppError(
-                    `Evaluation method with id: ${id} not found`
+                    `Evaluation method with id: ${id} not found`,
+                    404
                 );
             }
 
@@ -135,40 +141,41 @@ export default class EvaluationMethodService {
     /**
      * Find a single EvaluationMethod based on given filters.
      */
-    async findOne(
-        filter: EvaluationMethodFindOneDTO
-    ): Promise<EvaluationMethod | null> {
+    async findOneBy(
+        fields: Partial<IEvaluationMethodAttributes>
+    ): Promise<EvaluationMethod> {
         try {
-            logger.info("Finding evaluation method based on criteria");
-
-            const whereClause = this._constructWhereClause(filter);
-
+            logger.info(`Searching for evaluation method by fields:`, {
+                fields,
+            });
             const evaluationMethod = await EvaluationMethod.findOne({
-                where: whereClause,
+                where: { ...fields },
+                paranoid: false,
             });
-
             if (!evaluationMethod) {
-                logger.info("Evaluation method not found based on criteria");
-                throw new AppError(
-                    "Evaluation method not found based on criteria",
-                    404
+                logger.info(
+                    `Evaluation method not found by fields ${JSON.stringify(
+                        fields
+                    )}`
                 );
-            }
-
-            logger.info("Successfully found evaluation method: ", {
-                evaluationMethod,
-            });
+                throw new AppError("Evaluation method not found", 404);
+            } else
+                logger.info(
+                    `Evaluation method found by fields ${JSON.stringify(
+                        fields
+                    )}:`,
+                    { evaluationMethod }
+                );
 
             return evaluationMethod;
         } catch (error) {
-            logger.error("Error finding evaluation method based on criteria:", {
-                error,
-            });
-            throw new AppError(
-                "Failed to find evaluation method based on criteria",
-                500,
-                error
+            logger.error(
+                `Error finding evaluation method by fields ${JSON.stringify(
+                    fields
+                )}:`,
+                { error }
             );
+            throw error;
         }
     }
 
@@ -193,7 +200,7 @@ export default class EvaluationMethodService {
      * Construct the WHERE clause for querying.
      */
     private _constructWhereClause(
-        filter: EvaluationMethodFindOneDTO | EvaluationMethodSearchDTO
+        filter: EvaluationMethodSearchDTO
     ): EvaluationMethodWhereClauseType {
         const whereClause: EvaluationMethodWhereClauseType = {};
 
