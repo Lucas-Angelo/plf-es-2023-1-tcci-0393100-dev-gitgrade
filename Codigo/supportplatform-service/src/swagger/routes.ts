@@ -102,7 +102,7 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "CommitMetricsQueryDTO": {
+    "RepositoryMetricQueryDTO": {
         "dataType": "refObject",
         "properties": {
             "startedAt": {"dataType":"date","validators":{"isDate":{"errorMsg":"startedAt must be a valid date"}}},
@@ -123,16 +123,6 @@ const models: TsoaRoute.Models = {
             "message": {"dataType":"string","required":true},
             "details": {"ref":"Record_string._message-string--value-any_-or-undefined_"},
             "stack": {"dataType":"string"},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "FileChangeMetricsDTO": {
-        "dataType": "refObject",
-        "properties": {
-            "totalAdditions": {"dataType":"double","required":true},
-            "totalDeletions": {"dataType":"double","required":true},
-            "fileChangesPerContributor": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"deletions":{"dataType":"nestedObjectLiteral","nestedProperties":{"percentage":{"dataType":"double","required":true},"sum":{"dataType":"double","required":true}},"required":true},"addtions":{"dataType":"nestedObjectLiteral","nestedProperties":{"percentage":{"dataType":"double","required":true},"sum":{"dataType":"double","required":true}},"required":true},"contribuitor":{"dataType":"nestedObjectLiteral","nestedProperties":{"githubAvatarUrl":{"dataType":"string","required":true},"githubLogin":{"dataType":"string","required":true},"githubName":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"required":true}}},"required":true},
         },
         "additionalProperties": false,
     },
@@ -257,7 +247,7 @@ export function RegisterRoutes(app: Router) {
             function RepositoryMetricsController_getCommitMetrics(request: any, response: any, next: any) {
             const args = {
                     repositoryId: {"in":"path","name":"repositoryId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"repositoryId must be an integer"},"minimum":{"errorMsg":"repositoryId must be greater than or equal to 1","value":1}}},
-                    query: {"in":"queries","name":"query","required":true,"ref":"CommitMetricsQueryDTO"},
+                    query: {"in":"queries","name":"query","required":true,"ref":"RepositoryMetricQueryDTO"},
                     notFoundResponse: {"in":"res","name":"404","required":true,"ref":"ErrorResponseDTO"},
                     unprocessableEntityResponse: {"in":"res","name":"422","required":true,"ref":"ErrorResponseDTO"},
             };
@@ -284,8 +274,10 @@ export function RegisterRoutes(app: Router) {
 
             function RepositoryMetricsController_getChangesMetrics(request: any, response: any, next: any) {
             const args = {
-                    repositoryId: {"in":"path","name":"repositoryId","required":true,"dataType":"double"},
-                    branchName: {"in":"query","name":"branchName","dataType":"string"},
+                    repositoryId: {"in":"path","name":"repositoryId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"repositoryId must be an integer"},"minimum":{"errorMsg":"repositoryId must be greater than or equal to 1","value":1}}},
+                    query: {"in":"queries","name":"query","required":true,"ref":"RepositoryMetricQueryDTO"},
+                    notFoundResponse: {"in":"res","name":"404","required":true,"ref":"ErrorResponseDTO"},
+                    unprocessableEntityResponse: {"in":"res","name":"422","required":true,"ref":"ErrorResponseDTO"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

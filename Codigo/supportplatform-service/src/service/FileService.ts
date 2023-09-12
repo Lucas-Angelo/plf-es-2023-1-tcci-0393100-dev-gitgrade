@@ -7,11 +7,18 @@ import {
     FileChangeMetricsServiceQueryDataValues,
     FileChangeMetricsServiceResponse,
 } from "../interface/FileMetrics";
+import {
+    getDateInDayEnd,
+    getDateInDayStart,
+    getDateInServerTimeZone,
+} from "../utils/date";
 
 export default class FileService {
     async getFileChangeMetricsGroupedByContributor(
         repositoryId: number,
-        branchName: string
+        branchName: string,
+        startedAt: Date,
+        endedAt: Date
     ) {
         const changesCounts = await Contributor.findAll({
             attributes: [
@@ -40,6 +47,18 @@ export default class FileService {
                     required: true,
                     as: "commits",
                     attributes: [],
+                    where: {
+                        committedDate: {
+                            [sequelize.Op.between]: [
+                                getDateInDayStart(
+                                    getDateInServerTimeZone(startedAt)
+                                ),
+                                getDateInDayEnd(
+                                    getDateInServerTimeZone(endedAt)
+                                ),
+                            ],
+                        },
+                    },
                     include: [
                         {
                             model: Branch,

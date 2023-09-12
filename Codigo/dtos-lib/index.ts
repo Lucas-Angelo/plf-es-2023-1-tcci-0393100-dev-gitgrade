@@ -1,10 +1,11 @@
-import { CommitMetricsDTO, CommitMetricsQueryDTO } from "./dto/commitMetrics";
+import { CommitMetricsDTO } from "./dto/commitMetrics";
 import { GetAllRepositoryQueryDTO, RepositoryDTO } from "./dto/repository";
 import { BranchDTO, GetAllBranchQueryDTO } from "./dto/branch";
 import { ContributorDTO, GetAllContributorQueryDTO } from "./dto/contributor";
 import { PaginationResponseDTO } from "./utils/pagination";
 import { FileChangeMetricsDTO } from "./dto/fileMetrics";
 import { ErrorResponseDTO } from "./utils/error";
+import { RepositoryMetricQueryDTO } from "./dto/repositoryMetrics";
 
 export type {
     RepositoryDTO,
@@ -16,6 +17,6 @@ export type {
     GetAllBranchQueryDTO,
     ContributorDTO,
     GetAllContributorQueryDTO,
-    CommitMetricsQueryDTO,
-    ErrorResponseDTO
+    ErrorResponseDTO,
+    RepositoryMetricQueryDTO
 }

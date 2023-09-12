@@ -284,7 +284,7 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"CommitMetricsQueryDTO": {
+			"RepositoryMetricQueryDTO": {
 				"properties": {
 					"startedAt": {
 						"type": "string",
@@ -320,96 +320,6 @@
 				},
 				"required": [
 					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"FileChangeMetricsDTO": {
-				"properties": {
-					"totalAdditions": {
-						"type": "number",
-						"format": "double"
-					},
-					"totalDeletions": {
-						"type": "number",
-						"format": "double"
-					},
-					"fileChangesPerContributor": {
-						"items": {
-							"properties": {
-								"deletions": {
-									"properties": {
-										"percentage": {
-											"type": "number",
-											"format": "double"
-										},
-										"sum": {
-											"type": "number",
-											"format": "double"
-										}
-									},
-									"required": [
-										"percentage",
-										"sum"
-									],
-									"type": "object"
-								},
-								"addtions": {
-									"properties": {
-										"percentage": {
-											"type": "number",
-											"format": "double"
-										},
-										"sum": {
-											"type": "number",
-											"format": "double"
-										}
-									},
-									"required": [
-										"percentage",
-										"sum"
-									],
-									"type": "object"
-								},
-								"contribuitor": {
-									"properties": {
-										"githubAvatarUrl": {
-											"type": "string"
-										},
-										"githubLogin": {
-											"type": "string"
-										},
-										"githubName": {
-											"type": "string"
-										},
-										"id": {
-											"type": "number",
-											"format": "double"
-										}
-									},
-									"required": [
-										"githubAvatarUrl",
-										"githubLogin",
-										"githubName",
-										"id"
-									],
-									"type": "object"
-								}
-							},
-							"required": [
-								"deletions",
-								"addtions",
-								"contribuitor"
-							],
-							"type": "object"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"totalAdditions",
-					"totalDeletions",
-					"fileChangesPerContributor"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -756,8 +666,26 @@
 						"description": "Ok",
 						"content": {
 							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/FileChangeMetricsDTO"
+									"$ref": "#/components/schemas/ErrorResponseDTO"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponseDTO"
 								}
 							}
 						}
@@ -773,8 +701,27 @@
 						"name": "repositoryId",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "startedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "endedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
 						}
 					},
 					{
