@@ -63,57 +63,11 @@ export default function DateFilterForm(props: IDateFilterFormProps) {
             const editedInputName = event.target.name;
 
             const isStartedAt = editedInputName === "startedAt";
-            const isEndedAt = editedInputName === "endedAt";
 
             const otherInputName = isStartedAt ? "endedAt" : "startedAt";
 
-            const oldValue = formData[editedInputName];
             const editedInputValue = event.target.value;
-            let otherInputValue = formData[otherInputName];
-
-            const startedAtValue = isStartedAt
-                ? event.target.value
-                : formData.startedAt;
-            const endedAtValue = isEndedAt
-                ? event.target.value
-                : formData.endedAt;
-            const oldStartedAtValue = isStartedAt
-                ? oldValue
-                : formData.startedAt;
-            const oldEndedAtValue = isEndedAt ? oldValue : formData.endedAt;
-
-            const hadValidDateRangeBefore = getIfDateRangeIsValid(
-                new Date(oldStartedAtValue),
-                new Date(oldEndedAtValue)
-            );
-            const hasValidDateRangeNow = getIfDateRangeIsValid(
-                new Date(startedAtValue),
-                new Date(endedAtValue)
-            );
-
-            // remaneja a data do outro input para manter o intervalo de datas, se o novo intervalo for inválido e o anterior for válido
-            if (
-                otherInputValue &&
-                editedInputName &&
-                !hasValidDateRangeNow &&
-                oldValue &&
-                hadValidDateRangeBefore
-            ) {
-                const daysDiff =
-                    Math.abs(
-                        new Date(oldStartedAtValue).getTime() -
-                            new Date(oldEndedAtValue).getTime()
-                    ) /
-                    (1000 * 60 * 60 * 24);
-                otherInputValue = new Date(
-                    new Date(editedInputValue).getTime() +
-                        daysDiff *
-                            (1000 * 60 * 60 * 24) *
-                            (isStartedAt ? 1 : -1)
-                )
-                    .toISOString()
-                    .split("T")[0];
-            }
+            const otherInputValue = formData[otherInputName];
 
             setFormData({
                 ...formData,

@@ -9,6 +9,7 @@ import appRoutes from "../../commom/routes/appRoutes";
 
 import * as BasePageRoute from "../../pages/base";
 import ErrorElement from "../../commom/components/errorElement";
+import NavigateMaintainingSearchParams from "../../commom/components/navigateMaintainingSearchParams";
 
 const routes = createRoutesFromElements(
     <Route errorElement={<ErrorElement />}>
@@ -77,7 +78,7 @@ const routes = createRoutesFromElements(
                                 <Route
                                     path=""
                                     element={
-                                        <Navigate
+                                        <NavigateMaintainingSearchParams
                                             to={
                                                 appRoutes.repo[":id"].metrics
                                                     .commits.absolute.path

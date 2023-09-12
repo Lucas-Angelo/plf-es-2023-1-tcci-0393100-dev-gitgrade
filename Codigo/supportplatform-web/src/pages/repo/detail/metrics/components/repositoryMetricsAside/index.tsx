@@ -5,6 +5,7 @@ import { useRepositoryById } from "../../../../../../commom/data/repo";
 import { useParams } from "react-router";
 import Divider from "../../../../../../commom/components/divider";
 import BranchQueryNavigationMenu from "../branchQueryNavigationMenu";
+import { useSearchParamsString } from "../../../../../../commom/hooks/useRemainingSearchParams";
 
 const repositoryMetricsRoutes = appRoutes.repo[":id"].metrics;
 
@@ -16,6 +17,8 @@ export default function RepositoryMetricsAside() {
     const id = Number(params.id);
 
     const { data: repositoryData } = useRepositoryById(id);
+
+    const searchParamsString = useSearchParamsString();
 
     return (
         <Box
@@ -35,36 +38,56 @@ export default function RepositoryMetricsAside() {
                     >
                         Informação
                     </Text>
-                    <NavListItem to={repositoryMetricsRoutes.commits.path}>
+                    <NavListItem
+                        to={repositoryMetricsRoutes.commits.path.concat(
+                            searchParamsString
+                        )}
+                    >
                         <Text sx={{ fontWeight: "bold" }}>
                             Contribuições de Commits
                         </Text>
                     </NavListItem>
-                    <NavListItem to={repositoryMetricsRoutes.fileTypes.path}>
+                    <NavListItem
+                        to={repositoryMetricsRoutes.fileTypes.path.concat(
+                            searchParamsString
+                        )}
+                    >
                         <Text sx={{ fontWeight: "bold" }}>
                             Tipos de arquivos contribuidos
                         </Text>
                     </NavListItem>
-                    <NavListItem to={repositoryMetricsRoutes.linesOfCode.path}>
+                    <NavListItem
+                        to={repositoryMetricsRoutes.linesOfCode.path.concat(
+                            searchParamsString
+                        )}
+                    >
                         <Text sx={{ fontWeight: "bold" }}>
                             Contribuições de Linhas de código
                         </Text>
                     </NavListItem>
                     <NavListItem
-                        to={repositoryMetricsRoutes.fileContributions.path}
+                        to={repositoryMetricsRoutes.fileContributions.path.concat(
+                            searchParamsString
+                        )}
                     >
                         <Text sx={{ fontWeight: "bold" }}>
                             Contribuições de Arquivos
                         </Text>
                     </NavListItem>
                     <NavListItem
-                        to={repositoryMetricsRoutes.commitQuality.path}
+                        to={repositoryMetricsRoutes.commitQuality.path.concat(
+                            searchParamsString
+                        )}
                     >
                         <Text sx={{ fontWeight: "bold" }}>
                             Qualidade da descrição dos commits
                         </Text>
                     </NavListItem>
-                    <NavListItem to={repositoryMetricsRoutes.closedIssues.path}>
+                    <NavListItem
+                        to={repositoryMetricsRoutes.closedIssues.path.concat(
+                            searchParamsString
+                        )}
+                    >
                         <Text sx={{ fontWeight: "bold" }}>Issues fechadas</Text>
                     </NavListItem>
                 </NavList>
