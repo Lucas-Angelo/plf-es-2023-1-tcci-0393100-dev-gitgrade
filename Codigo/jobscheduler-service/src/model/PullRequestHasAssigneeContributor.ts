@@ -18,7 +18,7 @@ class PullRequestHasAssigneeContributor extends Model {
                     allowNull: false,
                     primaryKey: true,
                     references: {
-                        model: "pull_request",
+                        model: PullRequest,
                         key: "id",
                     },
                 },
@@ -28,7 +28,7 @@ class PullRequestHasAssigneeContributor extends Model {
                     allowNull: false,
                     primaryKey: true,
                     references: {
-                        model: "contributor",
+                        model: Contributor,
                         key: "id",
                     },
                 },

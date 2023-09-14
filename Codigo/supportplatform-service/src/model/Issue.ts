@@ -47,7 +47,7 @@ class Issue extends Model<IIssueAttributes> {
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: false,
                     references: {
-                        model: "repository",
+                        model: Repository,
                         key: "id",
                     },
                 },
@@ -56,7 +56,7 @@ class Issue extends Model<IIssueAttributes> {
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: true,
                     references: {
-                        model: "contributor",
+                        model: Contributor,
                         key: "id",
                     },
                 },

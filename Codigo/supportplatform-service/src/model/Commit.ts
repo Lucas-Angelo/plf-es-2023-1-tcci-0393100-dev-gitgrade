@@ -39,7 +39,7 @@ class Commit extends Model<ICommitAttributes> {
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: false,
                     references: {
-                        model: "branch",
+                        model: Branch,
                         key: "id",
                     },
                 },
@@ -48,7 +48,7 @@ class Commit extends Model<ICommitAttributes> {
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: true,
                     references: {
-                        model: "contributor",
+                        model: Contributor,
                         key: "id",
                     },
                 },

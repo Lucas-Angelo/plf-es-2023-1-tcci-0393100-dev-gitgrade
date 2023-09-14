@@ -34,7 +34,7 @@ class Branch extends Model<IBranchAttributes> {
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: false,
                     references: {
-                        model: "repository",
+                        model: Repository,
                         key: "id",
                     },
                 },

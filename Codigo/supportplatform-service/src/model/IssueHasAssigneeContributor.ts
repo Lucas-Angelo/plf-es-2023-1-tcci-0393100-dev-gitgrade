@@ -18,7 +18,7 @@ class IssueHasAssigneeContributor extends Model {
                     allowNull: false,
                     primaryKey: true,
                     references: {
-                        model: "issue",
+                        model: Issue,
                         key: "id",
                     },
                 },
@@ -28,7 +28,7 @@ class IssueHasAssigneeContributor extends Model {
                     allowNull: false,
                     primaryKey: true,
                     references: {
-                        model: "contributor",
+                        model: Contributor,
                         key: "id",
                     },
                 },

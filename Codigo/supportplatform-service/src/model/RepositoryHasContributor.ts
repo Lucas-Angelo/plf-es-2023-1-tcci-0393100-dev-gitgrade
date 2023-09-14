@@ -17,7 +17,7 @@ class RepositoryHasContributor extends Model {
                     allowNull: false,
                     primaryKey: true,
                     references: {
-                        model: "repository",
+                        model: Repository,
                         key: "id",
                     },
                 },
@@ -26,7 +26,7 @@ class RepositoryHasContributor extends Model {
                     allowNull: false,
                     primaryKey: true,
                     references: {
-                        model: "contributor",
+                        model: Contributor,
                         key: "id",
                     },
                 },

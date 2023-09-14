@@ -37,7 +37,7 @@ class File extends Model<IFileAttributes> {
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: false,
                     references: {
-                        model: "commit",
+                        model: Commit,
                         key: "id",
                     },
                 },

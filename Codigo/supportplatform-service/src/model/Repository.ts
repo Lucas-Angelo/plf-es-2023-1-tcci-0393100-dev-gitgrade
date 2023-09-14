@@ -60,7 +60,7 @@ class Repository extends Model<IRepositoryAttributes> {
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: true,
                     references: {
-                        model: "evaluation_method",
+                        model: EvaluationMethod,
                         key: "id",
                     },
                 },

@@ -51,7 +51,7 @@ class PullRequest extends Model<IPullRequestAttributes> {
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: false,
                     references: {
-                        model: "repository",
+                        model: Repository,
                         key: "id",
                     },
                 },
@@ -60,7 +60,7 @@ class PullRequest extends Model<IPullRequestAttributes> {
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: true,
                     references: {
-                        model: "contributor",
+                        model: Contributor,
                         key: "id",
                     },
                 },

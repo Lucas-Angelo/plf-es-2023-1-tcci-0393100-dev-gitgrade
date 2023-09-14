@@ -52,6 +52,7 @@ class SequelizeDatabase {
 
     private initModels() {
         User.initModel(this.sequelize);
+        EvaluationMethod.initModel(this.sequelize);
         Repository.initModel(this.sequelize);
         Contributor.initModel(this.sequelize);
         RepositoryHasContributor.initModel(this.sequelize);
@@ -62,7 +63,6 @@ class SequelizeDatabase {
         Branch.initModel(this.sequelize);
         Commit.initModel(this.sequelize);
         File.initModel(this.sequelize);
-        EvaluationMethod.initModel(this.sequelize);
     }
 
     private associateModels() {
