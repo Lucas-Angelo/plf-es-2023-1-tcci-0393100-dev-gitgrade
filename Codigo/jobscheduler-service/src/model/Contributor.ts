@@ -2,6 +2,7 @@ import { DataTypes, Model, Sequelize } from "sequelize";
 
 import EnvConfig from "../config/EnvConfig";
 
+import { Commit } from "./Commit";
 import { Repository } from "./Repository";
 
 interface IContributorAttributes {
@@ -76,11 +77,18 @@ class Contributor extends Model<IContributorAttributes> {
         );
     }
 
-    static associate(models: { Repository: typeof Repository }): void {
+    static associate(models: {
+        Repository: typeof Repository;
+        Commit: typeof Commit;
+    }): void {
         this.belongsToMany(models.Repository, {
             foreignKey: "contributorId",
             as: "repositories",
             through: "repository_has_contributor",
+        });
+        this.hasMany(models.Commit, {
+            foreignKey: "contributor_id",
+            as: "commits",
         });
     }
 }

@@ -1,7 +1,7 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 import EnvConfig from "../config/EnvConfig";
-import { Repository } from "./Repository";
 import { Commit } from "./Commit";
+import { Repository } from "./Repository";
 
 interface IBranchAttributes {
     id?: number;
@@ -33,6 +33,10 @@ class Branch extends Model<IBranchAttributes> {
                     field: "repository_id",
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: false,
+                    references: {
+                        model: "repository",
+                        key: "id",
+                    },
                 },
                 name: {
                     field: "name",

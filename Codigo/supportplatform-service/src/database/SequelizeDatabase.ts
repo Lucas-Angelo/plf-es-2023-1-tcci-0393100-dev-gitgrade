@@ -78,6 +78,7 @@ class SequelizeDatabase {
         });
         Commit.associate({ Branch, Contributor, File });
         File.associate({ Commit });
+        Repository.associate({ EvaluationMethod });
     }
 
     async connect() {

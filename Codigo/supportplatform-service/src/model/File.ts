@@ -36,6 +36,10 @@ class File extends Model<IFileAttributes> {
                     field: "commit_id",
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: false,
+                    references: {
+                        model: "commit",
+                        key: "id",
+                    },
                 },
                 path: {
                     field: "path",

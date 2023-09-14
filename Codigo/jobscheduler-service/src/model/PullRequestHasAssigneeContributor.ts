@@ -1,4 +1,4 @@
-import { Model, DataTypes, Sequelize } from "sequelize";
+import { DataTypes, Model, Sequelize } from "sequelize";
 
 import EnvConfig from "../config/EnvConfig";
 
@@ -17,12 +17,20 @@ class PullRequestHasAssigneeContributor extends Model {
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: false,
                     primaryKey: true,
+                    references: {
+                        model: "pull_request",
+                        key: "id",
+                    },
                 },
                 assigneeContributorId: {
                     field: "assignee_contributor_id",
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: false,
                     primaryKey: true,
+                    references: {
+                        model: "contributor",
+                        key: "id",
+                    },
                 },
             },
             {

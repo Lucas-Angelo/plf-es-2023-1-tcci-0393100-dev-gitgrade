@@ -17,8 +17,8 @@ export interface EvaluationMethodCreateDTO {
    */
   year: number;
   /**
+   * @isOptional disabledAt is optional
    * @isDate disabledAt must be a Date
-   * @isOptional
    * @default null
    */
   disabledAt?: Date | null;
@@ -53,42 +53,42 @@ export interface EvaluationMethodUpdateDTO {
  */
 export interface EvaluationMethodSearchDTO {
   /**
+   * @isOptional page is optional, if not provided, default to 1
    * @isInt page must be an integer
    * @minimum 1 page must be greater than or equal to 1
-   * @isOptional page is optional, if not provided, default to 1
    * @default 1
    */
   page?: number;
   /**
+   * @isOptional limit is optional, if not provided, default to 10
    * @isInt limit must be an integer
    * @minimum 1 limit must be greater than or equal to 1
-   * @isOptional limit is optional, if not provided, default to 10
    * @default 10
    */
   limit?: number;
   /**
+   * @isOptional description is optional
    * @isString description must be a string
-   * @isOptional
    */
   description?: string;
   /**
+   * @isOptional semester is optional
    * @isInt semester must be an integer
-   * @isOptional
    */
   semester?: number;
   /**
+   * @isOptional year is optional
    * @isInt year must be an integer
-   * @isOptional
    */
   year?: number;
   /**
+   * @isOptional disabledAt is optional
    * @isDate disabledAt must be a Date
-   * @isOptional
    */
   disabledAt?: Date | null;
   /**
-   * @isBoolean forceDisabled must be a boolean
    * @isOptional
+   * @isBoolean forceDisabled must be a boolean
    * @default false
    */
   forceDisabled?: boolean;
@@ -99,30 +99,30 @@ export interface EvaluationMethodSearchDTO {
  */
 export interface EvaluationMethodFindOneDTO {
   /**
-   * @isInt id must be an integer
    * @isOptional id is optional
+   * @isInt id must be an integer
    */
   id?: number;
   /**
+   * @isOptional description is optional
    * @isString description must be a string
    * @minLength 1 description must have a minimum length of 1
    * @maxLength 255 description must have a maximum length of 255
-   * @isOptional description is optional
    */
   description?: string;
   /**
-   * @isInt semester must be an integer
    * @isOptional semester is optional
+   * @isInt semester must be an integer
    */
   semester?: number;
   /**
-   * @isInt year must be an integer
    * @isOptional year is optional
+   * @isInt year must be an integer
    */
   year?: number;
   /**
-   * @isDate disabledAt must be a Date
    * @isOptional disabledAt is optional
+   * @isDate disabledAt must be a Date
    */
   disabledAt?: Date | null;
 }

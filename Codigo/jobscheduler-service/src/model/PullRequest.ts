@@ -50,11 +50,19 @@ class PullRequest extends Model<IPullRequestAttributes> {
                     field: "repository_id",
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: false,
+                    references: {
+                        model: "repository",
+                        key: "id",
+                    },
                 },
                 authorContributorId: {
                     field: "author_contributor_id",
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: true,
+                    references: {
+                        model: "contributor",
+                        key: "id",
+                    },
                 },
                 githubId: {
                     field: "github_id",

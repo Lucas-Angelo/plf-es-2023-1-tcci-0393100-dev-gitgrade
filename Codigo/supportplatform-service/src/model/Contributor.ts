@@ -2,8 +2,8 @@ import { DataTypes, Model, Sequelize } from "sequelize";
 
 import EnvConfig from "../config/EnvConfig";
 
-import { Repository } from "./Repository";
 import { Commit } from "./Commit";
+import { Repository } from "./Repository";
 
 interface IContributorAttributes {
     id?: number;

@@ -1,6 +1,8 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 
+import { EvaluationMethodResponseDTO } from "@gitgrade/dtos";
 import EnvConfig from "../config/EnvConfig";
+import { EvaluationMethod } from "./EvaluationMethod";
 
 interface IRepositoryAttributes {
     id?: number;
@@ -40,6 +42,7 @@ class Repository extends Model<IRepositoryAttributes> {
     public automaticSynchronization!: boolean;
     public synchronizing!: boolean;
     public lastSyncAt!: Date | null;
+    public evaluationMethod!: EvaluationMethodResponseDTO | null;
 
     public static initModel(sequelize: Sequelize): void {
         this.init(
@@ -56,6 +59,10 @@ class Repository extends Model<IRepositoryAttributes> {
                     field: "evaluation_method_id",
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: true,
+                    references: {
+                        model: "evaluation_method",
+                        key: "id",
+                    },
                 },
                 githubId: {
                     field: "github_id",
@@ -161,6 +168,15 @@ class Repository extends Model<IRepositoryAttributes> {
                 sequelize,
             }
         );
+    }
+
+    static associate(models: {
+        EvaluationMethod: typeof EvaluationMethod;
+    }): void {
+        this.belongsTo(models.EvaluationMethod, {
+            foreignKey: "evaluationMethodId",
+            as: "evaluationMethod",
+        });
     }
 }
 

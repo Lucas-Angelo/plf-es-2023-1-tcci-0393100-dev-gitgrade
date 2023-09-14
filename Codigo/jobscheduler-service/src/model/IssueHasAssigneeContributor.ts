@@ -17,12 +17,20 @@ class IssueHasAssigneeContributor extends Model {
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: false,
                     primaryKey: true,
+                    references: {
+                        model: "issue",
+                        key: "id",
+                    },
                 },
                 assigneeContributorId: {
                     field: "assignee_contributor_id",
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: false,
                     primaryKey: true,
+                    references: {
+                        model: "contributor",
+                        key: "id",
+                    },
                 },
             },
             {

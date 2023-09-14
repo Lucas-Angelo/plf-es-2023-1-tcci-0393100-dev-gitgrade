@@ -166,20 +166,12 @@
 						"format": "double"
 					},
 					"evaluationMethod": {
-						"properties": {
-							"name": {
-								"type": "string"
-							},
-							"id": {
-								"type": "number",
-								"format": "double"
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/EvaluationMethodResponseDTO"
 							}
-						},
-						"required": [
-							"name",
-							"id"
 						],
-						"type": "object"
+						"nullable": true
 					},
 					"githubId": {
 						"type": "string"
@@ -291,6 +283,22 @@
 					},
 					"filter": {
 						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RepositoryPatchDTO": {
+				"description": "RepositoryPatchDTO - Used for updating a Repository.",
+				"properties": {
+					"evaluationMethodId": {
+						"type": "integer",
+						"format": "int32",
+						"nullable": true,
+						"minimum": 1
+					},
+					"automaticSynchronization": {
+						"type": "boolean"
 					}
 				},
 				"type": "object",
@@ -828,6 +836,87 @@
 						}
 					}
 				]
+			}
+		},
+		"/repository/{id}": {
+			"patch": {
+				"operationId": "Patch",
+				"responses": {
+					"200": {
+						"description": "Updated evaluation method",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RepositoryDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"evaluationMethod": {
+												"id": 1,
+												"description": "First evaluation method description",
+												"semester": 1,
+												"year": 2023,
+												"disabledAt": null
+											},
+											"githubId": "123456",
+											"name": "First repository",
+											"description": "First repository description",
+											"stargazerCount": 0,
+											"forkCount": 0,
+											"githubCreatedAt": "2023-09-01T00:00:00.000Z",
+											"githubUpdatedAt": "2023-09-01T00:00:00.000Z",
+											"hasProjectsEnabled": false,
+											"hasIssuesEnabled": false,
+											"primaryLanguage": "JavaScript",
+											"licenseName": "MIT",
+											"defaultBranch": "main",
+											"automaticSynchronization": true,
+											"synchronizing": false,
+											"lastSyncAt": "2023-09-01T00:00:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Update a repository.",
+				"tags": [
+					"repository"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"description": "Id of the repository to update.",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Body of the request.",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RepositoryPatchDTO",
+								"description": "Body of the request."
+							}
+						}
+					}
+				}
 			}
 		},
 		"/repository/{repositoryId}/metric/commit": {

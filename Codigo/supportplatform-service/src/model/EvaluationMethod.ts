@@ -1,5 +1,6 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 import EnvConfig from "../config/EnvConfig";
+import { Repository } from "./Repository";
 
 interface IEvaluationMethodAttributes {
     id?: number;
@@ -57,12 +58,19 @@ class EvaluationMethod extends Model<IEvaluationMethodAttributes> {
                 collate: EnvConfig.DB_COLLATE,
                 paranoid: true,
                 timestamps: true,
-                deletedAt: "disabled_at",
+                deletedAt: "disabledAt",
                 createdAt: false,
                 updatedAt: false,
                 sequelize,
             }
         );
+    }
+
+    static associate(models: { Repository: typeof Repository }): void {
+        this.hasMany(models.Repository, {
+            foreignKey: "evaluationMethodId",
+            as: "repositories",
+        });
     }
 }
 

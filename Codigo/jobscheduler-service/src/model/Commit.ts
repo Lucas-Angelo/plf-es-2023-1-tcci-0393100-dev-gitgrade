@@ -38,11 +38,19 @@ class Commit extends Model<ICommitAttributes> {
                     field: "branch_id",
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: false,
+                    references: {
+                        model: "branch",
+                        key: "id",
+                    },
                 },
                 contributorId: {
                     field: "contributor_id",
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: true,
+                    references: {
+                        model: "contributor",
+                        key: "id",
+                    },
                 },
                 sha: {
                     field: "sha",
