@@ -296,6 +296,34 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/repository/:repositoryId/metric/fileTypes',
+            ...(fetchMiddlewares<RequestHandler>(RepositoryMetricsController)),
+            ...(fetchMiddlewares<RequestHandler>(RepositoryMetricsController.prototype.getFileTypesMetrics)),
+
+            function RepositoryMetricsController_getFileTypesMetrics(request: any, response: any, next: any) {
+            const args = {
+                    repositoryId: {"in":"path","name":"repositoryId","required":true,"dataType":"double"},
+                    query: {"in":"queries","name":"query","required":true,"ref":"RepositoryMetricQueryDTO"},
+                    notFoundResponse: {"in":"res","name":"404","required":true,"ref":"ErrorResponseDTO"},
+                    unprocessableEntityResponse: {"in":"res","name":"422","required":true,"ref":"ErrorResponseDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new RepositoryMetricsController();
+
+
+              const promise = controller.getFileTypesMetrics.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 

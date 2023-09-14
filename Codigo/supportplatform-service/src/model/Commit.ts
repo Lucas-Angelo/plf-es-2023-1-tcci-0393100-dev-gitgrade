@@ -23,6 +23,10 @@ class Commit extends Model<ICommitAttributes> {
     public message!: string | null;
     public committedDate!: Date;
 
+    public branch!: Branch;
+    public contributor!: Contributor;
+    public files!: File[];
+
     static initModel(sequelize: Sequelize): void {
         this.init(
             {

@@ -107,4 +107,40 @@ export class RepositoryMetricsController {
             );
         return new FileChangeMetricsMapper().toDto(serviceResponse);
     }
+
+    @Get("fileTypes")
+    async getFileTypesMetrics(
+        repositoryId: number,
+        @Queries() query: RepositoryMetricQueryDTO,
+        @Res() notFoundResponse: TsoaResponse<404, ErrorResponseDTO>,
+        @Res() unprocessableEntityResponse: TsoaResponse<422, ErrorResponseDTO>
+    ) {
+        const validateQueryInterval = new QueryIntervalValidator(
+            unprocessableEntityResponse
+        ).validate(query);
+        if (validateQueryInterval) return validateQueryInterval;
+
+        const repository = await this.repositoryService.findById(repositoryId);
+
+        if (!repository) {
+            return notFoundResponse(404, {
+                message: "Repository not found",
+            });
+        }
+
+        const branchName =
+            query.branchName ?? repository.defaultBranch ?? "master";
+        const startedAt =
+            query.startedAt ?? new Date(repository.githubCreatedAt);
+        const endedAt = query.endedAt ?? new Date();
+
+        const serviceResponse =
+            await this.fileService.getFileTypeMetricsGroupedByContributor(
+                repositoryId,
+                branchName,
+                startedAt,
+                endedAt
+            );
+        return serviceResponse;
+    }
 }

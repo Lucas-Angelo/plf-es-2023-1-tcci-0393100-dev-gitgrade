@@ -18,3 +18,21 @@ export interface FileChangeMetricsDTO {
         }
     }>
 }
+
+export interface FileTypeMetricDTO {
+    count: number,
+    extension: string,
+}
+
+export interface FileTypeMetricsDTO {
+    general: Array<FileTypeMetricDTO>,
+    perContributor: Array<{
+        contributor: {
+            id: number,
+            githubName: string | null,
+            githubLogin: string ,
+            githubAvatarUrl: string | null,
+        },
+        fileTypes: Array<FileTypeMetricDTO>,
+    }>
+}
