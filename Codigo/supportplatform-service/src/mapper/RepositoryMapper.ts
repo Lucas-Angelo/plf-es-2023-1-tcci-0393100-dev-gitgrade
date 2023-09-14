@@ -1,5 +1,5 @@
-import { Repository } from "../model/Repository";
 import { RepositoryDTO } from "@gitgrade/dtos";
+import { Repository } from "../model/Repository";
 
 export class RepositoryMapper {
     toDto(model: Repository): RepositoryDTO {
@@ -20,7 +20,7 @@ export class RepositoryMapper {
             primaryLanguage: model.primaryLanguage,
             stargazerCount: model.stargazerCount,
             synchronizing: model.synchronizing,
-            evaluationMethod: undefined,
+            evaluationMethod: model.evaluationMethod,
         };
     }
 }

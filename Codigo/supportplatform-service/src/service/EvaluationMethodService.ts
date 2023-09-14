@@ -85,12 +85,25 @@ export default class EvaluationMethodService {
             });
 
             await evaluationMethod.update(data);
+            if (!data.disabledAt) await evaluationMethod.restore();
+
+            const newEvaluationMethod = await EvaluationMethod.findOne({
+                where: { id },
+                paranoid: false,
+            });
+            if (!newEvaluationMethod) {
+                logger.error(`Evaluation method with id: ${id} not found`);
+                throw new AppError(
+                    `Evaluation method with id: ${id} not found`,
+                    404
+                );
+            }
 
             logger.info("Successfully updated evaluation method: ", {
-                evaluationMethod,
+                newEvaluationMethod,
             });
 
-            return evaluationMethod;
+            return newEvaluationMethod;
         } catch (error) {
             logger.error(`Error updating evaluation method with id: ${id}`, {
                 error,

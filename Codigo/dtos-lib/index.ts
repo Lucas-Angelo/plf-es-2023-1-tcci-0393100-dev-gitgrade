@@ -7,7 +7,11 @@ import {
 } from "./dto/EvaluationMethod";
 import { CommitMetricsDTO } from "./dto/commitMetrics";
 import { FileChangeMetricsDTO } from "./dto/fileMetrics";
-import { GetAllRepositoryQueryDTO, RepositoryDTO } from "./dto/repository";
+import {
+  GetAllRepositoryQueryDTO,
+  RepositoryDTO,
+  RepositoryPatchDTO,
+} from "./dto/repository";
 import {
   SprintCreateDTO,
   SprintFindOneDTO,
@@ -28,6 +32,7 @@ export type {
   GetAllRepositoryQueryDTO,
   PaginationResponseDTO,
   RepositoryDTO,
+  RepositoryPatchDTO,
   SprintCreateDTO,
   SprintFindOneDTO,
   SprintResponseDTO,
