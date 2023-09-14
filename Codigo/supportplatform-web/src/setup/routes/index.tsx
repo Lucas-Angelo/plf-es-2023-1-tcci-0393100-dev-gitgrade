@@ -99,8 +99,47 @@ const routes = createRoutesFromElements(
                                     appRoutes.repo[":id"].metrics.linesOfCode
                                         .path
                                 }
-                                element={<>linesOfCode</>}
-                            />
+                                lazy={() =>
+                                    import(
+                                        "../../pages/repo/detail/metrics/lines/index"
+                                    )
+                                }
+                            >
+                                <Route
+                                    path={
+                                        appRoutes.repo[":id"].metrics
+                                            .linesOfCode.addtions.path
+                                    }
+                                    lazy={() =>
+                                        import(
+                                            "../../pages/repo/detail/metrics/lines/addtions/index"
+                                        )
+                                    }
+                                />
+                                <Route
+                                    path={
+                                        appRoutes.repo[":id"].metrics
+                                            .linesOfCode.deletions.path
+                                    }
+                                    lazy={() =>
+                                        import(
+                                            "../../pages/repo/detail/metrics/lines/deletions/index"
+                                        )
+                                    }
+                                />
+                                <Route
+                                    path=""
+                                    element={
+                                        <NavigateMaintainingSearchParams
+                                            to={
+                                                appRoutes.repo[":id"].metrics
+                                                    .linesOfCode.addtions.path
+                                            }
+                                            replace
+                                        />
+                                    }
+                                />
+                            </Route>
                             <Route
                                 path={
                                     appRoutes.repo[":id"].metrics

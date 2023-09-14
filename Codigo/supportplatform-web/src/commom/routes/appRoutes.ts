@@ -87,6 +87,24 @@ const appRoutes = {
                             this.path
                         }`;
                     },
+
+                    // nested routes
+                    addtions: {
+                        path: "addtions" as const,
+                        link(id: number) {
+                            return `${appRoutes.repo[
+                                ":id"
+                            ].metrics.linesOfCode.link(id)}/${this.path}`;
+                        },
+                    },
+                    deletions: {
+                        path: "deletions" as const,
+                        link(id: number) {
+                            return `${appRoutes.repo[
+                                ":id"
+                            ].metrics.linesOfCode.link(id)}/${this.path}`;
+                        },
+                    },
                 },
                 fileContributions: {
                     path: "file-contributions" as const,

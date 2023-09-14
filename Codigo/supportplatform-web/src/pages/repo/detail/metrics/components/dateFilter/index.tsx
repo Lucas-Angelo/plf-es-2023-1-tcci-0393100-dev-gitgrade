@@ -26,8 +26,14 @@ export function formatDateRange(
     fallbackStartedAt: Date,
     fallbackEndedAt: Date
 ) {
+    const isStartedAtAValidDate = startedAt && getIfDateIsValid(startedAt);
+    const isEndedAtAValidDate = endedAt && getIfDateIsValid(endedAt);
     const isRangeValid =
-        !startedAt || !endedAt || getIfDateRangeIsValid(startedAt, endedAt);
+        !startedAt ||
+        !endedAt ||
+        isStartedAtAValidDate ||
+        isEndedAtAValidDate ||
+        getIfDateRangeIsValid(startedAt, endedAt);
     const finalStartedAt =
         startedAt && getIfDateIsValid(startedAt) && isRangeValid
             ? startedAt
@@ -54,7 +60,14 @@ export default function DateFilter(props: IDateFilterProps) {
     const startedAtDate = getTimeZoneAdjustedDate(startedAt);
     const endedAtDate = getTimeZoneAdjustedDate(endedAt);
 
-    const isDateRangeValid = getIfDateRangeIsValid(startedAtDate, endedAtDate);
+    const isStartedAtAValidDate = startedAt && getIfDateIsValid(startedAtDate);
+    const isEndedAtAValidDate = endedAt && getIfDateIsValid(endedAtDate);
+    const isDateRangeValid =
+        startedAt ||
+        isStartedAtAValidDate ||
+        endedAt ||
+        isEndedAtAValidDate ||
+        getIfDateRangeIsValid(startedAtDate, endedAtDate);
 
     const fallbackStartedAt = props.repositoryGithubCreatedAt
         ? new Date(props.repositoryGithubCreatedAt)
