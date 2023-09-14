@@ -9,6 +9,7 @@ import { Op } from "sequelize";
 import logger from "../config/LogConfig";
 import AppError from "../error/AppError";
 import { SprintWhereClauseType } from "../interface/Sprint";
+import { EvaluationMethod } from "../model/EvaluationMethod";
 import { Sprint } from "../model/Sprint";
 import { SequelizeUtil } from "../utils/SequelizeUtil";
 import { sequelizePagination } from "../utils/pagination";
@@ -29,6 +30,12 @@ export default class SprintService {
 
             this.validateNotNullAndEmptyFields(data);
 
+            await this.checkIfEvaluationMethodExists(data.evaluation_method_id);
+            this.checkIfStartDateIsBeforeEndDate(
+                data.start_date,
+                data.end_date
+            );
+
             const sprint = await Sprint.create(data);
 
             logger.info("Successfully created a new sprint: ", {
@@ -45,7 +52,7 @@ export default class SprintService {
     /**
      * Update an existing Sprint.
      */
-    async update(id: number, data: SprintUpdateDTO): Promise<Sprint | null> {
+    async update(id: number, data: SprintUpdateDTO): Promise<Sprint> {
         try {
             if (!id) {
                 logger.error("Id not provided", { id });
@@ -54,12 +61,18 @@ export default class SprintService {
 
             this.validateNotNullAndEmptyFields(data);
 
+            await this.checkIfEvaluationMethodExists(data.evaluation_method_id);
+            this.checkIfStartDateIsBeforeEndDate(
+                data.start_date,
+                data.end_date
+            );
+
             logger.info(`Updating sprint with id: ${id}`);
             const sprint = await Sprint.findByPk(id);
 
             if (!sprint) {
                 logger.error(`Sprint with id: ${id} not found`);
-                throw new AppError(`Sprint with id: ${id} not found`);
+                throw new AppError(`Sprint with id: ${id} not found`, 404);
             }
 
             logger.info("Current and new sprint data: ", {
@@ -121,35 +134,33 @@ export default class SprintService {
     /**
      * Find a single Sprint based on given filters.
      */
-    async findOne(filter: SprintFindOneDTO): Promise<Sprint | null> {
+    async findOneBy(fields: Partial<SprintFindOneDTO>): Promise<Sprint> {
         try {
-            logger.info("Finding sprint based on criteria");
-
-            const whereClause = this._constructWhereClause(filter);
-
+            logger.info(`Searching for sprint by fields:`, {
+                fields,
+            });
             const sprint = await Sprint.findOne({
-                where: whereClause,
+                where: { ...fields },
+                paranoid: false,
             });
-
             if (!sprint) {
-                logger.info("Sprint not found based on criteria");
-                throw new AppError("Sprint not found based on criteria", 404);
-            }
-
-            logger.info("Successfully found sprint: ", {
-                sprint,
-            });
+                logger.info(
+                    `Sprint not found by fields ${JSON.stringify(fields)}`
+                );
+                throw new AppError("Sprint not found", 404);
+            } else
+                logger.info(
+                    `Sprint found by fields ${JSON.stringify(fields)}:`,
+                    { sprint }
+                );
 
             return sprint;
         } catch (error) {
-            logger.error("Error finding sprint based on criteria:", {
-                error,
-            });
-            throw new AppError(
-                "Failed to find sprint based on criteria",
-                500,
-                error
+            logger.error(
+                `Error finding sprint by fields ${JSON.stringify(fields)}:`,
+                { error }
             );
+            throw error;
         }
     }
 
@@ -189,5 +200,33 @@ export default class SprintService {
         }
 
         return whereClause;
+    }
+
+    private async checkIfEvaluationMethodExists(
+        evaluation_method_id: number
+    ): Promise<void> {
+        await EvaluationMethod.findByPk(evaluation_method_id).then(
+            (evaluationMethod) => {
+                if (!evaluationMethod) {
+                    logger.error(
+                        `evaluation_method_id: ${evaluation_method_id} not found`
+                    );
+                    throw new AppError(
+                        `evaluation_method_id: ${evaluation_method_id} not found`,
+                        404
+                    );
+                }
+            }
+        );
+    }
+
+    private checkIfStartDateIsBeforeEndDate(
+        start_date: Date,
+        end_date: Date
+    ): void {
+        if (start_date >= end_date) {
+            logger.error("start_date must be before end_date");
+            throw new AppError("start_date must be before end_date", 400);
+        }
     }
 }

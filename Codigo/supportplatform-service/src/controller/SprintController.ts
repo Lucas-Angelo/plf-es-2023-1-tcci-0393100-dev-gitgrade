@@ -8,6 +8,7 @@ import {
 import {
     Body,
     Controller,
+    Example,
     Get,
     Path,
     Post,
@@ -34,15 +35,22 @@ export class SprintController extends Controller {
 
     /**
      * Create a new Sprint.
-     * @body requestBody SprintCreateDTO data to create.
+     * @body body SprintCreateDTO data to create.
      */
+    @Example<SprintResponseDTO>({
+        id: 1,
+        name: "Sprint 1",
+        start_date: new Date("2023-01-01"),
+        end_date: new Date("2023-01-15"),
+        evaluation_method_id: 1,
+    })
     @Post("/")
     @SuccessResponse("201", "Sprint created")
     public async create(
-        @Body() requestBody: SprintCreateDTO
+        @Body() body: SprintCreateDTO
     ): Promise<SprintResponseDTO> {
         this.setStatus(201);
-        const serviceResponse = await this.sprintService.create(requestBody);
+        const serviceResponse = await this.sprintService.create(body);
         const mapper = new SprintMapper();
         return mapper.toDto(serviceResponse);
     }
@@ -51,20 +59,23 @@ export class SprintController extends Controller {
      * Update an existing Sprint by id.
      * Need body with all fields.
      * @path id Id of the Sprint to update.
-     * @body requestBody SprintUpdateDTO data to update.
+     * @body body SprintUpdateDTO data to update.
      */
+    @Example<SprintResponseDTO>({
+        id: 1,
+        name: "Sprint 1",
+        start_date: new Date("2023-01-01"),
+        end_date: new Date("2023-01-15"),
+        evaluation_method_id: 1,
+    })
     @Put("/{id}")
     @SuccessResponse("200", "Sprint updated")
     public async update(
         @Path() id: number,
-        @Body() requestBody: SprintUpdateDTO
-    ): Promise<SprintResponseDTO | null> {
+        @Body() body: SprintUpdateDTO
+    ): Promise<SprintResponseDTO> {
         this.setStatus(200);
-        const serviceResponse = await this.sprintService.update(
-            id,
-            requestBody
-        );
-        if (!serviceResponse) return null;
+        const serviceResponse = await this.sprintService.update(id, body);
         const mapper = new SprintMapper();
         return mapper.toDto(serviceResponse);
     }
@@ -74,6 +85,18 @@ export class SprintController extends Controller {
      * Can filter by start_date, end_date, and evaluation_method_id.
      * @query query SprintSearchDTO query to filter by start_date, end_date, and evaluation_method_id.
      */
+    @Example<PaginationResponseDTO<SprintResponseDTO>>({
+        totalPages: 1,
+        results: [
+            {
+                id: 1,
+                name: "Sprint 1",
+                start_date: new Date("2023-01-01"),
+                end_date: new Date("2023-01-15"),
+                evaluation_method_id: 1,
+            },
+        ],
+    })
     @Get("/")
     @SuccessResponse("200", "Found sprints")
     public async getAll(
@@ -92,12 +115,20 @@ export class SprintController extends Controller {
      * Get an existing Sprint by id.
      * @path id Id of the Sprint to get.
      */
+    @Example<SprintResponseDTO>({
+        id: 1,
+        name: "Sprint 1",
+        start_date: new Date("2023-01-01"),
+        end_date: new Date("2023-01-15"),
+        evaluation_method_id: 1,
+    })
     @Get("/{id}")
     @SuccessResponse("200", "Found sprint")
-    public async getOne(@Path() id: number): Promise<SprintResponseDTO | null> {
+    public async getOne(@Path() id: number): Promise<SprintResponseDTO> {
         this.setStatus(200);
-        const serviceResponse = await this.sprintService.findOne({ id });
-        if (!serviceResponse) return null;
+        const serviceResponse = await this.sprintService.findOneBy({
+            id: id,
+        });
         const mapper = new SprintMapper();
         return mapper.toDto(serviceResponse);
     }

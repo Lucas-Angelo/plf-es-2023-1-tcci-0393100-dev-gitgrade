@@ -133,6 +133,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "id": {"dataType":"double","required":true},
+            "name": {"dataType":"string","required":true},
             "start_date": {"dataType":"datetime","required":true},
             "end_date": {"dataType":"datetime","required":true},
             "evaluation_method_id": {"dataType":"double","required":true},
@@ -143,6 +144,7 @@ const models: TsoaRoute.Models = {
     "SprintCreateDTO": {
         "dataType": "refObject",
         "properties": {
+            "name": {"dataType":"string","required":true,"validators":{"isString":{"errorMsg":"name must be a string"},"minLength":{"errorMsg":"name must have a minimum length of 1","value":1},"maxLength":{"errorMsg":"name must have a maximum length of 255","value":255}}},
             "start_date": {"dataType":"date","required":true,"validators":{"isDate":{"errorMsg":"start_date must be a Date"}}},
             "end_date": {"dataType":"date","required":true,"validators":{"isDate":{"errorMsg":"end_date must be a Date"}}},
             "evaluation_method_id": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"evaluation_method_id must be an integer"}}},
@@ -153,6 +155,7 @@ const models: TsoaRoute.Models = {
     "SprintUpdateDTO": {
         "dataType": "refObject",
         "properties": {
+            "name": {"dataType":"string","required":true,"validators":{"isString":{"errorMsg":"name must be a string"},"minLength":{"errorMsg":"name must have a minimum length of 1","value":1},"maxLength":{"errorMsg":"name must have a maximum length of 255","value":255}}},
             "start_date": {"dataType":"date","required":true,"validators":{"isDate":{"errorMsg":"start_date must be a Date"}}},
             "end_date": {"dataType":"date","required":true,"validators":{"isDate":{"errorMsg":"end_date must be a Date"}}},
             "evaluation_method_id": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"evaluation_method_id must be an integer"}}},
@@ -168,8 +171,9 @@ const models: TsoaRoute.Models = {
     "SprintSearchDTO": {
         "dataType": "refObject",
         "properties": {
-            "page": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"page must be an integer"},"minimum":{"errorMsg":"page must be greater than or equal to 1","value":1}}},
-            "limit": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"limit must be an integer"},"minimum":{"errorMsg":"limit must be greater than or equal to 1","value":1}}},
+            "page": {"dataType":"integer","validators":{"isInt":{"errorMsg":"page must be an integer"},"minimum":{"errorMsg":"page must be greater than or equal to 1","value":1}}},
+            "limit": {"dataType":"integer","validators":{"isInt":{"errorMsg":"limit must be an integer"},"minimum":{"errorMsg":"limit must be greater than or equal to 1","value":1}}},
+            "name": {"dataType":"string","validators":{"isString":{"errorMsg":"name must be a string"},"minLength":{"errorMsg":"name must have a minimum length of 1","value":1},"maxLength":{"errorMsg":"name must have a maximum length of 255","value":255}}},
             "start_date": {"dataType":"date","validators":{"isDate":{"errorMsg":"start_date must be a Date"}}},
             "end_date": {"dataType":"date","validators":{"isDate":{"errorMsg":"end_date must be a Date"}}},
             "evaluation_method_id": {"dataType":"integer","validators":{"isInt":{"errorMsg":"evaluation_method_id must be an integer"}}},
@@ -379,7 +383,7 @@ export function RegisterRoutes(app: Router) {
 
             function SprintController_create(request: any, response: any, next: any) {
             const args = {
-                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"SprintCreateDTO"},
+                    body: {"in":"body","name":"body","required":true,"ref":"SprintCreateDTO"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -406,7 +410,7 @@ export function RegisterRoutes(app: Router) {
             function SprintController_update(request: any, response: any, next: any) {
             const args = {
                     id: {"in":"path","name":"id","required":true,"dataType":"double"},
-                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"SprintUpdateDTO"},
+                    body: {"in":"body","name":"body","required":true,"ref":"SprintUpdateDTO"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

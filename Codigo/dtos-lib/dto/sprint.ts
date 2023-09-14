@@ -3,6 +3,12 @@
  */
 export interface SprintCreateDTO {
   /**
+   * @isString name must be a string
+   * @minLength 1 name must have a minimum length of 1
+   * @maxLength 255 name must have a maximum length of 255
+   */
+  name: string;
+  /**
    * @isDate start_date must be a Date
    */
   start_date: Date;
@@ -20,6 +26,12 @@ export interface SprintCreateDTO {
  * SprintUpdateDTO - Used for updating an existing Sprint.
  */
 export interface SprintUpdateDTO {
+  /**
+   * @isString name must be a string
+   * @minLength 1 name must have a minimum length of 1
+   * @maxLength 255 name must have a maximum length of 255
+   */
+  name: string;
   /**
    * @isDate start_date must be a Date
    */
@@ -41,26 +53,35 @@ export interface SprintSearchDTO {
   /**
    * @isInt page must be an integer
    * @minimum 1 page must be greater than or equal to 1
+   * @isOptional page is optional
    */
-  page: number;
+  page?: number;
   /**
    * @isInt limit must be an integer
    * @minimum 1 limit must be greater than or equal to 1
+   * @isOptional limit is optional
    */
-  limit: number;
+  limit?: number;
+  /**
+   * @isString name must be a string
+   * @minLength 1 name must have a minimum length of 1
+   * @maxLength 255 name must have a maximum length of 255
+   * @isOptional name is optional
+   */
+  name?: string;
   /**
    * @isDate start_date must be a Date
-   * @isOptional
+   * @isOptional start_date is optional
    */
   start_date?: Date;
   /**
    * @isDate end_date must be a Date
-   * @isOptional
+   * @isOptional end_date is optional
    */
   end_date?: Date;
   /**
    * @isInt evaluation_method_id must be an integer
-   * @isOptional
+   * @isOptional evaluation_method_id is optional
    */
   evaluation_method_id?: number;
 }
@@ -71,22 +92,29 @@ export interface SprintSearchDTO {
 export interface SprintFindOneDTO {
   /**
    * @isInt id must be an integer
-   * @isOptional
+   * @isOptional id is optional
    */
   id?: number;
   /**
+   * @isString name must be a string
+   * @minLength 1 name must have a minimum length of 1
+   * @maxLength 255 name must have a maximum length of 255
+   * @isOptional name is optional
+   */
+  name?: string;
+  /**
    * @isDate start_date must be a Date
-   * @isOptional
+   * @isOptional start_date is optional
    */
   start_date?: Date;
   /**
    * @isDate end_date must be a Date
-   * @isOptional
+   * @isOptional end_date is optional
    */
   end_date?: Date;
   /**
    * @isInt evaluation_method_id must be an integer
-   * @isOptional
+   * @isOptional evaluation_method_id is optional
    */
   evaluation_method_id?: number;
 }
@@ -96,6 +124,7 @@ export interface SprintFindOneDTO {
  */
 export interface SprintResponseDTO {
   id: number;
+  name: string;
   start_date: Date;
   end_date: Date;
   evaluation_method_id: number;

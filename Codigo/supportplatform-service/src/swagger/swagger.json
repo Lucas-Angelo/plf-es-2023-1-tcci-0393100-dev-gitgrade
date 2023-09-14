@@ -452,6 +452,9 @@
 						"type": "number",
 						"format": "double"
 					},
+					"name": {
+						"type": "string"
+					},
 					"start_date": {
 						"type": "string",
 						"format": "date-time"
@@ -467,6 +470,7 @@
 				},
 				"required": [
 					"id",
+					"name",
 					"start_date",
 					"end_date",
 					"evaluation_method_id"
@@ -477,6 +481,11 @@
 			"SprintCreateDTO": {
 				"description": "SprintCreateDTO - Used for creating a new Sprint.",
 				"properties": {
+					"name": {
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 255
+					},
 					"start_date": {
 						"type": "string",
 						"format": "date"
@@ -491,6 +500,7 @@
 					}
 				},
 				"required": [
+					"name",
 					"start_date",
 					"end_date",
 					"evaluation_method_id"
@@ -501,6 +511,11 @@
 			"SprintUpdateDTO": {
 				"description": "SprintUpdateDTO - Used for updating an existing Sprint.",
 				"properties": {
+					"name": {
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 255
+					},
 					"start_date": {
 						"type": "string",
 						"format": "date"
@@ -515,6 +530,7 @@
 					}
 				},
 				"required": [
+					"name",
 					"start_date",
 					"end_date",
 					"evaluation_method_id"
@@ -554,6 +570,11 @@
 						"format": "int32",
 						"minimum": 1
 					},
+					"name": {
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 255
+					},
 					"start_date": {
 						"type": "string",
 						"format": "date"
@@ -567,10 +588,6 @@
 						"format": "int32"
 					}
 				},
-				"required": [
-					"page",
-					"limit"
-				],
 				"type": "object",
 				"additionalProperties": false
 			}
@@ -1041,6 +1058,17 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/SprintResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"name": "Sprint 1",
+											"start_date": "2023-01-01T00:00:00.000Z",
+											"end_date": "2023-01-15T00:00:00.000Z",
+											"evaluation_method_id": 1
+										}
+									}
 								}
 							}
 						}
@@ -1078,6 +1106,22 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/PaginationResponseDTO_SprintResponseDTO_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"totalPages": 1,
+											"results": [
+												{
+													"id": 1,
+													"name": "Sprint 1",
+													"start_date": "2023-01-01T00:00:00.000Z",
+													"end_date": "2023-01-15T00:00:00.000Z",
+													"evaluation_method_id": 1
+												}
+											]
+										}
+									}
 								}
 							}
 						}
@@ -1098,7 +1142,7 @@
 					{
 						"in": "query",
 						"name": "page",
-						"required": true,
+						"required": false,
 						"schema": {
 							"format": "int32",
 							"type": "integer",
@@ -1108,11 +1152,21 @@
 					{
 						"in": "query",
 						"name": "limit",
-						"required": true,
+						"required": false,
 						"schema": {
 							"format": "int32",
 							"type": "integer",
 							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "name",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"minLength": 1,
+							"maxLength": 255
 						}
 					},
 					{
@@ -1154,12 +1208,18 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/SprintResponseDTO"
+									"$ref": "#/components/schemas/SprintResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"name": "Sprint 1",
+											"start_date": "2023-01-01T00:00:00.000Z",
+											"end_date": "2023-01-15T00:00:00.000Z",
+											"evaluation_method_id": 1
 										}
-									],
-									"nullable": true
+									}
 								}
 							}
 						}
@@ -1206,12 +1266,18 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/SprintResponseDTO"
+									"$ref": "#/components/schemas/SprintResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"name": "Sprint 1",
+											"start_date": "2023-01-01T00:00:00.000Z",
+											"end_date": "2023-01-15T00:00:00.000Z",
+											"evaluation_method_id": 1
 										}
-									],
-									"nullable": true
+									}
 								}
 							}
 						}

@@ -4,6 +4,7 @@ import { EvaluationMethod } from "./EvaluationMethod";
 
 interface ISprintAttributes {
     id?: number;
+    name: string;
     start_date: Date;
     end_date: Date;
     evaluation_method_id: number;
@@ -11,6 +12,7 @@ interface ISprintAttributes {
 
 class Sprint extends Model<ISprintAttributes> {
     public id!: number;
+    public name!: string;
     public start_date!: Date;
     public end_date!: Date;
     public evaluation_method_id!: number;
@@ -24,6 +26,11 @@ class Sprint extends Model<ISprintAttributes> {
                     primaryKey: true,
                     unique: true,
                     autoIncrement: true,
+                    allowNull: false,
+                },
+                name: {
+                    field: "name",
+                    type: DataTypes.STRING(255),
                     allowNull: false,
                 },
                 start_date: {
