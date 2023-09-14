@@ -82,11 +82,20 @@ export default class SprintService {
 
             await sprint.update(data);
 
-            logger.info("Successfully updated sprint: ", {
-                sprint,
+            const newSprint = await Sprint.findOne({
+                where: { id },
             });
 
-            return sprint;
+            if (!newSprint) {
+                logger.error(`Sprint with id: ${id} not found`);
+                throw new AppError(`Sprint with id: ${id} not found`, 404);
+            }
+
+            logger.info("Successfully updated sprint: ", {
+                newSprint,
+            });
+
+            return newSprint;
         } catch (error) {
             logger.error(`Error updating sprint with id: ${id}`, {
                 error,

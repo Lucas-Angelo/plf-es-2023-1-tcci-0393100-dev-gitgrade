@@ -625,7 +625,7 @@ describe(`PUT ${baseRoute}/{id}`, () => {
         expect(response.body.name).toBe("Updated sprint");
         expect(response.body.start_date).toBe("2023-01-01T00:00:00.000Z");
         expect(response.body.end_date).toBe("2023-01-15T00:00:00.000Z");
-        expect(response.body.evaluation_method_id).toBe(13);
+        expect(response.body.evaluation_method_id).toBe("13");
     });
 
     it("should return 404 when sprint is not found", async () => {
