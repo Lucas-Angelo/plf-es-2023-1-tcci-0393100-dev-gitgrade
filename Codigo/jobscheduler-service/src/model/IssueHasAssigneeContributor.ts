@@ -34,10 +34,17 @@ class IssueHasAssigneeContributor extends Model {
                 },
             },
             {
-                tableName: "issue_has_assignee_contributor",
+                tableName: "issue_assignees",
                 charset: EnvConfig.DB_CHARSET,
                 collate: EnvConfig.DB_COLLATE,
                 sequelize,
+                indexes: [
+                    {
+                        unique: true,
+                        name: "issue_assignee_unique",
+                        fields: ["issue_id", "assignee_contributor_id"],
+                    },
+                ],
             }
         );
     }

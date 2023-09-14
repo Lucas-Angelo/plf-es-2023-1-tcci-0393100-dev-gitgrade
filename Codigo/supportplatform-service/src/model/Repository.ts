@@ -2,7 +2,12 @@ import { DataTypes, Model, Sequelize } from "sequelize";
 
 import { EvaluationMethodResponseDTO } from "@gitgrade/dtos";
 import EnvConfig from "../config/EnvConfig";
+import { Branch } from "./Branch";
+import { Contributor } from "./Contributor";
 import { EvaluationMethod } from "./EvaluationMethod";
+import { Issue } from "./Issue";
+import { PullRequest } from "./PullRequest";
+import { RepositoryHasContributor } from "./RepositoryHasContributor";
 
 interface IRepositoryAttributes {
     id?: number;
@@ -171,12 +176,34 @@ class Repository extends Model<IRepositoryAttributes> {
     }
 
     static associate(models: {
+        Branch: typeof Branch;
+        Contributor: typeof Contributor;
+        Issue: typeof Issue;
+        PullRequest: typeof PullRequest;
         EvaluationMethod: typeof EvaluationMethod;
     }): void {
+        this.hasMany(models.Branch, {
+            foreignKey: "repositoryId",
+            as: "branches",
+        });
+        this.belongsToMany(models.Contributor, {
+            foreignKey: "repositoryId",
+            as: "contributors",
+            through: RepositoryHasContributor,
+        });
+        this.hasMany(models.Issue, {
+            foreignKey: "repositoryId",
+            as: "issues",
+        });
+        this.hasMany(models.PullRequest, {
+            foreignKey: "repositoryId",
+            as: "pullRequests",
+        });
         this.belongsTo(models.EvaluationMethod, {
             foreignKey: "evaluationMethodId",
             as: "evaluationMethod",
         });
+        // TODO: consistency rule delivery association
     }
 }
 

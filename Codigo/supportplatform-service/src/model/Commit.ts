@@ -108,6 +108,7 @@ class Commit extends Model<ICommitAttributes> {
             foreignKey: "commitId",
             as: "files",
         });
+        // CodeQuality association
     }
 }
 

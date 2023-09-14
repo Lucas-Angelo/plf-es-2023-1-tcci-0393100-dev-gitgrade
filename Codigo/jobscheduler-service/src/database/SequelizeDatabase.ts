@@ -65,7 +65,7 @@ class SequelizeDatabase {
 
     private associateModels() {
         Branch.associate({ Repository, Commit });
-        Contributor.associate({ Repository, Commit });
+        Contributor.associate({ Repository, Commit, Issue, PullRequest });
         RepositoryHasContributor.associate({ Contributor, Repository });
         Issue.associate({ Contributor, Repository });
         IssueHasAssigneeContributor.associate({ Contributor, Issue });
@@ -76,6 +76,7 @@ class SequelizeDatabase {
         });
         Commit.associate({ Branch, Contributor, File });
         File.associate({ Commit });
+        Repository.associate({ Branch, Contributor, Issue, PullRequest });
     }
 
     async connect() {

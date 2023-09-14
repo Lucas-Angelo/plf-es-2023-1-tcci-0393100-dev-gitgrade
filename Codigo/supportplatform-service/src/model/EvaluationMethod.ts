@@ -71,6 +71,9 @@ class EvaluationMethod extends Model<IEvaluationMethodAttributes> {
             foreignKey: "evaluationMethodId",
             as: "repositories",
         });
+        // Sprint association
+        // ConsistenceRule association
+        // StandardizedIssue association
     }
 }
 

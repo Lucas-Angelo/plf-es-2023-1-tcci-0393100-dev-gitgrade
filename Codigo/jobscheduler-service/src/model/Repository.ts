@@ -1,6 +1,11 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 
 import EnvConfig from "../config/EnvConfig";
+import { Branch } from "./Branch";
+import { Contributor } from "./Contributor";
+import { Issue } from "./Issue";
+import { PullRequest } from "./PullRequest";
+import { RepositoryHasContributor } from "./RepositoryHasContributor";
 
 interface IRepositoryAttributes {
     id?: number;
@@ -161,6 +166,33 @@ class Repository extends Model<IRepositoryAttributes> {
                 sequelize,
             }
         );
+    }
+
+    static associate(models: {
+        Branch: typeof Branch;
+        Contributor: typeof Contributor;
+        Issue: typeof Issue;
+        PullRequest: typeof PullRequest;
+    }): void {
+        this.hasMany(models.Branch, {
+            foreignKey: "repositoryId",
+            as: "branches",
+        });
+        this.belongsToMany(models.Contributor, {
+            foreignKey: "repositoryId",
+            as: "contributors",
+            through: RepositoryHasContributor,
+        });
+        this.hasMany(models.Issue, {
+            foreignKey: "repositoryId",
+            as: "issues",
+        });
+        this.hasMany(models.PullRequest, {
+            foreignKey: "repositoryId",
+            as: "pullRequests",
+        });
+        // EvaluationMethod association
+        // ConsistencyRuleDelivery association
     }
 }
 

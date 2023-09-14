@@ -34,10 +34,17 @@ class PullRequestHasAssigneeContributor extends Model {
                 },
             },
             {
-                tableName: "pr_has_assignee_contributor",
+                tableName: "pr_assignees",
                 charset: EnvConfig.DB_CHARSET,
                 collate: EnvConfig.DB_COLLATE,
                 sequelize,
+                indexes: [
+                    {
+                        unique: true,
+                        name: "pr_assignee_unique",
+                        fields: ["pull_request_id", "assignee_contributor_id"],
+                    },
+                ],
             }
         );
     }
