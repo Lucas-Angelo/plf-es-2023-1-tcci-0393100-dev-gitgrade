@@ -31,6 +31,9 @@ class Issue extends Model<IIssueAttributes> {
     public githubClosedAt!: Date | null;
     public closed!: boolean;
 
+    public author!: Contributor;
+    public assignees!: Contributor[];
+
     static initModel(sequelize: Sequelize): void {
         this.init(
             {
@@ -123,7 +126,11 @@ class Issue extends Model<IIssueAttributes> {
         this.belongsToMany(models.Contributor, {
             through: IssueHasAssigneeContributor,
             foreignKey: "issueId",
+            otherKey: "assigneeContributorId",
             as: "assignees",
+        });
+        this.hasMany(IssueHasAssigneeContributor, {
+            foreignKey: "issueId",
         });
     }
 }

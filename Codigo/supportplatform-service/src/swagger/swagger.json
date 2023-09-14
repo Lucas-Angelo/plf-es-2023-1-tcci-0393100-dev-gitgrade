@@ -323,6 +323,20 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"IssueMetricQueryDTO": {
+				"properties": {
+					"startedAt": {
+						"type": "string",
+						"format": "date"
+					},
+					"endedAt": {
+						"type": "string",
+						"format": "date"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -805,6 +819,74 @@
 						"name": "branchName",
 						"required": false,
 						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/repository/{repositoryId}/metric/issues": {
+			"get": {
+				"operationId": "GetIssuesMetrics",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponseDTO"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponseDTO"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"metrics"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "startedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "endedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
 							"type": "string"
 						}
 					}

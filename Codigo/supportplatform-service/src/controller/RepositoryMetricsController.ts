@@ -4,12 +4,14 @@ import {
     CommitMetricsDTO,
     RepositoryMetricQueryDTO,
     ErrorResponseDTO,
+    IssueMetricQueryDTO,
 } from "@gitgrade/dtos";
 import { CommitMetricsMapper } from "../mapper/CommitMetricsMapper";
 import FileService from "../service/FileService";
 import { FileChangeMetricsMapper } from "../mapper/FileChangeMetricsMapper";
 import RepositoryService from "../service/RepositoryService";
 import { QueryIntervalValidator } from "../validation/QueryIntervalValidator";
+import IssueService from "../service/IssueService";
 
 @Route("repository/{repositoryId}/metric")
 @Tags("metrics")
@@ -17,11 +19,13 @@ export class RepositoryMetricsController {
     repositoryService: RepositoryService;
     commitService: CommitService;
     fileService: FileService;
+    issueService: IssueService;
 
     constructor() {
         this.repositoryService = new RepositoryService();
         this.commitService = new CommitService();
         this.fileService = new FileService();
+        this.issueService = new IssueService();
     }
 
     /**
@@ -138,6 +142,39 @@ export class RepositoryMetricsController {
             await this.fileService.getFileTypeMetricsGroupedByContributor(
                 repositoryId,
                 branchName,
+                startedAt,
+                endedAt
+            );
+        return serviceResponse;
+    }
+
+    @Get("issues")
+    async getIssuesMetrics(
+        repositoryId: number,
+        @Queries() query: IssueMetricQueryDTO,
+        @Res() notFoundResponse: TsoaResponse<404, ErrorResponseDTO>,
+        @Res() unprocessableEntityResponse: TsoaResponse<422, ErrorResponseDTO>
+    ) {
+        const validateQueryInterval = new QueryIntervalValidator(
+            unprocessableEntityResponse
+        ).validate(query);
+        if (validateQueryInterval) return validateQueryInterval;
+
+        const repository = await this.repositoryService.findById(repositoryId);
+
+        if (!repository) {
+            return notFoundResponse(404, {
+                message: "Repository not found",
+            });
+        }
+
+        const startedAt =
+            query.startedAt ?? new Date(repository.githubCreatedAt);
+        const endedAt = query.endedAt ?? new Date();
+
+        const serviceResponse =
+            await this.issueService.getIssueMetricsGroupedByContributor(
+                repositoryId,
                 startedAt,
                 endedAt
             );

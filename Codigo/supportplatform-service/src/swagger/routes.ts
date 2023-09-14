@@ -127,6 +127,15 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IssueMetricQueryDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "startedAt": {"dataType":"date","validators":{"isDate":{"errorMsg":"startedAt must be a valid date"}}},
+            "endedAt": {"dataType":"date","validators":{"isDate":{"errorMsg":"endedAt must be a valid date"}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
 const validationService = new ValidationService(models);
 
@@ -318,6 +327,34 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.getFileTypesMetrics.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/repository/:repositoryId/metric/issues',
+            ...(fetchMiddlewares<RequestHandler>(RepositoryMetricsController)),
+            ...(fetchMiddlewares<RequestHandler>(RepositoryMetricsController.prototype.getIssuesMetrics)),
+
+            function RepositoryMetricsController_getIssuesMetrics(request: any, response: any, next: any) {
+            const args = {
+                    repositoryId: {"in":"path","name":"repositoryId","required":true,"dataType":"double"},
+                    query: {"in":"queries","name":"query","required":true,"ref":"IssueMetricQueryDTO"},
+                    notFoundResponse: {"in":"res","name":"404","required":true,"ref":"ErrorResponseDTO"},
+                    unprocessableEntityResponse: {"in":"res","name":"422","required":true,"ref":"ErrorResponseDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new RepositoryMetricsController();
+
+
+              const promise = controller.getIssuesMetrics.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);

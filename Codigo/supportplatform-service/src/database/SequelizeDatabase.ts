@@ -65,7 +65,7 @@ class SequelizeDatabase {
 
     private associateModels() {
         Branch.associate({ Repository, Commit });
-        Contributor.associate({ Repository, Commit });
+        Contributor.associate({ Repository, Commit, Issue });
         RepositoryHasContributor.associate({ Contributor, Repository });
         Issue.associate({ Contributor, Repository });
         IssueHasAssigneeContributor.associate({ Contributor, Issue });

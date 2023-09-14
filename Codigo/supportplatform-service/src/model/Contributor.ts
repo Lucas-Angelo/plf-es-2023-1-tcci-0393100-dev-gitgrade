@@ -4,6 +4,7 @@ import EnvConfig from "../config/EnvConfig";
 
 import { Repository } from "./Repository";
 import { Commit } from "./Commit";
+import { Issue } from "./Issue";
 
 interface IContributorAttributes {
     id?: number;
@@ -80,6 +81,7 @@ class Contributor extends Model<IContributorAttributes> {
     static associate(models: {
         Repository: typeof Repository;
         Commit: typeof Commit;
+        Issue: typeof Issue;
     }): void {
         this.belongsToMany(models.Repository, {
             foreignKey: "contributorId",
@@ -89,6 +91,15 @@ class Contributor extends Model<IContributorAttributes> {
         this.hasMany(models.Commit, {
             foreignKey: "contributor_id",
             as: "commits",
+        });
+        this.hasMany(models.Issue, {
+            foreignKey: "authorContributorId",
+            as: "authoredIssues",
+        });
+        this.belongsToMany(models.Issue, {
+            foreignKey: "assignee_contributor_id",
+            as: "assignedIssues",
+            through: "issue_has_assignee_contributor",
         });
     }
 }
