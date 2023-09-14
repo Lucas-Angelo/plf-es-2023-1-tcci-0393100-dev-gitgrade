@@ -1,5 +1,6 @@
 import {
   EvaluationMethodCreateDTO,
+  EvaluationMethodFindOneDTO,
   EvaluationMethodResponseDTO,
   EvaluationMethodSearchDTO,
   EvaluationMethodUpdateDTO,
@@ -19,6 +20,7 @@ import { PaginationResponseDTO } from "./utils/pagination";
 export type {
   CommitMetricsDTO,
   EvaluationMethodCreateDTO,
+  EvaluationMethodFindOneDTO,
   EvaluationMethodResponseDTO,
   EvaluationMethodSearchDTO,
   EvaluationMethodUpdateDTO,

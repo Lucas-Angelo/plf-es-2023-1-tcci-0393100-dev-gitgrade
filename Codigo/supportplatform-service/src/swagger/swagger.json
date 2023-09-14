@@ -790,12 +790,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/EvaluationMethodResponseDTO"
-										}
-									],
-									"nullable": true
+									"$ref": "#/components/schemas/EvaluationMethodResponseDTO"
 								},
 								"examples": {
 									"Example 1": {
@@ -853,12 +848,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/EvaluationMethodResponseDTO"
-										}
-									],
-									"nullable": true
+									"$ref": "#/components/schemas/EvaluationMethodResponseDTO"
 								},
 								"examples": {
 									"Example 1": {
@@ -876,6 +866,36 @@
 					}
 				},
 				"description": "Get an existing EvaluationMethod by id.",
+				"tags": [
+					"evaluation-method"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"204": {
+						"description": "EvaluationMethod deleted"
+					}
+				},
+				"description": "Delete an existing EvaluationMethod by id.",
 				"tags": [
 					"evaluation-method"
 				],

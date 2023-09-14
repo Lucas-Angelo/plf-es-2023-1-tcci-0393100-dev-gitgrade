@@ -8,6 +8,7 @@ import {
 import {
     Body,
     Controller,
+    Delete,
     Example,
     Get,
     Path,
@@ -72,7 +73,7 @@ export class EvaluationMethodController extends Controller {
     public async update(
         @Path() id: number,
         @Body() body: EvaluationMethodUpdateDTO
-    ): Promise<EvaluationMethodResponseDTO | null> {
+    ): Promise<EvaluationMethodResponseDTO> {
         this.setStatus(200);
         const serviceResponse = await this.evaluationMethodService.update(
             id,
@@ -137,12 +138,23 @@ export class EvaluationMethodController extends Controller {
     public async getOne(
         @Path()
         id: number
-    ): Promise<EvaluationMethodResponseDTO | null> {
+    ): Promise<EvaluationMethodResponseDTO> {
         this.setStatus(200);
         const serviceResponse = await this.evaluationMethodService.findOneBy({
             id: id,
         });
         const mapper = new EvaluationMethodMapper();
         return mapper.toDto(serviceResponse);
+    }
+
+    /**
+     * Delete an existing EvaluationMethod by id.
+     * @path id Id of the EvaluationMethod to delete.
+     */
+    @Delete("/{id}")
+    @SuccessResponse("204", "EvaluationMethod deleted")
+    public async delete(@Path() id: number): Promise<void> {
+        this.setStatus(204);
+        await this.evaluationMethodService.delete(id);
     }
 }

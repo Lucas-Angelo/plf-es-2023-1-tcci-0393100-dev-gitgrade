@@ -95,6 +95,39 @@ export interface EvaluationMethodSearchDTO {
 }
 
 /**
+ * EvaluationMethodFindOneDTO - Used for finding a single EvaluationMethod.
+ */
+export interface EvaluationMethodFindOneDTO {
+  /**
+   * @isInt id must be an integer
+   * @isOptional id is optional
+   */
+  id?: number;
+  /**
+   * @isString description must be a string
+   * @minLength 1 description must have a minimum length of 1
+   * @maxLength 255 description must have a maximum length of 255
+   * @isOptional description is optional
+   */
+  description?: string;
+  /**
+   * @isInt semester must be an integer
+   * @isOptional semester is optional
+   */
+  semester?: number;
+  /**
+   * @isInt year must be an integer
+   * @isOptional year is optional
+   */
+  year?: number;
+  /**
+   * @isDate disabledAt must be a Date
+   * @isOptional disabledAt is optional
+   */
+  disabledAt?: Date | null;
+}
+
+/**
  * EvaluationMethodResponseDTO - Could be used to structure the response object when sending EvaluationMethods to the client.
  */
 export interface EvaluationMethodResponseDTO {
