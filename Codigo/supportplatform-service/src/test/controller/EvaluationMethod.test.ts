@@ -367,6 +367,35 @@ describe(`GET ${baseRoute}/{id}`, () => {
             "invalid float number"
         );
     });
+
+    it("should return 401 when no token is provided", async () => {
+        const response = await supertest(app)
+            .get(`${baseRoute}/1`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("No authorization header provided");
+    });
+
+    it("should return 401 when token is not Bearer", async () => {
+        const response = await supertest(app)
+            .get(`${baseRoute}/1`)
+            .set("Authorization", `Basic ${authUser.token}`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid authorization header");
+    });
+
+    it("should return 401 when token is invalid", async () => {
+        const response = await supertest(app)
+            .get(`${baseRoute}/1`)
+            .set("Authorization", `Bearer invalid-token`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid token");
+    });
 });
 
 describe(`POST ${baseRoute}`, () => {
@@ -562,6 +591,35 @@ describe(`POST ${baseRoute}`, () => {
             "disabledAt must be a Date"
         );
     });
+
+    it("should return 401 when no token is provided", async () => {
+        const response = await supertest(app)
+            .post(`${baseRoute}`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("No authorization header provided");
+    });
+
+    it("should return 401 when token is not Bearer", async () => {
+        const response = await supertest(app)
+            .post(`${baseRoute}`)
+            .set("Authorization", `Basic ${authUser.token}`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid authorization header");
+    });
+
+    it("should return 401 when token is invalid", async () => {
+        const response = await supertest(app)
+            .post(`${baseRoute}`)
+            .set("Authorization", `Bearer invalid-token`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid token");
+    });
 });
 
 describe(`PUT ${baseRoute}/{id}`, () => {
@@ -741,5 +799,115 @@ describe(`PUT ${baseRoute}/{id}`, () => {
         expect(response.body.error?.["body.disabledAt"]?.message).toContain(
             "disabledAt must be a Date"
         );
+    });
+
+    it("should return 401 when no token is provided", async () => {
+        const response = await supertest(app)
+            .put(`${baseRoute}/1`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("No authorization header provided");
+    });
+
+    it("should return 401 when token is not Bearer", async () => {
+        const response = await supertest(app)
+            .put(`${baseRoute}/1`)
+            .set("Authorization", `Basic ${authUser.token}`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid authorization header");
+    });
+
+    it("should return 401 when token is invalid", async () => {
+        const response = await supertest(app)
+            .put(`${baseRoute}/1`)
+            .set("Authorization", `Bearer invalid-token`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid token");
+    });
+});
+
+describe(`DELETE ${baseRoute}/{id}`, () => {
+    const authUser = generateToken(1);
+
+    beforeAll(async () => {
+        await new Database().connect();
+    });
+
+    it("should return 204 when deleting a evaluation method", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/1`)
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(204)
+            .send();
+
+        expect(response.body).toStrictEqual({});
+    });
+
+    it("should return 204 when deleting a evaluation method that is already disabled", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/1`)
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(204)
+            .send();
+
+        expect(response.body).toStrictEqual({});
+    });
+
+    it("should return 404 when evaluation method is not found", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/9999`)
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(404)
+            .send();
+
+        expect(response.body.message).toBe(
+            "Evaluation method with id: 9999 not found"
+        );
+    });
+
+    it("should return 422 when id is not a number", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/abc`)
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(422)
+            .send();
+
+        expect(response.body.error?.["id"]?.message).toBe(
+            "invalid float number"
+        );
+    });
+
+    it("should return 401 when no token is provided", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/1`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("No authorization header provided");
+    });
+
+    it("should return 401 when token is not Bearer", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/1`)
+            .set("Authorization", `Basic ${authUser.token}`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid authorization header");
+    });
+
+    it("should return 401 when token is invalid", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/1`)
+            .set("Authorization", `Bearer invalid-token`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid token");
     });
 });

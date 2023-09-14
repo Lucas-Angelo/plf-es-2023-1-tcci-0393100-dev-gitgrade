@@ -1,5 +1,6 @@
 import {
     EvaluationMethodCreateDTO,
+    EvaluationMethodFindOneDTO,
     EvaluationMethodSearchDTO,
     EvaluationMethodUpdateDTO,
     PaginationResponseDTO,
@@ -8,10 +9,7 @@ import { Op } from "sequelize";
 import logger from "../config/LogConfig";
 import AppError from "../error/AppError";
 import { EvaluationMethodWhereClauseType } from "../interface/EvaluationMethod";
-import {
-    EvaluationMethod,
-    IEvaluationMethodAttributes,
-} from "../model/EvaluationMethod";
+import { EvaluationMethod } from "../model/EvaluationMethod";
 import { SequelizeUtil } from "../utils/SequelizeUtil";
 import { sequelizePagination } from "../utils/pagination";
 
@@ -30,6 +28,8 @@ export default class EvaluationMethodService {
             logger.info("Creating a new evaluation method");
 
             this.validateNotNullAndEmptyFields(data);
+
+            this.checkIfIsAValidSemester(data.semester);
 
             const evaluationMethod = await EvaluationMethod.create(data);
 
@@ -62,6 +62,8 @@ export default class EvaluationMethodService {
             }
 
             this.validateNotNullAndEmptyFields(data);
+
+            this.checkIfIsAValidSemester(data.semester);
 
             logger.info(`Updating evaluation method with id: ${id}`);
             const evaluationMethod = await EvaluationMethod.findOne({
@@ -142,7 +144,7 @@ export default class EvaluationMethodService {
      * Find a single EvaluationMethod based on given filters.
      */
     async findOneBy(
-        fields: Partial<IEvaluationMethodAttributes>
+        fields: Partial<EvaluationMethodFindOneDTO>
     ): Promise<EvaluationMethod> {
         try {
             logger.info(`Searching for evaluation method by fields:`, {
@@ -176,6 +178,43 @@ export default class EvaluationMethodService {
                 { error }
             );
             throw error;
+        }
+    }
+
+    async delete(id: number): Promise<void> {
+        try {
+            logger.info(`Deleting evaluation method with id: ${id}`);
+            const evaluationMethod = await EvaluationMethod.findOne({
+                where: { id },
+                paranoid: false,
+            });
+
+            if (!evaluationMethod) {
+                logger.error(`Evaluation method with id: ${id} not found`);
+                throw new AppError(
+                    `Evaluation method with id: ${id} not found`,
+                    404
+                );
+            }
+
+            logger.info("Current evaluation method data: ", {
+                current: evaluationMethod,
+            });
+
+            await evaluationMethod.destroy();
+
+            logger.info("Successfully deleted evaluation method: ", {
+                evaluationMethod,
+            });
+        } catch (error) {
+            logger.error(`Error deleting evaluation method with id: ${id}`, {
+                error,
+            });
+            throw new AppError(
+                `Failed to delete evaluation method with id: ${id}`,
+                500,
+                error
+            );
         }
     }
 
@@ -215,5 +254,9 @@ export default class EvaluationMethodService {
 
         logger.info("Constructed where clause: ", { whereClause });
         return whereClause;
+    }
+
+    private checkIfIsAValidSemester(semester: number): boolean {
+        return semester === 1 || semester === 2;
     }
 }
