@@ -122,12 +122,30 @@ const appRoutes = {
                         }`;
                     },
                 },
-                closedIssues: {
-                    path: "closed-issues" as const,
+                issues: {
+                    path: "issues" as const,
                     link(id: number) {
                         return `${appRoutes.repo[":id"].metrics.link(id)}/${
                             this.path
                         }`;
+                    },
+
+                    // nested routes
+                    author: {
+                        path: "author" as const,
+                        link(id: number) {
+                            return `${appRoutes.repo[":id"].metrics.issues.link(
+                                id
+                            )}/${this.path}`;
+                        },
+                    },
+                    assignee: {
+                        path: "assignee" as const,
+                        link(id: number) {
+                            return `${appRoutes.repo[":id"].metrics.issues.link(
+                                id
+                            )}/${this.path}`;
+                        },
                     },
                 },
             },

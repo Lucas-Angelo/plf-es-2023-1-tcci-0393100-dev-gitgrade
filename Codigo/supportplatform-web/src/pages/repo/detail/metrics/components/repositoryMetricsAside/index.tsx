@@ -84,11 +84,11 @@ export default function RepositoryMetricsAside() {
                         </Text>
                     </NavListItem>
                     <NavListItem
-                        to={repositoryMetricsRoutes.closedIssues.path.concat(
+                        to={repositoryMetricsRoutes.issues.path.concat(
                             searchParamsString
                         )}
                     >
-                        <Text sx={{ fontWeight: "bold" }}>Issues fechadas</Text>
+                        <Text sx={{ fontWeight: "bold" }}>Issues</Text>
                     </NavListItem>
                 </NavList>
             </Box>
