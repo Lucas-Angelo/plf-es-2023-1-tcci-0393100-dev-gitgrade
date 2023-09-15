@@ -1,4 +1,4 @@
-import { EvaluationMethodResponseDTO } from "./EvaluationMethod";
+import { EvaluationMethodResponseDTO } from "./evaluationMethod";
 
 export interface RepositoryDTO {
   id: number;

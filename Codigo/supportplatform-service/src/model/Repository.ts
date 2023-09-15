@@ -1,6 +1,5 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 
-import { EvaluationMethodResponseDTO } from "@gitgrade/dtos";
 import EnvConfig from "../config/EnvConfig";
 import { Branch } from "./Branch";
 import { Contributor } from "./Contributor";
@@ -47,7 +46,7 @@ class Repository extends Model<IRepositoryAttributes> {
     public automaticSynchronization!: boolean;
     public synchronizing!: boolean;
     public lastSyncAt!: Date | null;
-    public evaluationMethod!: EvaluationMethodResponseDTO | null;
+    public evaluationMethod!: EvaluationMethod | null;
 
     public static initModel(sequelize: Sequelize): void {
         this.init(
