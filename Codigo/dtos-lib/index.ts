@@ -1,11 +1,11 @@
+import { CommitMetricsDTO } from "./dto/commitMetrics";
 import {
   EvaluationMethodCreateDTO,
   EvaluationMethodFindOneDTO,
   EvaluationMethodResponseDTO,
   EvaluationMethodSearchDTO,
   EvaluationMethodUpdateDTO,
-} from "./dto/EvaluationMethod";
-import { CommitMetricsDTO } from "./dto/commitMetrics";
+} from "./dto/evaluationMethod";
 import { FileChangeMetricsDTO } from "./dto/fileMetrics";
 import {
   GetAllRepositoryQueryDTO,
