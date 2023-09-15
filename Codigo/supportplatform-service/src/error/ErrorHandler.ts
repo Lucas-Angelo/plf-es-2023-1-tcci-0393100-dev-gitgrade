@@ -61,9 +61,6 @@ export default function applyErrorHandler(app: Express) {
 
             logger.error("Response: ", responseBody);
             return response.status(500).json(responseBody);
-
-            logger.error("Response: ", responseBody);
-            return response.status(500).json(responseBody);
         },
     ]);
 }
