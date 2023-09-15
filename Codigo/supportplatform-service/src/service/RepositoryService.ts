@@ -1,9 +1,8 @@
-import { Repository } from "../model/Repository";
-import logger from "../config/LogConfig";
-import { sequelizePagination } from "../utils/pagination";
 import { PaginationResponseDTO } from "@gitgrade/dtos";
-import { Sequelize } from "sequelize";
-import { Op } from "sequelize";
+import { Op, Sequelize } from "sequelize";
+import logger from "../config/LogConfig";
+import { Repository } from "../model/Repository";
+import { sequelizePagination } from "../utils/pagination";
 
 export default class RepositoryService {
     async findAll(search: {
