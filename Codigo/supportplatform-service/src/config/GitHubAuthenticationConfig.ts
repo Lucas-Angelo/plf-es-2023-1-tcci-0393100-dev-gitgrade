@@ -79,7 +79,7 @@ class GitHubAuthenticationConfig {
     ) {
         // Get user's organizations
         const orgs = await this.getOrganizations(token);
-        const loopLessOrg = orgs.find(
+        const organization = orgs.find(
             (org: { login: string }) =>
                 org.login === EnvConfig.GITHUB_ORGANIZATION_NAME
         );
@@ -87,7 +87,7 @@ class GitHubAuthenticationConfig {
         logger.info("orgs", orgs);
 
         // Check if user is a member of the organization
-        if (!loopLessOrg)
+        if (!organization)
             return done(
                 new AppError("User is not an member of the organization", 403)
             );
