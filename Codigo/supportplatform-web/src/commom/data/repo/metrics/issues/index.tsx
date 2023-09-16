@@ -21,7 +21,6 @@ export const getIssuesMetricsGroupedByContributorByRepositoryIdQuery = (
 export const useIssuesMetricsGroupedByContributorByRepositoryId = (
     id: number,
     params?: {
-        branchName?: string;
         startedAt?: string;
         endedAt?: string;
     }

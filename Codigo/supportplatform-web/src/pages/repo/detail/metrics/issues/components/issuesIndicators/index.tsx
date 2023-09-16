@@ -22,8 +22,8 @@ export default function IssuesIndicators(props: IIssuesIndicatorsProps) {
             >
                 <Indicator
                     leadingIcon={IssueOpenedIcon}
-                    title="Issues foram abertas"
-                    metric={props.issueMetrics.issuesOpennedCount}
+                    description="Issues foram abertas"
+                    header={props.issueMetrics.issuesOpennedCount}
                     sx={{ height: "100%" }}
                 />
             </Box>
@@ -33,8 +33,8 @@ export default function IssuesIndicators(props: IIssuesIndicatorsProps) {
             >
                 <Indicator
                     leadingIcon={IssueClosedIcon}
-                    title="Issues foram fechadas"
-                    metric={props.issueMetrics.issuesClosedCount}
+                    description="Issues foram fechadas"
+                    header={props.issueMetrics.issuesClosedCount}
                     sx={{ height: "100%" }}
                 />
             </Box>

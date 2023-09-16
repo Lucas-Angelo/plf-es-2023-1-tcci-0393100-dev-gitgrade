@@ -156,7 +156,11 @@ const routes = createRoutesFromElements(
                                     appRoutes.repo[":id"].metrics.commitQuality
                                         .path
                                 }
-                                element={<>commitQuality</>}
+                                lazy={() =>
+                                    import(
+                                        "../../pages/repo/detail/metrics/commitQuality/index"
+                                    )
+                                }
                             />
                             <Route
                                 path={appRoutes.repo[":id"].metrics.issues.path}

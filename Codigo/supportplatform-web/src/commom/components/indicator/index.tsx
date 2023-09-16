@@ -1,17 +1,17 @@
 import { Box, BoxProps, Heading, Octicon } from "@primer/react";
 import Card from "../card";
-import { ElementType } from "react";
+import React, { ElementType } from "react";
 
 interface IIndicatorProps extends BoxProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    leadingIcon: ElementType<any>;
-    metric: number | string;
-    title: string;
+    leadingIcon?: ElementType<any>;
+    header: number | string | React.ReactNode;
+    description: string;
 }
 
 export default function Indicator({
-    metric,
-    title,
+    header: metric,
+    description: title,
     leadingIcon,
     ...props
 }: IIndicatorProps) {
@@ -29,10 +29,12 @@ export default function Indicator({
                         gap: 2,
                     }}
                 >
-                    <Octicon
-                        icon={leadingIcon}
-                        size={20}
-                    />{" "}
+                    {leadingIcon && (
+                        <Octicon
+                            icon={leadingIcon}
+                            size={20}
+                        />
+                    )}
                     {metric}
                 </Heading>
                 {title}
