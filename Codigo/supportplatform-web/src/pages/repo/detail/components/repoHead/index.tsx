@@ -5,7 +5,6 @@ import {
     Label,
     Link,
     Octicon,
-    ToggleSwitch,
     UnderlineNav2,
 } from "@primer/react";
 import {
@@ -103,19 +102,6 @@ export default function RepoHead(props: IRepoHeadProps) {
 
                 <Box>
                     <Label variant="accent">método_avaliativo</Label>
-                </Box>
-
-                <Box
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "flex-end",
-                        gap: 2,
-                    }}
-                    className="toggle-switch-wrapper"
-                >
-                    Sincronização automática
-                    <ToggleSwitch aria-labelledby="Sincronização automática" />
                 </Box>
 
                 <Box>

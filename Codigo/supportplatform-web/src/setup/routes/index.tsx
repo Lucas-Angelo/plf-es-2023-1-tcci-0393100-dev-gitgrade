@@ -234,7 +234,9 @@ const routes = createRoutesFromElements(
                         />
                         <Route
                             path={appRoutes.repo[":id"].config.path}
-                            element={<>config</>}
+                            lazy={() =>
+                                import("../../pages/repo/detail/config/index")
+                            }
                         />
 
                         <Route

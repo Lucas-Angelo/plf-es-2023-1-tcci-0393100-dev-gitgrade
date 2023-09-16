@@ -1,7 +1,3 @@
 .underline-nav-wrapper nav ul {
     width: 100%;
 }
-
-.toggle-switch-wrapper:not(a) > div > span {
-    display: none;
-}
