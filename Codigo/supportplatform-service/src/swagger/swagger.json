@@ -337,6 +337,92 @@
 				},
 				"type": "object",
 				"additionalProperties": false
+			},
+			"CommitQualityMetricsDTO": {
+				"properties": {
+					"generalCommitQualityLevel": {
+						"items": {
+							"properties": {
+								"qualityLevelCount": {
+									"type": "number",
+									"format": "double"
+								},
+								"qualityLevel": {
+									"type": "number",
+									"format": "double"
+								}
+							},
+							"required": [
+								"qualityLevelCount",
+								"qualityLevel"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"commitQualityPerContributor": {
+						"items": {
+							"properties": {
+								"commitQualityLevel": {
+									"items": {
+										"properties": {
+											"qualityLevelCount": {
+												"type": "number",
+												"format": "double"
+											},
+											"qualityLevel": {
+												"type": "number",
+												"format": "double"
+											}
+										},
+										"required": [
+											"qualityLevelCount",
+											"qualityLevel"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								},
+								"contributor": {
+									"properties": {
+										"githubAvatarUrl": {
+											"type": "string"
+										},
+										"githubLogin": {
+											"type": "string"
+										},
+										"githubName": {
+											"type": "string"
+										},
+										"id": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"githubAvatarUrl",
+										"githubLogin",
+										"githubName",
+										"id"
+									],
+									"type": "object"
+								}
+							},
+							"required": [
+								"commitQualityLevel",
+								"contributor"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"generalCommitQualityLevel",
+					"commitQualityPerContributor"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -887,6 +973,85 @@
 						"required": false,
 						"schema": {
 							"format": "date",
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/repository/{repositoryId}/metric/commit-quality": {
+			"get": {
+				"operationId": "GetCommitQualityMetrics",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CommitQualityMetricsDTO"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponseDTO"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponseDTO"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"metrics"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "startedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "endedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "branchName",
+						"required": false,
+						"schema": {
 							"type": "string"
 						}
 					}

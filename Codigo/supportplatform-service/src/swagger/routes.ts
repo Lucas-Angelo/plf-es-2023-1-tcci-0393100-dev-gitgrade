@@ -136,6 +136,15 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CommitQualityMetricsDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "generalCommitQualityLevel": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"qualityLevelCount":{"dataType":"double","required":true},"qualityLevel":{"dataType":"double","required":true}}},"required":true},
+            "commitQualityPerContributor": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"commitQualityLevel":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"qualityLevelCount":{"dataType":"double","required":true},"qualityLevel":{"dataType":"double","required":true}}},"required":true},"contributor":{"dataType":"nestedObjectLiteral","nestedProperties":{"githubAvatarUrl":{"dataType":"string","required":true},"githubLogin":{"dataType":"string","required":true},"githubName":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"required":true}}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
 const validationService = new ValidationService(models);
 
@@ -355,6 +364,34 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.getIssuesMetrics.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/repository/:repositoryId/metric/commit-quality',
+            ...(fetchMiddlewares<RequestHandler>(RepositoryMetricsController)),
+            ...(fetchMiddlewares<RequestHandler>(RepositoryMetricsController.prototype.getCommitQualityMetrics)),
+
+            function RepositoryMetricsController_getCommitQualityMetrics(request: any, response: any, next: any) {
+            const args = {
+                    repositoryId: {"in":"path","name":"repositoryId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"repositoryId must be an integer"},"minimum":{"errorMsg":"repositoryId must be greater than or equal to 1","value":1}}},
+                    query: {"in":"queries","name":"query","required":true,"ref":"RepositoryMetricQueryDTO"},
+                    notFoundResponse: {"in":"res","name":"404","required":true,"ref":"ErrorResponseDTO"},
+                    unprocessableEntityResponse: {"in":"res","name":"422","required":true,"ref":"ErrorResponseDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new RepositoryMetricsController();
+
+
+              const promise = controller.getCommitQualityMetrics.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);

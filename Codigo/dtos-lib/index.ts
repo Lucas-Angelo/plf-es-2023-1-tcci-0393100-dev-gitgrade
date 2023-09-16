@@ -1,4 +1,4 @@
-import { CommitMetricsDTO } from "./dto/commitMetrics";
+import { CommitMetricsDTO, CommitQualityMetricsDTO } from "./dto/commitMetrics";
 import { GetAllRepositoryQueryDTO, RepositoryDTO } from "./dto/repository";
 import { BranchDTO, GetAllBranchQueryDTO } from "./dto/branch";
 import { ContributorDTO, GetAllContributorQueryDTO } from "./dto/contributor";
@@ -27,5 +27,6 @@ export type {
   FileTypeMetricsDTO,
   FileTypeMetricDTO,
   IssueMetricQueryDTO,
-  IssueMetricsDTO
+  IssueMetricsDTO,
+  CommitQualityMetricsDTO,
 };

@@ -5,6 +5,7 @@ import {
     RepositoryMetricQueryDTO,
     ErrorResponseDTO,
     IssueMetricQueryDTO,
+    CommitQualityMetricsDTO,
 } from "@gitgrade/dtos";
 import { CommitMetricsMapper } from "../mapper/CommitMetricsMapper";
 import FileService from "../service/FileService";
@@ -12,6 +13,7 @@ import { FileChangeMetricsMapper } from "../mapper/FileChangeMetricsMapper";
 import RepositoryService from "../service/RepositoryService";
 import { QueryIntervalValidator } from "../validation/QueryIntervalValidator";
 import IssueService from "../service/IssueService";
+import { CommitQualityMetricsMapper } from "../mapper/CommitQualityMetricsMapper";
 
 @Route("repository/{repositoryId}/metric")
 @Tags("metrics")
@@ -179,5 +181,47 @@ export class RepositoryMetricsController {
                 endedAt
             );
         return serviceResponse;
+    }
+
+    /**
+     *
+     * @param repositoryId
+     * @param repositoryId @isInt repositoryId repositoryId must be an integer
+     * @param repositoryId @minimum repositoryId 1 repositoryId must be greater than or equal to 1
+     */
+    @Get("commit-quality")
+    async getCommitQualityMetrics(
+        repositoryId: number,
+        @Queries() query: RepositoryMetricQueryDTO,
+        @Res() notFoundResponse: TsoaResponse<404, ErrorResponseDTO>,
+        @Res() unprocessableEntityResponse: TsoaResponse<422, ErrorResponseDTO>
+    ): Promise<CommitQualityMetricsDTO> {
+        const validateQueryInterval = new QueryIntervalValidator(
+            unprocessableEntityResponse
+        ).validate(query);
+        if (validateQueryInterval) return validateQueryInterval;
+
+        const repository = await this.repositoryService.findById(repositoryId);
+
+        if (!repository) {
+            return notFoundResponse(404, {
+                message: "Repository not found",
+            });
+        }
+
+        const branchName =
+            query.branchName ?? repository.defaultBranch ?? "master";
+        const startedAt =
+            query.startedAt ?? new Date(repository.githubCreatedAt);
+        const endedAt = query.endedAt ?? new Date();
+
+        const serviceResponse =
+            await this.commitService.getCommitQualityGroupedByContributor(
+                repositoryId,
+                branchName,
+                startedAt,
+                endedAt
+            );
+        return new CommitQualityMetricsMapper().toDto(serviceResponse);
     }
 }
