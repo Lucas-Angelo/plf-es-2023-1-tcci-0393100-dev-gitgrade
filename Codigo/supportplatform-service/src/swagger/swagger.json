@@ -835,7 +835,7 @@
 				]
 			}
 		},
-		"/repository/{repositoryId}/metric/fileTypes": {
+		"/repository/{repositoryId}/metric/file-types": {
 			"get": {
 				"operationId": "GetFileTypesMetrics",
 				"responses": {

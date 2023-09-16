@@ -34,7 +34,7 @@ export default class FileService {
         if (query?.endedAt) searchParams.set("endedAt", query.endedAt);
 
         return api.get<FileTypeMetricsDTO>(
-            `repository/${repositoryId}/metric/fileTypes?${searchParams.toString()}`
+            `repository/${repositoryId}/metric/file-types?${searchParams.toString()}`
         );
     }
 }

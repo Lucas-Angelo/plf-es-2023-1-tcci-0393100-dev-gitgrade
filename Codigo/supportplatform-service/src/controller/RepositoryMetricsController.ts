@@ -114,7 +114,7 @@ export class RepositoryMetricsController {
         return new FileChangeMetricsMapper().toDto(serviceResponse);
     }
 
-    @Get("fileTypes")
+    @Get("file-types")
     async getFileTypesMetrics(
         repositoryId: number,
         @Queries() query: RepositoryMetricQueryDTO,
