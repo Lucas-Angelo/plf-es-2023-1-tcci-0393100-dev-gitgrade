@@ -150,9 +150,17 @@ export default class CommitService {
         const commitQualityCounts = await Commit.findAll({
             where: {
                 message: {
-                    [Op.notLike]: "Merge branch %",
-                    [Op.notLike]: "Merge remote tracking branch %",
-                    [Op.notLike]: "Merge pull request #%",
+                    [Op.and]: [
+                        {
+                            [Op.notLike]: "Merge branch %",
+                        },
+                        {
+                            [Op.notLike]: "Merge remote tracking branch %",
+                        },
+                        {
+                            [Op.notLike]: "Merge pull request #%",
+                        },
+                    ],
                 },
                 committedDate: {
                     [sequelize.Op.between]: [
