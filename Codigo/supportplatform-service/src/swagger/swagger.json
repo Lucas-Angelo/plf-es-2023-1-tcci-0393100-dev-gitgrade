@@ -471,7 +471,7 @@
 						"type": "string",
 						"format": "date-time"
 					},
-					"evaluation_method_id": {
+					"evaluationMethodId": {
 						"type": "number",
 						"format": "double"
 					}
@@ -481,7 +481,7 @@
 					"name",
 					"start_date",
 					"end_date",
-					"evaluation_method_id"
+					"evaluationMethodId"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -502,7 +502,7 @@
 						"type": "string",
 						"format": "date"
 					},
-					"evaluation_method_id": {
+					"evaluationMethodId": {
 						"type": "integer",
 						"format": "int32"
 					}
@@ -511,7 +511,7 @@
 					"name",
 					"start_date",
 					"end_date",
-					"evaluation_method_id"
+					"evaluationMethodId"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -532,7 +532,7 @@
 						"type": "string",
 						"format": "date"
 					},
-					"evaluation_method_id": {
+					"evaluationMethodId": {
 						"type": "integer",
 						"format": "int32"
 					}
@@ -541,7 +541,7 @@
 					"name",
 					"start_date",
 					"end_date",
-					"evaluation_method_id"
+					"evaluationMethodId"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -591,7 +591,7 @@
 						"type": "string",
 						"format": "date"
 					},
-					"evaluation_method_id": {
+					"evaluationMethodId": {
 						"type": "integer",
 						"format": "int32"
 					}
@@ -1175,7 +1175,7 @@
 											"name": "Sprint 1",
 											"start_date": "2023-01-01T00:00:00.000Z",
 											"end_date": "2023-01-15T00:00:00.000Z",
-											"evaluation_method_id": 1
+											"evaluationMethodId": 1
 										}
 									}
 								}
@@ -1226,7 +1226,7 @@
 													"name": "Sprint 1",
 													"start_date": "2023-01-01T00:00:00.000Z",
 													"end_date": "2023-01-15T00:00:00.000Z",
-													"evaluation_method_id": 1
+													"evaluationMethodId": 1
 												}
 											]
 										}
@@ -1236,7 +1236,7 @@
 						}
 					}
 				},
-				"description": "Get all Sprints with pagination and filter.\nCan filter by start_date, end_date, and evaluation_method_id.",
+				"description": "Get all Sprints with pagination and filter.\nCan filter by start_date, end_date, and evaluationMethodId.",
 				"tags": [
 					"sprint"
 				],
@@ -1298,7 +1298,7 @@
 					},
 					{
 						"in": "query",
-						"name": "evaluation_method_id",
+						"name": "evaluationMethodId",
 						"required": false,
 						"schema": {
 							"format": "int32",
@@ -1326,7 +1326,7 @@
 											"name": "Sprint 1",
 											"start_date": "2023-01-01T00:00:00.000Z",
 											"end_date": "2023-01-15T00:00:00.000Z",
-											"evaluation_method_id": 1
+											"evaluationMethodId": 1
 										}
 									}
 								}
@@ -1384,7 +1384,7 @@
 											"name": "Sprint 1",
 											"start_date": "2023-01-01T00:00:00.000Z",
 											"end_date": "2023-01-15T00:00:00.000Z",
-											"evaluation_method_id": 1
+											"evaluationMethodId": 1
 										}
 									}
 								}

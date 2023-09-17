@@ -4,7 +4,7 @@ import { EvaluationMethod } from "./EvaluationMethod";
 
 interface ISprintAttributes {
     id?: number;
-    evaluation_method_id: number;
+    evaluationMethodId: number;
     name: string;
     start_date: Date;
     end_date: Date;
@@ -12,7 +12,7 @@ interface ISprintAttributes {
 
 class Sprint extends Model<ISprintAttributes> {
     public id!: number;
-    public evaluation_method_id!: number;
+    public evaluationMethodId!: number;
     public name!: string;
     public start_date!: Date;
     public end_date!: Date;
@@ -28,7 +28,7 @@ class Sprint extends Model<ISprintAttributes> {
                     autoIncrement: true,
                     allowNull: false,
                 },
-                evaluation_method_id: {
+                evaluationMethodId: {
                     field: "evaluation_method_id",
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: false,
@@ -66,9 +66,10 @@ class Sprint extends Model<ISprintAttributes> {
         EvaluationMethod: typeof EvaluationMethod;
     }): void {
         this.belongsTo(models.EvaluationMethod, {
-            foreignKey: "evaluation_method_id",
+            foreignKey: "evaluationMethodId",
             as: "evaluation_method",
         });
+        // hasMany CodeQuality
     }
 }
 

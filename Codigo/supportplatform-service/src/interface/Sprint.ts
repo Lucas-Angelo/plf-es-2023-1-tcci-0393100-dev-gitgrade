@@ -3,5 +3,5 @@ import { Op } from "sequelize";
 export type SprintWhereClauseType = {
     start_date?: { [Op.gte]: Date };
     end_date?: { [Op.lte]: Date };
-    evaluation_method_id?: number;
+    evaluationMethodId?: number;
 };

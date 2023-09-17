@@ -17,9 +17,9 @@ export interface SprintCreateDTO {
    */
   end_date: Date;
   /**
-   * @isInt evaluation_method_id must be an integer
+   * @isInt evaluationMethodId must be an integer
    */
-  evaluation_method_id: number;
+  evaluationMethodId: number;
 }
 
 /**
@@ -41,9 +41,9 @@ export interface SprintUpdateDTO {
    */
   end_date: Date;
   /**
-   * @isInt evaluation_method_id must be an integer
+   * @isInt evaluationMethodId must be an integer
    */
-  evaluation_method_id: number;
+  evaluationMethodId: number;
 }
 
 /**
@@ -80,10 +80,10 @@ export interface SprintSearchDTO {
    */
   end_date?: Date;
   /**
-   * @isInt evaluation_method_id must be an integer
-   * @isOptional evaluation_method_id is optional
+   * @isInt evaluationMethodId must be an integer
+   * @isOptional evaluationMethodId is optional
    */
-  evaluation_method_id?: number;
+  evaluationMethodId?: number;
 }
 
 /**
@@ -113,10 +113,10 @@ export interface SprintFindOneDTO {
    */
   end_date?: Date;
   /**
-   * @isInt evaluation_method_id must be an integer
-   * @isOptional evaluation_method_id is optional
+   * @isInt evaluationMethodId must be an integer
+   * @isOptional evaluationMethodId is optional
    */
-  evaluation_method_id?: number;
+  evaluationMethodId?: number;
 }
 
 /**
@@ -127,5 +127,5 @@ export interface SprintResponseDTO {
   name: string;
   start_date: Date;
   end_date: Date;
-  evaluation_method_id: number;
+  evaluationMethodId: number;
 }

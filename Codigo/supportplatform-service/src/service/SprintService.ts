@@ -30,7 +30,7 @@ export default class SprintService {
 
             this.validateNotNullAndEmptyFields(data);
 
-            await this.checkIfEvaluationMethodExists(data.evaluation_method_id);
+            await this.checkIfEvaluationMethodExists(data.evaluationMethodId);
             this.checkIfStartDateIsBeforeEndDate(
                 data.start_date,
                 data.end_date
@@ -61,7 +61,7 @@ export default class SprintService {
 
             this.validateNotNullAndEmptyFields(data);
 
-            await this.checkIfEvaluationMethodExists(data.evaluation_method_id);
+            await this.checkIfEvaluationMethodExists(data.evaluationMethodId);
             this.checkIfStartDateIsBeforeEndDate(
                 data.start_date,
                 data.end_date
@@ -204,24 +204,24 @@ export default class SprintService {
             };
         }
 
-        if (filter.evaluation_method_id) {
-            whereClause.evaluation_method_id = filter.evaluation_method_id;
+        if (filter.evaluationMethodId) {
+            whereClause.evaluationMethodId = filter.evaluationMethodId;
         }
 
         return whereClause;
     }
 
     private async checkIfEvaluationMethodExists(
-        evaluation_method_id: number
+        evaluationMethodId: number
     ): Promise<void> {
-        await EvaluationMethod.findByPk(evaluation_method_id).then(
+        await EvaluationMethod.findByPk(evaluationMethodId).then(
             (evaluationMethod) => {
                 if (!evaluationMethod) {
                     logger.error(
-                        `evaluation_method_id: ${evaluation_method_id} not found`
+                        `evaluationMethodId: ${evaluationMethodId} not found`
                     );
                     throw new AppError(
-                        `evaluation_method_id: ${evaluation_method_id} not found`,
+                        `evaluationMethodId: ${evaluationMethodId} not found`,
                         404
                     );
                 }

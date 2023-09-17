@@ -1,6 +1,7 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 import EnvConfig from "../config/EnvConfig";
 import { Repository } from "./Repository";
+import { Sprint } from "./Sprint";
 
 interface IEvaluationMethodAttributes {
     id?: number;
@@ -66,12 +67,18 @@ class EvaluationMethod extends Model<IEvaluationMethodAttributes> {
         );
     }
 
-    static associate(models: { Repository: typeof Repository }): void {
+    static associate(models: {
+        Repository: typeof Repository;
+        Sprint: typeof Sprint;
+    }): void {
         this.hasMany(models.Repository, {
             foreignKey: "evaluationMethodId",
             as: "repositories",
         });
-        // Sprint association
+        this.hasMany(models.Sprint, {
+            foreignKey: "evaluationMethodId",
+            as: "sprints",
+        });
         // ConsistenceRule association
         // StandardizedIssue association
     }

@@ -42,7 +42,7 @@ export class SprintController extends Controller {
         name: "Sprint 1",
         start_date: new Date("2023-01-01"),
         end_date: new Date("2023-01-15"),
-        evaluation_method_id: 1,
+        evaluationMethodId: 1,
     })
     @Post("/")
     @SuccessResponse("201", "Sprint created")
@@ -66,7 +66,7 @@ export class SprintController extends Controller {
         name: "Sprint 1",
         start_date: new Date("2023-01-01"),
         end_date: new Date("2023-01-15"),
-        evaluation_method_id: 1,
+        evaluationMethodId: 1,
     })
     @Put("/{id}")
     @SuccessResponse("200", "Sprint updated")
@@ -82,8 +82,8 @@ export class SprintController extends Controller {
 
     /**
      * Get all Sprints with pagination and filter.
-     * Can filter by start_date, end_date, and evaluation_method_id.
-     * @query query SprintSearchDTO query to filter by start_date, end_date, and evaluation_method_id.
+     * Can filter by start_date, end_date, and evaluationMethodId.
+     * @query query SprintSearchDTO query to filter by start_date, end_date, and evaluationMethodId.
      */
     @Example<PaginationResponseDTO<SprintResponseDTO>>({
         totalPages: 1,
@@ -93,7 +93,7 @@ export class SprintController extends Controller {
                 name: "Sprint 1",
                 start_date: new Date("2023-01-01"),
                 end_date: new Date("2023-01-15"),
-                evaluation_method_id: 1,
+                evaluationMethodId: 1,
             },
         ],
     })
@@ -120,7 +120,7 @@ export class SprintController extends Controller {
         name: "Sprint 1",
         start_date: new Date("2023-01-01"),
         end_date: new Date("2023-01-15"),
-        evaluation_method_id: 1,
+        evaluationMethodId: 1,
     })
     @Get("/{id}")
     @SuccessResponse("200", "Found sprint")

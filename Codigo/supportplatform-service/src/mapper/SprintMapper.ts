@@ -8,7 +8,7 @@ export class SprintMapper {
             name: model.name,
             start_date: model.start_date,
             end_date: model.end_date,
-            evaluation_method_id: model.evaluation_method_id,
+            evaluationMethodId: model.evaluationMethodId,
         };
     }
 }
