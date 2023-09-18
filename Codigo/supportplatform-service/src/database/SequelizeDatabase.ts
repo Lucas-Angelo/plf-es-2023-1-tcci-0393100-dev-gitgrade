@@ -88,6 +88,8 @@ class SequelizeDatabase {
             PullRequest,
             EvaluationMethod,
         });
+        EvaluationMethod.associate({ Repository, Sprint });
+        Sprint.associate({ EvaluationMethod });
     }
 
     async connect() {
