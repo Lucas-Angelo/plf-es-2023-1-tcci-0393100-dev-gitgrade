@@ -12,3 +12,4 @@ logs/
 env/
 package-lock.json
 .dockerignore
+src/swagger/

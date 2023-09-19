@@ -2,8 +2,13 @@ import { DataTypes, Model, Sequelize } from "sequelize";
 
 import EnvConfig from "../config/EnvConfig";
 
-import { Repository } from "./Repository";
 import { Commit } from "./Commit";
+import { Issue } from "./Issue";
+import { IssueHasAssigneeContributor } from "./IssueHasAssigneeContributor";
+import { PullRequest } from "./PullRequest";
+import { PullRequestHasAssigneeContributor } from "./PullRequestHasAssigneeContributor";
+import { Repository } from "./Repository";
+import { RepositoryHasContributor } from "./RepositoryHasContributor";
 
 interface IContributorAttributes {
     id?: number;
@@ -80,15 +85,37 @@ class Contributor extends Model<IContributorAttributes> {
     static associate(models: {
         Repository: typeof Repository;
         Commit: typeof Commit;
+        Issue: typeof Issue;
+        PullRequest: typeof PullRequest;
     }): void {
         this.belongsToMany(models.Repository, {
             foreignKey: "contributorId",
             as: "repositories",
-            through: "repository_has_contributor",
+            through: RepositoryHasContributor,
         });
         this.hasMany(models.Commit, {
             foreignKey: "contributor_id",
             as: "commits",
+        });
+
+        this.hasMany(models.Issue, {
+            foreignKey: "authorContributorId",
+            as: "authoredIssues",
+        });
+        this.hasMany(models.PullRequest, {
+            foreignKey: "authorContributorId",
+            as: "authoredPullRequests",
+        });
+
+        this.belongsToMany(models.Issue, {
+            through: IssueHasAssigneeContributor,
+            foreignKey: "assigneeContributorId",
+            as: "assignedIssues",
+        });
+        this.belongsToMany(models.PullRequest, {
+            through: PullRequestHasAssigneeContributor,
+            foreignKey: "assigneeContributorId",
+            as: "assignedPullRequests",
         });
     }
 }

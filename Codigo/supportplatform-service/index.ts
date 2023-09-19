@@ -6,7 +6,7 @@ import Database from "./src/database";
 const database = new Database();
 database.connect().catch(database.disconnect);
 
-const port = EnvConfig.PORT || 3001;
+const port = EnvConfig.PORT || 3002;
 app.listen(port, () => {
     logger.info(`Server is running on port ${port}`);
 });

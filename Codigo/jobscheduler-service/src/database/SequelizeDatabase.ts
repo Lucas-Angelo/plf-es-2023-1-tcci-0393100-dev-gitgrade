@@ -63,11 +63,28 @@ class SequelizeDatabase {
         File.initModel(this.sequelize);
     }
 
+    private associateModels() {
+        Branch.associate({ Repository, Commit });
+        Contributor.associate({ Repository, Commit, Issue, PullRequest });
+        RepositoryHasContributor.associate({ Contributor, Repository });
+        Issue.associate({ Contributor, Repository });
+        IssueHasAssigneeContributor.associate({ Contributor, Issue });
+        PullRequest.associate({ Contributor, Repository });
+        PullRequestHasAssigneeContributor.associate({
+            Contributor,
+            PullRequest,
+        });
+        Commit.associate({ Branch, Contributor, File });
+        File.associate({ Commit });
+        Repository.associate({ Branch, Contributor, Issue, PullRequest });
+    }
+
     async connect() {
         await MySqlDatabase.createDatabaseIfNotExists();
 
         try {
             this.initModels();
+            this.associateModels();
             await this.sequelize.authenticate();
             // TODO: create migrations
             if (EnvConfig.NODE_ENV == "development")

@@ -8,6 +8,7 @@ import SequelizeOptions from "../config/SequelizeConfig";
 import { Branch } from "../model/Branch";
 import { Commit } from "../model/Commit";
 import { Contributor } from "../model/Contributor";
+import { EvaluationMethod } from "../model/EvaluationMethod";
 import { File } from "../model/File";
 import { Issue } from "../model/Issue";
 import { IssueHasAssigneeContributor } from "../model/IssueHasAssigneeContributor";
@@ -51,6 +52,7 @@ class SequelizeDatabase {
 
     private initModels() {
         User.initModel(this.sequelize);
+        EvaluationMethod.initModel(this.sequelize);
         Repository.initModel(this.sequelize);
         Contributor.initModel(this.sequelize);
         RepositoryHasContributor.initModel(this.sequelize);
@@ -65,7 +67,7 @@ class SequelizeDatabase {
 
     private associateModels() {
         Branch.associate({ Repository, Commit });
-        Contributor.associate({ Repository, Commit });
+        Contributor.associate({ Repository, Commit, Issue, PullRequest });
         RepositoryHasContributor.associate({ Contributor, Repository });
         Issue.associate({ Contributor, Repository });
         IssueHasAssigneeContributor.associate({ Contributor, Issue });
@@ -76,6 +78,13 @@ class SequelizeDatabase {
         });
         Commit.associate({ Branch, Contributor, File });
         File.associate({ Commit });
+        Repository.associate({
+            Branch,
+            Contributor,
+            Issue,
+            PullRequest,
+            EvaluationMethod,
+        });
     }
 
     async connect() {

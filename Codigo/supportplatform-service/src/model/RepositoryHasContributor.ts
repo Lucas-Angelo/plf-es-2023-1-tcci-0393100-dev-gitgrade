@@ -1,4 +1,4 @@
-import { Model, DataTypes, Sequelize } from "sequelize";
+import { DataTypes, Model, Sequelize } from "sequelize";
 
 import EnvConfig from "../config/EnvConfig";
 
@@ -16,11 +16,19 @@ class RepositoryHasContributor extends Model {
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: false,
                     primaryKey: true,
+                    references: {
+                        model: Repository,
+                        key: "id",
+                    },
                 },
                 contributorId: {
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: false,
                     primaryKey: true,
+                    references: {
+                        model: Contributor,
+                        key: "id",
+                    },
                 },
             },
             {

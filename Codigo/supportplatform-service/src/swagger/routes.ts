@@ -3,6 +3,8 @@
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute, HttpStatusCodeLiteral, TsoaResponse, fetchMiddlewares } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { EvaluationMethodController } from './../controller/EvaluationMethodController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { RepositoryController } from './../controller/RepositoryController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { RepositoryMetricsController } from './../controller/RepositoryMetricsController';
@@ -14,11 +16,64 @@ import type { RequestHandler, Router } from 'express';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
 const models: TsoaRoute.Models = {
+    "EvaluationMethodResponseDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "description": {"dataType":"string","required":true},
+            "semester": {"dataType":"double","required":true},
+            "year": {"dataType":"double","required":true},
+            "disabledAt": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "EvaluationMethodCreateDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "description": {"dataType":"string","required":true,"validators":{"isString":{"errorMsg":"description must be a string"},"minLength":{"errorMsg":"description must have a minimum length of 1","value":1},"maxLength":{"errorMsg":"description must have a maximum length of 255","value":255}}},
+            "semester": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"semester must be an integer"}}},
+            "year": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"year must be an integer"}}},
+            "disabledAt": {"dataType":"union","subSchemas":[{"dataType":"date"},{"dataType":"enum","enums":[null]}],"default":"null","validators":{"isDate":{"errorMsg":"disabledAt must be a Date"}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "EvaluationMethodUpdateDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "description": {"dataType":"string","required":true,"validators":{"isString":{"errorMsg":"description must be a string"},"minLength":{"errorMsg":"description must have a minimum length of 1","value":1},"maxLength":{"errorMsg":"description must have a maximum length of 255","value":255}}},
+            "semester": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"semester must be an integer"}}},
+            "year": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"year must be an integer"}}},
+            "disabledAt": {"dataType":"union","subSchemas":[{"dataType":"date"},{"dataType":"enum","enums":[null]}],"required":true,"validators":{"isDate":{"errorMsg":"disabledAt must be a Date"}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PaginationResponseDTO_EvaluationMethodResponseDTO_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"results":{"dataType":"array","array":{"dataType":"refObject","ref":"EvaluationMethodResponseDTO"},"required":true},"totalPages":{"dataType":"double","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "EvaluationMethodSearchDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "page": {"dataType":"integer","default":"1","validators":{"isInt":{"errorMsg":"page must be an integer"},"minimum":{"errorMsg":"page must be greater than or equal to 1","value":1}}},
+            "limit": {"dataType":"integer","default":"10","validators":{"isInt":{"errorMsg":"limit must be an integer"},"minimum":{"errorMsg":"limit must be greater than or equal to 1","value":1}}},
+            "description": {"dataType":"string","validators":{"isString":{"errorMsg":"description must be a string"}}},
+            "semester": {"dataType":"integer","validators":{"isInt":{"errorMsg":"semester must be an integer"}}},
+            "year": {"dataType":"integer","validators":{"isInt":{"errorMsg":"year must be an integer"}}},
+            "disabledAt": {"dataType":"union","subSchemas":[{"dataType":"date"},{"dataType":"enum","enums":[null]}],"validators":{"isDate":{"errorMsg":"disabledAt must be a Date"}}},
+            "forceDisabled": {"dataType":"boolean","default":"false","validators":{"isBoolean":{"errorMsg":"forceDisabled must be a boolean"}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "RepositoryDTO": {
         "dataType": "refObject",
         "properties": {
             "id": {"dataType":"double","required":true},
-            "evaluationMethod": {"dataType":"nestedObjectLiteral","nestedProperties":{"name":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}}},
+            "evaluationMethod": {"dataType":"union","subSchemas":[{"ref":"EvaluationMethodResponseDTO"},{"dataType":"enum","enums":[null]}]},
             "githubId": {"dataType":"string","required":true},
             "name": {"dataType":"string","required":true},
             "description": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
@@ -53,6 +108,15 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "RepositoryPatchDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "evaluationMethodId": {"dataType":"union","subSchemas":[{"dataType":"integer"},{"dataType":"enum","enums":[null]}],"validators":{"isInt":{"errorMsg":"evaluationMethodId must be an integer"},"minimum":{"errorMsg":"evaluationMethodId must be greater than or equal to 1","value":1}}},
+            "automaticSynchronization": {"dataType":"boolean"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "CommitMetricsDTO": {
         "dataType": "refObject",
         "properties": {
@@ -82,6 +146,137 @@ export function RegisterRoutes(app: Router) {
     //  NOTE: If you do not see routes for all of your controllers in this file, then you might not have informed tsoa of where to look
     //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
     // ###########################################################################################################
+        app.post('/evaluation-method',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(EvaluationMethodController)),
+            ...(fetchMiddlewares<RequestHandler>(EvaluationMethodController.prototype.create)),
+
+            function EvaluationMethodController_create(request: any, response: any, next: any) {
+            const args = {
+                    body: {"in":"body","name":"body","required":true,"ref":"EvaluationMethodCreateDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new EvaluationMethodController();
+
+
+              const promise = controller.create.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 201, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.put('/evaluation-method/:id',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(EvaluationMethodController)),
+            ...(fetchMiddlewares<RequestHandler>(EvaluationMethodController.prototype.update)),
+
+            function EvaluationMethodController_update(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                    body: {"in":"body","name":"body","required":true,"ref":"EvaluationMethodUpdateDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new EvaluationMethodController();
+
+
+              const promise = controller.update.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 200, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/evaluation-method',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(EvaluationMethodController)),
+            ...(fetchMiddlewares<RequestHandler>(EvaluationMethodController.prototype.getAll)),
+
+            function EvaluationMethodController_getAll(request: any, response: any, next: any) {
+            const args = {
+                    query: {"in":"queries","name":"query","required":true,"ref":"EvaluationMethodSearchDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new EvaluationMethodController();
+
+
+              const promise = controller.getAll.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 200, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/evaluation-method/:id',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(EvaluationMethodController)),
+            ...(fetchMiddlewares<RequestHandler>(EvaluationMethodController.prototype.getOne)),
+
+            function EvaluationMethodController_getOne(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new EvaluationMethodController();
+
+
+              const promise = controller.getOne.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 200, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.delete('/evaluation-method/:id',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(EvaluationMethodController)),
+            ...(fetchMiddlewares<RequestHandler>(EvaluationMethodController.prototype.delete)),
+
+            function EvaluationMethodController_delete(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new EvaluationMethodController();
+
+
+              const promise = controller.delete.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 204, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/repository',
             authenticateMiddleware([{"bearer":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(RepositoryController)),
@@ -102,7 +297,34 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.getAll.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              promiseHandler(controller, promise, response, 200, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.patch('/repository/:id',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(RepositoryController)),
+            ...(fetchMiddlewares<RequestHandler>(RepositoryController.prototype.patch)),
+
+            function RepositoryController_patch(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                    body: {"in":"body","name":"body","required":true,"ref":"RepositoryPatchDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new RepositoryController();
+
+
+              const promise = controller.patch.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 200, next);
             } catch (err) {
                 return next(err);
             }
@@ -129,7 +351,7 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.getCommitMetrics.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              promiseHandler(controller, promise, response, 200, next);
             } catch (err) {
                 return next(err);
             }
@@ -156,7 +378,7 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.getChangesMetrics.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              promiseHandler(controller, promise, response, 200, next);
             } catch (err) {
                 return next(err);
             }
