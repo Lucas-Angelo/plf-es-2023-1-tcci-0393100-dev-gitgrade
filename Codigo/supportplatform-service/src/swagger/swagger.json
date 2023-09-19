@@ -452,6 +452,152 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"SprintResponseDTO": {
+				"description": "SprintResponseDTO - Could be used to structure the response object when sending Sprints to the client.",
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"name": {
+						"type": "string"
+					},
+					"start_date": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"end_date": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"evaluationMethodId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"start_date",
+					"end_date",
+					"evaluationMethodId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SprintCreateDTO": {
+				"description": "SprintCreateDTO - Used for creating a new Sprint.",
+				"properties": {
+					"name": {
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 255
+					},
+					"start_date": {
+						"type": "string",
+						"format": "date"
+					},
+					"end_date": {
+						"type": "string",
+						"format": "date"
+					},
+					"evaluationMethodId": {
+						"type": "integer",
+						"format": "int32"
+					}
+				},
+				"required": [
+					"name",
+					"start_date",
+					"end_date",
+					"evaluationMethodId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SprintUpdateDTO": {
+				"description": "SprintUpdateDTO - Used for updating an existing Sprint.",
+				"properties": {
+					"name": {
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 255
+					},
+					"start_date": {
+						"type": "string",
+						"format": "date"
+					},
+					"end_date": {
+						"type": "string",
+						"format": "date"
+					},
+					"evaluationMethodId": {
+						"type": "integer",
+						"format": "int32"
+					}
+				},
+				"required": [
+					"name",
+					"start_date",
+					"end_date",
+					"evaluationMethodId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PaginationResponseDTO_SprintResponseDTO_": {
+				"properties": {
+					"results": {
+						"items": {
+							"$ref": "#/components/schemas/SprintResponseDTO"
+						},
+						"type": "array"
+					},
+					"totalPages": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"results",
+					"totalPages"
+				],
+				"type": "object"
+			},
+			"SprintSearchDTO": {
+				"description": "SprintSearchDTO - Used for searching through Sprints with pagination and filters.",
+				"properties": {
+					"page": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"limit": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"name": {
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 255
+					},
+					"start_date": {
+						"type": "string",
+						"format": "date"
+					},
+					"end_date": {
+						"type": "string",
+						"format": "date"
+					},
+					"evaluationMethodId": {
+						"type": "integer",
+						"format": "int32"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {
@@ -1006,6 +1152,265 @@
 						"required": false,
 						"schema": {
 							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/sprint": {
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"201": {
+						"description": "Sprint created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SprintResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"name": "Sprint 1",
+											"start_date": "2023-01-01T00:00:00.000Z",
+											"end_date": "2023-01-15T00:00:00.000Z",
+											"evaluationMethodId": 1
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a new Sprint.",
+				"tags": [
+					"sprint"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SprintCreateDTO"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Found sprints",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PaginationResponseDTO_SprintResponseDTO_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"totalPages": 1,
+											"results": [
+												{
+													"id": 1,
+													"name": "Sprint 1",
+													"start_date": "2023-01-01T00:00:00.000Z",
+													"end_date": "2023-01-15T00:00:00.000Z",
+													"evaluationMethodId": 1
+												}
+											]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all Sprints with pagination and filter.\nCan filter by start_date, end_date, and evaluationMethodId.",
+				"tags": [
+					"sprint"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "name",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"minLength": 1,
+							"maxLength": 255
+						}
+					},
+					{
+						"in": "query",
+						"name": "start_date",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "end_date",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "evaluationMethodId",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer"
+						}
+					}
+				]
+			}
+		},
+		"/sprint/{id}": {
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Sprint updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SprintResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"name": "Sprint 1",
+											"start_date": "2023-01-01T00:00:00.000Z",
+											"end_date": "2023-01-15T00:00:00.000Z",
+											"evaluationMethodId": 1
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Update an existing Sprint by id.\nNeed body with all fields.",
+				"tags": [
+					"sprint"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SprintUpdateDTO"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetOne",
+				"responses": {
+					"200": {
+						"description": "Found sprint",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SprintResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"name": "Sprint 1",
+											"start_date": "2023-01-01T00:00:00.000Z",
+											"end_date": "2023-01-15T00:00:00.000Z",
+											"evaluationMethodId": 1
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Get an existing Sprint by id.",
+				"tags": [
+					"sprint"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
 						}
 					}
 				]

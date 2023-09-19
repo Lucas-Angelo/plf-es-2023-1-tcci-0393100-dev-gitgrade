@@ -16,6 +16,7 @@ import { PullRequest } from "../model/PullRequest";
 import { PullRequestHasAssigneeContributor } from "../model/PullRequestHasAssigneeContributor";
 import { Repository } from "../model/Repository";
 import { RepositoryHasContributor } from "../model/RepositoryHasContributor";
+import { Sprint } from "../model/Sprint";
 import { User } from "../model/User";
 
 class SequelizeDatabase {
@@ -63,6 +64,8 @@ class SequelizeDatabase {
         Branch.initModel(this.sequelize);
         Commit.initModel(this.sequelize);
         File.initModel(this.sequelize);
+        EvaluationMethod.initModel(this.sequelize);
+        Sprint.initModel(this.sequelize);
     }
 
     private associateModels() {
@@ -85,6 +88,8 @@ class SequelizeDatabase {
             PullRequest,
             EvaluationMethod,
         });
+        EvaluationMethod.associate({ Repository, Sprint });
+        Sprint.associate({ EvaluationMethod });
     }
 
     async connect() {

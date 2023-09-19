@@ -12,6 +12,13 @@ import {
   RepositoryDTO,
   RepositoryPatchDTO,
 } from "./dto/repository";
+import {
+  SprintCreateDTO,
+  SprintFindOneDTO,
+  SprintResponseDTO,
+  SprintSearchDTO,
+  SprintUpdateDTO,
+} from "./dto/sprint";
 import { PaginationResponseDTO } from "./utils/pagination";
 
 export type {
@@ -26,4 +33,9 @@ export type {
   PaginationResponseDTO,
   RepositoryDTO,
   RepositoryPatchDTO,
+  SprintCreateDTO,
+  SprintFindOneDTO,
+  SprintResponseDTO,
+  SprintSearchDTO,
+  SprintUpdateDTO,
 };
