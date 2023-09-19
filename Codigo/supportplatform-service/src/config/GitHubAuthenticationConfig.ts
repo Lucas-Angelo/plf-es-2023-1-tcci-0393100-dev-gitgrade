@@ -143,7 +143,10 @@ class GitHubAuthenticationConfig {
             } else done(new AppError("User is not AuthUser", 500));
         });
 
-        passport.deserializeUser(async (token: string, done) => {
+        passport.deserializeUser(async (user: Express.User, done) => {
+            if (!("token" in user))
+                return done(new AppError("User is not AuthUser", 500));
+            const token = (user as AuthUser).token;
             try {
                 const decoded = verifyToken(token);
                 if (typeof decoded === "object" && "id" in decoded) {
