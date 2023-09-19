@@ -414,7 +414,6 @@ describe(`POST ${baseRoute}`, () => {
                 description: "New evaluation method",
                 semester: 1,
                 year: 2023,
-                disabledAt: null,
             });
 
         expect(response.body.id).toBe(37);
@@ -450,7 +449,6 @@ describe(`POST ${baseRoute}`, () => {
             .send({
                 semester: 1,
                 year: 2023,
-                disabledAt: null,
             });
 
         expect(response.body.error?.["body.description"]?.message).toBe(
@@ -467,7 +465,6 @@ describe(`POST ${baseRoute}`, () => {
                 description: 123,
                 semester: 1,
                 year: 2023,
-                disabledAt: null,
             });
 
         expect(response.body.error?.["body.description"]?.message).toBe(
@@ -484,7 +481,6 @@ describe(`POST ${baseRoute}`, () => {
                 description: "",
                 semester: 1,
                 year: 2023,
-                disabledAt: null,
             });
 
         expect(response.body.error?.["body.description"]?.message).toBe(
@@ -501,7 +497,6 @@ describe(`POST ${baseRoute}`, () => {
                 description: "a".repeat(256),
                 semester: 1,
                 year: 2023,
-                disabledAt: null,
             });
 
         expect(response.body.error?.["body.description"]?.message).toBe(
@@ -517,7 +512,6 @@ describe(`POST ${baseRoute}`, () => {
             .send({
                 description: "New evaluation method",
                 year: 2023,
-                disabledAt: null,
             });
 
         expect(response.body.error?.["body.semester"]?.message).toBe(
@@ -534,7 +528,6 @@ describe(`POST ${baseRoute}`, () => {
                 description: "New evaluation method",
                 semester: "abc",
                 year: 2023,
-                disabledAt: null,
             });
 
         expect(response.body.error?.["body.semester"]?.message).toBe(
@@ -550,7 +543,6 @@ describe(`POST ${baseRoute}`, () => {
             .send({
                 description: "New evaluation method",
                 semester: 2023,
-                disabledAt: null,
             });
 
         expect(response.body.error?.["body.year"]?.message).toBe(
@@ -567,7 +559,6 @@ describe(`POST ${baseRoute}`, () => {
                 description: "New evaluation method",
                 semester: 1,
                 year: "abc",
-                disabledAt: null,
             });
 
         expect(response.body.error?.["body.year"]?.message).toBe(
