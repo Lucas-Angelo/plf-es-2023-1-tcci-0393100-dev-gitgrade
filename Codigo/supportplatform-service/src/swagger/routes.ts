@@ -15,15 +15,6 @@ import type { RequestHandler, Router } from 'express';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
 const models: TsoaRoute.Models = {
-    "BranchDTO": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "name": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "GetAllBranchQueryDTO": {
         "dataType": "refObject",
         "properties": {
@@ -33,14 +24,17 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ContributorDTO": {
+    "Record_string._message-string--value-any_-or-undefined_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ErrorResponseDTO": {
         "dataType": "refObject",
         "properties": {
-            "id": {"dataType":"double","required":true},
-            "githubName": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
-            "githubEmail": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
-            "githubLogin": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
-            "githubAvatarUrl": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "message": {"dataType":"string","required":true},
+            "details": {"ref":"Record_string._message-string--value-any_-or-undefined_"},
+            "stack": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
@@ -112,21 +106,6 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Record_string._message-string--value-any_-or-undefined_": {
-        "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ErrorResponseDTO": {
-        "dataType": "refObject",
-        "properties": {
-            "message": {"dataType":"string","required":true},
-            "details": {"ref":"Record_string._message-string--value-any_-or-undefined_"},
-            "stack": {"dataType":"string"},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "IssueMetricQueryDTO": {
         "dataType": "refObject",
         "properties": {
@@ -163,6 +142,7 @@ export function RegisterRoutes(app: Router) {
             const args = {
                     repositoryId: {"in":"path","name":"repositoryId","required":true,"dataType":"double"},
                     query: {"in":"queries","name":"query","required":true,"ref":"GetAllBranchQueryDTO"},
+                    notFoundResponse: {"in":"res","name":"404","required":true,"ref":"ErrorResponseDTO"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -189,6 +169,7 @@ export function RegisterRoutes(app: Router) {
             const args = {
                     repositoryId: {"in":"path","name":"repositoryId","required":true,"dataType":"double"},
                     query: {"in":"queries","name":"query","required":true,"ref":"GetAllContributorQueryDTO"},
+                    notFoundResponse: {"in":"res","name":"404","required":true,"ref":"ErrorResponseDTO"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

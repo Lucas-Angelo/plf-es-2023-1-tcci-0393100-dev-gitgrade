@@ -6,23 +6,6 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"BranchDTO": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"name": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"id",
-					"name"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"GetAllBranchQueryDTO": {
 				"properties": {
 					"page": {
@@ -39,35 +22,25 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"ContributorDTO": {
+			"Record_string._message-string--value-any_-or-undefined_": {
+				"properties": {},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"ErrorResponseDTO": {
 				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
+					"message": {
+						"type": "string"
 					},
-					"githubName": {
-						"type": "string",
-						"nullable": true
+					"details": {
+						"$ref": "#/components/schemas/Record_string._message-string--value-any_-or-undefined_"
 					},
-					"githubEmail": {
-						"type": "string",
-						"nullable": true
-					},
-					"githubLogin": {
-						"type": "string",
-						"nullable": true
-					},
-					"githubAvatarUrl": {
-						"type": "string",
-						"nullable": true
+					"stack": {
+						"type": "string"
 					}
 				},
 				"required": [
-					"id",
-					"githubName",
-					"githubEmail",
-					"githubLogin",
-					"githubAvatarUrl"
+					"message"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -301,29 +274,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"Record_string._message-string--value-any_-or-undefined_": {
-				"properties": {},
-				"type": "object",
-				"description": "Construct a type with a set of properties K of type T"
-			},
-			"ErrorResponseDTO": {
-				"properties": {
-					"message": {
-						"type": "string"
-					},
-					"details": {
-						"$ref": "#/components/schemas/Record_string._message-string--value-any_-or-undefined_"
-					},
-					"stack": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"IssueMetricQueryDTO": {
 				"properties": {
 					"startedAt": {
@@ -449,24 +399,16 @@
 						"description": "Ok",
 						"content": {
 							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
 								"schema": {
-									"properties": {
-										"results": {
-											"items": {
-												"$ref": "#/components/schemas/BranchDTO"
-											},
-											"type": "array"
-										},
-										"totalPages": {
-											"type": "number",
-											"format": "double"
-										}
-									},
-									"required": [
-										"results",
-										"totalPages"
-									],
-									"type": "object"
+									"$ref": "#/components/schemas/ErrorResponseDTO"
 								}
 							}
 						}
@@ -517,24 +459,16 @@
 						"description": "Ok",
 						"content": {
 							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
 								"schema": {
-									"properties": {
-										"results": {
-											"items": {
-												"$ref": "#/components/schemas/ContributorDTO"
-											},
-											"type": "array"
-										},
-										"totalPages": {
-											"type": "number",
-											"format": "double"
-										}
-									},
-									"required": [
-										"results",
-										"totalPages"
-									],
-									"type": "object"
+									"$ref": "#/components/schemas/ErrorResponseDTO"
 								}
 							}
 						}
