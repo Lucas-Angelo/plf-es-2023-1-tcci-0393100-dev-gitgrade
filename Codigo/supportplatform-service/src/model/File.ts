@@ -21,6 +21,8 @@ class File extends Model<IFileAttributes> {
     public additions!: number;
     public deletions!: number;
 
+    public commit!: Commit;
+
     static initModel(sequelize: Sequelize): void {
         this.init(
             {

@@ -111,45 +111,50 @@ export default class FileService {
         startedAt: Date,
         endedAt: Date
     ) {
-        const changesCounts = await Commit.findAll({
-            attributes: [],
-            where: {
-                committedDate: {
-                    [sequelize.Op.between]: [
-                        getDateInDayStart(getDateInServerTimeZone(startedAt)),
-                        getDateInDayEnd(getDateInServerTimeZone(endedAt)),
-                    ],
-                },
-            },
+        const fileChanges = await File.findAll({
+            attributes: ["extension", "path", "commitId"],
             include: [
                 {
-                    model: Branch,
+                    model: Commit,
+                    required: true,
+                    as: "commit",
+                    attributes: ["id"],
                     where: {
-                        repositoryId,
-                        name: branchName,
+                        committedDate: {
+                            [sequelize.Op.between]: [
+                                getDateInDayStart(
+                                    getDateInServerTimeZone(startedAt)
+                                ),
+                                getDateInDayEnd(
+                                    getDateInServerTimeZone(endedAt)
+                                ),
+                            ],
+                        },
                     },
-                    as: "branch",
-                    attributes: [],
-                },
-                {
-                    model: File,
-                    required: true,
-                    as: "files",
-                    attributes: ["extension"],
-                },
-                {
-                    model: Contributor,
-                    required: true,
-                    as: "contributor",
-                    attributes: [
-                        "id",
-                        "githubName",
-                        "githubLogin",
-                        "githubAvatarUrl",
+                    include: [
+                        {
+                            model: Branch,
+                            where: {
+                                repositoryId,
+                                name: branchName,
+                            },
+                            as: "branch",
+                            attributes: [],
+                        },
+                        {
+                            model: Contributor,
+                            required: true,
+                            as: "contributor",
+                            attributes: [
+                                "id",
+                                "githubName",
+                                "githubLogin",
+                                "githubAvatarUrl",
+                            ],
+                        },
                     ],
                 },
             ],
-            group: ["files.path", "contributor.id"],
         });
 
         const mapExtensionToCount = new Map<string, number>();
@@ -157,40 +162,53 @@ export default class FileService {
             number,
             Map<string, number>
         >();
-
-        for (const commitAndStuff of changesCounts) {
+        const mapLoadedFilesToContributorsSet = new Map<string, Set<number>>();
+        for (const fileAndStuff of fileChanges) {
             // agrupar por tipo de arquivo
             // contar quantos de cada tipo de arquivo
             // somar a contagem em uma variável geral e em uma variável do contributor
-            const file = commitAndStuff.files[0];
-            const contributor = commitAndStuff.contributor;
-            const key = file.extension;
+            const file = fileAndStuff;
 
-            if (key) {
-                const value = mapExtensionToCount.get(key);
-                if (value) {
-                    mapExtensionToCount.set(key, value + 1);
-                } else {
-                    mapExtensionToCount.set(key, 1);
-                }
+            const contributor = file.commit.contributor;
+            const extensionKey = file.extension;
 
-                let contributorMap = mapContributorToMapExtensionToCount.get(
-                    contributor.id
+            if (extensionKey) {
+                const fileContributorSet = mapLoadedFilesToContributorsSet.get(
+                    file.path
                 );
-                if (!contributorMap) {
-                    contributorMap = new Map<string, number>();
-                    mapContributorToMapExtensionToCount.set(
-                        contributor.id,
-                        contributorMap
+
+                if (!fileContributorSet) {
+                    const value = mapExtensionToCount.get(extensionKey);
+                    if (value) {
+                        mapExtensionToCount.set(extensionKey, value + 1);
+                    } else {
+                        mapExtensionToCount.set(extensionKey, 1);
+                    }
+
+                    mapLoadedFilesToContributorsSet.set(
+                        file.path,
+                        new Set([contributor.id])
                     );
                 }
 
-                if (contributorMap) {
-                    const value = contributorMap.get(key);
-                    if (value) {
-                        contributorMap.set(key, value + 1);
-                    } else {
-                        contributorMap.set(key, 1);
+                if (!fileContributorSet?.has(contributor.id)) {
+                    let contributorMap =
+                        mapContributorToMapExtensionToCount.get(contributor.id);
+                    if (!contributorMap) {
+                        contributorMap = new Map<string, number>();
+                        mapContributorToMapExtensionToCount.set(
+                            contributor.id,
+                            contributorMap
+                        );
+                    }
+
+                    if (contributorMap) {
+                        const value = contributorMap.get(extensionKey);
+                        if (value) {
+                            contributorMap.set(extensionKey, value + 1);
+                        } else {
+                            contributorMap.set(extensionKey, 1);
+                        }
                     }
                 }
             }
@@ -200,7 +218,7 @@ export default class FileService {
             return Array.from(map.entries()).map(([extension, count]) => {
                 return {
                     extension,
-                    count,
+                    count: Number(count),
                 };
             });
         }
@@ -210,12 +228,18 @@ export default class FileService {
             perContributor: Array.from(
                 mapContributorToMapExtensionToCount.entries()
             ).reduce((finalArray, [id, contributorMap]) => {
-                const contributor = changesCounts.find(
-                    (commitAndStuff) => commitAndStuff.contributor.id === id
-                )?.contributor;
+                const contributor = fileChanges.find(
+                    (commitAndStuff) =>
+                        commitAndStuff.commit.contributor.id === id
+                )?.commit.contributor;
                 if (contributor) {
                     finalArray.push({
-                        contributor,
+                        contributor: {
+                            id: Number(contributor.id),
+                            githubName: contributor.githubName,
+                            githubLogin: contributor.githubLogin,
+                            githubAvatarUrl: contributor.githubAvatarUrl,
+                        },
                         fileTypes: mapToArrayOfObjects(contributorMap),
                     });
                 }

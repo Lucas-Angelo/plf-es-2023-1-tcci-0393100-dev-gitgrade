@@ -4,6 +4,7 @@ import { repositoryTestingSeed } from "../seed/repository";
 import {
     CommitMetricsDTO,
     CommitQualityMetricsDTO,
+    FileTypeMetricsDTO,
     IssueMetricsDTO,
 } from "@gitgrade/dtos";
 import { contributorTestingSeed } from "../seed/contributor";
@@ -461,5 +462,127 @@ describe("GET /repository/:id/metric/issues", () => {
 
         expect(contributor2?.assignedIssuesCount).toBe(3);
         expect(contributor2?.authoredIssuesCount).toBe(1);
+    });
+});
+
+describe("GET /repository/:id/metric/file-types", () => {
+    it("should return 422 when search param startedAt is not a date", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/file-types?startedAt=abc`
+            )
+            .expect(422)
+            .send();
+
+        expect(response.body.details?.["query.startedAt"]?.message).toBe(
+            "startedAt must be a valid date"
+        );
+    });
+
+    it("should return 422 when search param endedAt is not a date", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/file-types?endedAt=abc`
+            )
+            .expect(422)
+            .send();
+
+        expect(response.body.details?.["query.endedAt"]?.message).toBe(
+            "endedAt must be a valid date"
+        );
+    });
+
+    it("should return 422 when search param startedAt is greater than endedAt", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/file-types?startedAt=2021-01-01&endedAt=2020-01-01`
+            )
+            .expect(422)
+            .send();
+
+        expect(response.body.details?.["query.startedAt"]?.message).toBe(
+            "startedAt must be less than or equal to endedAt"
+        );
+        expect(response.body.details?.["query.endedAt"]?.message).toBe(
+            "endedAt must be greater than or equal to startedAt"
+        );
+        expect(response.body.message).toBe("Invalid date interval");
+    });
+
+    it("should return 404 when repository does not exist", async () => {
+        const response = await supertest(app)
+            .get("/repository/999/metric/file-types")
+            .expect(404)
+            .send();
+
+        expect(response.body.message).toBe("Repository not found");
+    });
+
+    it("should return 200 when missing params, and default to startedAt = project's createdAt and endedAt = now", async () => {
+        const response = await supertest(app)
+            .get(`/repository/${repositoryTestingSeed[0].id}/metric/file-types`)
+            .expect(200)
+            .send();
+
+        const body: FileTypeMetricsDTO = response.body;
+        const contributorsIds = body.perContributor.map(
+            (item) => item.contributor.id
+        );
+
+        expect(body.general).toHaveLength(3);
+        expect(body.general).toContainEqual({
+            count: 3,
+            extension: "ts",
+        });
+        expect(body.general).toContainEqual({
+            count: 2,
+            extension: "html",
+        });
+        expect(body.general).toContainEqual({
+            count: 1,
+            extension: "css",
+        });
+
+        expect(body.perContributor).toHaveLength(3);
+
+        expect(contributorsIds).toContainEqual(contributorTestingSeed[0].id);
+        expect(contributorsIds).toContainEqual(contributorTestingSeed[1].id);
+        expect(contributorsIds).toContainEqual(contributorTestingSeed[2].id);
+
+        const contributor1 = body.perContributor.find(
+            (item) => item.contributor.id === contributorTestingSeed[0].id
+        );
+        const contributor2 = body.perContributor.find(
+            (item) => item.contributor.id === contributorTestingSeed[1].id
+        );
+        const contributor3 = body.perContributor.find(
+            (item) => item.contributor.id === contributorTestingSeed[2].id
+        );
+
+        expect(contributor1?.fileTypes).toHaveLength(1);
+        expect(contributor1?.fileTypes).toContainEqual({
+            count: 2,
+            extension: "ts",
+        });
+
+        expect(contributor2?.fileTypes).toHaveLength(1);
+        expect(contributor2?.fileTypes).toContainEqual({
+            count: 1,
+            extension: "ts",
+        });
+
+        expect(contributor3?.fileTypes).toHaveLength(3);
+        expect(contributor3?.fileTypes).toContainEqual({
+            count: 2,
+            extension: "ts",
+        });
+        expect(contributor3?.fileTypes).toContainEqual({
+            count: 2,
+            extension: "html",
+        });
+        expect(contributor3?.fileTypes).toContainEqual({
+            count: 1,
+            extension: "css",
+        });
     });
 });
