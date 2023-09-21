@@ -22,7 +22,7 @@ export default class IssueService {
             ],
         };
         const issuesWithAuthorContributor = await Issue.findAll({
-            attributes: ["githubCreatedAt", "githubClosedAt"],
+            attributes: ["githubCreatedAt", "githubClosedAt", "id"],
             where: {
                 [sequelize.Op.or]: [
                     {

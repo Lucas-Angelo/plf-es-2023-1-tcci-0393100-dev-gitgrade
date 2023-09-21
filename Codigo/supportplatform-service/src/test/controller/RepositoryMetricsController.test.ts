@@ -1,7 +1,11 @@
 import supertest from "supertest";
 import app from "../..";
 import { repositoryTestingSeed } from "../seed/repository";
-import { CommitMetricsDTO, CommitQualityMetricsDTO } from "@gitgrade/dtos";
+import {
+    CommitMetricsDTO,
+    CommitQualityMetricsDTO,
+    IssueMetricsDTO,
+} from "@gitgrade/dtos";
 import { contributorTestingSeed } from "../seed/contributor";
 import Database from "../../database";
 
@@ -370,5 +374,92 @@ describe("GET /repository/:id/metric/commit-quality", () => {
                 qualityLevelCount: 1,
             },
         ]);
+    });
+});
+
+describe("GET /repository/:id/metric/issues", () => {
+    it("should return 422 when search param startedAt is not a date", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/issues?startedAt=abc`
+            )
+            .expect(422)
+            .send();
+
+        expect(response.body.details?.["query.startedAt"]?.message).toBe(
+            "startedAt must be a valid date"
+        );
+    });
+
+    it("should return 422 when search param endedAt is not a date", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/issues?endedAt=abc`
+            )
+            .expect(422)
+            .send();
+
+        expect(response.body.details?.["query.endedAt"]?.message).toBe(
+            "endedAt must be a valid date"
+        );
+    });
+
+    it("should return 422 when search param startedAt is greater than endedAt", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/issues?startedAt=2021-01-01&endedAt=2020-01-01`
+            )
+            .expect(422)
+            .send();
+
+        expect(response.body.details?.["query.startedAt"]?.message).toBe(
+            "startedAt must be less than or equal to endedAt"
+        );
+        expect(response.body.details?.["query.endedAt"]?.message).toBe(
+            "endedAt must be greater than or equal to startedAt"
+        );
+        expect(response.body.message).toBe("Invalid date interval");
+    });
+
+    it("should return 404 when repository does not exist", async () => {
+        const response = await supertest(app)
+            .get("/repository/999/metric/issues")
+            .expect(404)
+            .send();
+
+        expect(response.body.message).toBe("Repository not found");
+    });
+
+    it("should return 200 when missing params, and default to startedAt = project's createdAt and endedAt = now", async () => {
+        const response = await supertest(app)
+            .get(`/repository/${repositoryTestingSeed[3].id}/metric/issues`)
+            .expect(200)
+            .send();
+
+        const body: IssueMetricsDTO = response.body;
+        const contributorsIds = body.issueDataPerContributor.map(
+            (item) => item.contributor.id
+        );
+
+        expect(body.issuesOpennedCount).toBe(5);
+        expect(body.issuesClosedCount).toBe(1);
+
+        expect(body.issueDataPerContributor).toHaveLength(2);
+
+        expect(contributorsIds).toContain(contributorTestingSeed[0].id);
+        expect(contributorsIds).toContain(contributorTestingSeed[1].id);
+
+        const contributor1 = body.issueDataPerContributor.find(
+            (item) => item.contributor.id === contributorTestingSeed[0].id
+        );
+        const contributor2 = body.issueDataPerContributor.find(
+            (item) => item.contributor.id === contributorTestingSeed[1].id
+        );
+
+        expect(contributor1?.assignedIssuesCount).toBe(2);
+        expect(contributor1?.authoredIssuesCount).toBe(3);
+
+        expect(contributor2?.assignedIssuesCount).toBe(3);
+        expect(contributor2?.authoredIssuesCount).toBe(1);
     });
 });
