@@ -113,6 +113,13 @@ const branchTestingSeed = [
         commitAutomaticSynchronization: false,
         fileAutomaticSynchronization: false,
     },
+    {
+        id: 17,
+        name: "main",
+        repositoryId: repositoryTestingSeed[3].id,
+        commitAutomaticSynchronization: true,
+        fileAutomaticSynchronization: true,
+    },
 ];
 
 export { branchTestingSeed };

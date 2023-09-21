@@ -66,6 +66,15 @@ const repositoryHasContributorSeed = [
         repositoryId: repositoryTestingSeed[2].id,
         contributorId: contributorTestingSeed[11].id,
     },
+
+    {
+        repositoryId: repositoryTestingSeed[3].id,
+        contributorId: contributorTestingSeed[0].id,
+    },
+    {
+        repositoryId: repositoryTestingSeed[3].id,
+        contributorId: contributorTestingSeed[1].id,
+    },
 ];
 
 export { repositoryHasContributorSeed };

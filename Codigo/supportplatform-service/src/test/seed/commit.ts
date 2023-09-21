@@ -74,6 +74,98 @@ const commitTestingSeed = [
         message: "message4",
         committedDate: new Date("2023-02-07T12:00:00-03:00"),
     },
+
+    {
+        id: 10,
+        branchId: branchTestingSeed[16].id,
+        contributorId: contributorTestingSeed[0].id,
+        sha: "el-sha1",
+        message: "awful",
+        committedDate: new Date("2023-01-10T02:01:00-03:00"),
+    },
+    {
+        id: 11,
+        branchId: branchTestingSeed[16].id,
+        contributorId: contributorTestingSeed[0].id,
+        sha: "el-sha2",
+        message: "bad commit message",
+        committedDate: new Date("2023-02-03T15:52:12-03:00"),
+    },
+    {
+        id: 12,
+        branchId: branchTestingSeed[16].id,
+        contributorId: contributorTestingSeed[1].id,
+        sha: "el-sha3",
+        message: "regular commit message ( > 20 < 40)",
+        committedDate: new Date("2023-02-04T23:12:00-03:00"),
+    },
+    {
+        id: 13,
+        branchId: branchTestingSeed[16].id,
+        contributorId: contributorTestingSeed[0].id,
+        sha: "el-sha4",
+        message: "another regular commit message",
+        committedDate: new Date("2023-02-07T12:00:00-03:00"),
+    },
+    {
+        id: 14,
+        branchId: branchTestingSeed[16].id,
+        contributorId: contributorTestingSeed[0].id,
+        sha: "el-sha5",
+        message: "another regular commit message",
+        committedDate: new Date("2023-03-01T12:00:00-03:00"),
+    },
+    {
+        id: 15,
+        branchId: branchTestingSeed[16].id,
+        contributorId: contributorTestingSeed[0].id,
+        sha: "el-sha6",
+        message: "an ideal commit message with more than 40 caracteres",
+        committedDate: new Date("2023-03-01T12:00:00-03:00"),
+    },
+    {
+        id: 16,
+        branchId: branchTestingSeed[16].id,
+        contributorId: contributorTestingSeed[1].id,
+        sha: "el-sha7",
+        message: "an ideal commit message with more than 40 caracteres",
+        committedDate: new Date("2023-03-01T12:00:00-03:00"),
+    },
+    {
+        id: 17,
+        branchId: branchTestingSeed[16].id,
+        contributorId: contributorTestingSeed[0].id,
+        sha: "el-sha8",
+        message:
+            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean ma",
+        committedDate: new Date("2023-03-01T12:00:00-03:00"),
+    },
+    {
+        id: 18,
+        branchId: branchTestingSeed[16].id,
+        contributorId: contributorTestingSeed[0].id,
+        sha: "el-sha9",
+        message:
+            "Merge branch 'master' of https://github.com/icei-pucminas/plf-es-2020-2-tiiv-8499100-conectivo into master",
+        committedDate: new Date("2023-03-01T12:00:00-03:00"),
+    },
+    {
+        id: 19,
+        branchId: branchTestingSeed[16].id,
+        contributorId: contributorTestingSeed[1].id,
+        sha: "el-sha10",
+        message:
+            "Merge remote-tracking branch 'refs/remotes/origin/frontPages&Changes",
+        committedDate: new Date("2023-03-01T12:00:00-03:00"),
+    },
+    {
+        id: 20,
+        branchId: branchTestingSeed[16].id,
+        contributorId: contributorTestingSeed[1].id,
+        sha: "el-sha11",
+        message: "Merge pull request #4 from rafaelbotazini/authentication",
+        committedDate: new Date("2023-03-01T12:00:00-03:00"),
+    },
 ];
 
 export { commitTestingSeed };

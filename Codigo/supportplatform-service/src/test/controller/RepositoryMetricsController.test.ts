@@ -1,7 +1,7 @@
 import supertest from "supertest";
 import app from "../..";
 import { repositoryTestingSeed } from "../seed/repository";
-import { CommitMetricsDTO } from "@gitgrade/dtos";
+import { CommitMetricsDTO, CommitQualityMetricsDTO } from "@gitgrade/dtos";
 import { contributorTestingSeed } from "../seed/contributor";
 import Database from "../../database";
 
@@ -250,5 +250,125 @@ describe("GET /repository/:id/metric/commit", () => {
 
         expect(contributor2?.commtiPercentage).toBe(50);
         expect(contributor3?.commtiPercentage).toBe(50);
+    });
+});
+
+describe("GET /repository/:id/metric/commit-quality", () => {
+    it("should return 422 when search param startedAt is not a date", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/commit-quality?startedAt=abc`
+            )
+            .expect(422)
+            .send();
+
+        expect(response.body.details?.["query.startedAt"]?.message).toBe(
+            "startedAt must be a valid date"
+        );
+    });
+
+    it("should return 422 when search param endedAt is not a date", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/commit-quality?endedAt=abc`
+            )
+            .expect(422)
+            .send();
+
+        expect(response.body.details?.["query.endedAt"]?.message).toBe(
+            "endedAt must be a valid date"
+        );
+    });
+
+    it("should return 422 when search param startedAt is greater than endedAt", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/commit-quality?startedAt=2021-01-01&endedAt=2020-01-01`
+            )
+            .expect(422)
+            .send();
+
+        expect(response.body.details?.["query.startedAt"]?.message).toBe(
+            "startedAt must be less than or equal to endedAt"
+        );
+        expect(response.body.details?.["query.endedAt"]?.message).toBe(
+            "endedAt must be greater than or equal to startedAt"
+        );
+        expect(response.body.message).toBe("Invalid date interval");
+    });
+
+    it("should return 404 when repository does not exist", async () => {
+        const response = await supertest(app)
+            .get("/repository/999/metric/commit-quality")
+            .expect(404)
+            .send();
+
+        expect(response.body.message).toBe("Repository not found");
+    });
+
+    it("should return 200 when missing params, and default to startedAt = project's createdAt, endedAt = now and branch = project's default", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[3].id}/metric/commit-quality`
+            )
+            .expect(200)
+            .send();
+
+        const body: CommitQualityMetricsDTO = response.body;
+        const contributorsIds = body.commitQualityPerContributor.map(
+            (item) => item.contributor.id
+        );
+
+        expect(body.generalCommitQualityLevel[0].qualityLevelCount).toBe(1);
+        expect(body.generalCommitQualityLevel[1].qualityLevelCount).toBe(1);
+        expect(body.generalCommitQualityLevel[2].qualityLevelCount).toBe(3);
+        expect(body.generalCommitQualityLevel[3].qualityLevelCount).toBe(2);
+        expect(body.generalCommitQualityLevel[4].qualityLevelCount).toBe(1);
+
+        expect(body.commitQualityPerContributor).toHaveLength(2);
+
+        expect(contributorsIds).toContain(contributorTestingSeed[0].id);
+        expect(contributorsIds).toContain(contributorTestingSeed[1].id);
+
+        const contributor1 = body.commitQualityPerContributor.find(
+            (item) => item.contributor.id === contributorTestingSeed[0].id
+        );
+        const contributor2 = body.commitQualityPerContributor.find(
+            (item) => item.contributor.id === contributorTestingSeed[1].id
+        );
+
+        expect(contributor1?.commitQualityLevel).toStrictEqual([
+            {
+                qualityLevel: 0,
+                qualityLevelCount: 1,
+            },
+            {
+                qualityLevel: 1,
+                qualityLevelCount: 1,
+            },
+            {
+                qualityLevel: 2,
+                qualityLevelCount: 2,
+            },
+            {
+                qualityLevel: 3,
+                qualityLevelCount: 1,
+            },
+            {
+                qualityLevel: 4,
+                qualityLevelCount: 1,
+            },
+        ]);
+
+        expect(contributor2?.commitQualityLevel).toStrictEqual([
+            {
+                qualityLevel: 2,
+                qualityLevelCount: 1,
+            },
+            {
+                qualityLevel: 3,
+                qualityLevelCount: 1,
+            },
+        ]);
     });
 });

@@ -155,7 +155,7 @@ export default class CommitService {
                             [Op.notLike]: "Merge branch %",
                         },
                         {
-                            [Op.notLike]: "Merge remote tracking branch %",
+                            [Op.notLike]: "Merge remote-tracking branch %",
                         },
                         {
                             [Op.notLike]: "Merge pull request #%",
