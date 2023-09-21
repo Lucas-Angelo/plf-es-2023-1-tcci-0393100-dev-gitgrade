@@ -1,5 +1,9 @@
 import { Box, SegmentedControl } from "@primer/react";
-import { PlusIcon, DashIcon } from "@primer/octicons-react";
+import {
+    DiffAddedIcon,
+    DiffRemovedIcon,
+    DiffModifiedIcon,
+} from "@primer/octicons-react";
 import SegmentedButtonLink from "../../../../../../../commom/components/segmentedControlLink";
 import appRoutes from "../../../../../../../commom/routes/appRoutes";
 import { useSearchParamsString } from "../../../../../../../commom/hooks/useRemainingSearchParams";
@@ -13,7 +17,7 @@ export default function LinesOfCodeMetricsVisualizerControl() {
                 aria-describedby="scCaption-horiz"
             >
                 <SegmentedButtonLink
-                    leadingIcon={PlusIcon}
+                    leadingIcon={DiffAddedIcon}
                     to={appRoutes.repo[
                         ":id"
                     ].metrics.linesOfCode.addtions.path.concat(
@@ -23,7 +27,7 @@ export default function LinesOfCodeMetricsVisualizerControl() {
                     Adições
                 </SegmentedButtonLink>
                 <SegmentedButtonLink
-                    leadingIcon={DashIcon}
+                    leadingIcon={DiffRemovedIcon}
                     to={appRoutes.repo[
                         ":id"
                     ].metrics.linesOfCode.deletions.path.concat(
@@ -31,6 +35,16 @@ export default function LinesOfCodeMetricsVisualizerControl() {
                     )}
                 >
                     Remoções
+                </SegmentedButtonLink>
+                <SegmentedButtonLink
+                    leadingIcon={DiffModifiedIcon}
+                    to={appRoutes.repo[
+                        ":id"
+                    ].metrics.linesOfCode.relative.path.concat(
+                        searchParamsString
+                    )}
+                >
+                    Relativo
                 </SegmentedButtonLink>
             </SegmentedControl>
         </Box>

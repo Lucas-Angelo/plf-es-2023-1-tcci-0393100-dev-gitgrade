@@ -132,6 +132,17 @@ const routes = createRoutesFromElements(
                                     }
                                 />
                                 <Route
+                                    path={
+                                        appRoutes.repo[":id"].metrics
+                                            .linesOfCode.relative.path
+                                    }
+                                    lazy={() =>
+                                        import(
+                                            "../../pages/repo/detail/metrics/lines/relative/index"
+                                        )
+                                    }
+                                />
+                                <Route
                                     path=""
                                     element={
                                         <NavigateMaintainingSearchParams

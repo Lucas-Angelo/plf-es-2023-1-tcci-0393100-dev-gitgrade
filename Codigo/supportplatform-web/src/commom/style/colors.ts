@@ -18,3 +18,8 @@ export const chartColors = [
 export function getChartColor(index: number) {
     return chartColors[index % chartColors.length];
 }
+
+export const fileChangeColors = {
+    additions: "#34D058", // green-400
+    deletions: "#EA4A5A", // red-400
+};

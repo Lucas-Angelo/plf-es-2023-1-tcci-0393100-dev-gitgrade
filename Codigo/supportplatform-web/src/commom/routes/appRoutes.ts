@@ -105,6 +105,14 @@ const appRoutes = {
                             ].metrics.linesOfCode.link(id)}/${this.path}`;
                         },
                     },
+                    relative: {
+                        path: "relative" as const,
+                        link(id: number) {
+                            return `${appRoutes.repo[
+                                ":id"
+                            ].metrics.linesOfCode.link(id)}/${this.path}`;
+                        },
+                    },
                 },
                 fileContributions: {
                     path: "file-contributions" as const,
