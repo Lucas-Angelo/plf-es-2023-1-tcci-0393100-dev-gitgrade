@@ -41,6 +41,16 @@ export default class FileService {
                     ),
                     "deletionsSum",
                 ],
+                [
+                    sequelize.fn(
+                        "COUNT",
+                        sequelize.fn(
+                            "DISTINCT",
+                            sequelize.col("commits.files.path")
+                        )
+                    ),
+                    "fileCount",
+                ],
             ],
             include: [
                 {
@@ -74,6 +84,7 @@ export default class FileService {
                             model: File,
                             as: "files",
                             attributes: [],
+                            required: true,
                         },
                     ],
                 },
@@ -96,10 +107,45 @@ export default class FileService {
             { totalAdditions: 0, totalDeletions: 0 }
         );
 
+        const countAllResponse = await File.count({
+            group: ["path"],
+            include: [
+                {
+                    model: Commit,
+                    required: true,
+                    as: "commit",
+                    where: {
+                        committedDate: {
+                            [sequelize.Op.between]: [
+                                getDateInDayStart(
+                                    getDateInServerTimeZone(startedAt)
+                                ),
+                                getDateInDayEnd(
+                                    getDateInServerTimeZone(endedAt)
+                                ),
+                            ],
+                        },
+                    },
+                    include: [
+                        {
+                            model: Branch,
+                            where: {
+                                repositoryId,
+                                name: branchName,
+                            },
+                            as: "branch",
+                            attributes: [],
+                        },
+                    ],
+                },
+            ],
+        });
+
         const response: FileChangeMetricsServiceResponse = {
             totalAdditions,
             totalDeletions,
             results: dataValues,
+            fileCount: countAllResponse.length,
         };
 
         return response;

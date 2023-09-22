@@ -1,6 +1,7 @@
 export interface FileChangeMetricsDTO {
     totalAdditions: number,
     totalDeletions: number,
+    fileCount: number,
     fileChangesPerContributor: Array<{
         contribuitor: {
             id: number,
@@ -15,7 +16,8 @@ export interface FileChangeMetricsDTO {
         deletions: {
             sum: number,
             percentage: number,
-        }
+        },
+        fileCount: number,
     }>
 }
 

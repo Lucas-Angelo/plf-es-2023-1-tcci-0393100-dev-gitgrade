@@ -2,7 +2,7 @@ import { FileChangeMetricsDTO, FileTypeMetricsDTO } from "@gitgrade/dtos";
 import api from "../config/api";
 
 export default class FileService {
-    async getLinesOfCodeGroupedByContributorByRepositoryIdQuery(
+    async getFileChangesGroupedByContributorByRepositoryIdQuery(
         repositoryId: number,
         query?: {
             branchName?: string;

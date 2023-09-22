@@ -160,7 +160,11 @@ const routes = createRoutesFromElements(
                                     appRoutes.repo[":id"].metrics
                                         .fileContributions.path
                                 }
-                                element={<>fileContributions</>}
+                                lazy={() =>
+                                    import(
+                                        "../../pages/repo/detail/metrics/fileContributions/index"
+                                    )
+                                }
                             />
                             <Route
                                 path={

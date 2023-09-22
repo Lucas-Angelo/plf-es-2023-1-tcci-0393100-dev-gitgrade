@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import FileService from "../../../../service/api/file";
 
-export const getLinesOfCodeMetricsGroupedByContributorByRepositoryIdQuery = (
+export const getFileChangesMetricsGroupedByContributorByRepositoryIdQuery = (
     id: number,
     params?: {
         branchName?: string;
@@ -14,12 +14,12 @@ export const getLinesOfCodeMetricsGroupedByContributorByRepositoryIdQuery = (
         : ["repo", id, "metrics", "linesOfCode"],
     queryFn: async () =>
         new FileService()
-            .getLinesOfCodeGroupedByContributorByRepositoryIdQuery(id, params)
+            .getFileChangesGroupedByContributorByRepositoryIdQuery(id, params)
             .then((res) => res.data),
     staleTime: Number.MAX_VALUE,
 });
 
-export const useLinesOfCodeMetricsGroupedByContributorByRepositoryId = (
+export const useFileChangesMetricsGroupedByContributorByRepositoryId = (
     id: number,
     params?: {
         branchName?: string;
@@ -28,5 +28,5 @@ export const useLinesOfCodeMetricsGroupedByContributorByRepositoryId = (
     }
 ) =>
     useQuery(
-        getLinesOfCodeMetricsGroupedByContributorByRepositoryIdQuery(id, params)
+        getFileChangesMetricsGroupedByContributorByRepositoryIdQuery(id, params)
     );

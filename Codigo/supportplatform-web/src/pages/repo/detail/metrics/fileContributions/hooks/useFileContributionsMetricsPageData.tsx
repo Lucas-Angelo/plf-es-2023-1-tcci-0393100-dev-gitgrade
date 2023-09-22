@@ -8,7 +8,7 @@ type PageRouteParams = (typeof pageRouteParams)[number];
 
 const pageRouteSearchParams = appRoutes.repo[":id"].metrics.search;
 
-export function useLinesOfCodeMetricsPageData() {
+export function useFileContributionsMetricsPageData() {
     const params = useParams<PageRouteParams>();
     const id = Number(params.id);
     const [searchParams] = useSearchParams();

@@ -8,7 +8,9 @@ export class FileChangeMetricsMapper {
         return {
             totalAdditions: serviceResponse.totalAdditions,
             totalDeletions: serviceResponse.totalDeletions,
+            fileCount: serviceResponse.fileCount,
             fileChangesPerContributor: serviceResponse.results.map((item) => ({
+                fileCount: Number(item.fileCount),
                 contribuitor: {
                     id: Number(item.id),
                     githubName: item.githubName,

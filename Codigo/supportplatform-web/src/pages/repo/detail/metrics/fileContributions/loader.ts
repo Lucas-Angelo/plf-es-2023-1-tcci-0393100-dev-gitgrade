@@ -5,7 +5,7 @@ import { getFileChangesMetricsGroupedByContributorByRepositoryIdQuery } from "..
 
 const pageRouteSearchParams = appRoutes.repo[":id"].metrics.search;
 
-export default function repositoryLinesOfCodeMetricsPageLoader({
+export default function repositoryFileContributionsMetricsPageLoader({
     params,
     request,
 }: LoaderFunctionArgs) {
