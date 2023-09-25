@@ -4,6 +4,7 @@ import { repositoryTestingSeed } from "../seed/repository";
 import {
     CommitMetricsDTO,
     CommitQualityMetricsDTO,
+    FileChangeMetricsDTO,
     FileTypeMetricsDTO,
     IssueMetricsDTO,
 } from "@gitgrade/dtos";
@@ -584,5 +585,103 @@ describe("GET /repository/:id/metric/file-types", () => {
             count: 1,
             extension: "css",
         });
+    });
+});
+
+describe("GET /repository/:id/metric/changes", () => {
+    it("should return 422 when search param startedAt is not a date", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/changes?startedAt=abc`
+            )
+            .expect(422)
+            .send();
+
+        expect(response.body.details?.["query.startedAt"]?.message).toBe(
+            "startedAt must be a valid date"
+        );
+    });
+
+    it("should return 422 when search param endedAt is not a date", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/changes?endedAt=abc`
+            )
+            .expect(422)
+            .send();
+
+        expect(response.body.details?.["query.endedAt"]?.message).toBe(
+            "endedAt must be a valid date"
+        );
+    });
+
+    it("should return 422 when search param startedAt is greater than endedAt", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/changes?startedAt=2021-01-01&endedAt=2020-01-01`
+            )
+            .expect(422)
+            .send();
+
+        expect(response.body.details?.["query.startedAt"]?.message).toBe(
+            "startedAt must be less than or equal to endedAt"
+        );
+        expect(response.body.details?.["query.endedAt"]?.message).toBe(
+            "endedAt must be greater than or equal to startedAt"
+        );
+        expect(response.body.message).toBe("Invalid date interval");
+    });
+
+    it("should return 404 when repository does not exist", async () => {
+        const response = await supertest(app)
+            .get("/repository/999/metric/changes")
+            .expect(404)
+            .send();
+
+        expect(response.body.message).toBe("Repository not found");
+    });
+
+    it("should return 200 when missing params, and default to startedAt = project's createdAt and endedAt = now", async () => {
+        const response = await supertest(app)
+            .get(`/repository/${repositoryTestingSeed[0].id}/metric/changes`)
+            .expect(200)
+            .send();
+
+        const body: FileChangeMetricsDTO = response.body;
+        const contributorsIds = body.fileChangesPerContributor.map(
+            (item) => item.contribuitor.id
+        );
+
+        expect(body.fileCount).toBe(6);
+        expect(body.totalAdditions).toBe(217);
+        expect(body.totalDeletions).toBe(37);
+
+        expect(body.fileChangesPerContributor).toHaveLength(3);
+
+        expect(contributorsIds).toContainEqual(contributorTestingSeed[0].id);
+        expect(contributorsIds).toContainEqual(contributorTestingSeed[1].id);
+        expect(contributorsIds).toContainEqual(contributorTestingSeed[2].id);
+
+        const contributor1 = body.fileChangesPerContributor.find(
+            (item) => item.contribuitor.id === contributorTestingSeed[0].id
+        );
+        const contributor2 = body.fileChangesPerContributor.find(
+            (item) => item.contribuitor.id === contributorTestingSeed[1].id
+        );
+        const contributor3 = body.fileChangesPerContributor.find(
+            (item) => item.contribuitor.id === contributorTestingSeed[2].id
+        );
+
+        expect(contributor1?.addtions.sum).toBe(112);
+        expect(contributor1?.deletions.sum).toBe(27);
+        expect(contributor1?.fileCount).toBe(2);
+
+        expect(contributor2?.addtions.sum).toBe(0);
+        expect(contributor2?.deletions.sum).toBe(5);
+        expect(contributor2?.fileCount).toBe(1);
+
+        expect(contributor3?.addtions.sum).toBe(105);
+        expect(contributor3?.deletions.sum).toBe(5);
+        expect(contributor3?.fileCount).toBe(5);
     });
 });

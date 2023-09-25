@@ -7,6 +7,7 @@ export const getFileChangesMetricsGroupedByContributorByRepositoryIdQuery = (
         branchName?: string;
         startedAt?: string;
         endedAt?: string;
+        contributors?: Array<string>;
     }
 ) => ({
     queryKey: params
@@ -25,6 +26,7 @@ export const useFileChangesMetricsGroupedByContributorByRepositoryId = (
         branchName?: string;
         startedAt?: string;
         endedAt?: string;
+        contributors?: Array<string>;
     }
 ) =>
     useQuery(

@@ -1,5 +1,4 @@
 import {
-    Avatar,
     Box,
     Button,
     Label,
@@ -20,12 +19,14 @@ import {
 import "./styles.css";
 import UnderlineNavItemLink from "../../../../../commom/components/underlineNavItemLink";
 import appRoutes from "../../../../../commom/routes/appRoutes";
+import ContributorAvatarLink from "../contributorAvatarLink";
 
 interface IRepoHeadProps {
     orgName: string;
     repoName: string;
     evaluationMethodName?: string;
     contributors?: Array<{
+        id: number;
         githubName?: string | null;
         githubLogin: string | null;
         githubAvatarUrl: string | null;
@@ -87,15 +88,11 @@ export default function RepoHead(props: IRepoHeadProps) {
                     }}
                 >
                     {props.contributors?.map((contributor) => (
-                        <Avatar
-                            src={contributor.githubAvatarUrl!}
-                            key={contributor.githubLogin}
-                            size={20}
-                            title={
-                                (contributor.githubName ||
-                                    contributor.githubLogin) ??
-                                "Sem nome"
-                            }
+                        <ContributorAvatarLink
+                            key={contributor.id}
+                            githubAvatarUrl={contributor.githubAvatarUrl}
+                            githubLogin={contributor.githubLogin}
+                            githubName={contributor.githubName}
                         />
                     ))}
                 </Box>

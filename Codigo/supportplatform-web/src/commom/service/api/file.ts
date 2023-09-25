@@ -8,12 +8,19 @@ export default class FileService {
             branchName?: string;
             startedAt?: string;
             endedAt?: string;
+            contributors?: Array<string>;
         }
     ) {
         const searchParams = new URLSearchParams();
         if (query?.branchName) searchParams.set("branchName", query.branchName);
         if (query?.startedAt) searchParams.set("startedAt", query.startedAt);
         if (query?.endedAt) searchParams.set("endedAt", query.endedAt);
+
+        if (query?.contributors) {
+            query.contributors.forEach((contributor) => {
+                searchParams.append("contributor", contributor);
+            });
+        }
 
         return api.get<FileChangeMetricsDTO>(
             `repository/${repositoryId}/metric/changes?${searchParams.toString()}`
@@ -26,12 +33,19 @@ export default class FileService {
             branchName?: string;
             startedAt?: string;
             endedAt?: string;
+            contributors?: Array<string>;
         }
     ) {
         const searchParams = new URLSearchParams();
         if (query?.branchName) searchParams.set("branchName", query.branchName);
         if (query?.startedAt) searchParams.set("startedAt", query.startedAt);
         if (query?.endedAt) searchParams.set("endedAt", query.endedAt);
+
+        if (query?.contributors) {
+            query.contributors.forEach((contributor) => {
+                searchParams.append("contributor", contributor);
+            });
+        }
 
         return api.get<FileTypeMetricsDTO>(
             `repository/${repositoryId}/metric/file-types?${searchParams.toString()}`

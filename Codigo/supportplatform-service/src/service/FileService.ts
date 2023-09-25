@@ -19,8 +19,12 @@ export default class FileService {
         repositoryId: number,
         branchName: string,
         startedAt: Date,
-        endedAt: Date
+        endedAt: Date,
+        contributors?: Array<string>
     ) {
+        const contributorWhere = contributors
+            ? { githubLogin: contributors }
+            : {};
         const changesCounts = await Contributor.findAll({
             attributes: [
                 "id",
@@ -90,6 +94,7 @@ export default class FileService {
                 },
             ],
             group: ["Contributor.id"],
+            where: contributorWhere,
         });
 
         const dataValues = changesCounts.map(
@@ -136,6 +141,12 @@ export default class FileService {
                             as: "branch",
                             attributes: [],
                         },
+                        {
+                            model: Contributor,
+                            required: true,
+                            as: "contributor",
+                            where: contributorWhere,
+                        },
                     ],
                 },
             ],
@@ -155,8 +166,12 @@ export default class FileService {
         repositoryId: number,
         branchName: string,
         startedAt: Date,
-        endedAt: Date
+        endedAt: Date,
+        contributors?: Array<string>
     ) {
+        const contributorWhere = contributors
+            ? { githubLogin: contributors }
+            : {};
         const fileChanges = await File.findAll({
             attributes: ["extension", "path", "commitId"],
             include: [
@@ -197,6 +212,7 @@ export default class FileService {
                                 "githubLogin",
                                 "githubAvatarUrl",
                             ],
+                            where: contributorWhere,
                         },
                     ],
                 },

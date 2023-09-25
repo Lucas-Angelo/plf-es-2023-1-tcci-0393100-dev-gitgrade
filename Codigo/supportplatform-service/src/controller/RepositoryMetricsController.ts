@@ -67,7 +67,8 @@ export class RepositoryMetricsController {
                 repositoryId,
                 branchName,
                 startedAt,
-                endedAt
+                endedAt,
+                query.contributor
             );
         return new CommitMetricsMapper().toDto(serviceResponse);
     }
@@ -109,7 +110,8 @@ export class RepositoryMetricsController {
                 repositoryId,
                 branchName,
                 startedAt,
-                endedAt
+                endedAt,
+                query.contributor
             );
         return new FileChangeMetricsMapper().toDto(serviceResponse);
     }
@@ -145,7 +147,8 @@ export class RepositoryMetricsController {
                 repositoryId,
                 branchName,
                 startedAt,
-                endedAt
+                endedAt,
+                query.contributor
             );
         return serviceResponse;
     }
@@ -178,7 +181,8 @@ export class RepositoryMetricsController {
             await this.issueService.getIssueMetricsGroupedByContributor(
                 repositoryId,
                 startedAt,
-                endedAt
+                endedAt,
+                query.contributor
             );
         return serviceResponse;
     }
@@ -220,7 +224,8 @@ export class RepositoryMetricsController {
                 repositoryId,
                 branchName,
                 startedAt,
-                endedAt
+                endedAt,
+                query.contributor
             );
         return new CommitQualityMetricsMapper().toDto(serviceResponse);
     }

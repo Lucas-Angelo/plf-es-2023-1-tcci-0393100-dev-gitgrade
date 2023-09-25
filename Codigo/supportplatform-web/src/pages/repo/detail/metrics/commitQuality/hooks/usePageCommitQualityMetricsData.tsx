@@ -20,6 +20,9 @@ export function usePageCommitQualityMetricsData() {
                 searchParams.get(pageRouteSearchParams.endedAt) ?? undefined,
             startedAt:
                 searchParams.get(pageRouteSearchParams.startedAt) ?? undefined,
+            contributors:
+                searchParams.getAll(pageRouteSearchParams.contributor) ??
+                undefined,
         });
 
     return issueMetricsData;

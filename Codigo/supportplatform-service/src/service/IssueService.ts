@@ -13,7 +13,8 @@ export default class IssueService {
     async getIssueMetricsGroupedByContributor(
         repositoryId: number,
         startedAt: Date,
-        endedAt: Date
+        endedAt: Date,
+        contributors?: Array<string>
     ) {
         const dateWhereClause = {
             [sequelize.Op.between]: [
@@ -21,6 +22,9 @@ export default class IssueService {
                 getDateInDayEnd(getDateInServerTimeZone(endedAt)),
             ],
         };
+        const contributorWhere = contributors
+            ? { githubLogin: contributors }
+            : {};
         const issuesWithAuthorContributor = await Issue.findAll({
             attributes: ["githubCreatedAt", "githubClosedAt", "id"],
             where: {
@@ -53,6 +57,7 @@ export default class IssueService {
                         "githubLogin",
                         "githubAvatarUrl",
                     ],
+                    where: contributorWhere,
                 },
             ],
         });
@@ -88,6 +93,7 @@ export default class IssueService {
                         "githubLogin",
                         "githubAvatarUrl",
                     ],
+                    where: contributorWhere,
                 },
             ],
         });

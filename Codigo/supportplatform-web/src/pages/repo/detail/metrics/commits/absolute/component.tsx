@@ -23,6 +23,9 @@ export default function RepositoryAbsoluteCommitMetricsPage() {
                 searchParams.get(pageRouteSearchParams.endedAt) ?? undefined,
             startedAt:
                 searchParams.get(pageRouteSearchParams.startedAt) ?? undefined,
+            contributors: searchParams.getAll(
+                pageRouteSearchParams.contributor
+            ),
         });
 
     return (

@@ -18,4 +18,5 @@ export interface IssueMetricQueryDTO {
   startedAt?: Date;
   /** @isDate endedAt must be a valid date */
   endedAt?: Date;
+  contributor?: Array<string>;
 }

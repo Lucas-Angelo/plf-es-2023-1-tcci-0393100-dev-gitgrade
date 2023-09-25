@@ -28,6 +28,9 @@ export default function repositoryLinesOfCodeMetricsPageLoader({
                 startedAt:
                     searchParams.get(pageRouteSearchParams.startedAt) ??
                     undefined,
+                contributors:
+                    searchParams.getAll(pageRouteSearchParams.contributor) ??
+                    undefined,
             }
         )
     );

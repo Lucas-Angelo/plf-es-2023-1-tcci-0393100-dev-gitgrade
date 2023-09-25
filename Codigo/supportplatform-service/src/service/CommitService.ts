@@ -20,8 +20,12 @@ export default class CommitService {
         repositoryId: number,
         branchName: string,
         startedAt: Date,
-        endedAt: Date
+        endedAt: Date,
+        contributors?: Array<string>
     ) {
+        const contributorWhere = contributors
+            ? { githubLogin: contributors }
+            : {};
         const commitCounts = await Contributor.findAll({
             attributes: [
                 "id",
@@ -64,6 +68,7 @@ export default class CommitService {
                     },
                 },
             ],
+            where: contributorWhere,
             group: ["Contributor.id"],
         });
 
@@ -86,7 +91,8 @@ export default class CommitService {
         repositoryId: number,
         branchName: string,
         startedAt: Date,
-        endedAt: Date
+        endedAt: Date,
+        contributors?: Array<string>
     ) {
         const qualityLevels = [
             {
@@ -115,6 +121,9 @@ export default class CommitService {
                 barrier: 100,
             },
         ];
+        const contributorWhere = contributors
+            ? { githubLogin: contributors }
+            : {};
 
         const firstLineLengthSequelizeLiteral =
             "LENGTH(SUBSTRING_INDEX(`Commit`.`message`, '\\n', 1))";
@@ -198,6 +207,7 @@ export default class CommitService {
                         "githubLogin",
                         "githubAvatarUrl",
                     ],
+                    where: contributorWhere,
                 },
             ],
 

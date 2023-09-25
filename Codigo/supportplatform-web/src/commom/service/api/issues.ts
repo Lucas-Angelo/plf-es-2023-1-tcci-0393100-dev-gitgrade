@@ -7,11 +7,18 @@ export class IssueService {
         query?: {
             startedAt?: string;
             endedAt?: string;
+            contributors?: Array<string>;
         }
     ) {
         const searchParams = new URLSearchParams();
         if (query?.startedAt) searchParams.set("startedAt", query.startedAt);
         if (query?.endedAt) searchParams.set("endedAt", query.endedAt);
+
+        if (query?.contributors) {
+            query.contributors.forEach((contributor) => {
+                searchParams.append("contributor", contributor);
+            });
+        }
 
         return api.get<IssueMetricsDTO>(
             `repository/${repositoryId}/metric/issues?${searchParams.toString()}`

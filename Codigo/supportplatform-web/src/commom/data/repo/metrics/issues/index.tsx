@@ -6,6 +6,7 @@ export const getIssuesMetricsGroupedByContributorByRepositoryIdQuery = (
     params?: {
         startedAt?: string;
         endedAt?: string;
+        contributors?: Array<string>;
     }
 ) => ({
     queryKey: params
@@ -23,6 +24,7 @@ export const useIssuesMetricsGroupedByContributorByRepositoryId = (
     params?: {
         startedAt?: string;
         endedAt?: string;
+        contributors?: Array<string>;
     }
 ) =>
     useQuery(

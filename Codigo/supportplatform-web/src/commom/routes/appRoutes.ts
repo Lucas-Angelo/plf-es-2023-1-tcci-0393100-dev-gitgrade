@@ -43,6 +43,7 @@ const appRoutes = {
                     branch: "branch",
                     startedAt: "startedAt",
                     endedAt: "endedAt",
+                    contributor: "contributor",
                 },
 
                 // nested routes

@@ -269,6 +269,12 @@
 					},
 					"branchName": {
 						"type": "string"
+					},
+					"contributor": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
 					}
 				},
 				"type": "object",
@@ -283,6 +289,12 @@
 					"endedAt": {
 						"type": "string",
 						"format": "date"
+					},
+					"contributor": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
 					}
 				},
 				"type": "object",
@@ -688,6 +700,17 @@
 						"schema": {
 							"type": "string"
 						}
+					},
+					{
+						"in": "query",
+						"name": "contributor",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
 					}
 				]
 			}
@@ -765,6 +788,17 @@
 						"schema": {
 							"type": "string"
 						}
+					},
+					{
+						"in": "query",
+						"name": "contributor",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
 					}
 				]
 			}
@@ -841,6 +875,17 @@
 						"schema": {
 							"type": "string"
 						}
+					},
+					{
+						"in": "query",
+						"name": "contributor",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
 					}
 				]
 			}
@@ -908,6 +953,17 @@
 						"schema": {
 							"format": "date",
 							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "contributor",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
 						}
 					}
 				]
@@ -987,6 +1043,17 @@
 						"required": false,
 						"schema": {
 							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "contributor",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
 						}
 					}
 				]
