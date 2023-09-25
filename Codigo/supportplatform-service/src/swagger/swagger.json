@@ -61,6 +61,153 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"EvaluationMethodResponseDTO": {
+				"description": "EvaluationMethodResponseDTO - Could be used to structure the response object when sending EvaluationMethods to the client.",
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"description": {
+						"type": "string"
+					},
+					"semester": {
+						"type": "number",
+						"format": "double"
+					},
+					"year": {
+						"type": "number",
+						"format": "double"
+					},
+					"disabledAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					}
+				},
+				"required": [
+					"id",
+					"description",
+					"semester",
+					"year"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"EvaluationMethodCreateDTO": {
+				"description": "EvaluationMethodCreateDTO - Used for creating a new EvaluationMethod.",
+				"properties": {
+					"description": {
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 255
+					},
+					"semester": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"year": {
+						"type": "integer",
+						"format": "int32"
+					}
+				},
+				"required": [
+					"description",
+					"semester",
+					"year"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"EvaluationMethodUpdateDTO": {
+				"description": "EvaluationMethodUpdateDTO - Used for updating an existing EvaluationMethod.",
+				"properties": {
+					"description": {
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 255
+					},
+					"semester": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"year": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"disabledAt": {
+						"type": "string",
+						"format": "date",
+						"nullable": true
+					}
+				},
+				"required": [
+					"description",
+					"semester",
+					"year",
+					"disabledAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PaginationResponseDTO_EvaluationMethodResponseDTO_": {
+				"properties": {
+					"results": {
+						"items": {
+							"$ref": "#/components/schemas/EvaluationMethodResponseDTO"
+						},
+						"type": "array"
+					},
+					"totalPages": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"results",
+					"totalPages"
+				],
+				"type": "object"
+			},
+			"EvaluationMethodSearchDTO": {
+				"description": "EvaluationMethodSearchDTO - Used for searching through EvaluationMethods with pagination and filters.",
+				"properties": {
+					"page": {
+						"type": "integer",
+						"format": "int32",
+						"default": "1",
+						"minimum": 1
+					},
+					"limit": {
+						"type": "integer",
+						"format": "int32",
+						"default": "10",
+						"minimum": 1
+					},
+					"description": {
+						"type": "string"
+					},
+					"semester": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"year": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"disabledAt": {
+						"type": "string",
+						"format": "date",
+						"nullable": true
+					},
+					"forceDisabled": {
+						"type": "boolean",
+						"default": "false"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"RepositoryDTO": {
 				"properties": {
 					"id": {
@@ -68,20 +215,12 @@
 						"format": "double"
 					},
 					"evaluationMethod": {
-						"properties": {
-							"name": {
-								"type": "string"
-							},
-							"id": {
-								"type": "number",
-								"format": "double"
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/EvaluationMethodResponseDTO"
 							}
-						},
-						"required": [
-							"name",
-							"id"
 						],
-						"type": "object"
+						"nullable": true
 					},
 					"githubId": {
 						"type": "string"
@@ -193,6 +332,22 @@
 					},
 					"filter": {
 						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RepositoryPatchDTO": {
+				"description": "RepositoryPatchDTO - Used for updating a Repository.",
+				"properties": {
+					"evaluationMethodId": {
+						"type": "integer",
+						"format": "int32",
+						"nullable": true,
+						"minimum": 1
+					},
+					"automaticSynchronization": {
+						"type": "boolean"
 					}
 				},
 				"type": "object",
@@ -385,9 +540,161 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"SprintResponseDTO": {
+				"description": "SprintResponseDTO - Could be used to structure the response object when sending Sprints to the client.",
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"name": {
+						"type": "string"
+					},
+					"start_date": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"end_date": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"evaluationMethodId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"start_date",
+					"end_date",
+					"evaluationMethodId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SprintCreateDTO": {
+				"description": "SprintCreateDTO - Used for creating a new Sprint.",
+				"properties": {
+					"name": {
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 255
+					},
+					"start_date": {
+						"type": "string",
+						"format": "date"
+					},
+					"end_date": {
+						"type": "string",
+						"format": "date"
+					},
+					"evaluationMethodId": {
+						"type": "integer",
+						"format": "int32"
+					}
+				},
+				"required": [
+					"name",
+					"start_date",
+					"end_date",
+					"evaluationMethodId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SprintUpdateDTO": {
+				"description": "SprintUpdateDTO - Used for updating an existing Sprint.",
+				"properties": {
+					"name": {
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 255
+					},
+					"start_date": {
+						"type": "string",
+						"format": "date"
+					},
+					"end_date": {
+						"type": "string",
+						"format": "date"
+					},
+					"evaluationMethodId": {
+						"type": "integer",
+						"format": "int32"
+					}
+				},
+				"required": [
+					"name",
+					"start_date",
+					"end_date",
+					"evaluationMethodId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PaginationResponseDTO_SprintResponseDTO_": {
+				"properties": {
+					"results": {
+						"items": {
+							"$ref": "#/components/schemas/SprintResponseDTO"
+						},
+						"type": "array"
+					},
+					"totalPages": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"results",
+					"totalPages"
+				],
+				"type": "object"
+			},
+			"SprintSearchDTO": {
+				"description": "SprintSearchDTO - Used for searching through Sprints with pagination and filters.",
+				"properties": {
+					"page": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"limit": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"name": {
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 255
+					},
+					"start_date": {
+						"type": "string",
+						"format": "date"
+					},
+					"end_date": {
+						"type": "string",
+						"format": "date"
+					},
+					"evaluationMethodId": {
+						"type": "integer",
+						"format": "int32"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
-		"securitySchemes": {}
+		"securitySchemes": {
+			"bearer": {
+				"type": "apiKey",
+				"name": "Authorization",
+				"in": "header"
+			}
+		}
 	},
 	"info": {
 		"title": "supportplatform-service",
@@ -523,12 +830,317 @@
 				]
 			}
 		},
+		"/evaluation-method": {
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"201": {
+						"description": "EvaluationMethod created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/EvaluationMethodResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"description": "First evaluation method",
+											"semester": 2,
+											"year": 2023,
+											"disabledAt": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a new EvaluationMethod.",
+				"tags": [
+					"evaluation-method"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/EvaluationMethodCreateDTO"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Found evaluation methods",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PaginationResponseDTO_EvaluationMethodResponseDTO_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"totalPages": 1,
+											"results": [
+												{
+													"id": 1,
+													"description": "First evaluation method",
+													"semester": 2,
+													"year": 2023,
+													"disabledAt": "2023-09-01T00:00:00.000Z"
+												},
+												{
+													"id": 2,
+													"description": "Second evaluation method",
+													"semester": 2,
+													"year": 2023,
+													"disabledAt": null
+												}
+											]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all EvaluationMethods with pagination and filter.\nCan filter by description, semester, year and disabledAt.",
+				"tags": [
+					"evaluation-method"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": "1",
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"default": "10",
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "description",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "semester",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer"
+						}
+					},
+					{
+						"in": "query",
+						"name": "year",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer"
+						}
+					},
+					{
+						"in": "query",
+						"name": "disabledAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "forceDisabled",
+						"required": false,
+						"schema": {
+							"default": "false",
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/evaluation-method/{id}": {
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "EvaluationMethod updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/EvaluationMethodResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"description": "First evaluation method",
+											"semester": 2,
+											"year": 2023,
+											"disabledAt": "2023-09-01T00:00:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Update an existing EvaluationMethod by id.\nNeed body with all fields.",
+				"tags": [
+					"evaluation-method"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/EvaluationMethodUpdateDTO"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetOne",
+				"responses": {
+					"200": {
+						"description": "Found evaluation method",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/EvaluationMethodResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"description": "First evaluation method",
+											"semester": 2,
+											"year": 2023,
+											"disabledAt": "2023-09-01T00:00:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Get an existing EvaluationMethod by id.",
+				"tags": [
+					"evaluation-method"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"204": {
+						"description": "EvaluationMethod deleted"
+					}
+				},
+				"description": "Delete an existing EvaluationMethod by id.",
+				"tags": [
+					"evaluation-method"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
 		"/repository": {
 			"get": {
 				"operationId": "GetAll",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "Found repositories",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -541,7 +1153,13 @@
 				"tags": [
 					"repository"
 				],
-				"security": [],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "query",
@@ -610,7 +1228,13 @@
 				"tags": [
 					"repository"
 				],
-				"security": [],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -623,6 +1247,81 @@
 						}
 					}
 				]
+			},
+			"patch": {
+				"operationId": "Patch",
+				"responses": {
+					"200": {
+						"description": "Updated evaluation method",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RepositoryDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"evaluationMethod": {
+												"id": 1,
+												"description": "First evaluation method description",
+												"semester": 1,
+												"year": 2023,
+												"disabledAt": null
+											},
+											"githubId": "123456",
+											"name": "First repository",
+											"description": "First repository description",
+											"stargazerCount": 0,
+											"forkCount": 0,
+											"githubCreatedAt": "2023-09-01T00:00:00.000Z",
+											"githubUpdatedAt": "2023-09-01T00:00:00.000Z",
+											"hasProjectsEnabled": false,
+											"hasIssuesEnabled": false,
+											"primaryLanguage": "JavaScript",
+											"licenseName": "MIT",
+											"defaultBranch": "main",
+											"automaticSynchronization": true,
+											"synchronizing": false,
+											"lastSyncAt": "2023-09-01T00:00:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"repository"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RepositoryPatchDTO"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/repository/{repositoryId}/metric/commit": {
@@ -630,7 +1329,7 @@
 				"operationId": "GetCommitMetrics",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "Commit metrics",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -663,7 +1362,13 @@
 				"tags": [
 					"metrics"
 				],
-				"security": [],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -720,7 +1425,7 @@
 				"operationId": "GetChangesMetrics",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "File change metrics",
 						"content": {
 							"application/json": {
 								"schema": {}
@@ -751,7 +1456,13 @@
 				"tags": [
 					"metrics"
 				],
-				"security": [],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -839,7 +1550,13 @@
 				"tags": [
 					"metrics"
 				],
-				"security": [],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -926,7 +1643,13 @@
 				"tags": [
 					"metrics"
 				],
-				"security": [],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -1007,7 +1730,13 @@
 				"tags": [
 					"metrics"
 				],
-				"security": [],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -1054,6 +1783,265 @@
 							"items": {
 								"type": "string"
 							}
+						}
+					}
+				]
+			}
+		},
+		"/sprint": {
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"201": {
+						"description": "Sprint created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SprintResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"name": "Sprint 1",
+											"start_date": "2023-01-01T00:00:00.000Z",
+											"end_date": "2023-01-15T00:00:00.000Z",
+											"evaluationMethodId": 1
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a new Sprint.",
+				"tags": [
+					"sprint"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SprintCreateDTO"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Found sprints",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PaginationResponseDTO_SprintResponseDTO_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"totalPages": 1,
+											"results": [
+												{
+													"id": 1,
+													"name": "Sprint 1",
+													"start_date": "2023-01-01T00:00:00.000Z",
+													"end_date": "2023-01-15T00:00:00.000Z",
+													"evaluationMethodId": 1
+												}
+											]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all Sprints with pagination and filter.\nCan filter by start_date, end_date, and evaluationMethodId.",
+				"tags": [
+					"sprint"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "name",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"minLength": 1,
+							"maxLength": 255
+						}
+					},
+					{
+						"in": "query",
+						"name": "start_date",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "end_date",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "evaluationMethodId",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer"
+						}
+					}
+				]
+			}
+		},
+		"/sprint/{id}": {
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Sprint updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SprintResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"name": "Sprint 1",
+											"start_date": "2023-01-01T00:00:00.000Z",
+											"end_date": "2023-01-15T00:00:00.000Z",
+											"evaluationMethodId": 1
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Update an existing Sprint by id.\nNeed body with all fields.",
+				"tags": [
+					"sprint"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SprintUpdateDTO"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetOne",
+				"responses": {
+					"200": {
+						"description": "Found sprint",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SprintResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"name": "Sprint 1",
+											"start_date": "2023-01-01T00:00:00.000Z",
+											"end_date": "2023-01-15T00:00:00.000Z",
+											"evaluationMethodId": 1
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Get an existing Sprint by id.",
+				"tags": [
+					"sprint"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
 						}
 					}
 				]

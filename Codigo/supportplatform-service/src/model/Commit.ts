@@ -42,11 +42,19 @@ class Commit extends Model<ICommitAttributes> {
                     field: "branch_id",
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: false,
+                    references: {
+                        model: Branch,
+                        key: "id",
+                    },
                 },
                 contributorId: {
                     field: "contributor_id",
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: true,
+                    references: {
+                        model: Contributor,
+                        key: "id",
+                    },
                 },
                 sha: {
                     field: "sha",
@@ -104,6 +112,7 @@ class Commit extends Model<ICommitAttributes> {
             foreignKey: "commitId",
             as: "files",
         });
+        // CodeQuality association
     }
 }
 

@@ -1,5 +1,6 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 import EnvConfig from "../config/EnvConfig";
+import { Commit } from "./Commit";
 import { Repository } from "./Repository";
 
 interface IBranchAttributes {
@@ -32,6 +33,10 @@ class Branch extends Model<IBranchAttributes> {
                     field: "repository_id",
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: false,
+                    references: {
+                        model: Repository,
+                        key: "id",
+                    },
                 },
                 name: {
                     field: "name",
@@ -70,10 +75,17 @@ class Branch extends Model<IBranchAttributes> {
         );
     }
 
-    static associate(models: { Repository: typeof Repository }): void {
+    static associate(models: {
+        Repository: typeof Repository;
+        Commit: typeof Commit;
+    }): void {
         this.belongsTo(models.Repository, {
             foreignKey: "repositoryId",
             as: "repository",
+        });
+        this.hasMany(models.Commit, {
+            foreignKey: "branch_id",
+            as: "commits",
         });
     }
 }

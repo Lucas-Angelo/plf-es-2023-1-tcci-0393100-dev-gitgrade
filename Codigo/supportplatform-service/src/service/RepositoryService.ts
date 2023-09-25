@@ -1,11 +1,19 @@
-import { Repository } from "../model/Repository";
+import { PaginationResponseDTO, RepositoryPatchDTO } from "@gitgrade/dtos";
+import { Op, Sequelize } from "sequelize";
 import logger from "../config/LogConfig";
 import { getTotalPages, sequelizePagination } from "../utils/pagination";
-import { PaginationResponseDTO } from "@gitgrade/dtos";
-import { Sequelize } from "sequelize";
-import { Op } from "sequelize";
+import AppError from "../error/AppError";
+import { EvaluationMethod } from "../model/EvaluationMethod";
+import { Repository } from "../model/Repository";
+import EvaluationMethodService from "./EvaluationMethodService";
 
 export default class RepositoryService {
+    private evaluationMethodService: EvaluationMethodService;
+
+    constructor() {
+        this.evaluationMethodService = new EvaluationMethodService();
+    }
+
     async findAll(search: {
         page: number;
         limit: number;
@@ -25,6 +33,12 @@ export default class RepositoryService {
                           ),
                       ]
                     : undefined,
+                include: [
+                    {
+                        model: EvaluationMethod,
+                        as: "evaluationMethod",
+                    },
+                ],
             });
             return {
                 results: rows,
@@ -44,6 +58,42 @@ export default class RepositoryService {
             return repository;
         } catch (error) {
             logger.error("Error finding repository by id:", { error });
+            throw error;
+        }
+    }
+
+    async patch(id: number, body: RepositoryPatchDTO): Promise<Repository> {
+        try {
+            logger.info(`Updating repository ${id}`);
+            if (body.evaluationMethodId)
+                await this.evaluationMethodService.findOneBy({
+                    id: body.evaluationMethodId,
+                });
+            const repository = await Repository.findOne({
+                where: { id },
+            });
+            if (!repository) {
+                logger.error(`Error updating repository ${id}:`);
+                throw new AppError("Repository not found", 404);
+            }
+            await repository.update(body);
+            const newRepository = await Repository.findOne({
+                where: { id },
+                include: [
+                    {
+                        model: EvaluationMethod,
+                        as: "evaluationMethod",
+                    },
+                ],
+            });
+            if (!newRepository) {
+                logger.error(`Error updating repository ${id}:`);
+                throw new AppError("Repository not found", 404);
+            }
+            logger.info(`Successfully updated repository ${id}`);
+            return newRepository;
+        } catch (error) {
+            logger.error(`Error updating repository ${id}:`, { error });
             throw error;
         }
     }

@@ -1,4 +1,3 @@
-import { Get, Queries, Res, Route, Tags, TsoaResponse } from "tsoa";
 import CommitService from "../service/CommitService";
 import {
     CommitMetricsDTO,
@@ -7,23 +6,36 @@ import {
     IssueMetricQueryDTO,
     CommitQualityMetricsDTO,
 } from "@gitgrade/dtos";
+import {
+    Controller,
+    Get,
+    Route,
+    Security,
+    SuccessResponse,
+    Tags,
+    Queries,
+    Res,
+    TsoaResponse,
+} from "tsoa";
 import { CommitMetricsMapper } from "../mapper/CommitMetricsMapper";
-import FileService from "../service/FileService";
 import { FileChangeMetricsMapper } from "../mapper/FileChangeMetricsMapper";
 import RepositoryService from "../service/RepositoryService";
 import { QueryIntervalValidator } from "../validation/QueryIntervalValidator";
 import IssueService from "../service/IssueService";
 import { CommitQualityMetricsMapper } from "../mapper/CommitQualityMetricsMapper";
+import FileService from "../service/FileService";
 
 @Route("repository/{repositoryId}/metric")
+@Security("bearer", ["admin"])
 @Tags("metrics")
-export class RepositoryMetricsController {
+export class RepositoryMetricsController extends Controller {
     repositoryService: RepositoryService;
     commitService: CommitService;
     fileService: FileService;
     issueService: IssueService;
 
     constructor() {
+        super();
         this.repositoryService = new RepositoryService();
         this.commitService = new CommitService();
         this.fileService = new FileService();
@@ -37,6 +49,7 @@ export class RepositoryMetricsController {
      * @param repositoryId @minimum repositoryId 1 repositoryId must be greater than or equal to 1
      */
     @Get("commit")
+    @SuccessResponse("200", "Commit metrics")
     async getCommitMetrics(
         repositoryId: number,
         @Queries() query: RepositoryMetricQueryDTO,
@@ -70,6 +83,8 @@ export class RepositoryMetricsController {
                 endedAt,
                 query.contributor
             );
+
+        this.setStatus(200);
         return new CommitMetricsMapper().toDto(serviceResponse);
     }
 
@@ -80,6 +95,7 @@ export class RepositoryMetricsController {
      * @param repositoryId @minimum repositoryId 1 repositoryId must be greater than or equal to 1
      */
     @Get("changes")
+    @SuccessResponse("200", "File change metrics")
     async getChangesMetrics(
         repositoryId: number,
         @Queries() query: RepositoryMetricQueryDTO,
@@ -113,6 +129,7 @@ export class RepositoryMetricsController {
                 endedAt,
                 query.contributor
             );
+        this.setStatus(200);
         return new FileChangeMetricsMapper().toDto(serviceResponse);
     }
 

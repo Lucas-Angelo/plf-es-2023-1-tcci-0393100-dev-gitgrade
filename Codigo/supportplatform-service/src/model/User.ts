@@ -2,12 +2,17 @@ import { DataTypes, Model, Sequelize } from "sequelize";
 
 import EnvConfig from "../config/EnvConfig";
 
+enum UserGithubOrganizationRoleEnum {
+    ADMIN = "admin",
+    MEMBER = "member",
+}
+
 interface IUserAttributes {
     id?: number;
     githubId?: string;
     githubLogin?: string;
     githubEmail?: string | null;
-    githubOrganizationRole?: string;
+    githubOrganizationRole?: UserGithubOrganizationRoleEnum;
     githubName?: string | null;
     githubAvatarUrl?: string | null;
 }
@@ -17,7 +22,7 @@ class User extends Model<IUserAttributes> {
     public githubId!: string;
     public githubLogin!: string;
     public githubEmail!: string | null;
-    public githubOrganizationRole!: string;
+    public githubOrganizationRole!: UserGithubOrganizationRoleEnum;
     public githubName!: string | null;
     public githubAvatarUrl!: string | null;
 
@@ -53,7 +58,7 @@ class User extends Model<IUserAttributes> {
                 githubEmail: {
                     field: "github_email",
                     type: DataTypes.STRING(254),
-                    allowNull: false,
+                    allowNull: true,
                     unique: true,
                     validate: {
                         notEmpty: true,
@@ -61,7 +66,12 @@ class User extends Model<IUserAttributes> {
                 },
                 githubOrganizationRole: {
                     field: "github_organization_role",
-                    type: DataTypes.STRING(50),
+                    type: DataTypes.ENUM,
+                    values: [
+                        UserGithubOrganizationRoleEnum.ADMIN,
+                        UserGithubOrganizationRoleEnum.MEMBER,
+                    ],
+                    defaultValue: UserGithubOrganizationRoleEnum.MEMBER,
                     allowNull: false,
                     validate: {
                         notEmpty: true,
@@ -88,4 +98,4 @@ class User extends Model<IUserAttributes> {
     }
 }
 
-export { IUserAttributes, User };
+export { IUserAttributes, User, UserGithubOrganizationRoleEnum };

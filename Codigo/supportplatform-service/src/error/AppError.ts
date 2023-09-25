@@ -1,13 +1,15 @@
 import { ValidationError as SequelizeValidationError } from "sequelize";
 
 export default class AppError extends Error {
-    message: string;
     statusCode: number;
     error: unknown;
 
     // Erro que chegou
     constructor(message: string, statusCode = 500, error?: unknown) {
         super(message);
+        this.name = this.constructor.name;
+        Error.captureStackTrace(this, this.constructor);
+
         // se for um ValidationError do Sequelize, converte para AppError
         if (error instanceof SequelizeValidationError) {
             this.message = error.message.replace("Validation error: ", "");
@@ -20,7 +22,6 @@ export default class AppError extends Error {
             this.statusCode = error.statusCode;
             this.error = error.error;
         } else {
-            this.message = message;
             this.statusCode = statusCode;
             this.error = error;
         }

@@ -1,19 +1,23 @@
 import { Branch } from "../../model/Branch";
 import { Commit } from "../../model/Commit";
 import { Contributor } from "../../model/Contributor";
+import { EvaluationMethod } from "../../model/EvaluationMethod";
 import { File } from "../../model/File";
 import { Issue } from "../../model/Issue";
 import { IssueHasAssigneeContributor } from "../../model/IssueHasAssigneeContributor";
 import { Repository } from "../../model/Repository";
 import { RepositoryHasContributor } from "../../model/RepositoryHasContributor";
+import { Sprint } from "../../model/Sprint";
 import { branchTestingSeed } from "../seed/branch";
 import { commitTestingSeed } from "../seed/commit";
 import { contributorTestingSeed } from "../seed/contributor";
+import { evaluationMethodTestingSeed } from "../seed/evaluationMethod";
 import { fileTestingSeed } from "../seed/file";
 import { issueTestingSeed } from "../seed/issue";
 import { issueHasAssigneeTestingSeed } from "../seed/issueHasAssigne";
 import { repositoryTestingSeed } from "../seed/repository";
 import { repositoryHasContributorSeed } from "../seed/repositoryHasContributor";
+import { sprintTestingSeed } from "../seed/sprint";
 
 export async function seedDatabase() {
     await Repository.bulkCreate(repositoryTestingSeed, {});
@@ -27,4 +31,6 @@ export async function seedDatabase() {
         issueHasAssigneeTestingSeed,
         {}
     );
+    await EvaluationMethod.bulkCreate(evaluationMethodTestingSeed, {});
+    await Sprint.bulkCreate(sprintTestingSeed, {});
 }

@@ -8,6 +8,7 @@ import SequelizeOptions from "../config/SequelizeConfig";
 import { Branch } from "../model/Branch";
 import { Commit } from "../model/Commit";
 import { Contributor } from "../model/Contributor";
+import { EvaluationMethod } from "../model/EvaluationMethod";
 import { File } from "../model/File";
 import { Issue } from "../model/Issue";
 import { IssueHasAssigneeContributor } from "../model/IssueHasAssigneeContributor";
@@ -15,6 +16,7 @@ import { PullRequest } from "../model/PullRequest";
 import { PullRequestHasAssigneeContributor } from "../model/PullRequestHasAssigneeContributor";
 import { Repository } from "../model/Repository";
 import { RepositoryHasContributor } from "../model/RepositoryHasContributor";
+import { Sprint } from "../model/Sprint";
 import { User } from "../model/User";
 
 class SequelizeDatabase {
@@ -51,6 +53,7 @@ class SequelizeDatabase {
 
     private initModels() {
         User.initModel(this.sequelize);
+        EvaluationMethod.initModel(this.sequelize);
         Repository.initModel(this.sequelize);
         Contributor.initModel(this.sequelize);
         RepositoryHasContributor.initModel(this.sequelize);
@@ -61,11 +64,13 @@ class SequelizeDatabase {
         Branch.initModel(this.sequelize);
         Commit.initModel(this.sequelize);
         File.initModel(this.sequelize);
+        EvaluationMethod.initModel(this.sequelize);
+        Sprint.initModel(this.sequelize);
     }
 
     private associateModels() {
         Branch.associate({ Repository, Commit });
-        Contributor.associate({ Repository, Commit, Issue });
+        Contributor.associate({ Repository, Commit, Issue, PullRequest });
         RepositoryHasContributor.associate({ Contributor, Repository });
         Issue.associate({ Contributor, Repository });
         IssueHasAssigneeContributor.associate({ Contributor, Issue });
@@ -76,6 +81,15 @@ class SequelizeDatabase {
         });
         Commit.associate({ Branch, Contributor, File });
         File.associate({ Commit });
+        Repository.associate({
+            Branch,
+            Contributor,
+            Issue,
+            PullRequest,
+            EvaluationMethod,
+        });
+        EvaluationMethod.associate({ Repository, Sprint });
+        Sprint.associate({ EvaluationMethod });
     }
 
     async connect() {
