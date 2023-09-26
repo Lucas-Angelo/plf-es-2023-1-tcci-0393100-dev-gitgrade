@@ -40,7 +40,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "message": {"dataType":"string","required":true},
-            "details": {"ref":"Record_string._message-string--value-any_-or-undefined_"},
+            "error": {"ref":"Record_string._message-string--value-any_-or-undefined_"},
             "stack": {"dataType":"string"},
         },
         "additionalProperties": false,
@@ -257,6 +257,7 @@ export function RegisterRoutes(app: Router) {
     //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
     // ###########################################################################################################
         app.get('/repository/:repositoryId/branch',
+            authenticateMiddleware([{"bearer":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(BranchController)),
             ...(fetchMiddlewares<RequestHandler>(BranchController.prototype.getByRepositoryId)),
 
@@ -284,6 +285,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/repository/:repositoryId/contributor',
+            authenticateMiddleware([{"bearer":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(ContributorController)),
             ...(fetchMiddlewares<RequestHandler>(ContributorController.prototype.findbyRepositoryId)),
 

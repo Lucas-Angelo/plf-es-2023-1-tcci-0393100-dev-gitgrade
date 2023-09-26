@@ -10,21 +10,25 @@ import {
 } from "@gitgrade/dtos";
 import { contributorTestingSeed } from "../seed/contributor";
 import Database from "../../database";
+import { generateToken } from "../../config/JwtConfig";
 
 beforeAll(async () => {
     await new Database().connect();
 });
 
 describe("GET /repository/:id/metric/commit", () => {
+    const authUser = generateToken(1);
+
     it("should return 422 when search param startedAt is not a date", async () => {
         const response = await supertest(app)
             .get(
                 `/repository/${repositoryTestingSeed[0].id}/metric/commit?startedAt=abc`
             )
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(422)
             .send();
 
-        expect(response.body.details?.["query.startedAt"]?.message).toBe(
+        expect(response.body.error?.["query.startedAt"]?.message).toBe(
             "startedAt must be a valid date"
         );
     });
@@ -34,10 +38,11 @@ describe("GET /repository/:id/metric/commit", () => {
             .get(
                 `/repository/${repositoryTestingSeed[0].id}/metric/commit?endedAt=abc`
             )
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(422)
             .send();
 
-        expect(response.body.details?.["query.endedAt"]?.message).toBe(
+        expect(response.body.error?.["query.endedAt"]?.message).toBe(
             "endedAt must be a valid date"
         );
     });
@@ -47,13 +52,16 @@ describe("GET /repository/:id/metric/commit", () => {
             .get(
                 `/repository/${repositoryTestingSeed[0].id}/metric/commit?startedAt=2021-01-01&endedAt=2020-01-01`
             )
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(422)
             .send();
 
-        expect(response.body.details?.["query.startedAt"]?.message).toBe(
+        console.log("its in the soil of boot", response.body);
+
+        expect(response.body.error?.["query.startedAt"]?.message).toBe(
             "startedAt must be less than or equal to endedAt"
         );
-        expect(response.body.details?.["query.endedAt"]?.message).toBe(
+        expect(response.body.error?.["query.endedAt"]?.message).toBe(
             "endedAt must be greater than or equal to startedAt"
         );
         expect(response.body.message).toBe("Invalid date interval");
@@ -62,6 +70,7 @@ describe("GET /repository/:id/metric/commit", () => {
     it("should return 404 when repository does not exist", async () => {
         const response = await supertest(app)
             .get("/repository/999/metric/commit")
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(404)
             .send();
 
@@ -71,6 +80,7 @@ describe("GET /repository/:id/metric/commit", () => {
     it("should return 200 when missing params, and default to startedAt = project's createdAt, endedAt = now and branch = project's default", async () => {
         const response = await supertest(app)
             .get(`/repository/${repositoryTestingSeed[0].id}/metric/commit`)
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
             .send();
 
@@ -109,6 +119,7 @@ describe("GET /repository/:id/metric/commit", () => {
             .get(
                 `/repository/${repositoryTestingSeed[0].id}/metric/commit?branchName=dev`
             )
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
             .send();
 
@@ -147,6 +158,7 @@ describe("GET /repository/:id/metric/commit", () => {
             .get(
                 `/repository/${repositoryTestingSeed[0].id}/metric/commit?startedAt=2023-02-04`
             )
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
             .send();
 
@@ -173,6 +185,7 @@ describe("GET /repository/:id/metric/commit", () => {
             .get(
                 `/repository/${repositoryTestingSeed[0].id}/metric/commit?startedAt=2023-02-04&branchName=dev`
             )
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
             .send();
 
@@ -199,6 +212,7 @@ describe("GET /repository/:id/metric/commit", () => {
             .get(
                 `/repository/${repositoryTestingSeed[0].id}/metric/commit?endedAt=2023-02-03`
             )
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
             .send();
 
@@ -231,6 +245,7 @@ describe("GET /repository/:id/metric/commit", () => {
             .get(
                 `/repository/${repositoryTestingSeed[0].id}/metric/commit?endedAt=2023-02-04&startedAt=2023-02-03`
             )
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
             .send();
 
@@ -257,18 +272,50 @@ describe("GET /repository/:id/metric/commit", () => {
         expect(contributor2?.commtiPercentage).toBe(50);
         expect(contributor3?.commtiPercentage).toBe(50);
     });
+
+    it("should return 401 when no token is provided", async () => {
+        const response = await supertest(app)
+            .get("/repository/1/metric/commit")
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("No authorization header provided");
+    });
+
+    it("should return 401 when token is not Bearer", async () => {
+        const response = await supertest(app)
+            .get("/repository/1/metric/commit")
+            .set("Authorization", `Basic ${authUser.token}`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid authorization header");
+    });
+
+    it("should return 401 when token is invalid", async () => {
+        const response = await supertest(app)
+            .get("/repository/1/metric/commit")
+            .set("Authorization", `Bearer invalid-token`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid token");
+    });
 });
 
 describe("GET /repository/:id/metric/commit-quality", () => {
+    const authUser = generateToken(1);
+
     it("should return 422 when search param startedAt is not a date", async () => {
         const response = await supertest(app)
             .get(
                 `/repository/${repositoryTestingSeed[0].id}/metric/commit-quality?startedAt=abc`
             )
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(422)
             .send();
 
-        expect(response.body.details?.["query.startedAt"]?.message).toBe(
+        expect(response.body.error?.["query.startedAt"]?.message).toBe(
             "startedAt must be a valid date"
         );
     });
@@ -278,10 +325,11 @@ describe("GET /repository/:id/metric/commit-quality", () => {
             .get(
                 `/repository/${repositoryTestingSeed[0].id}/metric/commit-quality?endedAt=abc`
             )
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(422)
             .send();
 
-        expect(response.body.details?.["query.endedAt"]?.message).toBe(
+        expect(response.body.error?.["query.endedAt"]?.message).toBe(
             "endedAt must be a valid date"
         );
     });
@@ -291,13 +339,14 @@ describe("GET /repository/:id/metric/commit-quality", () => {
             .get(
                 `/repository/${repositoryTestingSeed[0].id}/metric/commit-quality?startedAt=2021-01-01&endedAt=2020-01-01`
             )
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(422)
             .send();
 
-        expect(response.body.details?.["query.startedAt"]?.message).toBe(
+        expect(response.body.error?.["query.startedAt"]?.message).toBe(
             "startedAt must be less than or equal to endedAt"
         );
-        expect(response.body.details?.["query.endedAt"]?.message).toBe(
+        expect(response.body.error?.["query.endedAt"]?.message).toBe(
             "endedAt must be greater than or equal to startedAt"
         );
         expect(response.body.message).toBe("Invalid date interval");
@@ -306,6 +355,7 @@ describe("GET /repository/:id/metric/commit-quality", () => {
     it("should return 404 when repository does not exist", async () => {
         const response = await supertest(app)
             .get("/repository/999/metric/commit-quality")
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(404)
             .send();
 
@@ -317,6 +367,7 @@ describe("GET /repository/:id/metric/commit-quality", () => {
             .get(
                 `/repository/${repositoryTestingSeed[3].id}/metric/commit-quality`
             )
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
             .send();
 
@@ -377,18 +428,50 @@ describe("GET /repository/:id/metric/commit-quality", () => {
             },
         ]);
     });
+
+    it("should return 401 when no token is provided", async () => {
+        const response = await supertest(app)
+            .get("/repository/1/metric/commit-quality")
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("No authorization header provided");
+    });
+
+    it("should return 401 when token is not Bearer", async () => {
+        const response = await supertest(app)
+            .get("/repository/1/metric/commit-quality")
+            .set("Authorization", `Basic ${authUser.token}`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid authorization header");
+    });
+
+    it("should return 401 when token is invalid", async () => {
+        const response = await supertest(app)
+            .get("/repository/1/metric/commit-quality")
+            .set("Authorization", `Bearer invalid-token`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid token");
+    });
 });
 
 describe("GET /repository/:id/metric/issues", () => {
+    const authUser = generateToken(1);
+
     it("should return 422 when search param startedAt is not a date", async () => {
         const response = await supertest(app)
             .get(
                 `/repository/${repositoryTestingSeed[0].id}/metric/issues?startedAt=abc`
             )
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(422)
             .send();
 
-        expect(response.body.details?.["query.startedAt"]?.message).toBe(
+        expect(response.body.error?.["query.startedAt"]?.message).toBe(
             "startedAt must be a valid date"
         );
     });
@@ -398,10 +481,11 @@ describe("GET /repository/:id/metric/issues", () => {
             .get(
                 `/repository/${repositoryTestingSeed[0].id}/metric/issues?endedAt=abc`
             )
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(422)
             .send();
 
-        expect(response.body.details?.["query.endedAt"]?.message).toBe(
+        expect(response.body.error?.["query.endedAt"]?.message).toBe(
             "endedAt must be a valid date"
         );
     });
@@ -411,13 +495,14 @@ describe("GET /repository/:id/metric/issues", () => {
             .get(
                 `/repository/${repositoryTestingSeed[0].id}/metric/issues?startedAt=2021-01-01&endedAt=2020-01-01`
             )
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(422)
             .send();
 
-        expect(response.body.details?.["query.startedAt"]?.message).toBe(
+        expect(response.body.error?.["query.startedAt"]?.message).toBe(
             "startedAt must be less than or equal to endedAt"
         );
-        expect(response.body.details?.["query.endedAt"]?.message).toBe(
+        expect(response.body.error?.["query.endedAt"]?.message).toBe(
             "endedAt must be greater than or equal to startedAt"
         );
         expect(response.body.message).toBe("Invalid date interval");
@@ -426,6 +511,7 @@ describe("GET /repository/:id/metric/issues", () => {
     it("should return 404 when repository does not exist", async () => {
         const response = await supertest(app)
             .get("/repository/999/metric/issues")
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(404)
             .send();
 
@@ -435,6 +521,7 @@ describe("GET /repository/:id/metric/issues", () => {
     it("should return 200 when missing params, and default to startedAt = project's createdAt and endedAt = now", async () => {
         const response = await supertest(app)
             .get(`/repository/${repositoryTestingSeed[3].id}/metric/issues`)
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
             .send();
 
@@ -464,18 +551,50 @@ describe("GET /repository/:id/metric/issues", () => {
         expect(contributor2?.assignedIssuesCount).toBe(3);
         expect(contributor2?.authoredIssuesCount).toBe(1);
     });
+
+    it("should return 401 when no token is provided", async () => {
+        const response = await supertest(app)
+            .get("/repository/1/metric/issues")
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("No authorization header provided");
+    });
+
+    it("should return 401 when token is not Bearer", async () => {
+        const response = await supertest(app)
+            .get("/repository/1/metric/issues")
+            .set("Authorization", `Basic ${authUser.token}`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid authorization header");
+    });
+
+    it("should return 401 when token is invalid", async () => {
+        const response = await supertest(app)
+            .get("/repository/1/metric/issues")
+            .set("Authorization", `Bearer invalid-token`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid token");
+    });
 });
 
 describe("GET /repository/:id/metric/file-types", () => {
+    const authUser = generateToken(1);
+
     it("should return 422 when search param startedAt is not a date", async () => {
         const response = await supertest(app)
             .get(
                 `/repository/${repositoryTestingSeed[0].id}/metric/file-types?startedAt=abc`
             )
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(422)
             .send();
 
-        expect(response.body.details?.["query.startedAt"]?.message).toBe(
+        expect(response.body.error?.["query.startedAt"]?.message).toBe(
             "startedAt must be a valid date"
         );
     });
@@ -485,10 +604,11 @@ describe("GET /repository/:id/metric/file-types", () => {
             .get(
                 `/repository/${repositoryTestingSeed[0].id}/metric/file-types?endedAt=abc`
             )
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(422)
             .send();
 
-        expect(response.body.details?.["query.endedAt"]?.message).toBe(
+        expect(response.body.error?.["query.endedAt"]?.message).toBe(
             "endedAt must be a valid date"
         );
     });
@@ -498,13 +618,14 @@ describe("GET /repository/:id/metric/file-types", () => {
             .get(
                 `/repository/${repositoryTestingSeed[0].id}/metric/file-types?startedAt=2021-01-01&endedAt=2020-01-01`
             )
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(422)
             .send();
 
-        expect(response.body.details?.["query.startedAt"]?.message).toBe(
+        expect(response.body.error?.["query.startedAt"]?.message).toBe(
             "startedAt must be less than or equal to endedAt"
         );
-        expect(response.body.details?.["query.endedAt"]?.message).toBe(
+        expect(response.body.error?.["query.endedAt"]?.message).toBe(
             "endedAt must be greater than or equal to startedAt"
         );
         expect(response.body.message).toBe("Invalid date interval");
@@ -513,6 +634,7 @@ describe("GET /repository/:id/metric/file-types", () => {
     it("should return 404 when repository does not exist", async () => {
         const response = await supertest(app)
             .get("/repository/999/metric/file-types")
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(404)
             .send();
 
@@ -522,6 +644,7 @@ describe("GET /repository/:id/metric/file-types", () => {
     it("should return 200 when missing params, and default to startedAt = project's createdAt and endedAt = now", async () => {
         const response = await supertest(app)
             .get(`/repository/${repositoryTestingSeed[0].id}/metric/file-types`)
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
             .send();
 
@@ -586,18 +709,50 @@ describe("GET /repository/:id/metric/file-types", () => {
             extension: "css",
         });
     });
+
+    it("should return 401 when no token is provided", async () => {
+        const response = await supertest(app)
+            .get("/repository/1/metric/file-types")
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("No authorization header provided");
+    });
+
+    it("should return 401 when token is not Bearer", async () => {
+        const response = await supertest(app)
+            .get("/repository/1/metric/file-types")
+            .set("Authorization", `Basic ${authUser.token}`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid authorization header");
+    });
+
+    it("should return 401 when token is invalid", async () => {
+        const response = await supertest(app)
+            .get("/repository/1/metric/file-types")
+            .set("Authorization", `Bearer invalid-token`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid token");
+    });
 });
 
 describe("GET /repository/:id/metric/changes", () => {
+    const authUser = generateToken(1);
+
     it("should return 422 when search param startedAt is not a date", async () => {
         const response = await supertest(app)
             .get(
                 `/repository/${repositoryTestingSeed[0].id}/metric/changes?startedAt=abc`
             )
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(422)
             .send();
 
-        expect(response.body.details?.["query.startedAt"]?.message).toBe(
+        expect(response.body.error?.["query.startedAt"]?.message).toBe(
             "startedAt must be a valid date"
         );
     });
@@ -607,10 +762,11 @@ describe("GET /repository/:id/metric/changes", () => {
             .get(
                 `/repository/${repositoryTestingSeed[0].id}/metric/changes?endedAt=abc`
             )
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(422)
             .send();
 
-        expect(response.body.details?.["query.endedAt"]?.message).toBe(
+        expect(response.body.error?.["query.endedAt"]?.message).toBe(
             "endedAt must be a valid date"
         );
     });
@@ -620,13 +776,14 @@ describe("GET /repository/:id/metric/changes", () => {
             .get(
                 `/repository/${repositoryTestingSeed[0].id}/metric/changes?startedAt=2021-01-01&endedAt=2020-01-01`
             )
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(422)
             .send();
 
-        expect(response.body.details?.["query.startedAt"]?.message).toBe(
+        expect(response.body.error?.["query.startedAt"]?.message).toBe(
             "startedAt must be less than or equal to endedAt"
         );
-        expect(response.body.details?.["query.endedAt"]?.message).toBe(
+        expect(response.body.error?.["query.endedAt"]?.message).toBe(
             "endedAt must be greater than or equal to startedAt"
         );
         expect(response.body.message).toBe("Invalid date interval");
@@ -635,6 +792,7 @@ describe("GET /repository/:id/metric/changes", () => {
     it("should return 404 when repository does not exist", async () => {
         const response = await supertest(app)
             .get("/repository/999/metric/changes")
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(404)
             .send();
 
@@ -644,6 +802,7 @@ describe("GET /repository/:id/metric/changes", () => {
     it("should return 200 when missing params, and default to startedAt = project's createdAt and endedAt = now", async () => {
         const response = await supertest(app)
             .get(`/repository/${repositoryTestingSeed[0].id}/metric/changes`)
+            .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
             .send();
 
@@ -683,5 +842,34 @@ describe("GET /repository/:id/metric/changes", () => {
         expect(contributor3?.addtions.sum).toBe(105);
         expect(contributor3?.deletions.sum).toBe(5);
         expect(contributor3?.fileCount).toBe(5);
+    });
+
+    it("should return 401 when no token is provided", async () => {
+        const response = await supertest(app)
+            .get("/repository/1/metric/changes")
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("No authorization header provided");
+    });
+
+    it("should return 401 when token is not Bearer", async () => {
+        const response = await supertest(app)
+            .get("/repository/1/metric/changes")
+            .set("Authorization", `Basic ${authUser.token}`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid authorization header");
+    });
+
+    it("should return 401 when token is invalid", async () => {
+        const response = await supertest(app)
+            .get("/repository/1/metric/changes")
+            .set("Authorization", `Bearer invalid-token`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid token");
     });
 });

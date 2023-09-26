@@ -32,7 +32,7 @@
 					"message": {
 						"type": "string"
 					},
-					"details": {
+					"error": {
 						"$ref": "#/components/schemas/Record_string._message-string--value-any_-or-undefined_"
 					},
 					"stack": {
@@ -736,7 +736,13 @@
 				"tags": [
 					"branch"
 				],
-				"security": [],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -796,7 +802,13 @@
 				"tags": [
 					"contributor"
 				],
-				"security": [],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",

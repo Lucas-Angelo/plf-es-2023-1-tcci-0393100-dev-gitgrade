@@ -1,9 +1,10 @@
-import { Get, Queries, Res, Route, Tags, TsoaResponse } from "tsoa";
+import { Get, Queries, Res, Route, Security, Tags, TsoaResponse } from "tsoa";
 import BranchService from "../service/BranchService";
 import { ErrorResponseDTO, GetAllBranchQueryDTO } from "@gitgrade/dtos";
 import { BranchMapper } from "../mapper/BranchMapper";
 import RepositoryService from "../service/RepositoryService";
 
+@Security("bearer", ["admin"])
 @Route("repository/{repositoryId}/branch")
 @Tags("branch")
 export class BranchController {

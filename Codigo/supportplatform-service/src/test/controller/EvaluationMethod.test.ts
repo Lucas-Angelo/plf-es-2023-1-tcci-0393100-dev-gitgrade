@@ -420,7 +420,7 @@ describe(`POST ${baseRoute}`, () => {
         expect(response.body.description).toBe("New evaluation method");
         expect(response.body.semester).toBe(1);
         expect(response.body.year).toBe(2023);
-        expect(response.body.disabledAt).toBe(null);
+        expect(response.body.disabledAt).toBe(undefined);
     });
 
     it("should return 201 when creating without disabledAt", async () => {
@@ -438,7 +438,7 @@ describe(`POST ${baseRoute}`, () => {
         expect(response.body.description).toBe("New evaluation method");
         expect(response.body.semester).toBe(1);
         expect(response.body.year).toBe(2023);
-        expect(response.body.disabledAt).toBe(null);
+        expect(response.body.disabledAt).toBe(undefined);
     });
 
     it("should return 422 when description is not provided", async () => {
@@ -579,7 +579,7 @@ describe(`POST ${baseRoute}`, () => {
             });
 
         expect(response.body.error?.["body.disabledAt"]?.message).toContain(
-            "disabledAt must be a Date"
+            '"disabledAt" is an excess property and therefore is not allowed'
         );
     });
 

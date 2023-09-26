@@ -1,9 +1,10 @@
-import { Get, Queries, Res, Route, Tags, TsoaResponse } from "tsoa";
+import { Get, Queries, Res, Route, Security, Tags, TsoaResponse } from "tsoa";
 import ContributorService from "../service/ContributorService";
 import ContributorMapper from "../mapper/ContributorMapper";
 import { ErrorResponseDTO, GetAllContributorQueryDTO } from "@gitgrade/dtos";
 import RepositoryService from "../service/RepositoryService";
 
+@Security("bearer", ["admin"])
 @Route("repository/{repositoryId}/contributor")
 @Tags("contributor")
 export class ContributorController {

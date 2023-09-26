@@ -19,7 +19,7 @@ export class QueryIntervalValidator {
         ) {
             return this.unprocessableEntityResponse(422, {
                 message: "Invalid date interval",
-                details: {
+                error: {
                     "query.startedAt": {
                         message:
                             "startedAt must be less than or equal to endedAt",
