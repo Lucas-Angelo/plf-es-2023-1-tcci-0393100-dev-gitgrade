@@ -1,9 +1,9 @@
-import { RepositoryDTO } from "@gitgrade/dtos";
+import { RepositoryResponseDTO } from "@gitgrade/dtos";
 import { Repository } from "../model/Repository";
 import { EvaluationMethodMapper } from "./EvaluationMethodMapper";
 
 export class RepositoryMapper {
-    toDto(model: Repository): RepositoryDTO {
+    toDto(model: Repository): RepositoryResponseDTO {
         return {
             id: Number(model.id),
             name: model.name,

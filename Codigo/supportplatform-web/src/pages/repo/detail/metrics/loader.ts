@@ -1,10 +1,10 @@
 import { LoaderFunctionArgs } from "react-router";
-import { ContributorDTO, RepositoryDTO } from "@gitgrade/dtos";
+import { ContributorDTO, RepositoryResponseDTO } from "@gitgrade/dtos";
 import { getBranchesByRepositoryIdQuery } from "../../../../commom/data/branch";
 import { loadQueryData } from "../../../../commom/data/utils/load";
 
 export interface RepoPageLoaderData {
-    repository: RepositoryDTO;
+    repository: RepositoryResponseDTO;
     contributors: ContributorDTO[];
 }
 

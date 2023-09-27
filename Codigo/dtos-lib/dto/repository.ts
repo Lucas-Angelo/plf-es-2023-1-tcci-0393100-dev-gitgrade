@@ -1,7 +1,7 @@
 import { PaginationRequestDTO } from "../utils/pagination";
 import { EvaluationMethodResponseDTO } from "./evaluationMethod";
 
-export interface RepositoryDTO {
+export interface RepositoryResponseDTO {
   id: number;
   evaluationMethod?: EvaluationMethodResponseDTO | null;
   githubId: string;

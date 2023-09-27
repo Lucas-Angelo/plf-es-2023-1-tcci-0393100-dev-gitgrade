@@ -208,7 +208,7 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"RepositoryDTO": {
+			"RepositoryResponseDTO": {
 				"properties": {
 					"id": {
 						"type": "number",
@@ -299,11 +299,11 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"PaginationResponseDTO_RepositoryDTO_": {
+			"PaginationResponseDTO_RepositoryResponseDTO_": {
 				"properties": {
 					"results": {
 						"items": {
-							"$ref": "#/components/schemas/RepositoryDTO"
+							"$ref": "#/components/schemas/RepositoryResponseDTO"
 						},
 						"type": "array"
 					},
@@ -1156,7 +1156,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PaginationResponseDTO_RepositoryDTO_"
+									"$ref": "#/components/schemas/PaginationResponseDTO_RepositoryResponseDTO_"
 								}
 							}
 						}
@@ -1213,7 +1213,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/RepositoryDTO"
+									"$ref": "#/components/schemas/RepositoryResponseDTO"
 								}
 							}
 						}
@@ -1268,7 +1268,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/RepositoryDTO"
+									"$ref": "#/components/schemas/RepositoryResponseDTO"
 								},
 								"examples": {
 									"Example 1": {

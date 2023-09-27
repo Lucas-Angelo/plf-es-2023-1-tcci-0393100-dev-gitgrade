@@ -107,7 +107,7 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "RepositoryDTO": {
+    "RepositoryResponseDTO": {
         "dataType": "refObject",
         "properties": {
             "id": {"dataType":"double","required":true},
@@ -131,9 +131,9 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "PaginationResponseDTO_RepositoryDTO_": {
+    "PaginationResponseDTO_RepositoryResponseDTO_": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"results":{"dataType":"array","array":{"dataType":"refObject","ref":"RepositoryDTO"},"required":true},"totalPages":{"dataType":"double","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"results":{"dataType":"array","array":{"dataType":"refObject","ref":"RepositoryResponseDTO"},"required":true},"totalPages":{"dataType":"double","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "GetAllRepositoryQueryDTO": {

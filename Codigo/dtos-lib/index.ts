@@ -20,7 +20,7 @@ import {
 import { FileChangeMetricsDTO } from "./dto/fileMetrics";
 import {
   GetAllRepositoryQueryDTO,
-  RepositoryDTO,
+  RepositoryResponseDTO,
   RepositoryPatchDTO,
 } from "./dto/repository";
 import {
@@ -45,7 +45,7 @@ export type {
   SprintSearchDTO,
   SprintUpdateDTO,
   
-  RepositoryDTO,
+  RepositoryResponseDTO,
   PaginationResponseDTO,
   GetAllRepositoryQueryDTO,
   CommitMetricsDTO,

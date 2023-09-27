@@ -1,7 +1,7 @@
 import {
     GetAllRepositoryQueryDTO,
     PaginationResponseDTO,
-    RepositoryDTO,
+    RepositoryResponseDTO,
     RepositoryPatchDTO,
 } from "@gitgrade/dtos";
 import {
@@ -37,7 +37,7 @@ export class RepositoryController extends Controller {
     @SuccessResponse("200", "Found repositories")
     public async getAll(
         @Queries() query: GetAllRepositoryQueryDTO
-    ): Promise<PaginationResponseDTO<RepositoryDTO>> {
+    ): Promise<PaginationResponseDTO<RepositoryResponseDTO>> {
         this.setStatus(200);
         const serviceResponse = await this.repositoryService.findAll({
             limit: query.limit ?? 10,
@@ -59,7 +59,7 @@ export class RepositoryController extends Controller {
     public async getById(
         id: number,
         @Res() notFoundResponse: TsoaResponse<404, { message: string }>
-    ): Promise<RepositoryDTO> {
+    ): Promise<RepositoryResponseDTO> {
         const serviceResponse = await this.repositoryService.findById(id);
 
         if (!serviceResponse) {
@@ -75,7 +75,7 @@ export class RepositoryController extends Controller {
      * @param body Body of the request.
      * @returns The updated repository.
      */
-    @Example<RepositoryDTO>({
+    @Example<RepositoryResponseDTO>({
         id: 1,
         evaluationMethod: {
             id: 1,
@@ -105,7 +105,7 @@ export class RepositoryController extends Controller {
     public async patch(
         @Path() id: number,
         @Body() body: RepositoryPatchDTO
-    ): Promise<RepositoryDTO> {
+    ): Promise<RepositoryResponseDTO> {
         this.setStatus(200);
         const serviceResponse = await this.repositoryService.patch(id, body);
         const mapper = new RepositoryMapper();
