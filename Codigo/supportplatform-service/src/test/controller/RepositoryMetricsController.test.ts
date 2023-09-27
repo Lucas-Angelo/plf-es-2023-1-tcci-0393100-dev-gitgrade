@@ -273,6 +273,33 @@ describe("GET /repository/:id/metric/commit", () => {
         expect(contributor3?.commtiPercentage).toBe(50);
     });
 
+    it("should return 200 when contributor filter is provided", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/commit?contributor=${contributorTestingSeed[1].githubLogin}`
+            )
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        const body: CommitMetricsDTO = response.body;
+        const contributorsIds = body.commitsPerContributor.map(
+            (item) => item.contribuitor.id
+        );
+
+        expect(body.totalCommitCount).toBe(1);
+        expect(body.commitsPerContributor).toHaveLength(1);
+        expect(contributorsIds).toContain(contributorTestingSeed[1].id);
+
+        const contributor2 = body.commitsPerContributor.find(
+            (item) => item.contribuitor.id === contributorTestingSeed[1].id
+        );
+
+        expect(contributor2?.commitCount).toBe(1);
+
+        expect(contributor2?.commtiPercentage).toBe(100);
+    });
+
     it("should return 401 when no token is provided", async () => {
         const response = await supertest(app)
             .get("/repository/1/metric/commit")
@@ -429,6 +456,158 @@ describe("GET /repository/:id/metric/commit-quality", () => {
         ]);
     });
 
+    it("should return 200 when startedAt is provided", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[3].id}/metric/commit-quality?startedAt=2023-03-01`
+            )
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        const body: CommitQualityMetricsDTO = response.body;
+        const contributorsIds = body.commitQualityPerContributor.map(
+            (item) => item.contributor.id
+        );
+
+        expect(body.generalCommitQualityLevel[0].qualityLevelCount).toBe(0);
+        expect(body.generalCommitQualityLevel[1].qualityLevelCount).toBe(0);
+        expect(body.generalCommitQualityLevel[2].qualityLevelCount).toBe(1);
+        expect(body.generalCommitQualityLevel[3].qualityLevelCount).toBe(2);
+        expect(body.generalCommitQualityLevel[4].qualityLevelCount).toBe(1);
+
+        expect(body.commitQualityPerContributor).toHaveLength(2);
+
+        expect(contributorsIds).toContain(contributorTestingSeed[0].id);
+        expect(contributorsIds).toContain(contributorTestingSeed[1].id);
+
+        const contributor1 = body.commitQualityPerContributor.find(
+            (item) => item.contributor.id === contributorTestingSeed[0].id
+        );
+
+        expect(contributor1?.commitQualityLevel).toStrictEqual([
+            {
+                qualityLevel: 2,
+                qualityLevelCount: 1,
+            },
+            {
+                qualityLevel: 3,
+                qualityLevelCount: 1,
+            },
+            {
+                qualityLevel: 4,
+                qualityLevelCount: 1,
+            },
+        ]);
+    });
+
+    it("should return 200 when endedAt is provided", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[3].id}/metric/commit-quality?endedAt=2023-02-07`
+            )
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        const body: CommitQualityMetricsDTO = response.body;
+        const contributorsIds = body.commitQualityPerContributor.map(
+            (item) => item.contributor.id
+        );
+
+        expect(body.generalCommitQualityLevel[0].qualityLevelCount).toBe(1);
+        expect(body.generalCommitQualityLevel[1].qualityLevelCount).toBe(1);
+        expect(body.generalCommitQualityLevel[2].qualityLevelCount).toBe(2);
+        expect(body.generalCommitQualityLevel[3].qualityLevelCount).toBe(0);
+        expect(body.generalCommitQualityLevel[4].qualityLevelCount).toBe(0);
+
+        expect(body.commitQualityPerContributor).toHaveLength(2);
+
+        expect(contributorsIds).toContain(contributorTestingSeed[0].id);
+        expect(contributorsIds).toContain(contributorTestingSeed[1].id);
+
+        const contributor1 = body.commitQualityPerContributor.find(
+            (item) => item.contributor.id === contributorTestingSeed[0].id
+        );
+        const contributor2 = body.commitQualityPerContributor.find(
+            (item) => item.contributor.id === contributorTestingSeed[1].id
+        );
+
+        expect(contributor1?.commitQualityLevel).toStrictEqual([
+            {
+                qualityLevel: 0,
+                qualityLevelCount: 1,
+            },
+            {
+                qualityLevel: 1,
+                qualityLevelCount: 1,
+            },
+            {
+                qualityLevel: 2,
+                qualityLevelCount: 1,
+            },
+        ]);
+
+        expect(contributor2?.commitQualityLevel).toStrictEqual([
+            {
+                qualityLevel: 2,
+                qualityLevelCount: 1,
+            },
+        ]);
+    });
+
+    it("should return 200 when contributor is provided", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[3].id}/metric/commit-quality?contributor=${contributorTestingSeed[0].githubLogin}`
+            )
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        const body: CommitQualityMetricsDTO = response.body;
+        const contributorsIds = body.commitQualityPerContributor.map(
+            (item) => item.contributor.id
+        );
+
+        expect(body.generalCommitQualityLevel[0].qualityLevelCount).toBe(1);
+        expect(body.generalCommitQualityLevel[1].qualityLevelCount).toBe(1);
+        expect(body.generalCommitQualityLevel[2].qualityLevelCount).toBe(2);
+        expect(body.generalCommitQualityLevel[3].qualityLevelCount).toBe(1);
+        expect(body.generalCommitQualityLevel[4].qualityLevelCount).toBe(1);
+
+        expect(body.commitQualityPerContributor).toHaveLength(1);
+
+        expect(contributorsIds).toContain(contributorTestingSeed[0].id);
+
+        const contributor1 = body.commitQualityPerContributor.find(
+            (item) => item.contributor.id === contributorTestingSeed[0].id
+        );
+
+        expect(contributor1?.commitQualityLevel).toStrictEqual([
+            {
+                qualityLevel: 0,
+                qualityLevelCount: 1,
+            },
+            {
+                qualityLevel: 1,
+                qualityLevelCount: 1,
+            },
+            {
+                qualityLevel: 2,
+                qualityLevelCount: 2,
+            },
+            {
+                qualityLevel: 3,
+                qualityLevelCount: 1,
+            },
+            {
+                qualityLevel: 4,
+                qualityLevelCount: 1,
+            },
+        ]);
+    });
+
     it("should return 401 when no token is provided", async () => {
         const response = await supertest(app)
             .get("/repository/1/metric/commit-quality")
@@ -550,6 +729,107 @@ describe("GET /repository/:id/metric/issues", () => {
 
         expect(contributor2?.assignedIssuesCount).toBe(3);
         expect(contributor2?.authoredIssuesCount).toBe(1);
+    });
+
+    it("should return 200 when provide startedAt", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[3].id}/metric/issues?startedAt=2023-04-20`
+            )
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        const body: IssueMetricsDTO = response.body;
+        const contributorsIds = body.issueDataPerContributor.map(
+            (item) => item.contributor.id
+        );
+
+        expect(body.issuesOpennedCount).toBe(2);
+        expect(body.issuesClosedCount).toBe(1);
+
+        expect(body.issueDataPerContributor).toHaveLength(2);
+
+        expect(contributorsIds).toContain(contributorTestingSeed[0].id);
+        expect(contributorsIds).toContain(contributorTestingSeed[1].id);
+
+        const contributor1 = body.issueDataPerContributor.find(
+            (item) => item.contributor.id === contributorTestingSeed[0].id
+        );
+        const contributor2 = body.issueDataPerContributor.find(
+            (item) => item.contributor.id === contributorTestingSeed[1].id
+        );
+
+        expect(contributor1?.assignedIssuesCount).toBe(1);
+        expect(contributor1?.authoredIssuesCount).toBe(3);
+
+        expect(contributor2?.assignedIssuesCount).toBe(2);
+        expect(contributor2?.authoredIssuesCount).toBe(0);
+    });
+
+    it("should return 200 when provide endedAt", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[3].id}/metric/issues?endedAt=2023-03-20`
+            )
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        const body: IssueMetricsDTO = response.body;
+        const contributorsIds = body.issueDataPerContributor.map(
+            (item) => item.contributor.id
+        );
+
+        expect(body.issuesOpennedCount).toBe(3);
+        expect(body.issuesClosedCount).toBe(0);
+
+        expect(body.issueDataPerContributor).toHaveLength(2);
+
+        expect(contributorsIds).toContain(contributorTestingSeed[0].id);
+        expect(contributorsIds).toContain(contributorTestingSeed[1].id);
+
+        const contributor1 = body.issueDataPerContributor.find(
+            (item) => item.contributor.id === contributorTestingSeed[0].id
+        );
+        const contributor2 = body.issueDataPerContributor.find(
+            (item) => item.contributor.id === contributorTestingSeed[1].id
+        );
+
+        expect(contributor1?.assignedIssuesCount).toBe(1);
+        expect(contributor1?.authoredIssuesCount).toBe(1);
+
+        expect(contributor2?.assignedIssuesCount).toBe(2);
+        expect(contributor2?.authoredIssuesCount).toBe(1);
+    });
+
+    it("should return 200 when provide contributor", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[3].id}/metric/issues?contributor=${contributorTestingSeed[0].githubLogin}`
+            )
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        const body: IssueMetricsDTO = response.body;
+        const contributorsIds = body.issueDataPerContributor.map(
+            (item) => item.contributor.id
+        );
+
+        expect(body.issuesOpennedCount).toBe(4);
+        expect(body.issuesClosedCount).toBe(1);
+
+        expect(body.issueDataPerContributor).toHaveLength(1);
+
+        expect(contributorsIds).toContain(contributorTestingSeed[0].id);
+
+        const contributor1 = body.issueDataPerContributor.find(
+            (item) => item.contributor.id === contributorTestingSeed[0].id
+        );
+
+        expect(contributor1?.assignedIssuesCount).toBe(2);
+        expect(contributor1?.authoredIssuesCount).toBe(3);
     });
 
     it("should return 401 when no token is provided", async () => {
@@ -710,6 +990,162 @@ describe("GET /repository/:id/metric/file-types", () => {
         });
     });
 
+    it("should return 200 when provided startedAt", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/file-types?startedAt=2023-02-04`
+            )
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        const body: FileTypeMetricsDTO = response.body;
+        const contributorsIds = body.perContributor.map(
+            (item) => item.contributor.id
+        );
+
+        expect(body.general).toHaveLength(3);
+        expect(body.general).toContainEqual({
+            count: 2,
+            extension: "ts",
+        });
+        expect(body.general).toContainEqual({
+            count: 2,
+            extension: "html",
+        });
+        expect(body.general).toContainEqual({
+            count: 1,
+            extension: "css",
+        });
+
+        expect(body.perContributor).toHaveLength(1);
+        expect(contributorsIds).toContainEqual(contributorTestingSeed[2].id);
+
+        const contributor3 = body.perContributor.find(
+            (item) => item.contributor.id === contributorTestingSeed[2].id
+        );
+
+        expect(contributor3?.fileTypes).toHaveLength(3);
+        expect(contributor3?.fileTypes).toContainEqual({
+            count: 2,
+            extension: "ts",
+        });
+        expect(contributor3?.fileTypes).toContainEqual({
+            count: 2,
+            extension: "html",
+        });
+        expect(contributor3?.fileTypes).toContainEqual({
+            count: 1,
+            extension: "css",
+        });
+    });
+
+    it("should return 200 when provided endedAt", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/file-types?endedAt=2023-02-03`
+            )
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        const body: FileTypeMetricsDTO = response.body;
+        const contributorsIds = body.perContributor.map(
+            (item) => item.contributor.id
+        );
+
+        expect(body.general).toHaveLength(1);
+        expect(body.general).toContainEqual({
+            count: 2,
+            extension: "ts",
+        });
+
+        expect(body.perContributor).toHaveLength(2);
+
+        expect(contributorsIds).toContainEqual(contributorTestingSeed[0].id);
+        expect(contributorsIds).toContainEqual(contributorTestingSeed[1].id);
+
+        const contributor1 = body.perContributor.find(
+            (item) => item.contributor.id === contributorTestingSeed[0].id
+        );
+        const contributor2 = body.perContributor.find(
+            (item) => item.contributor.id === contributorTestingSeed[1].id
+        );
+
+        expect(contributor1?.fileTypes).toHaveLength(1);
+        expect(contributor1?.fileTypes).toContainEqual({
+            count: 2,
+            extension: "ts",
+        });
+
+        expect(contributor2?.fileTypes).toHaveLength(1);
+        expect(contributor2?.fileTypes).toContainEqual({
+            count: 1,
+            extension: "ts",
+        });
+    });
+
+    it("should return 200 when provided contributor", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/file-types?contributor=${contributorTestingSeed[1].githubLogin}&contributor=${contributorTestingSeed[2].githubLogin}`
+            )
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        const body: FileTypeMetricsDTO = response.body;
+        const contributorsIds = body.perContributor.map(
+            (item) => item.contributor.id
+        );
+
+        expect(body.general).toHaveLength(3);
+        expect(body.general).toContainEqual({
+            count: 2,
+            extension: "ts",
+        });
+        expect(body.general).toContainEqual({
+            count: 2,
+            extension: "html",
+        });
+        expect(body.general).toContainEqual({
+            count: 1,
+            extension: "css",
+        });
+
+        expect(body.perContributor).toHaveLength(2);
+
+        expect(contributorsIds).toContainEqual(contributorTestingSeed[1].id);
+        expect(contributorsIds).toContainEqual(contributorTestingSeed[2].id);
+
+        const contributor2 = body.perContributor.find(
+            (item) => item.contributor.id === contributorTestingSeed[1].id
+        );
+        const contributor3 = body.perContributor.find(
+            (item) => item.contributor.id === contributorTestingSeed[2].id
+        );
+
+        expect(contributor2?.fileTypes).toHaveLength(1);
+        expect(contributor2?.fileTypes).toContainEqual({
+            count: 1,
+            extension: "ts",
+        });
+
+        expect(contributor3?.fileTypes).toHaveLength(3);
+        expect(contributor3?.fileTypes).toContainEqual({
+            count: 2,
+            extension: "ts",
+        });
+        expect(contributor3?.fileTypes).toContainEqual({
+            count: 2,
+            extension: "html",
+        });
+        expect(contributor3?.fileTypes).toContainEqual({
+            count: 1,
+            extension: "css",
+        });
+    });
+
     it("should return 401 when no token is provided", async () => {
         const response = await supertest(app)
             .get("/repository/1/metric/file-types")
@@ -834,6 +1270,115 @@ describe("GET /repository/:id/metric/changes", () => {
         expect(contributor1?.addtions.sum).toBe(112);
         expect(contributor1?.deletions.sum).toBe(27);
         expect(contributor1?.fileCount).toBe(2);
+
+        expect(contributor2?.addtions.sum).toBe(0);
+        expect(contributor2?.deletions.sum).toBe(5);
+        expect(contributor2?.fileCount).toBe(1);
+
+        expect(contributor3?.addtions.sum).toBe(105);
+        expect(contributor3?.deletions.sum).toBe(5);
+        expect(contributor3?.fileCount).toBe(5);
+    });
+
+    it("should return 200 when provided startedAt", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/changes?startedAt=2023-02-04`
+            )
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        const body: FileChangeMetricsDTO = response.body;
+        const contributorsIds = body.fileChangesPerContributor.map(
+            (item) => item.contribuitor.id
+        );
+
+        expect(body.fileCount).toBe(5);
+        expect(body.totalAdditions).toBe(105);
+        expect(body.totalDeletions).toBe(5);
+
+        expect(body.fileChangesPerContributor).toHaveLength(1);
+
+        expect(contributorsIds).toContainEqual(contributorTestingSeed[2].id);
+
+        const contributor3 = body.fileChangesPerContributor.find(
+            (item) => item.contribuitor.id === contributorTestingSeed[2].id
+        );
+
+        expect(contributor3?.addtions.sum).toBe(105);
+        expect(contributor3?.deletions.sum).toBe(5);
+        expect(contributor3?.fileCount).toBe(5);
+    });
+
+    it("should return 200 when provided endedAt", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/changes?endedAt=2023-02-03`
+            )
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        const body: FileChangeMetricsDTO = response.body;
+        const contributorsIds = body.fileChangesPerContributor.map(
+            (item) => item.contribuitor.id
+        );
+
+        expect(body.fileCount).toBe(2);
+        expect(body.totalAdditions).toBe(112);
+        expect(body.totalDeletions).toBe(32);
+
+        expect(body.fileChangesPerContributor).toHaveLength(2);
+
+        expect(contributorsIds).toContainEqual(contributorTestingSeed[0].id);
+        expect(contributorsIds).toContainEqual(contributorTestingSeed[1].id);
+
+        const contributor1 = body.fileChangesPerContributor.find(
+            (item) => item.contribuitor.id === contributorTestingSeed[0].id
+        );
+        const contributor2 = body.fileChangesPerContributor.find(
+            (item) => item.contribuitor.id === contributorTestingSeed[1].id
+        );
+
+        expect(contributor1?.addtions.sum).toBe(112);
+        expect(contributor1?.deletions.sum).toBe(27);
+        expect(contributor1?.fileCount).toBe(2);
+
+        expect(contributor2?.addtions.sum).toBe(0);
+        expect(contributor2?.deletions.sum).toBe(5);
+        expect(contributor2?.fileCount).toBe(1);
+    });
+
+    it("should return 200 when provided contributor", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/changes?contributor=${contributorTestingSeed[1].githubLogin}&contributor=${contributorTestingSeed[2].githubLogin}`
+            )
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        const body: FileChangeMetricsDTO = response.body;
+        const contributorsIds = body.fileChangesPerContributor.map(
+            (item) => item.contribuitor.id
+        );
+
+        expect(body.fileCount).toBe(5);
+        expect(body.totalAdditions).toBe(105);
+        expect(body.totalDeletions).toBe(10);
+
+        expect(body.fileChangesPerContributor).toHaveLength(2);
+
+        expect(contributorsIds).toContainEqual(contributorTestingSeed[1].id);
+        expect(contributorsIds).toContainEqual(contributorTestingSeed[2].id);
+
+        const contributor2 = body.fileChangesPerContributor.find(
+            (item) => item.contribuitor.id === contributorTestingSeed[1].id
+        );
+        const contributor3 = body.fileChangesPerContributor.find(
+            (item) => item.contribuitor.id === contributorTestingSeed[2].id
+        );
 
         expect(contributor2?.addtions.sum).toBe(0);
         expect(contributor2?.deletions.sum).toBe(5);

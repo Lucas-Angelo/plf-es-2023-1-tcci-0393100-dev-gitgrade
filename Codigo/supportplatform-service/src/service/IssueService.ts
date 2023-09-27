@@ -16,12 +16,17 @@ export default class IssueService {
         endedAt: Date,
         contributors?: Array<string>
     ) {
+        const startedAtDayStart = getDateInDayStart(
+            getDateInServerTimeZone(startedAt)
+        );
+        const endedAtDayEnd = getDateInDayEnd(getDateInServerTimeZone(endedAt));
         const dateWhereClause = {
             [sequelize.Op.between]: [
                 getDateInDayStart(getDateInServerTimeZone(startedAt)),
                 getDateInDayEnd(getDateInServerTimeZone(endedAt)),
             ],
         };
+
         const contributorWhere = contributors
             ? { githubLogin: contributors }
             : {};
@@ -117,16 +122,16 @@ export default class IssueService {
         for (const issueWithAuthor of issuesWithAuthorContributor) {
             if (!computedIssues.has(issueWithAuthor.id)) {
                 if (
-                    issueWithAuthor.githubCreatedAt >= startedAt &&
-                    issueWithAuthor.githubCreatedAt <= endedAt
+                    issueWithAuthor.githubCreatedAt >= startedAtDayStart &&
+                    issueWithAuthor.githubCreatedAt <= endedAtDayEnd
                 ) {
                     issuesOpennedCount += 1;
                 }
 
                 if (
                     issueWithAuthor.githubClosedAt &&
-                    issueWithAuthor.githubClosedAt >= startedAt &&
-                    issueWithAuthor.githubClosedAt <= endedAt
+                    issueWithAuthor.githubClosedAt >= startedAtDayStart &&
+                    issueWithAuthor.githubClosedAt <= endedAtDayEnd
                 ) {
                     issuesClosedCount += 1;
                 }
@@ -158,16 +163,16 @@ export default class IssueService {
         for (const issueWithAssignee of issuesWithAssigneeContributor) {
             if (!computedIssues.has(issueWithAssignee.id)) {
                 if (
-                    issueWithAssignee.githubCreatedAt >= startedAt &&
-                    issueWithAssignee.githubCreatedAt <= endedAt
+                    issueWithAssignee.githubCreatedAt >= startedAtDayStart &&
+                    issueWithAssignee.githubCreatedAt <= endedAtDayEnd
                 ) {
                     issuesOpennedCount += 1;
                 }
 
                 if (
                     issueWithAssignee.githubClosedAt &&
-                    issueWithAssignee.githubClosedAt >= startedAt &&
-                    issueWithAssignee.githubClosedAt <= endedAt
+                    issueWithAssignee.githubClosedAt >= startedAtDayStart &&
+                    issueWithAssignee.githubClosedAt <= endedAtDayEnd
                 ) {
                     issuesClosedCount += 1;
                 }
