@@ -56,8 +56,6 @@ describe("GET /repository/:id/metric/commit", () => {
             .expect(422)
             .send();
 
-        console.log("its in the soil of boot", response.body);
-
         expect(response.body.error?.["query.startedAt"]?.message).toBe(
             "startedAt must be less than or equal to endedAt"
         );
