@@ -1,12 +1,13 @@
 import { LoaderFunctionArgs } from "react-router";
 import { getRepositoryQuery } from "../../../commom/data/repo";
 import appRoutes from "../../../commom/routes/appRoutes";
-import { PaginationResponseDTO, RepositoryDTO } from "@gitgrade/dtos";
+import { PaginationResponseDTO, RepositoryResponseDTO } from "@gitgrade/dtos";
 import { loadQueryData } from "../../../commom/data/utils/load";
 
 const pageSearchParams = appRoutes.repo.list.search;
 
-export type RepoListPageLoaderData = PaginationResponseDTO<RepositoryDTO>;
+export type RepoListPageLoaderData =
+    PaginationResponseDTO<RepositoryResponseDTO>;
 
 export default async function repoListPageLoader({
     request,
