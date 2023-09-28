@@ -42,6 +42,7 @@ const routes = createRoutesFromElements(
                             lazy={() =>
                                 import("../../pages/repo/detail/metrics/index")
                             }
+                            errorElement={<ErrorElement />}
                         >
                             <Route
                                 path={
@@ -294,6 +295,11 @@ const routes = createRoutesFromElements(
                 </Route>
             </Route>
         </Route>
+
+        <Route
+            path={appRoutes.login.path}
+            lazy={() => import("../../pages/login/index")}
+        />
     </Route>
 );
 
