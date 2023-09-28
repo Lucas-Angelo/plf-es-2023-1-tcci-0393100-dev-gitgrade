@@ -1,9 +1,14 @@
 import { Box, Octicon, Text } from "@primer/react";
 import { MarkGithubIcon } from "@primer/octicons-react";
 
-export default function SigninButton() {
+interface ISigninButtonProps {
+    onClick?: () => void;
+}
+
+export default function SigninButton(props: ISigninButtonProps) {
     return (
         <Box
+            onClick={props.onClick}
             sx={{
                 border: "1px solid #D1D5DA",
                 borderRadius: 4,

@@ -10,6 +10,10 @@ const appRoutes = {
         link() {
             return `/${this.path}` as const;
         },
+        // necessary to map query string param name per a trustable variable
+        search: {
+            message: "message",
+        },
     },
     repo: {
         path: "repo" as const,

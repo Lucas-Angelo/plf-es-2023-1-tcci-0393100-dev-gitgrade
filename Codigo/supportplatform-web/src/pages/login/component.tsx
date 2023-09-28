@@ -2,8 +2,20 @@ import { Box, Avatar, Text } from "@primer/react";
 
 import GitGradeLogoPng from "../../assets/logo.png";
 import SigninButton from "./components/signinButton";
+import { LoginService } from "../../commom/service/api/login";
+import appRoutes from "../../commom/routes/appRoutes";
+import { useSearchParams } from "react-router-dom";
+
+const pageSearchParams = appRoutes.login.search;
 
 export default function LoginPage() {
+    function handleSigninButtonClick() {
+        new LoginService().redirectToGithubAuth();
+    }
+
+    const [searchParams] = useSearchParams();
+    const message = searchParams.get(pageSearchParams.message);
+
     return (
         <Box
             sx={{
@@ -48,7 +60,19 @@ export default function LoginPage() {
                     Plataforma de avaliação de trabalhos interdisciplinares
                 </Text>
 
-                <SigninButton />
+                <SigninButton onClick={handleSigninButtonClick} />
+
+                {message && (
+                    <Text
+                        sx={{
+                            fontSize: 2,
+                            textAlign: "center",
+                            color: "#ff6a69",
+                        }}
+                    >
+                        {message}
+                    </Text>
+                )}
             </Box>
         </Box>
     );
