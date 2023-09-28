@@ -5,6 +5,12 @@ const appRoutes = {
             return this.path;
         },
     },
+    login: {
+        path: "login" as const,
+        link() {
+            return `/${this.path}` as const;
+        },
+    },
     repo: {
         path: "repo" as const,
         link() {

@@ -55,6 +55,11 @@ const routes = createRoutesFromElements(
                 </Route>
             </Route>
         </Route>
+
+        <Route
+            path={appRoutes.login.path}
+            lazy={() => import("../../pages/login/index")}
+        />
     </Route>
 );
 
