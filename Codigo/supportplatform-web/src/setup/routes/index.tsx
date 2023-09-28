@@ -8,6 +8,7 @@ import {
 import appRoutes from "../../commom/routes/appRoutes";
 
 import * as BasePageRoute from "../../pages/base";
+import * as LoginPageRoute from "../../pages/login";
 import ErrorElement from "../../commom/components/errorElement";
 import NavigateMaintainingSearchParams from "../../commom/components/navigateMaintainingSearchParams";
 
@@ -16,6 +17,7 @@ const routes = createRoutesFromElements(
         <Route
             path={appRoutes.base.path}
             element={<BasePageRoute.Component />}
+            loader={BasePageRoute.loader}
         >
             <Route errorElement={<ErrorElement />}>
                 <Route
@@ -298,7 +300,8 @@ const routes = createRoutesFromElements(
 
         <Route
             path={appRoutes.login.path}
-            lazy={() => import("../../pages/login/index")}
+            element={<LoginPageRoute.Component />}
+            loader={LoginPageRoute.loader}
         />
     </Route>
 );
