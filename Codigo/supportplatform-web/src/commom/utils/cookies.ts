@@ -7,3 +7,7 @@ export function getCookies<TCookieAttribute extends string = string>() {
     }, {} as Record<TCookieAttribute, string | undefined>);
     return cookies;
 }
+
+export function cleanCookie(name: string) {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+}
