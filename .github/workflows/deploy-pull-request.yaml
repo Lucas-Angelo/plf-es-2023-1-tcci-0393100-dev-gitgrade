@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Sanitize branch name removing special characters and replacing slashes with dashes
       - name: Sanitize branch name
