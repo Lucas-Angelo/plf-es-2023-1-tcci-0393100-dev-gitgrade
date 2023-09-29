@@ -214,7 +214,7 @@ describe(`GET ${baseRoute}`, () => {
             .expect(422)
             .send();
 
-        expect(response.body.error?.["query.start_date"]?.message).toContain(
+        expect(response.body.error?.["query.start_date"]?.message).toBe(
             "start_date must be a Date"
         );
     });
@@ -226,7 +226,7 @@ describe(`GET ${baseRoute}`, () => {
             .expect(422)
             .send();
 
-        expect(response.body.error?.["query.end_date"]?.message).toContain(
+        expect(response.body.error?.["query.end_date"]?.message).toBe(
             "end_date must be a Date"
         );
     });
@@ -301,7 +301,9 @@ describe(`GET ${baseRoute}/{id}`, () => {
             .expect(404)
             .send();
 
-        expect(response.body.message).toBe("Sprint not found");
+        expect(response.body.message).toBe(
+            'Sprint not found by fields {"id":9999}'
+        );
     });
 
     it("should return 422 when id is not a number", async () => {
@@ -450,7 +452,7 @@ describe(`POST ${baseRoute}`, () => {
                 evaluationMethodId: 13,
             });
 
-        expect(response.body.error?.["body.start_date"]?.message).toContain(
+        expect(response.body.error?.["body.start_date"]?.message).toBe(
             "start_date must be a Date"
         );
     });
@@ -483,7 +485,7 @@ describe(`POST ${baseRoute}`, () => {
                 evaluationMethodId: 13,
             });
 
-        expect(response.body.error?.["body.end_date"]?.message).toContain(
+        expect(response.body.error?.["body.end_date"]?.message).toBe(
             "end_date must be a Date"
         );
     });
@@ -640,7 +642,9 @@ describe(`PUT ${baseRoute}/{id}`, () => {
                 evaluationMethodId: 13,
             });
 
-        expect(response.body.message).toBe("Sprint with id: 9999 not found");
+        expect(response.body.message).toBe(
+            'Sprint not found by fields {"id":9999}'
+        );
     });
 
     it("should return 422 when send another field (id) on body", async () => {
@@ -756,7 +760,7 @@ describe(`PUT ${baseRoute}/{id}`, () => {
                 evaluationMethodId: 13,
             });
 
-        expect(response.body.error?.["body.start_date"]?.message).toContain(
+        expect(response.body.error?.["body.start_date"]?.message).toBe(
             "start_date must be a Date"
         );
     });
@@ -789,7 +793,7 @@ describe(`PUT ${baseRoute}/{id}`, () => {
                 evaluationMethodId: 13,
             });
 
-        expect(response.body.error?.["body.end_date"]?.message).toContain(
+        expect(response.body.error?.["body.end_date"]?.message).toBe(
             "end_date must be a Date"
         );
     });

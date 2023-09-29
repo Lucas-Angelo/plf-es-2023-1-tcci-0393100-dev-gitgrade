@@ -7,6 +7,7 @@ import logger from "../config/LogConfig";
 import SequelizeOptions from "../config/SequelizeConfig";
 import { Branch } from "../model/Branch";
 import { Commit } from "../model/Commit";
+import { ConsistencyRule } from "../model/ConsistencyRule";
 import { Contributor } from "../model/Contributor";
 import { EvaluationMethod } from "../model/EvaluationMethod";
 import { File } from "../model/File";
@@ -17,6 +18,7 @@ import { PullRequestHasAssigneeContributor } from "../model/PullRequestHasAssign
 import { Repository } from "../model/Repository";
 import { RepositoryHasContributor } from "../model/RepositoryHasContributor";
 import { Sprint } from "../model/Sprint";
+import { StandardizedIssue } from "../model/StandardizedIssue";
 import { User } from "../model/User";
 
 class SequelizeDatabase {
@@ -35,6 +37,81 @@ class SequelizeDatabase {
         );
     }
 
+    async connect() {
+        await MySqlDatabase.createDatabaseIfNotExists();
+
+        try {
+            await this.sequelize.authenticate();
+            // TODO: create migrations
+            if (EnvConfig.NODE_ENV == "development") await this.sync();
+            this.logConnectionSuccess();
+        } catch (error) {
+            this.logConnectionError(error);
+        }
+
+        this.initModels();
+        this.associateModels();
+    }
+
+    private initModels() {
+        try {
+            User.initModel(this.sequelize);
+            EvaluationMethod.initModel(this.sequelize);
+            Repository.initModel(this.sequelize);
+            Contributor.initModel(this.sequelize);
+            RepositoryHasContributor.initModel(this.sequelize);
+            Issue.initModel(this.sequelize);
+            IssueHasAssigneeContributor.initModel(this.sequelize);
+            PullRequest.initModel(this.sequelize);
+            PullRequestHasAssigneeContributor.initModel(this.sequelize);
+            Branch.initModel(this.sequelize);
+            Commit.initModel(this.sequelize);
+            File.initModel(this.sequelize);
+            EvaluationMethod.initModel(this.sequelize);
+            Sprint.initModel(this.sequelize);
+            StandardizedIssue.initModel(this.sequelize);
+            ConsistencyRule.initModel(this.sequelize);
+        } catch (error) {
+            logger.error("Error initializing models:", error);
+            throw error;
+        }
+    }
+
+    private associateModels() {
+        try {
+            Branch.associate({ Repository, Commit });
+            Contributor.associate({ Repository, Commit, Issue, PullRequest });
+            RepositoryHasContributor.associate({ Contributor, Repository });
+            Issue.associate({ Contributor, Repository });
+            IssueHasAssigneeContributor.associate({ Contributor, Issue });
+            PullRequest.associate({ Contributor, Repository });
+            PullRequestHasAssigneeContributor.associate({
+                Contributor,
+                PullRequest,
+            });
+            Commit.associate({ Branch, Contributor, File });
+            File.associate({ Commit });
+            Repository.associate({
+                Branch,
+                Contributor,
+                Issue,
+                PullRequest,
+                EvaluationMethod,
+            });
+            EvaluationMethod.associate({ Repository, Sprint });
+            Sprint.associate({ EvaluationMethod });
+            StandardizedIssue.associate({ EvaluationMethod });
+            ConsistencyRule.associate({
+                EvaluationMethod,
+                Sprint,
+                StandardizedIssue,
+            });
+        } catch (error) {
+            logger.error("Error associating models:", error);
+            throw error;
+        }
+    }
+
     private logConnectionSuccess() {
         if (EnvConfig.APP_DEBUG && EnvConfig.NODE_ENV !== "test") {
             logger.info(
@@ -49,62 +126,6 @@ class SequelizeDatabase {
             { error }
         );
         throw error;
-    }
-
-    private initModels() {
-        User.initModel(this.sequelize);
-        EvaluationMethod.initModel(this.sequelize);
-        Repository.initModel(this.sequelize);
-        Contributor.initModel(this.sequelize);
-        RepositoryHasContributor.initModel(this.sequelize);
-        Issue.initModel(this.sequelize);
-        IssueHasAssigneeContributor.initModel(this.sequelize);
-        PullRequest.initModel(this.sequelize);
-        PullRequestHasAssigneeContributor.initModel(this.sequelize);
-        Branch.initModel(this.sequelize);
-        Commit.initModel(this.sequelize);
-        File.initModel(this.sequelize);
-        EvaluationMethod.initModel(this.sequelize);
-        Sprint.initModel(this.sequelize);
-    }
-
-    private associateModels() {
-        Branch.associate({ Repository, Commit });
-        Contributor.associate({ Repository, Commit, Issue, PullRequest });
-        RepositoryHasContributor.associate({ Contributor, Repository });
-        Issue.associate({ Contributor, Repository });
-        IssueHasAssigneeContributor.associate({ Contributor, Issue });
-        PullRequest.associate({ Contributor, Repository });
-        PullRequestHasAssigneeContributor.associate({
-            Contributor,
-            PullRequest,
-        });
-        Commit.associate({ Branch, Contributor, File });
-        File.associate({ Commit });
-        Repository.associate({
-            Branch,
-            Contributor,
-            Issue,
-            PullRequest,
-            EvaluationMethod,
-        });
-        EvaluationMethod.associate({ Repository, Sprint });
-        Sprint.associate({ EvaluationMethod });
-    }
-
-    async connect() {
-        await MySqlDatabase.createDatabaseIfNotExists();
-
-        try {
-            this.initModels();
-            this.associateModels();
-            await this.sequelize.authenticate();
-            // TODO: create migrations
-            if (EnvConfig.NODE_ENV == "development") await this.sync();
-            this.logConnectionSuccess();
-        } catch (error) {
-            this.logConnectionError(error);
-        }
     }
 
     async close() {
