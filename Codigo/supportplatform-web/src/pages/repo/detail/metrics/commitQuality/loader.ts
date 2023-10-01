@@ -1,7 +1,7 @@
 import { LoaderFunctionArgs } from "react-router";
 import { loadQueryData } from "../../../../../commom/data/utils/load";
-import { getCommitMetricsGroupedByContributorByRepositoryIdQuery } from "../../../../../commom/data/repo/metrics/commits";
 import appRoutes from "../../../../../commom/routes/appRoutes";
+import { getCommitQualityMetricsGroupedByContributorByRepositoryIdQuery } from "../../../../../commom/data/repo/metrics/commitQuality";
 
 const pageRouteSearchParams = appRoutes.repo[":id"].metrics.search;
 
@@ -17,16 +17,21 @@ export default function repositoryCommitQualityMetricsPageLoader({
     if (Number.isNaN(repositoryId)) throw new Error("Invalid repository id");
 
     return loadQueryData(
-        getCommitMetricsGroupedByContributorByRepositoryIdQuery(repositoryId, {
-            branchName:
-                searchParams.get(pageRouteSearchParams.branch) ?? undefined,
-            endedAt:
-                searchParams.get(pageRouteSearchParams.endedAt) ?? undefined,
-            startedAt:
-                searchParams.get(pageRouteSearchParams.startedAt) ?? undefined,
-            contributors:
-                searchParams.getAll(pageRouteSearchParams.contributor) ??
-                undefined,
-        })
+        getCommitQualityMetricsGroupedByContributorByRepositoryIdQuery(
+            repositoryId,
+            {
+                branchName:
+                    searchParams.get(pageRouteSearchParams.branch) ?? undefined,
+                endedAt:
+                    searchParams.get(pageRouteSearchParams.endedAt) ??
+                    undefined,
+                startedAt:
+                    searchParams.get(pageRouteSearchParams.startedAt) ??
+                    undefined,
+                contributors:
+                    searchParams.getAll(pageRouteSearchParams.contributor) ??
+                    undefined,
+            }
+        )
     );
 }

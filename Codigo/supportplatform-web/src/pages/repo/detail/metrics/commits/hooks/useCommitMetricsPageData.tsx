@@ -21,6 +21,15 @@ export function useCommitMetricsPageData() {
                 searchParams.get(pageRouteSearchParams.endedAt) ?? undefined,
             startedAt:
                 searchParams.get(pageRouteSearchParams.startedAt) ?? undefined,
+            contributors: searchParams.getAll(
+                pageRouteSearchParams.contributor
+            ),
+            filterWithNoContributor:
+                searchParams.get(
+                    pageRouteSearchParams.filterWithNoContributor
+                ) === "true"
+                    ? true
+                    : false,
         });
 
     return commitMetricsData;

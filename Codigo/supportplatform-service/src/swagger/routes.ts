@@ -159,7 +159,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "totalCommitCount": {"dataType":"double","required":true},
-            "commitsPerContributor": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"commtiPercentage":{"dataType":"double","required":true},"commitCount":{"dataType":"double","required":true},"contribuitor":{"dataType":"nestedObjectLiteral","nestedProperties":{"githubAvatarUrl":{"dataType":"string","required":true},"githubLogin":{"dataType":"string","required":true},"githubName":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"required":true}}},"required":true},
+            "commitsPerContributor": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"commtiPercentage":{"dataType":"double","required":true},"commitCount":{"dataType":"double","required":true},"contribuitor":{"dataType":"nestedObjectLiteral","nestedProperties":{"githubAvatarUrl":{"dataType":"string","required":true},"githubLogin":{"dataType":"string","required":true},"githubName":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}}}}},"required":true},
         },
         "additionalProperties": false,
     },
@@ -171,6 +171,7 @@ const models: TsoaRoute.Models = {
             "endedAt": {"dataType":"date","validators":{"isDate":{"errorMsg":"endedAt must be a valid date"}}},
             "branchName": {"dataType":"string"},
             "contributor": {"dataType":"array","array":{"dataType":"string"}},
+            "filterWithNoContributor": {"dataType":"boolean"},
         },
         "additionalProperties": false,
     },

@@ -21,13 +21,15 @@ export default function PercentualCommitChart(
         () =>
             props.commitMetrics.commitsPerContributor.map(
                 (contributorWithCommitMetrics) => ({
-                    name:
-                        contributorWithCommitMetrics.contribuitor.githubName ??
-                        contributorWithCommitMetrics.contribuitor.githubLogin,
+                    name: contributorWithCommitMetrics.contribuitor
+                        ? contributorWithCommitMetrics.contribuitor
+                              .githubName ??
+                          contributorWithCommitMetrics.contribuitor.githubLogin
+                        : "(Sem contribuidor)",
                     percentual: Number(
                         contributorWithCommitMetrics.commtiPercentage.toFixed(2)
                     ),
-                    id: contributorWithCommitMetrics.contribuitor.id,
+                    id: contributorWithCommitMetrics.contribuitor?.id ?? -1,
                 })
             ),
         [props.commitMetrics]
@@ -48,7 +50,7 @@ export default function PercentualCommitChart(
                     >
                         {chartData.map((entry, index) => (
                             <Cell
-                                key={`cell-${index}`}
+                                key={`cell-${entry.id}`}
                                 fill={getChartColor(index)}
                                 name={entry.name}
                             />

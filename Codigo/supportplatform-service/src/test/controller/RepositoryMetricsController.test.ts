@@ -84,32 +84,38 @@ describe("GET /repository/:id/metric/commit", () => {
 
         const body: CommitMetricsDTO = response.body;
         const contributorsIds = body.commitsPerContributor.map(
-            (item) => item.contribuitor.id
+            (item) => item.contribuitor?.id
         );
 
-        expect(body.totalCommitCount).toBe(5);
-        expect(body.commitsPerContributor).toHaveLength(3);
+        expect(body.totalCommitCount).toBe(7);
+        expect(body.commitsPerContributor).toHaveLength(4);
         expect(contributorsIds).toContain(contributorTestingSeed[0].id);
         expect(contributorsIds).toContain(contributorTestingSeed[1].id);
         expect(contributorsIds).toContain(contributorTestingSeed[2].id);
+        expect(contributorsIds).toContain(undefined);
 
         const contributor1 = body.commitsPerContributor.find(
-            (item) => item.contribuitor.id === contributorTestingSeed[0].id
+            (item) => item.contribuitor?.id === contributorTestingSeed[0].id
         );
         const contributor2 = body.commitsPerContributor.find(
-            (item) => item.contribuitor.id === contributorTestingSeed[1].id
+            (item) => item.contribuitor?.id === contributorTestingSeed[1].id
         );
         const contributor3 = body.commitsPerContributor.find(
-            (item) => item.contribuitor.id === contributorTestingSeed[2].id
+            (item) => item.contribuitor?.id === contributorTestingSeed[2].id
+        );
+        const noContributor = body.commitsPerContributor.find(
+            (item) => !item.contribuitor
         );
 
         expect(contributor1?.commitCount).toBe(1);
         expect(contributor2?.commitCount).toBe(1);
         expect(contributor3?.commitCount).toBe(3);
+        expect(noContributor?.commitCount).toBe(2);
 
-        expect(contributor1?.commtiPercentage).toBe(20);
-        expect(contributor2?.commtiPercentage).toBe(20);
-        expect(contributor3?.commtiPercentage).toBe(60);
+        expect(contributor1?.commtiPercentage).toBe(14.285714285714285);
+        expect(contributor2?.commtiPercentage).toBe(14.285714285714285);
+        expect(contributor3?.commtiPercentage).toBe(42.857142857142854);
+        expect(noContributor?.commtiPercentage).toBe(28.57142857142857);
     });
 
     it("should return 200 with one less commit, when branch = dev", async () => {
@@ -123,7 +129,7 @@ describe("GET /repository/:id/metric/commit", () => {
 
         const body: CommitMetricsDTO = response.body;
         const contributorsIds = body.commitsPerContributor.map(
-            (item) => item.contribuitor.id
+            (item) => item.contribuitor?.id
         );
 
         expect(body.totalCommitCount).toBe(4);
@@ -133,13 +139,13 @@ describe("GET /repository/:id/metric/commit", () => {
         expect(contributorsIds).toContain(contributorTestingSeed[2].id);
 
         const contributor1 = body.commitsPerContributor.find(
-            (item) => item.contribuitor.id === contributorTestingSeed[0].id
+            (item) => item.contribuitor?.id === contributorTestingSeed[0].id
         );
         const contributor2 = body.commitsPerContributor.find(
-            (item) => item.contribuitor.id === contributorTestingSeed[1].id
+            (item) => item.contribuitor?.id === contributorTestingSeed[1].id
         );
         const contributor3 = body.commitsPerContributor.find(
-            (item) => item.contribuitor.id === contributorTestingSeed[2].id
+            (item) => item.contribuitor?.id === contributorTestingSeed[2].id
         );
 
         expect(contributor1?.commitCount).toBe(1);
@@ -162,20 +168,26 @@ describe("GET /repository/:id/metric/commit", () => {
 
         const body: CommitMetricsDTO = response.body;
         const contributorsIds = body.commitsPerContributor.map(
-            (item) => item.contribuitor.id
+            (item) => item.contribuitor?.id
         );
 
-        expect(body.totalCommitCount).toBe(3);
-        expect(body.commitsPerContributor).toHaveLength(1);
+        expect(body.totalCommitCount).toBe(5);
+        expect(body.commitsPerContributor).toHaveLength(2);
         expect(contributorsIds).toContain(contributorTestingSeed[2].id);
+        expect(contributorsIds).toContain(undefined);
 
         const contributor3 = body.commitsPerContributor.find(
-            (item) => item.contribuitor.id === contributorTestingSeed[2].id
+            (item) => item.contribuitor?.id === contributorTestingSeed[2].id
+        );
+        const noContributor = body.commitsPerContributor.find(
+            (item) => !item.contribuitor
         );
 
         expect(contributor3?.commitCount).toBe(3);
+        expect(noContributor?.commitCount).toBe(2);
 
-        expect(contributor3?.commtiPercentage).toBe(100);
+        expect(contributor3?.commtiPercentage).toBe(60);
+        expect(noContributor?.commtiPercentage).toBe(40);
     });
 
     it("should return 200 and the two last commits, when startedAt = 2023-02-04 and branch = dev", async () => {
@@ -189,7 +201,7 @@ describe("GET /repository/:id/metric/commit", () => {
 
         const body: CommitMetricsDTO = response.body;
         const contributorsIds = body.commitsPerContributor.map(
-            (item) => item.contribuitor.id
+            (item) => item.contribuitor?.id
         );
 
         expect(body.totalCommitCount).toBe(2);
@@ -197,7 +209,7 @@ describe("GET /repository/:id/metric/commit", () => {
         expect(contributorsIds).toContain(contributorTestingSeed[2].id);
 
         const contributor3 = body.commitsPerContributor.find(
-            (item) => item.contribuitor.id === contributorTestingSeed[2].id
+            (item) => item.contribuitor?.id === contributorTestingSeed[2].id
         );
 
         expect(contributor3?.commitCount).toBe(2);
@@ -216,7 +228,7 @@ describe("GET /repository/:id/metric/commit", () => {
 
         const body: CommitMetricsDTO = response.body;
         const contributorsIds = body.commitsPerContributor.map(
-            (item) => item.contribuitor.id
+            (item) => item.contribuitor?.id
         );
 
         expect(body.totalCommitCount).toBe(2);
@@ -225,10 +237,10 @@ describe("GET /repository/:id/metric/commit", () => {
         expect(contributorsIds).toContain(contributorTestingSeed[1].id);
 
         const contributor1 = body.commitsPerContributor.find(
-            (item) => item.contribuitor.id === contributorTestingSeed[0].id
+            (item) => item.contribuitor?.id === contributorTestingSeed[0].id
         );
         const contributor2 = body.commitsPerContributor.find(
-            (item) => item.contribuitor.id === contributorTestingSeed[1].id
+            (item) => item.contribuitor?.id === contributorTestingSeed[1].id
         );
 
         expect(contributor1?.commitCount).toBe(1);
@@ -249,7 +261,7 @@ describe("GET /repository/:id/metric/commit", () => {
 
         const body: CommitMetricsDTO = response.body;
         const contributorsIds = body.commitsPerContributor.map(
-            (item) => item.contribuitor.id
+            (item) => item.contribuitor?.id
         );
 
         expect(body.totalCommitCount).toBe(2);
@@ -258,10 +270,10 @@ describe("GET /repository/:id/metric/commit", () => {
         expect(contributorsIds).toContain(contributorTestingSeed[2].id);
 
         const contributor2 = body.commitsPerContributor.find(
-            (item) => item.contribuitor.id === contributorTestingSeed[1].id
+            (item) => item.contribuitor?.id === contributorTestingSeed[1].id
         );
         const contributor3 = body.commitsPerContributor.find(
-            (item) => item.contribuitor.id === contributorTestingSeed[2].id
+            (item) => item.contribuitor?.id === contributorTestingSeed[2].id
         );
 
         expect(contributor2?.commitCount).toBe(1);
@@ -282,7 +294,7 @@ describe("GET /repository/:id/metric/commit", () => {
 
         const body: CommitMetricsDTO = response.body;
         const contributorsIds = body.commitsPerContributor.map(
-            (item) => item.contribuitor.id
+            (item) => item.contribuitor?.id
         );
 
         expect(body.totalCommitCount).toBe(1);
@@ -290,12 +302,72 @@ describe("GET /repository/:id/metric/commit", () => {
         expect(contributorsIds).toContain(contributorTestingSeed[1].id);
 
         const contributor2 = body.commitsPerContributor.find(
-            (item) => item.contribuitor.id === contributorTestingSeed[1].id
+            (item) => item.contribuitor?.id === contributorTestingSeed[1].id
         );
 
         expect(contributor2?.commitCount).toBe(1);
 
         expect(contributor2?.commtiPercentage).toBe(100);
+    });
+
+    it("should return 200 when contributor filter is provided and filterWithNoContributor is false", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/commit?contributor=${contributorTestingSeed[1].githubLogin}&filterWithNoContributor=false`
+            )
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        const body: CommitMetricsDTO = response.body;
+        const contributorsIds = body.commitsPerContributor.map(
+            (item) => item.contribuitor?.id
+        );
+
+        expect(body.totalCommitCount).toBe(1);
+        expect(body.commitsPerContributor).toHaveLength(1);
+        expect(contributorsIds).toContain(contributorTestingSeed[1].id);
+
+        const contributor2 = body.commitsPerContributor.find(
+            (item) => item.contribuitor?.id === contributorTestingSeed[1].id
+        );
+
+        expect(contributor2?.commitCount).toBe(1);
+
+        expect(contributor2?.commtiPercentage).toBe(100);
+    });
+
+    it("should return 200 when contributor filter is provided and filterWithNoContributor is true", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/commit?contributor=${contributorTestingSeed[1].githubLogin}&filterWithNoContributor=true`
+            )
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        const body: CommitMetricsDTO = response.body;
+        const contributorsIds = body.commitsPerContributor.map(
+            (item) => item.contribuitor?.id
+        );
+
+        expect(body.totalCommitCount).toBe(3);
+        expect(body.commitsPerContributor).toHaveLength(2);
+        expect(contributorsIds).toContain(contributorTestingSeed[1].id);
+        expect(contributorsIds).toContain(undefined);
+
+        const contributor2 = body.commitsPerContributor.find(
+            (item) => item.contribuitor?.id === contributorTestingSeed[1].id
+        );
+        const noContributor = body.commitsPerContributor.find(
+            (item) => !item.contribuitor
+        );
+
+        expect(contributor2?.commitCount).toBe(1);
+        expect(noContributor?.commitCount).toBe(2);
+
+        expect(contributor2?.commtiPercentage).toBe(33.33333333333333);
+        expect(noContributor?.commtiPercentage).toBe(66.66666666666666);
     });
 
     it("should return 401 when no token is provided", async () => {

@@ -1,7 +1,7 @@
 export interface CommitMetricsDTO {
   totalCommitCount: number;
   commitsPerContributor: Array<{
-    contribuitor: {
+    contribuitor?: {
       id: number;
       githubName: string;
       githubLogin: string;

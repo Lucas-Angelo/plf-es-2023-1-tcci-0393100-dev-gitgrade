@@ -5,4 +5,5 @@ export interface RepositoryMetricQueryDTO {
     endedAt?: Date,
     branchName?: string,
     contributor?: Array<string>,
+    filterWithNoContributor?: boolean
 }

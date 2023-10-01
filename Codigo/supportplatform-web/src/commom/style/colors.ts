@@ -15,6 +15,8 @@ export const chartColors = [
     "#3A1D6E", // purple-800
 ];
 
+export const noContributorColor = "#D1D5DA"; // gray-300
+
 export function getChartColor(index: number) {
     return chartColors[index % chartColors.length];
 }

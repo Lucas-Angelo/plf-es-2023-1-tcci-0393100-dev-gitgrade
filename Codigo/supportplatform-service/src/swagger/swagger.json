@@ -397,8 +397,7 @@
 							},
 							"required": [
 								"commtiPercentage",
-								"commitCount",
-								"contribuitor"
+								"commitCount"
 							],
 							"type": "object"
 						},
@@ -430,6 +429,9 @@
 							"type": "string"
 						},
 						"type": "array"
+					},
+					"filterWithNoContributor": {
+						"type": "boolean"
 					}
 				},
 				"type": "object",
@@ -1428,6 +1430,14 @@
 								"type": "string"
 							}
 						}
+					},
+					{
+						"in": "query",
+						"name": "filterWithNoContributor",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
 					}
 				]
 			}
@@ -1522,6 +1532,14 @@
 								"type": "string"
 							}
 						}
+					},
+					{
+						"in": "query",
+						"name": "filterWithNoContributor",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
 					}
 				]
 			}
@@ -1614,6 +1632,14 @@
 							"items": {
 								"type": "string"
 							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "filterWithNoContributor",
+						"required": false,
+						"schema": {
+							"type": "boolean"
 						}
 					}
 				]
@@ -1795,6 +1821,14 @@
 							"items": {
 								"type": "string"
 							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "filterWithNoContributor",
+						"required": false,
+						"schema": {
+							"type": "boolean"
 						}
 					}
 				]

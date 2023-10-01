@@ -19,7 +19,7 @@ import {
 import "./styles.css";
 import UnderlineNavItemLink from "../../../../../commom/components/underlineNavItemLink";
 import appRoutes from "../../../../../commom/routes/appRoutes";
-import ContributorAvatarLink from "../contributorAvatarLink";
+import ContributorFilter from "../contributorFilter";
 
 interface IRepoHeadProps {
     orgName: string;
@@ -87,14 +87,7 @@ export default function RepoHead(props: IRepoHeadProps) {
                         flexGrow: 1,
                     }}
                 >
-                    {props.contributors?.map((contributor) => (
-                        <ContributorAvatarLink
-                            key={contributor.id}
-                            githubAvatarUrl={contributor.githubAvatarUrl}
-                            githubLogin={contributor.githubLogin}
-                            githubName={contributor.githubName}
-                        />
-                    ))}
+                    <ContributorFilter contributors={props.contributors} />
                 </Box>
 
                 <Box>

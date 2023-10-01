@@ -9,12 +9,18 @@ export class CommitService {
             startedAt?: string;
             endedAt?: string;
             contributors?: Array<string>;
+            filterWithNoContributor?: boolean;
         }
     ) {
         const searchParams = new URLSearchParams();
         if (query?.branchName) searchParams.set("branchName", query.branchName);
         if (query?.startedAt) searchParams.set("startedAt", query.startedAt);
         if (query?.endedAt) searchParams.set("endedAt", query.endedAt);
+        if (query?.filterWithNoContributor)
+            searchParams.set(
+                "filterWithNoContributor",
+                query.filterWithNoContributor.toString()
+            );
 
         if (query?.contributors) {
             query.contributors.forEach((contributor) => {

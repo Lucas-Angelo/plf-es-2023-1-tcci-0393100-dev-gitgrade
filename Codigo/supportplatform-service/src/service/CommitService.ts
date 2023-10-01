@@ -1,4 +1,4 @@
-import sequelize from "sequelize";
+import sequelize, { WhereOptions } from "sequelize";
 import { Branch } from "../model/Branch";
 import { Commit } from "../model/Commit";
 import { Contributor } from "../model/Contributor";
@@ -21,58 +21,118 @@ export default class CommitService {
         branchName: string,
         startedAt: Date,
         endedAt: Date,
-        contributors?: Array<string>
+        contributors: Array<string> | undefined,
+        filterWithNoContributor: boolean | undefined
     ) {
-        const contributorWhere = contributors
+        let _contributorWhere2: WhereOptions = {};
+        if (contributors?.length || filterWithNoContributor) {
+            const orParts = [];
+            if (contributors?.length) {
+                orParts.push({
+                    "$contributor.github_login$": contributors,
+                });
+            }
+            if (filterWithNoContributor) {
+                orParts.push({
+                    contributorId: null,
+                });
+            }
+
+            _contributorWhere2 = {
+                [Op.or]: orParts,
+            };
+        }
+
+        const _contributorWhere = contributors
             ? { githubLogin: contributors }
             : {};
-        const commitCounts = await Contributor.findAll({
+        const commitCountss = await Commit.findAll({
             attributes: [
-                "id",
-                "githubName",
-                "githubLogin",
-                "githubAvatarUrl",
+                "contributorId",
                 [
-                    sequelize.fn("COUNT", sequelize.col("commits.id")),
+                    sequelize.fn("COUNT", sequelize.col("Commit.id")),
                     "commitCount",
                 ],
             ],
             include: [
                 {
-                    model: Commit,
-                    required: true,
-                    as: "commits",
-                    attributes: [],
-                    include: [
-                        {
-                            model: Branch,
-                            where: {
-                                repositoryId,
-                                name: branchName,
-                            },
-                            as: "branch",
-                            attributes: [],
-                        },
-                    ],
+                    model: Branch,
                     where: {
-                        committedDate: {
-                            [sequelize.Op.between]: [
-                                getDateInDayStart(
-                                    getDateInServerTimeZone(startedAt)
-                                ),
-                                getDateInDayEnd(
-                                    getDateInServerTimeZone(endedAt)
-                                ),
-                            ],
-                        },
+                        repositoryId,
+                        name: branchName,
                     },
+                    as: "branch",
+                    attributes: [],
+                },
+                {
+                    model: Contributor,
+                    as: "contributor",
+                    attributes: [
+                        "id",
+                        "githubName",
+                        "githubLogin",
+                        "githubAvatarUrl",
+                    ],
                 },
             ],
-            where: contributorWhere,
-            group: ["Contributor.id"],
+            where: {
+                committedDate: {
+                    [sequelize.Op.between]: [
+                        getDateInDayStart(getDateInServerTimeZone(startedAt)),
+                        getDateInDayEnd(getDateInServerTimeZone(endedAt)),
+                    ],
+                },
+                ..._contributorWhere2,
+            },
+            group: ["contributorId"],
         });
+        // const commitCounts = await Contributor.findAll({
+        //     attributes: [
+        //         "id",
+        //         "githubName",
+        //         "githubLogin",
+        //         "githubAvatarUrl",
+        //         [
+        //             sequelize.fn("COUNT", sequelize.col("commits.id")),
+        //             "commitCount",
+        //         ],
+        //     ],
+        //     include: [
+        //         {
+        //             model: Commit,
+        //             required: true,
+        //             as: "commits",
+        //             attributes: [],
+        //             include: [
+        //                 {
+        //                     model: Branch,
+        //                     where: {
+        //                         repositoryId,
+        //                         name: branchName,
+        //                     },
+        //                     as: "branch",
+        //                     attributes: [],
+        //                 },
+        //             ],
+        //             where: {
+        //                 committedDate: {
+        //                     [sequelize.Op.between]: [
+        //                         getDateInDayStart(
+        //                             getDateInServerTimeZone(startedAt)
+        //                         ),
+        //                         getDateInDayEnd(
+        //                             getDateInServerTimeZone(endedAt)
+        //                         ),
+        //                     ],
+        //                 },
+        //             },
+        //         },
+        //     ],
+        //     where: contributorWhere,
+        //     group: ["Contributor.id"],
+        // });
 
-        const dataValues = commitCounts.map(
+        const dataValues = commitCountss.map(
             (item) =>
                 item.dataValues as unknown as CommitMetricsServiceQueryDataValues
         );

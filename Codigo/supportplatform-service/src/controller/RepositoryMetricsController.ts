@@ -81,7 +81,8 @@ export class RepositoryMetricsController extends Controller {
                 branchName,
                 startedAt,
                 endedAt,
-                query.contributor
+                query.contributor,
+                query.filterWithNoContributor
             );
 
         this.setStatus(200);

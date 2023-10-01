@@ -54,6 +54,7 @@ const appRoutes = {
                     startedAt: "startedAt",
                     endedAt: "endedAt",
                     contributor: "contributor",
+                    filterWithNoContributor: "filterWithNoContributor",
                 },
 
                 // nested routes

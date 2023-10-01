@@ -1,9 +1,12 @@
 export interface CommitMetricsServiceQueryDataValues {
     id: string;
-    githubName: string;
-    githubLogin: string;
-    githubAvatarUrl: string;
     commitCount: string;
+    contributor?: {
+        id: number;
+        githubName: string;
+        githubLogin: string;
+        githubAvatarUrl: string;
+    };
 }
 
 export interface CommitMetricsServiceResponse {

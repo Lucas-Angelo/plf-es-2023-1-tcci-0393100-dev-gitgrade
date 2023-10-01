@@ -22,11 +22,13 @@ export default function AbsoluteCommitChart(props: IAbsoluteCommitChartProps) {
         () =>
             props.commitMetrics.commitsPerContributor.map(
                 (contributorWithCommitMetrics) => ({
-                    name:
-                        contributorWithCommitMetrics.contribuitor.githubName ??
-                        contributorWithCommitMetrics.contribuitor.githubLogin,
+                    name: contributorWithCommitMetrics.contribuitor
+                        ? contributorWithCommitMetrics.contribuitor
+                              .githubName ??
+                          contributorWithCommitMetrics.contribuitor.githubLogin
+                        : "(Sem contribuidor)",
+                    id: contributorWithCommitMetrics.contribuitor?.id ?? -1,
                     commitCount: contributorWithCommitMetrics.commitCount,
-                    id: contributorWithCommitMetrics.contribuitor.id,
                 })
             ),
         [props.commitMetrics]

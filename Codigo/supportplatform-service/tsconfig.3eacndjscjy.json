@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "typeRoots": ["node_modules/@types"],
+        "outDir": "dist",
+        "rootDir": ".",
+        "target": "ES2020",
+        "module": "CommonJS",
+        "strict": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "skipLibCheck": true,
+        "noImplicitAny": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
+    },
+    "ts-node": {
+        "esm": true
+    },
+    "include": [],
+    "exclude": ["./node_modules"],
+    "types": ["node", "mysql2", "node-cron", "winston"],
+    "files": [
+        "src/controller/RepositoryMetricsController.ts",
+        "src/interface/CommitMetrics.ts",
+        "src/mapper/CommitMetricsMapper.ts",
+        "src/service/CommitService.ts",
+        "src/swagger/routes.ts",
+        "src/test/controller/RepositoryMetricsController.test.ts",
+        "src/test/seed/commit.ts"
+    ]
+}
