@@ -7,6 +7,13 @@ import {
   ConsistencyRuleUpdateDTO,
 } from "./dto/consistencyRule";
 import {
+  ConsistencyRuleDeliveryCreateDTO,
+  ConsistencyRuleDeliveryFindOneDTO,
+  ConsistencyRuleDeliveryResponseDTO,
+  ConsistencyRuleDeliverySearchDTO,
+  ConsistencyRuleDeliveryUpdateDTO,
+} from "./dto/consistencyRuleDelivery";
+import {
   EvaluationMethodCreateDTO,
   EvaluationMethodFindOneDTO,
   EvaluationMethodResponseDTO,
@@ -17,6 +24,7 @@ import { FileChangeMetricsDTO } from "./dto/fileMetrics";
 import {
   GetAllRepositoryQueryDTO,
   RepositoryDTO,
+  RepositoryFindOneDTO,
   RepositoryPatchDTO,
 } from "./dto/repository";
 import {
@@ -38,6 +46,11 @@ import { PaginationResponseDTO } from "./utils/pagination";
 export type {
   CommitMetricsDTO,
   ConsistencyRuleCreateDTO,
+  ConsistencyRuleDeliveryCreateDTO,
+  ConsistencyRuleDeliveryFindOneDTO,
+  ConsistencyRuleDeliveryResponseDTO,
+  ConsistencyRuleDeliverySearchDTO,
+  ConsistencyRuleDeliveryUpdateDTO,
   ConsistencyRuleFindOneDTO,
   ConsistencyRuleResponseDTO,
   ConsistencyRuleSearchDTO,
@@ -51,6 +64,7 @@ export type {
   GetAllRepositoryQueryDTO,
   PaginationResponseDTO,
   RepositoryDTO,
+  RepositoryFindOneDTO,
   RepositoryPatchDTO,
   SprintCreateDTO,
   SprintFindOneDTO,

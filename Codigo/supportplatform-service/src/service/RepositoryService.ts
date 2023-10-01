@@ -1,4 +1,8 @@
-import { PaginationResponseDTO, RepositoryPatchDTO } from "@gitgrade/dtos";
+import {
+    PaginationResponseDTO,
+    RepositoryFindOneDTO,
+    RepositoryPatchDTO,
+} from "@gitgrade/dtos";
 import { Op, Sequelize } from "sequelize";
 import logger from "../config/LogConfig";
 import AppError from "../error/AppError";
@@ -12,6 +16,31 @@ export default class RepositoryService {
 
     constructor() {
         this.evaluationMethodService = new EvaluationMethodService();
+    }
+
+    async findOneBy(
+        fields: Partial<RepositoryFindOneDTO>
+    ): Promise<Repository> {
+        try {
+            logger.info("Searching for one repository");
+            const repository = await Repository.findOne({
+                where: fields,
+                include: [
+                    {
+                        model: EvaluationMethod,
+                        as: "evaluationMethod",
+                    },
+                ],
+            });
+            if (!repository) {
+                logger.error("Error finding one repository:");
+                throw new AppError("Repository not found", 404);
+            }
+            return repository;
+        } catch (error) {
+            logger.error("Error finding one repository:", { error });
+            throw error;
+        }
     }
 
     async findAll(search: {
