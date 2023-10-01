@@ -8,7 +8,7 @@ export class EvaluationMethodMapper {
             description: model.description,
             semester: model.semester,
             year: model.year,
-            disabledAt: model.disabledAt,
+            disabledAt: model.disabledAt ?? null,
         };
     }
 }
