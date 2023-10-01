@@ -3,11 +3,19 @@ import EnvConfig from "../config/EnvConfig";
 import { ConsistencyRule } from "./ConsistencyRule";
 import { Repository } from "./Repository";
 
+enum ConsistencyRuleDeliveryStatus {
+    AWAITING_DELIVERY = "AWAITING_DELIVERY",
+    DELIVERED_ON_TIME = "DELIVERED_ON_TIME",
+    DELIVERED_LATE = "DELIVERED_LATE",
+    NOT_DELIVERED = "NOT_DELIVERED",
+}
+
 interface IConsistencyRuleDeliveryAttributes {
     id?: number;
     consistencyRuleId: number;
     repositoryId: number;
     deliveryAt: Date;
+    status: ConsistencyRuleDeliveryStatus;
 }
 
 class ConsistencyRuleDelivery extends Model<IConsistencyRuleDeliveryAttributes> {
@@ -15,6 +23,11 @@ class ConsistencyRuleDelivery extends Model<IConsistencyRuleDeliveryAttributes> 
     public consistencyRuleId!: number;
     public repositoryId!: number;
     public deliveryAt!: Date;
+    public status!:
+        | "AWAITING_DELIVERY"
+        | "DELIVERED_ON_TIME"
+        | "DELIVERED_LATE"
+        | "NOT_DELIVERED";
 
     static initModel(sequelize: Sequelize): void {
         this.init(
@@ -50,6 +63,16 @@ class ConsistencyRuleDelivery extends Model<IConsistencyRuleDeliveryAttributes> 
                     type: DataTypes.DATE,
                     allowNull: false,
                 },
+                status: {
+                    field: "status",
+                    type: DataTypes.ENUM(
+                        "AWAITING_DELIVERY",
+                        "DELIVERED_ON_TIME",
+                        "DELIVERED_LATE",
+                        "NOT_DELIVERED"
+                    ),
+                    allowNull: false,
+                },
             },
             {
                 tableName: "consistency_rule_delivery",
@@ -75,4 +98,8 @@ class ConsistencyRuleDelivery extends Model<IConsistencyRuleDeliveryAttributes> 
     }
 }
 
-export { ConsistencyRuleDelivery, IConsistencyRuleDeliveryAttributes };
+export {
+    ConsistencyRuleDelivery,
+    ConsistencyRuleDeliveryStatus,
+    IConsistencyRuleDeliveryAttributes,
+};

@@ -1,3 +1,10 @@
+export enum ConsistencyRuleDeliveryStatus {
+  AWAITING_DELIVERY = "AWAITING_DELIVERY",
+  DELIVERED_ON_TIME = "DELIVERED_ON_TIME",
+  DELIVERED_LATE = "DELIVERED_LATE",
+  NOT_DELIVERED = "NOT_DELIVERED",
+}
+
 /**
  * ConsistencyRuleDeliveryCreateDTO - Used for creating a new ConsistencyRuleDelivery.
  */
@@ -16,6 +23,10 @@ export interface ConsistencyRuleDeliveryCreateDTO {
    * @isDate deliveryAt must be a Date
    */
   deliveryAt: Date;
+  /**
+   * @isEnum ConsistencyRuleDeliveryStatus must be a valid ConsistencyRuleDeliveryStatus
+   */
+  status: ConsistencyRuleDeliveryStatus;
 }
 
 /**
@@ -36,6 +47,10 @@ export interface ConsistencyRuleDeliveryUpdateDTO {
    * @isDate deliveryAt must be a Date
    */
   deliveryAt: Date;
+  /**
+   * @isEnum ConsistencyRuleDeliveryStatus must be a valid ConsistencyRuleDeliveryStatus
+   */
+  status: ConsistencyRuleDeliveryStatus;
 }
 
 /**
@@ -81,6 +96,11 @@ export interface ConsistencyRuleDeliverySearchDTO {
    * @isOptional deliveryAtEnd is optional
    */
   deliveryAtEnd?: Date;
+  /**
+   * @isEnum ConsistencyRuleDeliveryStatus must be a valid ConsistencyRuleDeliveryStatus
+   * @isOptional status is optional
+   */
+  status?: ConsistencyRuleDeliveryStatus;
 }
 
 /**
@@ -119,6 +139,11 @@ export interface ConsistencyRuleDeliveryFindOneDTO {
    * @isOptional deliveryAtEnd is optional
    */
   deliveryAtEnd?: Date;
+  /**
+   * @isEnum ConsistencyRuleDeliveryStatus must be a valid ConsistencyRuleDeliveryStatus
+   * @isOptional status is optional
+   */
+  status?: ConsistencyRuleDeliveryStatus;
 }
 
 /**
@@ -129,4 +154,5 @@ export interface ConsistencyRuleDeliveryResponseDTO {
   consistencyRuleId: number;
   repositoryId: number;
   deliveryAt: Date;
+  status: ConsistencyRuleDeliveryStatus;
 }
