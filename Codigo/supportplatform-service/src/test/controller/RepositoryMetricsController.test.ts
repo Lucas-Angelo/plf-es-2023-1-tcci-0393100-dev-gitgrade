@@ -1314,27 +1314,31 @@ describe("GET /repository/:id/metric/changes", () => {
 
         const body: FileChangeMetricsDTO = response.body;
         const contributorsIds = body.fileChangesPerContributor.map(
-            (item) => item.contribuitor.id
+            (item) => item.contribuitor?.id
         );
 
-        expect(body.fileCount).toBe(6);
-        expect(body.totalAdditions).toBe(217);
-        expect(body.totalDeletions).toBe(37);
+        expect(body.fileCount).toBe(8);
+        expect(body.totalAdditions).toBe(277);
+        expect(body.totalDeletions).toBe(90);
 
-        expect(body.fileChangesPerContributor).toHaveLength(3);
+        expect(body.fileChangesPerContributor).toHaveLength(4);
 
         expect(contributorsIds).toContainEqual(contributorTestingSeed[0].id);
         expect(contributorsIds).toContainEqual(contributorTestingSeed[1].id);
         expect(contributorsIds).toContainEqual(contributorTestingSeed[2].id);
+        expect(contributorsIds).toContainEqual(undefined);
 
         const contributor1 = body.fileChangesPerContributor.find(
-            (item) => item.contribuitor.id === contributorTestingSeed[0].id
+            (item) => item.contribuitor?.id === contributorTestingSeed[0].id
         );
         const contributor2 = body.fileChangesPerContributor.find(
-            (item) => item.contribuitor.id === contributorTestingSeed[1].id
+            (item) => item.contribuitor?.id === contributorTestingSeed[1].id
         );
         const contributor3 = body.fileChangesPerContributor.find(
-            (item) => item.contribuitor.id === contributorTestingSeed[2].id
+            (item) => item.contribuitor?.id === contributorTestingSeed[2].id
+        );
+        const noContributor = body.fileChangesPerContributor.find(
+            (item) => !item.contribuitor
         );
 
         expect(contributor1?.addtions.sum).toBe(112);
@@ -1348,6 +1352,10 @@ describe("GET /repository/:id/metric/changes", () => {
         expect(contributor3?.addtions.sum).toBe(105);
         expect(contributor3?.deletions.sum).toBe(5);
         expect(contributor3?.fileCount).toBe(5);
+
+        expect(noContributor?.addtions.sum).toBe(60);
+        expect(noContributor?.deletions.sum).toBe(53);
+        expect(noContributor?.fileCount).toBe(3);
     });
 
     it("should return 200 when provided startedAt", async () => {
@@ -1361,24 +1369,32 @@ describe("GET /repository/:id/metric/changes", () => {
 
         const body: FileChangeMetricsDTO = response.body;
         const contributorsIds = body.fileChangesPerContributor.map(
-            (item) => item.contribuitor.id
+            (item) => item.contribuitor?.id
         );
 
-        expect(body.fileCount).toBe(5);
-        expect(body.totalAdditions).toBe(105);
-        expect(body.totalDeletions).toBe(5);
+        expect(body.fileCount).toBe(7);
+        expect(body.totalAdditions).toBe(165);
+        expect(body.totalDeletions).toBe(58);
 
-        expect(body.fileChangesPerContributor).toHaveLength(1);
+        expect(body.fileChangesPerContributor).toHaveLength(2);
 
         expect(contributorsIds).toContainEqual(contributorTestingSeed[2].id);
+        expect(contributorsIds).toContainEqual(undefined);
 
         const contributor3 = body.fileChangesPerContributor.find(
-            (item) => item.contribuitor.id === contributorTestingSeed[2].id
+            (item) => item.contribuitor?.id === contributorTestingSeed[2].id
+        );
+        const noContributor = body.fileChangesPerContributor.find(
+            (item) => !item.contribuitor
         );
 
         expect(contributor3?.addtions.sum).toBe(105);
         expect(contributor3?.deletions.sum).toBe(5);
         expect(contributor3?.fileCount).toBe(5);
+
+        expect(noContributor?.addtions.sum).toBe(60);
+        expect(noContributor?.deletions.sum).toBe(53);
+        expect(noContributor?.fileCount).toBe(3);
     });
 
     it("should return 200 when provided endedAt", async () => {
@@ -1392,7 +1408,7 @@ describe("GET /repository/:id/metric/changes", () => {
 
         const body: FileChangeMetricsDTO = response.body;
         const contributorsIds = body.fileChangesPerContributor.map(
-            (item) => item.contribuitor.id
+            (item) => item.contribuitor?.id
         );
 
         expect(body.fileCount).toBe(2);
@@ -1405,10 +1421,10 @@ describe("GET /repository/:id/metric/changes", () => {
         expect(contributorsIds).toContainEqual(contributorTestingSeed[1].id);
 
         const contributor1 = body.fileChangesPerContributor.find(
-            (item) => item.contribuitor.id === contributorTestingSeed[0].id
+            (item) => item.contribuitor?.id === contributorTestingSeed[0].id
         );
         const contributor2 = body.fileChangesPerContributor.find(
-            (item) => item.contribuitor.id === contributorTestingSeed[1].id
+            (item) => item.contribuitor?.id === contributorTestingSeed[1].id
         );
 
         expect(contributor1?.addtions.sum).toBe(112);
@@ -1431,7 +1447,7 @@ describe("GET /repository/:id/metric/changes", () => {
 
         const body: FileChangeMetricsDTO = response.body;
         const contributorsIds = body.fileChangesPerContributor.map(
-            (item) => item.contribuitor.id
+            (item) => item.contribuitor?.id
         );
 
         expect(body.fileCount).toBe(5);
@@ -1444,10 +1460,10 @@ describe("GET /repository/:id/metric/changes", () => {
         expect(contributorsIds).toContainEqual(contributorTestingSeed[2].id);
 
         const contributor2 = body.fileChangesPerContributor.find(
-            (item) => item.contribuitor.id === contributorTestingSeed[1].id
+            (item) => item.contribuitor?.id === contributorTestingSeed[1].id
         );
         const contributor3 = body.fileChangesPerContributor.find(
-            (item) => item.contribuitor.id === contributorTestingSeed[2].id
+            (item) => item.contribuitor?.id === contributorTestingSeed[2].id
         );
 
         expect(contributor2?.addtions.sum).toBe(0);
@@ -1457,6 +1473,84 @@ describe("GET /repository/:id/metric/changes", () => {
         expect(contributor3?.addtions.sum).toBe(105);
         expect(contributor3?.deletions.sum).toBe(5);
         expect(contributor3?.fileCount).toBe(5);
+    });
+
+    it("should return 200 when filterWithNoContributor is provided", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/changes?filterWithNoContributor=true`
+            )
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        const body: FileChangeMetricsDTO = response.body;
+        const contributorsIds = body.fileChangesPerContributor.map(
+            (item) => item.contribuitor?.id
+        );
+
+        expect(body.fileCount).toBe(3);
+        expect(body.totalAdditions).toBe(60);
+        expect(body.totalDeletions).toBe(53);
+
+        expect(body.fileChangesPerContributor).toHaveLength(1);
+
+        expect(contributorsIds).toContainEqual(undefined);
+
+        const noContributor = body.fileChangesPerContributor.find(
+            (item) => !item.contribuitor
+        );
+
+        expect(noContributor?.addtions.sum).toBe(60);
+        expect(noContributor?.deletions.sum).toBe(53);
+        expect(noContributor?.fileCount).toBe(3);
+    });
+
+    it("should return 200 when provided contributor and filterWithNoContributor is provided", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/changes?contributor=${contributorTestingSeed[1].githubLogin}&contributor=${contributorTestingSeed[2].githubLogin}&filterWithNoContributor=true`
+            )
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        const body: FileChangeMetricsDTO = response.body;
+        const contributorsIds = body.fileChangesPerContributor.map(
+            (item) => item.contribuitor?.id
+        );
+
+        expect(body.fileCount).toBe(7);
+        expect(body.totalAdditions).toBe(165);
+        expect(body.totalDeletions).toBe(63);
+
+        expect(body.fileChangesPerContributor).toHaveLength(3);
+
+        expect(contributorsIds).toContainEqual(contributorTestingSeed[1].id);
+        expect(contributorsIds).toContainEqual(contributorTestingSeed[2].id);
+        expect(contributorsIds).toContainEqual(undefined);
+
+        const contributor2 = body.fileChangesPerContributor.find(
+            (item) => item.contribuitor?.id === contributorTestingSeed[1].id
+        );
+        const contributor3 = body.fileChangesPerContributor.find(
+            (item) => item.contribuitor?.id === contributorTestingSeed[2].id
+        );
+        const noContributor = body.fileChangesPerContributor.find(
+            (item) => !item.contribuitor
+        );
+
+        expect(contributor2?.addtions.sum).toBe(0);
+        expect(contributor2?.deletions.sum).toBe(5);
+        expect(contributor2?.fileCount).toBe(1);
+
+        expect(contributor3?.addtions.sum).toBe(105);
+        expect(contributor3?.deletions.sum).toBe(5);
+        expect(contributor3?.fileCount).toBe(5);
+
+        expect(noContributor?.addtions.sum).toBe(60);
+        expect(noContributor?.deletions.sum).toBe(53);
+        expect(noContributor?.fileCount).toBe(3);
     });
 
     it("should return 401 when no token is provided", async () => {

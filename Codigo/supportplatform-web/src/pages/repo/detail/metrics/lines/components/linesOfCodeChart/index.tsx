@@ -22,13 +22,14 @@ export default function LinesOfCodeChart(props: ILinesOfCodeChartProps) {
     const chartData = useMemo(
         () =>
             props.linesOfCodeMetrics.fileChangesPerContributor.map(
-                (contributorWithCommitMetrics) => ({
-                    name:
-                        contributorWithCommitMetrics.contribuitor.githubName ??
-                        contributorWithCommitMetrics.contribuitor.githubLogin,
-                    addtions: contributorWithCommitMetrics.addtions.sum,
-                    deletions: contributorWithCommitMetrics.deletions.sum,
-                    id: contributorWithCommitMetrics.contribuitor.id,
+                (contributorWithFileMetrics) => ({
+                    name: contributorWithFileMetrics.contribuitor
+                        ? contributorWithFileMetrics.contribuitor.githubName ??
+                          contributorWithFileMetrics.contribuitor.githubLogin
+                        : "(Sem contribuidor)",
+                    addtions: contributorWithFileMetrics.addtions.sum,
+                    deletions: contributorWithFileMetrics.deletions.sum,
+                    id: contributorWithFileMetrics.contribuitor?.id ?? -1,
                 })
             ),
         [props.linesOfCodeMetrics]

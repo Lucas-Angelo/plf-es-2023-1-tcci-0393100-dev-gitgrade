@@ -13,6 +13,7 @@ import {
     getDateInServerTimeZone,
 } from "../utils/date";
 import { FileTypeMetricsDTO } from "@gitgrade/dtos";
+import { getContributorWhere } from "../utils/contributorFilter";
 
 export default class FileService {
     async getFileChangeMetricsGroupedByContributor(
@@ -20,87 +21,171 @@ export default class FileService {
         branchName: string,
         startedAt: Date,
         endedAt: Date,
-        contributors?: Array<string>
+        contributors: Array<string> | undefined,
+        filterWithNoContributor: boolean | undefined
     ) {
-        const contributorWhere = contributors
-            ? { githubLogin: contributors }
-            : {};
-        const changesCounts = await Contributor.findAll({
-            attributes: [
-                "id",
-                "githubName",
-                "githubLogin",
-                "githubAvatarUrl",
-                [
-                    sequelize.fn(
-                        "SUM",
-                        sequelize.col("commits.files.additions")
-                    ),
-                    "additionSum",
-                ],
-                [
-                    sequelize.fn(
-                        "SUM",
-                        sequelize.col("commits.files.deletions")
-                    ),
-                    "deletionsSum",
-                ],
-                [
-                    sequelize.fn(
-                        "COUNT",
-                        sequelize.fn(
-                            "DISTINCT",
-                            sequelize.col("commits.files.path")
-                        )
-                    ),
-                    "fileCount",
-                ],
-            ],
-            include: [
-                {
-                    model: Commit,
-                    required: true,
-                    as: "commits",
-                    attributes: [],
-                    where: {
-                        committedDate: {
-                            [sequelize.Op.between]: [
-                                getDateInDayStart(
-                                    getDateInServerTimeZone(startedAt)
-                                ),
-                                getDateInDayEnd(
-                                    getDateInServerTimeZone(endedAt)
-                                ),
-                            ],
-                        },
-                    },
-                    include: [
-                        {
-                            model: Branch,
-                            where: {
-                                repositoryId,
-                                name: branchName,
-                            },
-                            as: "branch",
-                            attributes: [],
-                        },
-                        {
-                            model: File,
-                            as: "files",
-                            attributes: [],
-                            required: true,
-                        },
-                    ],
-                },
-            ],
-            group: ["Contributor.id"],
-            where: contributorWhere,
-        });
+        const dataValues: Array<FileChangeMetricsServiceQueryDataValues> = [];
 
-        const dataValues = changesCounts.map(
-            (item) =>
-                item.dataValues as unknown as FileChangeMetricsServiceQueryDataValues
-        );
+        if (
+            (contributors?.length && contributors.length > 0) ||
+            !filterWithNoContributor
+        ) {
+            const contributorWhere = contributors
+                ? { githubLogin: contributors }
+                : {};
+            const changesCounts = await Contributor.findAll({
+                attributes: [
+                    "id",
+                    "githubName",
+                    "githubLogin",
+                    "githubAvatarUrl",
+                    [
+                        sequelize.fn(
+                            "SUM",
+                            sequelize.col("commits.files.additions")
+                        ),
+                        "additionSum",
+                    ],
+                    [
+                        sequelize.fn(
+                            "SUM",
+                            sequelize.col("commits.files.deletions")
+                        ),
+                        "deletionsSum",
+                    ],
+                    [
+                        sequelize.fn(
+                            "COUNT",
+                            sequelize.fn(
+                                "DISTINCT",
+                                sequelize.col("commits.files.path")
+                            )
+                        ),
+                        "fileCount",
+                    ],
+                ],
+                include: [
+                    {
+                        model: Commit,
+                        required: true,
+                        as: "commits",
+                        attributes: [],
+                        where: {
+                            committedDate: {
+                                [sequelize.Op.between]: [
+                                    getDateInDayStart(
+                                        getDateInServerTimeZone(startedAt)
+                                    ),
+                                    getDateInDayEnd(
+                                        getDateInServerTimeZone(endedAt)
+                                    ),
+                                ],
+                            },
+                        },
+                        include: [
+                            {
+                                model: Branch,
+                                where: {
+                                    repositoryId,
+                                    name: branchName,
+                                },
+                                as: "branch",
+                                attributes: [],
+                            },
+                            {
+                                model: File,
+                                as: "files",
+                                attributes: [],
+                                required: true,
+                            },
+                        ],
+                    },
+                ],
+                group: ["Contributor.id"],
+                where: contributorWhere,
+            });
+
+            dataValues.push(
+                ...changesCounts.map(
+                    (item) =>
+                        item.dataValues as unknown as FileChangeMetricsServiceQueryDataValues
+                )
+            );
+        }
+
+        if (
+            !contributors ||
+            contributors.length === 0 ||
+            filterWithNoContributor
+        ) {
+            const noContributorChangesCount = await File.findAll({
+                raw: true,
+                attributes: [
+                    [
+                        sequelize.fn("SUM", sequelize.col("additions")),
+                        "additionSum",
+                    ],
+                    [
+                        sequelize.fn("SUM", sequelize.col("deletions")),
+                        "deletionsSum",
+                    ],
+                    [
+                        sequelize.fn(
+                            "COUNT",
+                            sequelize.fn("DISTINCT", sequelize.col("path"))
+                        ),
+                        "fileCount",
+                    ],
+                ],
+                include: [
+                    {
+                        model: Commit,
+                        required: true,
+                        as: "commit",
+                        attributes: [],
+                        where: {
+                            committedDate: {
+                                [sequelize.Op.between]: [
+                                    getDateInDayStart(
+                                        getDateInServerTimeZone(startedAt)
+                                    ),
+                                    getDateInDayEnd(
+                                        getDateInServerTimeZone(endedAt)
+                                    ),
+                                ],
+                            },
+                            contributorId: null,
+                        },
+                        include: [
+                            {
+                                model: Branch,
+                                where: {
+                                    repositoryId,
+                                    name: branchName,
+                                },
+                                as: "branch",
+                                attributes: [],
+                            },
+                        ],
+                    },
+                ],
+            });
+
+            const noContributorDataValues =
+                noContributorChangesCount as unknown as Omit<
+                    FileChangeMetricsServiceQueryDataValues,
+                    "contributor"
+                >[];
+
+            if (
+                noContributorDataValues.length > 0 &&
+                (Number(noContributorDataValues[0].fileCount) > 0 ||
+                    Number(noContributorDataValues[0].additionSum) > 0 ||
+                    Number(noContributorDataValues[0].deletionsSum) > 0)
+            ) {
+                dataValues.push(...noContributorDataValues);
+            }
+        }
 
         const { totalAdditions, totalDeletions } = dataValues.reduce(
             (sumObj, item) => ({
@@ -114,6 +199,10 @@ export default class FileService {
 
         const countAllResponse = await File.count({
             group: ["path"],
+            where: getContributorWhere(contributors, filterWithNoContributor, {
+                contributorIdFilterKey: "$commit.contributor_id$",
+                contributorLoginFilterKey: "$commit.contributor.github_login$",
+            }),
             include: [
                 {
                     model: Commit,
@@ -143,9 +232,7 @@ export default class FileService {
                         },
                         {
                             model: Contributor,
-                            required: true,
                             as: "contributor",
-                            where: contributorWhere,
                         },
                     ],
                 },
@@ -289,25 +376,28 @@ export default class FileService {
             general: mapToArrayOfObjects(mapExtensionToCount),
             perContributor: Array.from(
                 mapContributorToMapExtensionToCount.entries()
-            ).reduce((finalArray, [id, contributorMap]) => {
-                const contributor = fileChanges.find(
-                    (commitAndStuff) =>
-                        commitAndStuff.commit.contributor.id === id
-                )?.commit.contributor;
-                if (contributor) {
-                    finalArray.push({
-                        contributor: {
-                            id: Number(contributor.id),
-                            githubName: contributor.githubName,
-                            githubLogin: contributor.githubLogin,
-                            githubAvatarUrl: contributor.githubAvatarUrl,
-                        },
-                        fileTypes: mapToArrayOfObjects(contributorMap),
-                    });
-                }
+            ).reduce(
+                (finalArray, [id, contributorMap]) => {
+                    const contributor = fileChanges.find(
+                        (commitAndStuff) =>
+                            commitAndStuff.commit.contributor.id === id
+                    )?.commit.contributor;
+                    if (contributor) {
+                        finalArray.push({
+                            contributor: {
+                                id: Number(contributor.id),
+                                githubName: contributor.githubName,
+                                githubLogin: contributor.githubLogin,
+                                githubAvatarUrl: contributor.githubAvatarUrl,
+                            },
+                            fileTypes: mapToArrayOfObjects(contributorMap),
+                        });
+                    }
 
-                return finalArray;
-            }, [] as Array<FileTypeMetricsDTO["perContributor"][number]>),
+                    return finalArray;
+                },
+                [] as Array<FileTypeMetricsDTO["perContributor"][number]>
+            ),
         };
 
         return serviceResponse;

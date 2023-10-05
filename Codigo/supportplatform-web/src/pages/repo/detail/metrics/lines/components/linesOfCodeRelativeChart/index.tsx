@@ -22,19 +22,20 @@ export default function LinesOfCodeRelativeChart(
     const chartData = useMemo(
         () =>
             props.linesOfCodeMetrics.fileChangesPerContributor.map(
-                (contributorWithCommitMetrics) => ({
-                    name:
-                        contributorWithCommitMetrics.contribuitor.githubName ??
-                        contributorWithCommitMetrics.contribuitor.githubLogin,
+                (contributorWithFileMetrics) => ({
+                    name: contributorWithFileMetrics.contribuitor
+                        ? contributorWithFileMetrics.contribuitor.githubName ??
+                          contributorWithFileMetrics.contribuitor.githubLogin
+                        : "(Sem contribuidor)",
                     additions:
-                        (100 * contributorWithCommitMetrics.addtions.sum) /
-                        (contributorWithCommitMetrics.addtions.sum +
-                            contributorWithCommitMetrics.deletions.sum),
+                        (100 * contributorWithFileMetrics.addtions.sum) /
+                        (contributorWithFileMetrics.addtions.sum +
+                            contributorWithFileMetrics.deletions.sum),
                     deletions:
-                        (100 * contributorWithCommitMetrics.deletions.sum) /
-                        (contributorWithCommitMetrics.addtions.sum +
-                            contributorWithCommitMetrics.deletions.sum),
-                    id: contributorWithCommitMetrics.contribuitor.id,
+                        (100 * contributorWithFileMetrics.deletions.sum) /
+                        (contributorWithFileMetrics.addtions.sum +
+                            contributorWithFileMetrics.deletions.sum),
+                    id: contributorWithFileMetrics.contribuitor?.id ?? -1,
                 })
             ),
         [props.linesOfCodeMetrics]

@@ -23,12 +23,13 @@ export default function FileContributionsChart(
     const chartData = useMemo(
         () =>
             props.fileChangeMetrics.fileChangesPerContributor.map(
-                (contributorWithCommitMetrics) => ({
-                    name:
-                        contributorWithCommitMetrics.contribuitor.githubName ??
-                        contributorWithCommitMetrics.contribuitor.githubLogin,
-                    fileCount: contributorWithCommitMetrics.fileCount,
-                    id: contributorWithCommitMetrics.contribuitor.id,
+                (contributorWithFileMetrics) => ({
+                    name: contributorWithFileMetrics.contribuitor
+                        ? contributorWithFileMetrics.contribuitor.githubName ??
+                          contributorWithFileMetrics.contribuitor.githubLogin
+                        : "(Sem contribuidor)",
+                    fileCount: contributorWithFileMetrics.fileCount,
+                    id: contributorWithFileMetrics.contribuitor?.id ?? -1,
                 })
             ),
         [props.fileChangeMetrics]

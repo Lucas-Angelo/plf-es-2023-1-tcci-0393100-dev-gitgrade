@@ -1,6 +1,13 @@
 import { IFileAttributes } from "../../model/File";
 import { commitTestingSeed } from "./commit";
 
+const commit5001 =
+    commitTestingSeed.find((commit) => commit.id === 5001) ??
+    commitTestingSeed[20];
+const commit5002 =
+    commitTestingSeed.find((commit) => commit.id === 5002) ??
+    commitTestingSeed[21];
+
 const fileTestingSeed: Array<IFileAttributes> = [
     {
         id: 1,
@@ -65,6 +72,27 @@ const fileTestingSeed: Array<IFileAttributes> = [
         commitId: commitTestingSeed[4].id,
         path: "src/pagina2.html",
         extension: "html",
+    },
+    {
+        id: 9,
+        additions: 10,
+        deletions: 3,
+        commitId: commit5001.id,
+        path: "src/file1.ts",
+    },
+    {
+        id: 10,
+        additions: 25,
+        deletions: 50,
+        commitId: commit5001.id,
+        path: "src/file4.ts",
+    },
+    {
+        id: 11,
+        additions: 25,
+        deletions: 0,
+        commitId: commit5002.id,
+        path: "src/pagina3.html",
     },
 ];
 

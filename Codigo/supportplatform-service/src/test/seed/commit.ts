@@ -43,20 +43,6 @@ const commitTestingSeed = [
         committedDate: new Date("2023-03-01T12:00:00-03:00"),
     },
     {
-        id: 5001,
-        branchId: branchTestingSeed[0].id,
-        sha: "sha-la-la-la",
-        message: "no contributor",
-        committedDate: new Date("2023-02-10T02:00:00-03:00"),
-    },
-    {
-        id: 5002,
-        branchId: branchTestingSeed[0].id,
-        sha: "sha-la hein sha-la",
-        message: "no contributor 2",
-        committedDate: new Date("2023-02-10T03:30:00-03:00"),
-    },
-    {
         id: 6,
         branchId: branchTestingSeed[1].id,
         contributorId: contributorTestingSeed[0].id,
@@ -179,6 +165,20 @@ const commitTestingSeed = [
         sha: "el-sha11",
         message: "Merge pull request #4 from rafaelbotazini/authentication",
         committedDate: new Date("2023-03-01T12:00:00-03:00"),
+    },
+    {
+        id: 5001,
+        branchId: branchTestingSeed[0].id,
+        sha: "sha-la-la-la",
+        message: "no contributor",
+        committedDate: new Date("2023-02-10T02:00:00-03:00"),
+    },
+    {
+        id: 5002,
+        branchId: branchTestingSeed[0].id,
+        sha: "sha-la hein sha-la",
+        message: "no contributor 2",
+        committedDate: new Date("2023-02-10T03:30:00-03:00"),
     },
 ];
 

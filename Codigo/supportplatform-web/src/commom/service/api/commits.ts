@@ -17,10 +17,7 @@ export class CommitService {
         if (query?.startedAt) searchParams.set("startedAt", query.startedAt);
         if (query?.endedAt) searchParams.set("endedAt", query.endedAt);
         if (query?.filterWithNoContributor)
-            searchParams.set(
-                "filterWithNoContributor",
-                query.filterWithNoContributor.toString()
-            );
+            searchParams.set("filterWithNoContributor", "true");
 
         if (query?.contributors) {
             query.contributors.forEach((contributor) => {

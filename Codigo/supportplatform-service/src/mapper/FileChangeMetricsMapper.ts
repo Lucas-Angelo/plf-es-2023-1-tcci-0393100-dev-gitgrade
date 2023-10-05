@@ -11,12 +11,14 @@ export class FileChangeMetricsMapper {
             fileCount: serviceResponse.fileCount,
             fileChangesPerContributor: serviceResponse.results.map((item) => ({
                 fileCount: Number(item.fileCount),
-                contribuitor: {
-                    id: Number(item.id),
-                    githubName: item.githubName,
-                    githubLogin: item.githubLogin,
-                    githubAvatarUrl: item.githubAvatarUrl,
-                },
+                contribuitor: item.id
+                    ? {
+                          id: Number(item.id),
+                          githubName: item.githubName,
+                          githubLogin: item.githubLogin,
+                          githubAvatarUrl: item.githubAvatarUrl,
+                      }
+                    : undefined,
                 addtions: {
                     sum: Number(item.additionSum),
                     percentage:

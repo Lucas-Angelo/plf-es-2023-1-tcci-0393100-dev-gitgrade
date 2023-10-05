@@ -3,7 +3,7 @@ export interface FileChangeMetricsDTO {
     totalDeletions: number,
     fileCount: number,
     fileChangesPerContributor: Array<{
-        contribuitor: {
+        contribuitor?: {
             id: number,
             githubName: string,
             githubLogin: string,
