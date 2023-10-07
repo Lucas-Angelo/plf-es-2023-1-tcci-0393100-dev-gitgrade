@@ -20,8 +20,13 @@ const routes = createRoutesFromElements(
         >
             <Route errorElement={<ErrorElement />}>
                 <Route
-                    path=""
-                    element={<Navigate to={appRoutes.repo.link()} />}
+                    path="*"
+                    element={
+                        <Navigate
+                            replace
+                            to={appRoutes.repo.link()}
+                        />
+                    }
                 />
 
                 <Route path={appRoutes.repo.path}>

@@ -44,7 +44,7 @@ const appRoutes = {
     },
 
     evaluationMethod: {
-        path: "eval" as const,
+        path: "evaluationMethod" as const,
         link() {
             return `/${this.path}` as const;
         },
@@ -57,6 +57,20 @@ const appRoutes = {
                     this.path
                 }` as const;
             },
+
+            // necessary to map query string param name per a trustable variable
+            search: {
+                page: "page",
+                filter: "filter",
+            },
+        },
+        [":id"]: {
+            path: ":id" as const,
+            link(id: number) {
+                const path = this.path.replace(":id", id.toString());
+                return `${appRoutes.evaluationMethod.link()}/${path}`;
+            },
+            params: ["id"] as const,
         },
     },
 };
