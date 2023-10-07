@@ -29,7 +29,7 @@ export interface FileTypeMetricDTO {
 export interface FileTypeMetricsDTO {
     general: Array<FileTypeMetricDTO>,
     perContributor: Array<{
-        contributor: {
+        contributor?: {
             id: number,
             githubName: string | null,
             githubLogin: string ,

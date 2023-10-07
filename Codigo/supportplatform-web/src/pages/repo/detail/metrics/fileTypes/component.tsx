@@ -26,6 +26,12 @@ export default function RepositoryFileTypeMetricsPage() {
             contributors:
                 searchParams.getAll(pageRouteSearchParams.contributor) ??
                 undefined,
+            filterWithNoContributor:
+                searchParams.get(
+                    pageRouteSearchParams.filterWithNoContributor
+                ) === "true"
+                    ? true
+                    : false,
         });
     return (
         <Box>

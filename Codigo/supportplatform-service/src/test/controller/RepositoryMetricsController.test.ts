@@ -1000,16 +1000,16 @@ describe("GET /repository/:id/metric/file-types", () => {
 
         const body: FileTypeMetricsDTO = response.body;
         const contributorsIds = body.perContributor.map(
-            (item) => item.contributor.id
+            (item) => item.contributor?.id
         );
 
         expect(body.general).toHaveLength(3);
         expect(body.general).toContainEqual({
-            count: 3,
+            count: 4,
             extension: "ts",
         });
         expect(body.general).toContainEqual({
-            count: 2,
+            count: 3,
             extension: "html",
         });
         expect(body.general).toContainEqual({
@@ -1017,20 +1017,24 @@ describe("GET /repository/:id/metric/file-types", () => {
             extension: "css",
         });
 
-        expect(body.perContributor).toHaveLength(3);
+        expect(body.perContributor).toHaveLength(4);
 
         expect(contributorsIds).toContainEqual(contributorTestingSeed[0].id);
         expect(contributorsIds).toContainEqual(contributorTestingSeed[1].id);
         expect(contributorsIds).toContainEqual(contributorTestingSeed[2].id);
+        expect(contributorsIds).toContainEqual(undefined);
 
         const contributor1 = body.perContributor.find(
-            (item) => item.contributor.id === contributorTestingSeed[0].id
+            (item) => item.contributor?.id === contributorTestingSeed[0].id
         );
         const contributor2 = body.perContributor.find(
-            (item) => item.contributor.id === contributorTestingSeed[1].id
+            (item) => item.contributor?.id === contributorTestingSeed[1].id
         );
         const contributor3 = body.perContributor.find(
-            (item) => item.contributor.id === contributorTestingSeed[2].id
+            (item) => item.contributor?.id === contributorTestingSeed[2].id
+        );
+        const noContributor = body.perContributor.find(
+            (item) => !item.contributor
         );
 
         expect(contributor1?.fileTypes).toHaveLength(1);
@@ -1058,6 +1062,16 @@ describe("GET /repository/:id/metric/file-types", () => {
             count: 1,
             extension: "css",
         });
+
+        expect(noContributor?.fileTypes).toHaveLength(2);
+        expect(noContributor?.fileTypes).toContainEqual({
+            count: 1,
+            extension: "html",
+        });
+        expect(noContributor?.fileTypes).toContainEqual({
+            count: 2,
+            extension: "ts",
+        });
     });
 
     it("should return 200 when provided startedAt", async () => {
@@ -1071,16 +1085,16 @@ describe("GET /repository/:id/metric/file-types", () => {
 
         const body: FileTypeMetricsDTO = response.body;
         const contributorsIds = body.perContributor.map(
-            (item) => item.contributor.id
+            (item) => item.contributor?.id
         );
 
         expect(body.general).toHaveLength(3);
         expect(body.general).toContainEqual({
-            count: 2,
+            count: 3,
             extension: "ts",
         });
         expect(body.general).toContainEqual({
-            count: 2,
+            count: 3,
             extension: "html",
         });
         expect(body.general).toContainEqual({
@@ -1088,11 +1102,15 @@ describe("GET /repository/:id/metric/file-types", () => {
             extension: "css",
         });
 
-        expect(body.perContributor).toHaveLength(1);
+        expect(body.perContributor).toHaveLength(2);
         expect(contributorsIds).toContainEqual(contributorTestingSeed[2].id);
+        expect(contributorsIds).toContainEqual(undefined);
 
         const contributor3 = body.perContributor.find(
-            (item) => item.contributor.id === contributorTestingSeed[2].id
+            (item) => item.contributor?.id === contributorTestingSeed[2].id
+        );
+        const noContributor = body.perContributor.find(
+            (item) => !item.contributor
         );
 
         expect(contributor3?.fileTypes).toHaveLength(3);
@@ -1108,6 +1126,16 @@ describe("GET /repository/:id/metric/file-types", () => {
             count: 1,
             extension: "css",
         });
+
+        expect(noContributor?.fileTypes).toHaveLength(2);
+        expect(noContributor?.fileTypes).toContainEqual({
+            count: 1,
+            extension: "html",
+        });
+        expect(noContributor?.fileTypes).toContainEqual({
+            count: 2,
+            extension: "ts",
+        });
     });
 
     it("should return 200 when provided endedAt", async () => {
@@ -1121,7 +1149,7 @@ describe("GET /repository/:id/metric/file-types", () => {
 
         const body: FileTypeMetricsDTO = response.body;
         const contributorsIds = body.perContributor.map(
-            (item) => item.contributor.id
+            (item) => item.contributor?.id
         );
 
         expect(body.general).toHaveLength(1);
@@ -1136,10 +1164,10 @@ describe("GET /repository/:id/metric/file-types", () => {
         expect(contributorsIds).toContainEqual(contributorTestingSeed[1].id);
 
         const contributor1 = body.perContributor.find(
-            (item) => item.contributor.id === contributorTestingSeed[0].id
+            (item) => item.contributor?.id === contributorTestingSeed[0].id
         );
         const contributor2 = body.perContributor.find(
-            (item) => item.contributor.id === contributorTestingSeed[1].id
+            (item) => item.contributor?.id === contributorTestingSeed[1].id
         );
 
         expect(contributor1?.fileTypes).toHaveLength(1);
@@ -1166,7 +1194,7 @@ describe("GET /repository/:id/metric/file-types", () => {
 
         const body: FileTypeMetricsDTO = response.body;
         const contributorsIds = body.perContributor.map(
-            (item) => item.contributor.id
+            (item) => item.contributor?.id
         );
 
         expect(body.general).toHaveLength(3);
@@ -1189,10 +1217,10 @@ describe("GET /repository/:id/metric/file-types", () => {
         expect(contributorsIds).toContainEqual(contributorTestingSeed[2].id);
 
         const contributor2 = body.perContributor.find(
-            (item) => item.contributor.id === contributorTestingSeed[1].id
+            (item) => item.contributor?.id === contributorTestingSeed[1].id
         );
         const contributor3 = body.perContributor.find(
-            (item) => item.contributor.id === contributorTestingSeed[2].id
+            (item) => item.contributor?.id === contributorTestingSeed[2].id
         );
 
         expect(contributor2?.fileTypes).toHaveLength(1);
@@ -1213,6 +1241,123 @@ describe("GET /repository/:id/metric/file-types", () => {
         expect(contributor3?.fileTypes).toContainEqual({
             count: 1,
             extension: "css",
+        });
+    });
+
+    it("should return 200 when provided filterWithNoContributor and contributor", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/file-types?contributor=${contributorTestingSeed[1].githubLogin}&contributor=${contributorTestingSeed[2].githubLogin}&filterWithNoContributor=true`
+            )
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        const body: FileTypeMetricsDTO = response.body;
+        const contributorsIds = body.perContributor.map(
+            (item) => item.contributor?.id
+        );
+
+        expect(body.general).toHaveLength(3);
+        expect(body.general).toContainEqual({
+            count: 3,
+            extension: "ts",
+        });
+        expect(body.general).toContainEqual({
+            count: 3,
+            extension: "html",
+        });
+        expect(body.general).toContainEqual({
+            count: 1,
+            extension: "css",
+        });
+
+        expect(body.perContributor).toHaveLength(3);
+
+        expect(contributorsIds).toContainEqual(contributorTestingSeed[1].id);
+        expect(contributorsIds).toContainEqual(contributorTestingSeed[2].id);
+        expect(contributorsIds).toContainEqual(undefined);
+
+        const contributor2 = body.perContributor.find(
+            (item) => item.contributor?.id === contributorTestingSeed[1].id
+        );
+        const contributor3 = body.perContributor.find(
+            (item) => item.contributor?.id === contributorTestingSeed[2].id
+        );
+        const noContributor = body.perContributor.find(
+            (item) => !item.contributor
+        );
+
+        expect(contributor2?.fileTypes).toHaveLength(1);
+        expect(contributor2?.fileTypes).toContainEqual({
+            count: 1,
+            extension: "ts",
+        });
+
+        expect(contributor3?.fileTypes).toHaveLength(3);
+        expect(contributor3?.fileTypes).toContainEqual({
+            count: 2,
+            extension: "ts",
+        });
+        expect(contributor3?.fileTypes).toContainEqual({
+            count: 2,
+            extension: "html",
+        });
+        expect(contributor3?.fileTypes).toContainEqual({
+            count: 1,
+            extension: "css",
+        });
+
+        expect(noContributor?.fileTypes).toHaveLength(2);
+        expect(noContributor?.fileTypes).toContainEqual({
+            count: 1,
+            extension: "html",
+        });
+        expect(noContributor?.fileTypes).toContainEqual({
+            count: 2,
+            extension: "ts",
+        });
+    });
+
+    it("should return 200 when filterWithNoContributor is provided", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[0].id}/metric/file-types?filterWithNoContributor=true`
+            )
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        const body: FileTypeMetricsDTO = response.body;
+        const contributorsIds = body.perContributor.map(
+            (item) => item.contributor?.id
+        );
+
+        expect(body.general).toHaveLength(2);
+        expect(body.general).toContainEqual({
+            count: 2,
+            extension: "ts",
+        });
+        expect(body.general).toContainEqual({
+            count: 1,
+            extension: "html",
+        });
+
+        expect(body.perContributor).toHaveLength(1);
+        expect(contributorsIds).toContainEqual(undefined);
+
+        const noContributor = body.perContributor.find(
+            (item) => !item.contributor
+        );
+
+        expect(noContributor?.fileTypes).toHaveLength(2);
+        expect(noContributor?.fileTypes).toContainEqual({
+            count: 1,
+            extension: "html",
+        });
+        expect(noContributor?.fileTypes).toContainEqual({
+            count: 2,
+            extension: "ts",
         });
     });
 

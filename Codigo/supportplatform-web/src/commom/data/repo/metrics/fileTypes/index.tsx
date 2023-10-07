@@ -8,6 +8,7 @@ export const getFileTypeMetricsGroupedByContributorByRepositoryIdQuery = (
         startedAt?: string;
         endedAt?: string;
         contributors?: Array<string>;
+        filterWithNoContributor?: boolean;
     }
 ) => ({
     queryKey: params
@@ -30,6 +31,7 @@ export const useFileTypeMetricsGroupedByContributorByRepositoryId = (
         startedAt?: string;
         endedAt?: string;
         contributors?: Array<string>;
+        filterWithNoContributor?: boolean;
     }
 ) =>
     useQuery(

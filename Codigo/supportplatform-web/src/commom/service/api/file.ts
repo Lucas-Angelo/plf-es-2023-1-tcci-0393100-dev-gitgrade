@@ -38,6 +38,7 @@ export default class FileService {
             startedAt?: string;
             endedAt?: string;
             contributors?: Array<string>;
+            filterWithNoContributor?: boolean;
         }
     ) {
         const searchParams = new URLSearchParams();
@@ -50,6 +51,9 @@ export default class FileService {
                 searchParams.append("contributor", contributor);
             });
         }
+
+        if (query?.filterWithNoContributor)
+            searchParams.set("filterWithNoContributor", "true");
 
         return api.get<FileTypeMetricsDTO>(
             `repository/${repositoryId}/metric/file-types?${searchParams.toString()}`

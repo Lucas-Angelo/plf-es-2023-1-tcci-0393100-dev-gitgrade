@@ -79,6 +79,7 @@ const fileTestingSeed: Array<IFileAttributes> = [
         deletions: 3,
         commitId: commit5001.id,
         path: "src/file1.ts",
+        extension: "ts",
     },
     {
         id: 10,
@@ -86,6 +87,7 @@ const fileTestingSeed: Array<IFileAttributes> = [
         deletions: 50,
         commitId: commit5001.id,
         path: "src/file4.ts",
+        extension: "ts",
     },
     {
         id: 11,
@@ -93,6 +95,7 @@ const fileTestingSeed: Array<IFileAttributes> = [
         deletions: 0,
         commitId: commit5002.id,
         path: "src/pagina3.html",
+        extension: "html",
     },
 ];
 

@@ -24,7 +24,7 @@ class Commit extends Model<ICommitAttributes> {
     public committedDate!: Date;
 
     public branch!: Branch;
-    public contributor!: Contributor;
+    public contributor!: Contributor | null;
     public files!: File[];
 
     static initModel(sequelize: Sequelize): void {

@@ -254,13 +254,15 @@ export default class FileService {
         branchName: string,
         startedAt: Date,
         endedAt: Date,
-        contributors?: Array<string>
+        contributors: Array<string> | undefined,
+        filterWithNoContributor: boolean | undefined
     ) {
-        const contributorWhere = contributors
-            ? { githubLogin: contributors }
-            : {};
         const fileChanges = await File.findAll({
             attributes: ["extension", "path", "commitId"],
+            where: getContributorWhere(contributors, filterWithNoContributor, {
+                contributorIdFilterKey: "$commit.contributor_id$",
+                contributorLoginFilterKey: "$commit.contributor.github_login$",
+            }),
             include: [
                 {
                     model: Commit,
@@ -291,7 +293,7 @@ export default class FileService {
                         },
                         {
                             model: Contributor,
-                            required: true,
+                            required: false,
                             as: "contributor",
                             attributes: [
                                 "id",
@@ -299,7 +301,6 @@ export default class FileService {
                                 "githubLogin",
                                 "githubAvatarUrl",
                             ],
-                            where: contributorWhere,
                         },
                     ],
                 },
@@ -308,10 +309,13 @@ export default class FileService {
 
         const mapExtensionToCount = new Map<string, number>();
         const mapContributorToMapExtensionToCount = new Map<
-            number,
+            number | undefined,
             Map<string, number>
         >();
-        const mapLoadedFilesToContributorsSet = new Map<string, Set<number>>();
+        const mapLoadedFilesToContributorsSet = new Map<
+            string,
+            Set<number | undefined>
+        >();
         for (const fileAndStuff of fileChanges) {
             // agrupar por tipo de arquivo
             // contar quantos de cada tipo de arquivo
@@ -336,17 +340,19 @@ export default class FileService {
 
                     mapLoadedFilesToContributorsSet.set(
                         file.path,
-                        new Set([contributor.id])
+                        new Set([contributor?.id])
                     );
                 }
 
-                if (!fileContributorSet?.has(contributor.id)) {
+                if (!fileContributorSet?.has(contributor?.id)) {
                     let contributorMap =
-                        mapContributorToMapExtensionToCount.get(contributor.id);
+                        mapContributorToMapExtensionToCount.get(
+                            contributor?.id
+                        );
                     if (!contributorMap) {
                         contributorMap = new Map<string, number>();
                         mapContributorToMapExtensionToCount.set(
-                            contributor.id,
+                            contributor?.id,
                             contributorMap
                         );
                     }
@@ -380,19 +386,19 @@ export default class FileService {
                 (finalArray, [id, contributorMap]) => {
                     const contributor = fileChanges.find(
                         (commitAndStuff) =>
-                            commitAndStuff.commit.contributor.id === id
+                            commitAndStuff.commit.contributor?.id === id
                     )?.commit.contributor;
-                    if (contributor) {
-                        finalArray.push({
-                            contributor: {
-                                id: Number(contributor.id),
-                                githubName: contributor.githubName,
-                                githubLogin: contributor.githubLogin,
-                                githubAvatarUrl: contributor.githubAvatarUrl,
-                            },
-                            fileTypes: mapToArrayOfObjects(contributorMap),
-                        });
-                    }
+                    finalArray.push({
+                        contributor: contributor
+                            ? {
+                                  id: Number(contributor.id),
+                                  githubName: contributor.githubName,
+                                  githubLogin: contributor.githubLogin,
+                                  githubAvatarUrl: contributor.githubAvatarUrl,
+                              }
+                            : undefined,
+                        fileTypes: mapToArrayOfObjects(contributorMap),
+                    });
 
                     return finalArray;
                 },
