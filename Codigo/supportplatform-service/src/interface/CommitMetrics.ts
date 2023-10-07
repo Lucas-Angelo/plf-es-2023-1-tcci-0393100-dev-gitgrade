@@ -18,7 +18,7 @@ export interface CommitMetricsServiceResponse {
 export interface CommitQualityMetricsServiceQueryDataValues {
     qualityLevel: number;
     qualityLevelCount: string;
-    contributor: {
+    contributor?: {
         id: string;
         githubName: string;
         githubLogin: string;

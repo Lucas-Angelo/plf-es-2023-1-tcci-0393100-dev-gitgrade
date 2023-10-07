@@ -18,7 +18,7 @@ export interface CommitQualityMetricsDTO {
     qualityLevelCount: number;
   }>;
   commitQualityPerContributor: Array<{
-    contributor: {
+    contributor?: {
       id: number;
       githubName: string;
       githubLogin: string;

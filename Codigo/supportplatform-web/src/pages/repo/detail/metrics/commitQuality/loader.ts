@@ -31,6 +31,12 @@ export default function repositoryCommitQualityMetricsPageLoader({
                 contributors:
                     searchParams.getAll(pageRouteSearchParams.contributor) ??
                     undefined,
+                filterWithNoContributor:
+                    searchParams.get(
+                        pageRouteSearchParams.filterWithNoContributor
+                    ) === "true"
+                        ? true
+                        : false,
             }
         )
     );

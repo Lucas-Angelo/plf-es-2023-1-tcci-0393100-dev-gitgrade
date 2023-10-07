@@ -37,6 +37,7 @@ export class CommitService {
             startedAt?: string;
             endedAt?: string;
             contributors?: Array<string>;
+            filterWithNoContributor?: boolean;
         }
     ) {
         const searchParams = new URLSearchParams();
@@ -49,6 +50,9 @@ export class CommitService {
                 searchParams.append("contributor", contributor);
             });
         }
+
+        if (query?.filterWithNoContributor)
+            searchParams.set("filterWithNoContributor", "true");
 
         return api.get<CommitQualityMetricsDTO>(
             `repository/${repositoryId}/metric/commit-quality?${searchParams.toString()}`

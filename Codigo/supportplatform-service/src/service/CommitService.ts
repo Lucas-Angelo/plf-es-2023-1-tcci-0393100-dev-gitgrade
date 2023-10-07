@@ -95,7 +95,8 @@ export default class CommitService {
         branchName: string,
         startedAt: Date,
         endedAt: Date,
-        contributors?: Array<string>
+        contributors: Array<string> | undefined,
+        filterWithNoContributor: boolean | undefined
     ) {
         const qualityLevels = [
             {
@@ -124,9 +125,14 @@ export default class CommitService {
                 barrier: 100,
             },
         ];
-        const contributorWhere = contributors
-            ? { githubLogin: contributors }
-            : {};
+        const contributorWhere = getContributorWhere(
+            contributors,
+            filterWithNoContributor,
+            {
+                contributorLoginFilterKey: "$contributor.github_login$",
+                contributorIdFilterKey: "contributorId",
+            }
+        );
 
         const firstLineLengthSequelizeLiteral =
             "LENGTH(SUBSTRING_INDEX(`Commit`.`message`, '\\n', 1))";
@@ -180,6 +186,7 @@ export default class CommitService {
                         getDateInDayEnd(getDateInServerTimeZone(endedAt)),
                     ],
                 },
+                ...contributorWhere,
             },
 
             attributes: [
@@ -203,14 +210,13 @@ export default class CommitService {
                 {
                     model: Contributor,
                     as: "contributor",
-                    required: true,
+                    required: false,
                     attributes: [
                         "id",
                         "githubName",
                         "githubLogin",
                         "githubAvatarUrl",
                     ],
-                    where: contributorWhere,
                 },
             ],
 

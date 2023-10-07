@@ -470,25 +470,29 @@ describe("GET /repository/:id/metric/commit-quality", () => {
 
         const body: CommitQualityMetricsDTO = response.body;
         const contributorsIds = body.commitQualityPerContributor.map(
-            (item) => item.contributor.id
+            (item) => item.contributor?.id
         );
 
-        expect(body.generalCommitQualityLevel[0].qualityLevelCount).toBe(1);
+        expect(body.generalCommitQualityLevel[0].qualityLevelCount).toBe(2);
         expect(body.generalCommitQualityLevel[1].qualityLevelCount).toBe(1);
         expect(body.generalCommitQualityLevel[2].qualityLevelCount).toBe(3);
-        expect(body.generalCommitQualityLevel[3].qualityLevelCount).toBe(2);
+        expect(body.generalCommitQualityLevel[3].qualityLevelCount).toBe(3);
         expect(body.generalCommitQualityLevel[4].qualityLevelCount).toBe(1);
 
-        expect(body.commitQualityPerContributor).toHaveLength(2);
+        expect(body.commitQualityPerContributor).toHaveLength(3);
 
         expect(contributorsIds).toContain(contributorTestingSeed[0].id);
         expect(contributorsIds).toContain(contributorTestingSeed[1].id);
+        expect(contributorsIds).toContain(undefined);
 
         const contributor1 = body.commitQualityPerContributor.find(
-            (item) => item.contributor.id === contributorTestingSeed[0].id
+            (item) => item.contributor?.id === contributorTestingSeed[0].id
         );
         const contributor2 = body.commitQualityPerContributor.find(
-            (item) => item.contributor.id === contributorTestingSeed[1].id
+            (item) => item.contributor?.id === contributorTestingSeed[1].id
+        );
+        const noContributor = body.commitQualityPerContributor.find(
+            (item) => !item.contributor
         );
 
         expect(contributor1?.commitQualityLevel).toStrictEqual([
@@ -524,6 +528,17 @@ describe("GET /repository/:id/metric/commit-quality", () => {
                 qualityLevelCount: 1,
             },
         ]);
+
+        expect(noContributor?.commitQualityLevel).toStrictEqual([
+            {
+                qualityLevel: 0,
+                qualityLevelCount: 1,
+            },
+            {
+                qualityLevel: 3,
+                qualityLevelCount: 1,
+            },
+        ]);
     });
 
     it("should return 200 when startedAt is provided", async () => {
@@ -537,7 +552,7 @@ describe("GET /repository/:id/metric/commit-quality", () => {
 
         const body: CommitQualityMetricsDTO = response.body;
         const contributorsIds = body.commitQualityPerContributor.map(
-            (item) => item.contributor.id
+            (item) => item.contributor?.id
         );
 
         expect(body.generalCommitQualityLevel[0].qualityLevelCount).toBe(0);
@@ -552,7 +567,7 @@ describe("GET /repository/:id/metric/commit-quality", () => {
         expect(contributorsIds).toContain(contributorTestingSeed[1].id);
 
         const contributor1 = body.commitQualityPerContributor.find(
-            (item) => item.contributor.id === contributorTestingSeed[0].id
+            (item) => item.contributor?.id === contributorTestingSeed[0].id
         );
 
         expect(contributor1?.commitQualityLevel).toStrictEqual([
@@ -582,25 +597,29 @@ describe("GET /repository/:id/metric/commit-quality", () => {
 
         const body: CommitQualityMetricsDTO = response.body;
         const contributorsIds = body.commitQualityPerContributor.map(
-            (item) => item.contributor.id
+            (item) => item.contributor?.id
         );
 
-        expect(body.generalCommitQualityLevel[0].qualityLevelCount).toBe(1);
+        expect(body.generalCommitQualityLevel[0].qualityLevelCount).toBe(2);
         expect(body.generalCommitQualityLevel[1].qualityLevelCount).toBe(1);
         expect(body.generalCommitQualityLevel[2].qualityLevelCount).toBe(2);
-        expect(body.generalCommitQualityLevel[3].qualityLevelCount).toBe(0);
+        expect(body.generalCommitQualityLevel[3].qualityLevelCount).toBe(1);
         expect(body.generalCommitQualityLevel[4].qualityLevelCount).toBe(0);
 
-        expect(body.commitQualityPerContributor).toHaveLength(2);
+        expect(body.commitQualityPerContributor).toHaveLength(3);
 
         expect(contributorsIds).toContain(contributorTestingSeed[0].id);
         expect(contributorsIds).toContain(contributorTestingSeed[1].id);
+        expect(contributorsIds).toContain(undefined);
 
         const contributor1 = body.commitQualityPerContributor.find(
-            (item) => item.contributor.id === contributorTestingSeed[0].id
+            (item) => item.contributor?.id === contributorTestingSeed[0].id
         );
         const contributor2 = body.commitQualityPerContributor.find(
-            (item) => item.contributor.id === contributorTestingSeed[1].id
+            (item) => item.contributor?.id === contributorTestingSeed[1].id
+        );
+        const noContributor = body.commitQualityPerContributor.find(
+            (item) => !item.contributor
         );
 
         expect(contributor1?.commitQualityLevel).toStrictEqual([
@@ -624,6 +643,17 @@ describe("GET /repository/:id/metric/commit-quality", () => {
                 qualityLevelCount: 1,
             },
         ]);
+
+        expect(noContributor?.commitQualityLevel).toStrictEqual([
+            {
+                qualityLevel: 0,
+                qualityLevelCount: 1,
+            },
+            {
+                qualityLevel: 3,
+                qualityLevelCount: 1,
+            },
+        ]);
     });
 
     it("should return 200 when contributor is provided", async () => {
@@ -637,7 +667,7 @@ describe("GET /repository/:id/metric/commit-quality", () => {
 
         const body: CommitQualityMetricsDTO = response.body;
         const contributorsIds = body.commitQualityPerContributor.map(
-            (item) => item.contributor.id
+            (item) => item.contributor?.id
         );
 
         expect(body.generalCommitQualityLevel[0].qualityLevelCount).toBe(1);
@@ -651,7 +681,7 @@ describe("GET /repository/:id/metric/commit-quality", () => {
         expect(contributorsIds).toContain(contributorTestingSeed[0].id);
 
         const contributor1 = body.commitQualityPerContributor.find(
-            (item) => item.contributor.id === contributorTestingSeed[0].id
+            (item) => item.contributor?.id === contributorTestingSeed[0].id
         );
 
         expect(contributor1?.commitQualityLevel).toStrictEqual([
@@ -673,6 +703,113 @@ describe("GET /repository/:id/metric/commit-quality", () => {
             },
             {
                 qualityLevel: 4,
+                qualityLevelCount: 1,
+            },
+        ]);
+    });
+
+    it("should return 200 when filterWithNoContributor and contributor is provided", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[3].id}/metric/commit-quality?contributor=${contributorTestingSeed[0].githubLogin}&filterWithNoContributor=true`
+            )
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        const body: CommitQualityMetricsDTO = response.body;
+        const contributorsIds = body.commitQualityPerContributor.map(
+            (item) => item.contributor?.id
+        );
+
+        expect(body.generalCommitQualityLevel[0].qualityLevelCount).toBe(2);
+        expect(body.generalCommitQualityLevel[1].qualityLevelCount).toBe(1);
+        expect(body.generalCommitQualityLevel[2].qualityLevelCount).toBe(2);
+        expect(body.generalCommitQualityLevel[3].qualityLevelCount).toBe(2);
+        expect(body.generalCommitQualityLevel[4].qualityLevelCount).toBe(1);
+
+        expect(body.commitQualityPerContributor).toHaveLength(2);
+
+        expect(contributorsIds).toContain(contributorTestingSeed[0].id);
+        expect(contributorsIds).toContain(undefined);
+
+        const contributor1 = body.commitQualityPerContributor.find(
+            (item) => item.contributor?.id === contributorTestingSeed[0].id
+        );
+        const noContributor = body.commitQualityPerContributor.find(
+            (item) => !item.contributor
+        );
+
+        expect(contributor1?.commitQualityLevel).toStrictEqual([
+            {
+                qualityLevel: 0,
+                qualityLevelCount: 1,
+            },
+            {
+                qualityLevel: 1,
+                qualityLevelCount: 1,
+            },
+            {
+                qualityLevel: 2,
+                qualityLevelCount: 2,
+            },
+            {
+                qualityLevel: 3,
+                qualityLevelCount: 1,
+            },
+            {
+                qualityLevel: 4,
+                qualityLevelCount: 1,
+            },
+        ]);
+
+        expect(noContributor?.commitQualityLevel).toStrictEqual([
+            {
+                qualityLevel: 0,
+                qualityLevelCount: 1,
+            },
+            {
+                qualityLevel: 3,
+                qualityLevelCount: 1,
+            },
+        ]);
+    });
+
+    it("should return 200 when filterWithNoContributor is provided", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[3].id}/metric/commit-quality?filterWithNoContributor=true`
+            )
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        const body: CommitQualityMetricsDTO = response.body;
+        const contributorsIds = body.commitQualityPerContributor.map(
+            (item) => item.contributor?.id
+        );
+
+        expect(body.generalCommitQualityLevel[0].qualityLevelCount).toBe(1);
+        expect(body.generalCommitQualityLevel[1].qualityLevelCount).toBe(0);
+        expect(body.generalCommitQualityLevel[2].qualityLevelCount).toBe(0);
+        expect(body.generalCommitQualityLevel[3].qualityLevelCount).toBe(1);
+        expect(body.generalCommitQualityLevel[4].qualityLevelCount).toBe(0);
+
+        expect(body.commitQualityPerContributor).toHaveLength(1);
+
+        expect(contributorsIds).toContain(undefined);
+
+        const noContributor = body.commitQualityPerContributor.find(
+            (item) => !item.contributor
+        );
+
+        expect(noContributor?.commitQualityLevel).toStrictEqual([
+            {
+                qualityLevel: 0,
+                qualityLevelCount: 1,
+            },
+            {
+                qualityLevel: 3,
                 qualityLevelCount: 1,
             },
         ]);

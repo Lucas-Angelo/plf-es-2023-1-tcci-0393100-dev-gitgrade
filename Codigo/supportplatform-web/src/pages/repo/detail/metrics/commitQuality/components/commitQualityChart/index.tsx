@@ -48,9 +48,10 @@ export default function CommitQualityChart(props: ICommitQualityChartProps) {
                         );
 
                     return {
-                        name:
-                            contributorData.contributor.githubName ??
-                            contributorData.contributor.githubLogin,
+                        name: contributorData.contributor
+                            ? contributorData.contributor.githubName ??
+                              contributorData.contributor.githubLogin
+                            : "(Sem contribuidor)",
                         ...contributorQualityLevelPerc,
                     };
                 }

@@ -190,7 +190,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "generalCommitQualityLevel": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"qualityLevelCount":{"dataType":"double","required":true},"qualityLevel":{"dataType":"double","required":true}}},"required":true},
-            "commitQualityPerContributor": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"commitQualityLevel":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"qualityLevelCount":{"dataType":"double","required":true},"qualityLevel":{"dataType":"double","required":true}}},"required":true},"contributor":{"dataType":"nestedObjectLiteral","nestedProperties":{"githubAvatarUrl":{"dataType":"string","required":true},"githubLogin":{"dataType":"string","required":true},"githubName":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"required":true}}},"required":true},
+            "commitQualityPerContributor": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"commitQualityLevel":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"qualityLevelCount":{"dataType":"double","required":true},"qualityLevel":{"dataType":"double","required":true}}},"required":true},"contributor":{"dataType":"nestedObjectLiteral","nestedProperties":{"githubAvatarUrl":{"dataType":"string","required":true},"githubLogin":{"dataType":"string","required":true},"githubName":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}}}}},"required":true},
         },
         "additionalProperties": false,
     },

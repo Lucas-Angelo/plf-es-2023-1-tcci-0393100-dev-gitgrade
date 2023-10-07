@@ -180,6 +180,20 @@ const commitTestingSeed = [
         message: "no contributor 2",
         committedDate: new Date("2023-02-10T03:30:00-03:00"),
     },
+    {
+        id: 2001,
+        branchId: branchTestingSeed[16].id,
+        sha: "el-sha12",
+        message: "an ideal commit message with more than 40 caracteres",
+        committedDate: new Date("2023-02-02T12:00:00-03:00"),
+    },
+    {
+        id: 2002,
+        branchId: branchTestingSeed[16].id,
+        sha: "el-sha13",
+        message: "bad one",
+        committedDate: new Date("2023-02-02T16:00:00-03:00"),
+    },
 ];
 
 export { commitTestingSeed };

@@ -245,7 +245,8 @@ export class RepositoryMetricsController extends Controller {
                 branchName,
                 startedAt,
                 endedAt,
-                query.contributor
+                query.contributor,
+                query.filterWithNoContributor
             );
         return new CommitQualityMetricsMapper().toDto(serviceResponse);
     }
