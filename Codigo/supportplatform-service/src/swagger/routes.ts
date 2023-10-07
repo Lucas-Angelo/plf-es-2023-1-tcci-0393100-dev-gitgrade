@@ -182,6 +182,7 @@ const models: TsoaRoute.Models = {
             "startedAt": {"dataType":"date","validators":{"isDate":{"errorMsg":"startedAt must be a valid date"}}},
             "endedAt": {"dataType":"date","validators":{"isDate":{"errorMsg":"endedAt must be a valid date"}}},
             "contributor": {"dataType":"array","array":{"dataType":"string"}},
+            "filterWithNoContributor": {"dataType":"boolean"},
         },
         "additionalProperties": false,
     },

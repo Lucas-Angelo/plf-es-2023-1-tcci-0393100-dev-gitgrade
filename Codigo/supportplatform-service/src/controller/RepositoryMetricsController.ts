@@ -202,7 +202,8 @@ export class RepositoryMetricsController extends Controller {
                 repositoryId,
                 startedAt,
                 endedAt,
-                query.contributor
+                query.contributor,
+                query.filterWithNoContributor
             );
         return serviceResponse;
     }

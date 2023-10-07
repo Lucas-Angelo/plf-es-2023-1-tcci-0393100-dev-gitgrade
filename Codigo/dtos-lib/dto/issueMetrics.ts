@@ -1,8 +1,8 @@
 export interface IssueMetricsDTO {
   issueDataPerContributor: Array<{
-    contributor: {
+    contributor?: {
       id: number;
-      githubName: string;
+      githubName: string | null;
       githubLogin: string | null;
       githubAvatarUrl: string | null;
     };
@@ -19,4 +19,5 @@ export interface IssueMetricQueryDTO {
   /** @isDate endedAt must be a valid date */
   endedAt?: Date;
   contributor?: Array<string>;
+  filterWithNoContributor?: boolean;
 }

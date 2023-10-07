@@ -913,22 +913,26 @@ describe("GET /repository/:id/metric/issues", () => {
 
         const body: IssueMetricsDTO = response.body;
         const contributorsIds = body.issueDataPerContributor.map(
-            (item) => item.contributor.id
+            (item) => item.contributor?.id
         );
 
-        expect(body.issuesOpennedCount).toBe(5);
+        expect(body.issuesOpennedCount).toBe(6);
         expect(body.issuesClosedCount).toBe(1);
 
-        expect(body.issueDataPerContributor).toHaveLength(2);
+        expect(body.issueDataPerContributor).toHaveLength(3);
 
         expect(contributorsIds).toContain(contributorTestingSeed[0].id);
         expect(contributorsIds).toContain(contributorTestingSeed[1].id);
+        expect(contributorsIds).toContain(undefined);
 
         const contributor1 = body.issueDataPerContributor.find(
-            (item) => item.contributor.id === contributorTestingSeed[0].id
+            (item) => item.contributor?.id === contributorTestingSeed[0].id
         );
         const contributor2 = body.issueDataPerContributor.find(
-            (item) => item.contributor.id === contributorTestingSeed[1].id
+            (item) => item.contributor?.id === contributorTestingSeed[1].id
+        );
+        const noContributor = body.issueDataPerContributor.find(
+            (item) => !item.contributor
         );
 
         expect(contributor1?.assignedIssuesCount).toBe(2);
@@ -936,6 +940,9 @@ describe("GET /repository/:id/metric/issues", () => {
 
         expect(contributor2?.assignedIssuesCount).toBe(3);
         expect(contributor2?.authoredIssuesCount).toBe(1);
+
+        expect(noContributor?.assignedIssuesCount).toBe(2);
+        expect(noContributor?.authoredIssuesCount).toBe(2);
     });
 
     it("should return 200 when provide startedAt", async () => {
@@ -949,22 +956,26 @@ describe("GET /repository/:id/metric/issues", () => {
 
         const body: IssueMetricsDTO = response.body;
         const contributorsIds = body.issueDataPerContributor.map(
-            (item) => item.contributor.id
+            (item) => item.contributor?.id
         );
 
         expect(body.issuesOpennedCount).toBe(2);
         expect(body.issuesClosedCount).toBe(1);
 
-        expect(body.issueDataPerContributor).toHaveLength(2);
+        expect(body.issueDataPerContributor).toHaveLength(3);
 
         expect(contributorsIds).toContain(contributorTestingSeed[0].id);
         expect(contributorsIds).toContain(contributorTestingSeed[1].id);
+        expect(contributorsIds).toContain(undefined);
 
         const contributor1 = body.issueDataPerContributor.find(
-            (item) => item.contributor.id === contributorTestingSeed[0].id
+            (item) => item.contributor?.id === contributorTestingSeed[0].id
         );
         const contributor2 = body.issueDataPerContributor.find(
-            (item) => item.contributor.id === contributorTestingSeed[1].id
+            (item) => item.contributor?.id === contributorTestingSeed[1].id
+        );
+        const noContributor = body.issueDataPerContributor.find(
+            (item) => !item.contributor
         );
 
         expect(contributor1?.assignedIssuesCount).toBe(1);
@@ -972,6 +983,9 @@ describe("GET /repository/:id/metric/issues", () => {
 
         expect(contributor2?.assignedIssuesCount).toBe(2);
         expect(contributor2?.authoredIssuesCount).toBe(0);
+
+        expect(noContributor?.assignedIssuesCount).toBe(1);
+        expect(noContributor?.authoredIssuesCount).toBe(0);
     });
 
     it("should return 200 when provide endedAt", async () => {
@@ -985,22 +999,26 @@ describe("GET /repository/:id/metric/issues", () => {
 
         const body: IssueMetricsDTO = response.body;
         const contributorsIds = body.issueDataPerContributor.map(
-            (item) => item.contributor.id
+            (item) => item.contributor?.id
         );
 
-        expect(body.issuesOpennedCount).toBe(3);
+        expect(body.issuesOpennedCount).toBe(4);
         expect(body.issuesClosedCount).toBe(0);
 
-        expect(body.issueDataPerContributor).toHaveLength(2);
+        expect(body.issueDataPerContributor).toHaveLength(3);
 
         expect(contributorsIds).toContain(contributorTestingSeed[0].id);
         expect(contributorsIds).toContain(contributorTestingSeed[1].id);
+        expect(contributorsIds).toContain(undefined);
 
         const contributor1 = body.issueDataPerContributor.find(
-            (item) => item.contributor.id === contributorTestingSeed[0].id
+            (item) => item.contributor?.id === contributorTestingSeed[0].id
         );
         const contributor2 = body.issueDataPerContributor.find(
-            (item) => item.contributor.id === contributorTestingSeed[1].id
+            (item) => item.contributor?.id === contributorTestingSeed[1].id
+        );
+        const noContributor = body.issueDataPerContributor.find(
+            (item) => !item.contributor
         );
 
         expect(contributor1?.assignedIssuesCount).toBe(1);
@@ -1008,6 +1026,9 @@ describe("GET /repository/:id/metric/issues", () => {
 
         expect(contributor2?.assignedIssuesCount).toBe(2);
         expect(contributor2?.authoredIssuesCount).toBe(1);
+
+        expect(noContributor?.assignedIssuesCount).toBe(1);
+        expect(noContributor?.authoredIssuesCount).toBe(2);
     });
 
     it("should return 200 when provide contributor", async () => {
@@ -1021,7 +1042,7 @@ describe("GET /repository/:id/metric/issues", () => {
 
         const body: IssueMetricsDTO = response.body;
         const contributorsIds = body.issueDataPerContributor.map(
-            (item) => item.contributor.id
+            (item) => item.contributor?.id
         );
 
         expect(body.issuesOpennedCount).toBe(4);
@@ -1032,11 +1053,76 @@ describe("GET /repository/:id/metric/issues", () => {
         expect(contributorsIds).toContain(contributorTestingSeed[0].id);
 
         const contributor1 = body.issueDataPerContributor.find(
-            (item) => item.contributor.id === contributorTestingSeed[0].id
+            (item) => item.contributor?.id === contributorTestingSeed[0].id
         );
 
         expect(contributor1?.assignedIssuesCount).toBe(2);
         expect(contributor1?.authoredIssuesCount).toBe(3);
+    });
+
+    it("should return 200 when provide filterWithNoContributor and contributor", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[3].id}/metric/issues?contributor=${contributorTestingSeed[0].githubLogin}&filterWithNoContributor=true`
+            )
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        const body: IssueMetricsDTO = response.body;
+        const contributorsIds = body.issueDataPerContributor.map(
+            (item) => item.contributor?.id
+        );
+
+        expect(body.issuesOpennedCount).toBe(6);
+        expect(body.issuesClosedCount).toBe(1);
+
+        expect(body.issueDataPerContributor).toHaveLength(2);
+
+        expect(contributorsIds).toContain(contributorTestingSeed[0].id);
+        expect(contributorsIds).toContain(undefined);
+
+        const contributor1 = body.issueDataPerContributor.find(
+            (item) => item.contributor?.id === contributorTestingSeed[0].id
+        );
+        const noContributor = body.issueDataPerContributor.find(
+            (item) => !item.contributor
+        );
+
+        expect(contributor1?.assignedIssuesCount).toBe(2);
+        expect(contributor1?.authoredIssuesCount).toBe(3);
+
+        expect(noContributor?.assignedIssuesCount).toBe(2);
+        expect(noContributor?.authoredIssuesCount).toBe(2);
+    });
+
+    it("should return 200 when provide only filterWithNoContributor", async () => {
+        const response = await supertest(app)
+            .get(
+                `/repository/${repositoryTestingSeed[3].id}/metric/issues?filterWithNoContributor=true`
+            )
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        const body: IssueMetricsDTO = response.body;
+        const contributorsIds = body.issueDataPerContributor.map(
+            (item) => item.contributor?.id
+        );
+
+        expect(body.issuesOpennedCount).toBe(3);
+        expect(body.issuesClosedCount).toBe(0);
+
+        expect(body.issueDataPerContributor).toHaveLength(1);
+
+        expect(contributorsIds).toContain(undefined);
+
+        const noContributor = body.issueDataPerContributor.find(
+            (item) => !item.contributor
+        );
+
+        expect(noContributor?.assignedIssuesCount).toBe(2);
+        expect(noContributor?.authoredIssuesCount).toBe(2);
     });
 
     it("should return 401 when no token is provided", async () => {

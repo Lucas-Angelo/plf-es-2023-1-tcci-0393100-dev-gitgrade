@@ -8,13 +8,15 @@ import {
 } from "../utils/date";
 import { Repository } from "../model/Repository";
 import { IssueMetricsDTO } from "@gitgrade/dtos";
+import { getContributorWhere } from "../utils/contributorFilter";
 
 export default class IssueService {
     async getIssueMetricsGroupedByContributor(
         repositoryId: number,
         startedAt: Date,
         endedAt: Date,
-        contributors?: Array<string>
+        contributors: Array<string> | undefined,
+        filterWithNoContributor: boolean | undefined
     ) {
         const startedAtDayStart = getDateInDayStart(
             getDateInServerTimeZone(startedAt)
@@ -27,19 +29,29 @@ export default class IssueService {
             ],
         };
 
-        const contributorWhere = contributors
-            ? { githubLogin: contributors }
-            : {};
-        const issuesWithAuthorContributor = await Issue.findAll({
+        const contributorWhere = getContributorWhere(
+            contributors,
+            filterWithNoContributor,
+            {
+                contributorIdFilterKey: "authorId",
+                contributorLoginFilterKey: "$author.github_login$",
+            }
+        );
+        const issues = await Issue.findAll({
             attributes: ["githubCreatedAt", "githubClosedAt", "id"],
             where: {
-                [sequelize.Op.or]: [
+                [sequelize.Op.and]: [
                     {
-                        githubCreatedAt: dateWhereClause,
+                        [sequelize.Op.or]: [
+                            {
+                                githubCreatedAt: dateWhereClause,
+                            },
+                            {
+                                githubClosedAt: dateWhereClause,
+                            },
+                        ],
                     },
-                    {
-                        githubClosedAt: dateWhereClause,
-                    },
+                    contributorWhere,
                 ],
             },
             include: [
@@ -55,19 +67,18 @@ export default class IssueService {
                 {
                     model: Contributor,
                     as: "author",
-                    required: true,
+                    required: false,
                     attributes: [
                         "id",
                         "githubName",
                         "githubLogin",
                         "githubAvatarUrl",
                     ],
-                    where: contributorWhere,
                 },
             ],
         });
 
-        const issuesWithAssigneeContributor = await Issue.findAll({
+        const issuesWithAssignees = await Issue.findAll({
             attributes: ["githubCreatedAt", "githubClosedAt", "id"],
             where: {
                 [sequelize.Op.or]: [
@@ -92,21 +103,21 @@ export default class IssueService {
                 {
                     model: Contributor,
                     as: "assignees",
+                    required: false,
                     attributes: [
                         "id",
                         "githubName",
                         "githubLogin",
                         "githubAvatarUrl",
                     ],
-                    where: contributorWhere,
                 },
             ],
         });
 
         const contributorsIssueDataMap = new Map<
-            number,
+            number | undefined,
             {
-                contributor: {
+                contributor?: {
                     id: number;
                     githubName: string | null;
                     githubLogin: string;
@@ -119,7 +130,7 @@ export default class IssueService {
         let issuesOpennedCount = 0;
         let issuesClosedCount = 0;
         const computedIssues = new Set<number>();
-        for (const issueWithAuthor of issuesWithAuthorContributor) {
+        for (const issueWithAuthor of issues) {
             if (!computedIssues.has(issueWithAuthor.id)) {
                 if (
                     issueWithAuthor.githubCreatedAt >= startedAtDayStart &&
@@ -141,67 +152,105 @@ export default class IssueService {
 
             const author = issueWithAuthor.author;
             const contributorIssueData = contributorsIssueDataMap.get(
-                author.id
+                author?.id
             );
             if (!contributorIssueData) {
-                contributorsIssueDataMap.set(author.id, {
-                    contributor: {
-                        id: Number(author.id),
-                        githubName: author.githubName,
-                        githubLogin: author.githubLogin,
-                        githubAvatarUrl: author.githubAvatarUrl,
-                    },
+                contributorsIssueDataMap.set(author?.id, {
+                    contributor: author
+                        ? {
+                              id: Number(author.id),
+                              githubName: author.githubName,
+                              githubLogin: author.githubLogin,
+                              githubAvatarUrl: author.githubAvatarUrl,
+                          }
+                        : undefined,
                     assignedIssuesCount: 0,
                     authoredIssuesCount: 1,
                 });
             } else {
                 contributorIssueData.authoredIssuesCount += 1;
-                contributorsIssueDataMap.set(author.id, contributorIssueData);
+                contributorsIssueDataMap.set(author?.id, contributorIssueData);
             }
         }
 
-        for (const issueWithAssignee of issuesWithAssigneeContributor) {
-            if (!computedIssues.has(issueWithAssignee.id)) {
-                if (
-                    issueWithAssignee.githubCreatedAt >= startedAtDayStart &&
-                    issueWithAssignee.githubCreatedAt <= endedAtDayEnd
-                ) {
-                    issuesOpennedCount += 1;
+        for (const issueWithAssignee of issuesWithAssignees) {
+            const computeIssue = () => {
+                if (!computedIssues.has(issueWithAssignee.id)) {
+                    if (
+                        issueWithAssignee.githubCreatedAt >=
+                            startedAtDayStart &&
+                        issueWithAssignee.githubCreatedAt <= endedAtDayEnd
+                    ) {
+                        issuesOpennedCount += 1;
+                    }
+
+                    if (
+                        issueWithAssignee.githubClosedAt &&
+                        issueWithAssignee.githubClosedAt >= startedAtDayStart &&
+                        issueWithAssignee.githubClosedAt <= endedAtDayEnd
+                    ) {
+                        issuesClosedCount += 1;
+                    }
+
+                    computedIssues.add(issueWithAssignee.id);
                 }
+            };
 
-                if (
-                    issueWithAssignee.githubClosedAt &&
-                    issueWithAssignee.githubClosedAt >= startedAtDayStart &&
-                    issueWithAssignee.githubClosedAt <= endedAtDayEnd
-                ) {
-                    issuesClosedCount += 1;
-                }
-
-                computedIssues.add(issueWithAssignee.id);
-            }
-
-            const assignees = issueWithAssignee.assignees;
-            for (const assignee of assignees) {
-                const contributorIssueData = contributorsIssueDataMap.get(
-                    assignee.id
-                );
+            if (
+                issueWithAssignee.assignees.length === 0 &&
+                (filterWithNoContributor || !contributors?.length)
+            ) {
+                computeIssue();
+                const contributorIssueData =
+                    contributorsIssueDataMap.get(undefined);
                 if (!contributorIssueData) {
-                    contributorsIssueDataMap.set(assignee.id, {
-                        contributor: {
-                            id: Number(assignee.id),
-                            githubName: assignee.githubName,
-                            githubLogin: assignee.githubLogin,
-                            githubAvatarUrl: assignee.githubAvatarUrl,
-                        },
+                    contributorsIssueDataMap.set(undefined, {
                         assignedIssuesCount: 1,
                         authoredIssuesCount: 0,
                     });
                 } else {
                     contributorIssueData.assignedIssuesCount += 1;
                     contributorsIssueDataMap.set(
-                        assignee.id,
+                        undefined,
                         contributorIssueData
                     );
+                }
+            } else if (
+                issueWithAssignee.assignees.length > 0 &&
+                ((!contributors?.length && !filterWithNoContributor) ||
+                    issueWithAssignee.assignees.some(
+                        (assignee) =>
+                            contributors?.includes(assignee.githubLogin)
+                    ))
+            ) {
+                computeIssue();
+                const assignees = issueWithAssignee.assignees.filter(
+                    (assignee) =>
+                        !contributors?.length ||
+                        contributors?.includes(assignee.githubLogin)
+                );
+                for (const assignee of assignees) {
+                    const contributorIssueData = contributorsIssueDataMap.get(
+                        assignee.id
+                    );
+                    if (!contributorIssueData) {
+                        contributorsIssueDataMap.set(assignee.id, {
+                            contributor: {
+                                id: Number(assignee.id),
+                                githubName: assignee.githubName,
+                                githubLogin: assignee.githubLogin,
+                                githubAvatarUrl: assignee.githubAvatarUrl,
+                            },
+                            assignedIssuesCount: 1,
+                            authoredIssuesCount: 0,
+                        });
+                    } else {
+                        contributorIssueData.assignedIssuesCount += 1;
+                        contributorsIssueDataMap.set(
+                            assignee.id,
+                            contributorIssueData
+                        );
+                    }
                 }
             }
         }
@@ -210,10 +259,12 @@ export default class IssueService {
             contributorsIssueDataMap.values()
         );
 
-        return {
+        const responseReturn: IssueMetricsDTO = {
             issueDataPerContributor,
             issuesOpennedCount,
             issuesClosedCount,
-        } as IssueMetricsDTO;
+        };
+
+        return responseReturn;
     }
 }

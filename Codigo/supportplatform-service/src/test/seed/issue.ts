@@ -63,6 +63,18 @@ const issueTestingSeed: Array<IIssueAttributes> = [
         closed: false,
         authorContributorId: null,
     },
+    {
+        id: 6,
+        title: "Issue 6 - no author neither assignee",
+        repositoryId: repositoryTestingSeed[3].id,
+        githubId: "6",
+        number: 6,
+        githubCreatedAt: new Date("2023-03-20T02:01:00-03:00"),
+        githubUpdatedAt: new Date("2023-04-20T02:01:00-03:00"),
+        githubClosedAt: null,
+        closed: false,
+        authorContributorId: null,
+    },
 ];
 
 export { issueTestingSeed };

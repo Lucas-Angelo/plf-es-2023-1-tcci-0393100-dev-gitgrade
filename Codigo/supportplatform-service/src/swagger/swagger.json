@@ -452,6 +452,9 @@
 							"type": "string"
 						},
 						"type": "array"
+					},
+					"filterWithNoContributor": {
+						"type": "boolean"
 					}
 				},
 				"type": "object",
@@ -1724,6 +1727,14 @@
 							"items": {
 								"type": "string"
 							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "filterWithNoContributor",
+						"required": false,
+						"schema": {
+							"type": "boolean"
 						}
 					}
 				]

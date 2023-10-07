@@ -31,7 +31,7 @@ class Issue extends Model<IIssueAttributes> {
     public githubClosedAt!: Date | null;
     public closed!: boolean;
 
-    public author!: Contributor;
+    public author!: Contributor | null;
     public assignees!: Contributor[];
 
     static initModel(sequelize: Sequelize): void {

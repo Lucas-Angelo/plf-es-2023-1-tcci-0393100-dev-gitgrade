@@ -19,21 +19,27 @@ interface IIssuesChartProps {
 }
 
 export default function IssuesChart(props: IIssuesChartProps) {
+    const fallBackName =
+        props.dataKey === "authoredIssuesCount"
+            ? "(Sem autor)"
+            : "(Sem atribuição)";
     const chartData = useMemo(
         () =>
             props.issueMetrics.issueDataPerContributor.map(
                 (contributorWithIssueMetrics) => ({
-                    name:
-                        contributorWithIssueMetrics.contributor.githubName ??
-                        contributorWithIssueMetrics.contributor.githubLogin,
+                    name: contributorWithIssueMetrics.contributor
+                        ? contributorWithIssueMetrics.contributor.githubName ??
+                          contributorWithIssueMetrics.contributor.githubLogin ??
+                          ""
+                        : fallBackName,
                     authoredIssuesCount:
                         contributorWithIssueMetrics.authoredIssuesCount,
                     assignedIssuesCount:
                         contributorWithIssueMetrics.assignedIssuesCount,
-                    id: contributorWithIssueMetrics.contributor.id,
+                    id: contributorWithIssueMetrics.contributor?.id ?? -1,
                 })
             ),
-        [props.issueMetrics]
+        [props.issueMetrics, fallBackName]
     );
 
     const barName =

@@ -8,6 +8,7 @@ export class IssueService {
             startedAt?: string;
             endedAt?: string;
             contributors?: Array<string>;
+            filterWithNoContributor?: boolean;
         }
     ) {
         const searchParams = new URLSearchParams();
@@ -19,6 +20,9 @@ export class IssueService {
                 searchParams.append("contributor", contributor);
             });
         }
+
+        if (query?.filterWithNoContributor)
+            searchParams.set("filterWithNoContributor", "true");
 
         return api.get<IssueMetricsDTO>(
             `repository/${repositoryId}/metric/issues?${searchParams.toString()}`
