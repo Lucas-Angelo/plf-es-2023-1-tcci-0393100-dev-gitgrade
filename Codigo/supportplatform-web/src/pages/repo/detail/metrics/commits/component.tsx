@@ -3,6 +3,7 @@ import { Box, Text } from "@primer/react";
 import CommitMetricsVisualizerControl from "./components/commitMetricsVisualizerControl";
 import { useCommitMetricsPageData } from "./hooks/useCommitMetricsPageData";
 import CommitIndicators from "./components/commitIndicators";
+import NoContributorDetails from "../components/noContributorDetails";
 
 export default function RepositoryCommitMetricsPage() {
     const commitMetrics = useCommitMetricsPageData();
@@ -24,6 +25,9 @@ export default function RepositoryCommitMetricsPage() {
             >
                 <CommitMetricsVisualizerControl />
                 <Outlet />
+                {commitMetrics?.commitsPerContributor.some(
+                    (item) => !item.contribuitor
+                ) && <NoContributorDetails />}
             </Box>
         </Box>
     );

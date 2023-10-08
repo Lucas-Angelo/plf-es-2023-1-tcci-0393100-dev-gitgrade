@@ -4,6 +4,7 @@ import appRoutes from "../../../../../commom/routes/appRoutes";
 import { useParams } from "react-router";
 import { useSearchParams } from "react-router-dom";
 import { useFileTypeMetricsGroupedByContributorByRepositoryId } from "../../../../../commom/data/repo/metrics/fileTypes";
+import ChartDetails from "../components/chartDetails";
 
 const pageRouteParams = appRoutes.repo[":id"].params;
 type PageRouteParams = (typeof pageRouteParams)[number];
@@ -51,6 +52,14 @@ export default function RepositoryFileTypeMetricsPage() {
                     />
                 )}
             </Box>
+
+            <ChartDetails sx={{ mt: 8 }}>
+                Esse gráfico apresenta a quantidade de arquivos contribuídos
+                para cada tipo de extensão. O tamanho dos setores é proporcional
+                a porcentagem do número de arquivos da extensão para o total de
+                arquivos . São considerados os arquivos dos commits que foram
+                realizados entre a data selecionada.
+            </ChartDetails>
         </Box>
     );
 }

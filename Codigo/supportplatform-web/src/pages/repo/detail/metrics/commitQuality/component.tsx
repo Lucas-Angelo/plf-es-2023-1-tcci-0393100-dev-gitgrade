@@ -3,6 +3,8 @@ import { usePageCommitQualityMetricsData } from "./hooks/usePageCommitQualityMet
 import CommitQualityChart from "./components/commitQualityChart";
 import CommitQualityIndicators from "./components/commitQualityIndicators";
 import { InfoIcon } from "@primer/octicons-react";
+import ChartDetails from "../components/chartDetails";
+import NoContributorDetails from "../components/noContributorDetails";
 
 export default function RepositoryCommitQualityMetricsPage() {
     const commitQualityMetrics = usePageCommitQualityMetricsData();
@@ -37,6 +39,17 @@ export default function RepositoryCommitQualityMetricsPage() {
                         commitQualityChartMetrics={commitQualityMetrics}
                     />
                 )}
+
+                <ChartDetails sx={{ mt: 8 }}>
+                    Esse gráfico classifica as mensagens de commit de acordo com
+                    o tamanho dela, mostrando quantos por cento de cada
+                    classificação entre todos os commits de cada contribuidor.
+                    São considerados os commits que foram realizados entre a
+                    data selecionada.
+                </ChartDetails>
+                {commitQualityMetrics?.commitQualityPerContributor.some(
+                    (item) => !item.contributor
+                ) && <NoContributorDetails />}
             </Box>
         </Box>
     );

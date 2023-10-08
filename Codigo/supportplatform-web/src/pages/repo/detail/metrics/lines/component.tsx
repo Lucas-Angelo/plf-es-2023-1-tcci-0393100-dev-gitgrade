@@ -3,6 +3,7 @@ import { Box, Text } from "@primer/react";
 import LinesOfCodeMetricsVisualizerControl from "./components/linesOfCodeMetricsVisualizerControl";
 import LinesOfCodeIndicators from "./components/linesOfCodeIndicators";
 import { useLinesOfCodeMetricsPageData } from "./hooks/useLinesOfCodeMetricsPageData";
+import NoContributorDetails from "../components/noContributorDetails";
 
 export default function RepositoryLinesOfCodeMetricsPage() {
     const linesOfCodeMetricsData = useLinesOfCodeMetricsPageData();
@@ -26,6 +27,9 @@ export default function RepositoryLinesOfCodeMetricsPage() {
             >
                 <LinesOfCodeMetricsVisualizerControl />
                 <Outlet />
+                {linesOfCodeMetricsData?.fileChangesPerContributor.some(
+                    (item) => !item.contribuitor
+                ) && <NoContributorDetails sx={{ mt: 4 }} />}
             </Box>
         </Box>
     );
