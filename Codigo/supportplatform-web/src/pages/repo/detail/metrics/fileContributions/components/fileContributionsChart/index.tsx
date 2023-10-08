@@ -10,11 +10,12 @@ import {
     YAxis,
     Tooltip as ChartTooltip,
 } from "recharts";
-import { getChartColor } from "../../../../../../../commom/style/colors";
+import { getContributorChartColor } from "../../../../../../../commom/style/colors";
 import ContribuitorsLegend from "../../../../../../../commom/components/contribuitorsLegend";
 
 interface IFileContributionsChartProps {
     fileChangeMetrics: FileChangeMetricsDTO;
+    repositoryContributors: Array<{ id: number }>;
 }
 
 export default function FileContributionsChart(
@@ -54,7 +55,13 @@ export default function FileContributionsChart(
                         {chartData.map((entry, index) => (
                             <Cell
                                 key={`cell-${index}`}
-                                fill={getChartColor(index)}
+                                fill={getContributorChartColor(
+                                    entry.id,
+                                    props.repositoryContributors.map(
+                                        (i) => i.id
+                                    ),
+                                    index
+                                )}
                                 name={entry.name}
                             />
                         ))}
@@ -63,7 +70,10 @@ export default function FileContributionsChart(
                     <ChartTooltip cursor={{ opacity: 0.5 }} />
                 </BarChart>
             </ResponsiveContainer>
-            <ContribuitorsLegend contributors={chartData}></ContribuitorsLegend>
+            <ContribuitorsLegend
+                repositoryContributors={props.repositoryContributors}
+                contributors={chartData}
+            ></ContribuitorsLegend>
         </>
     );
 }

@@ -2,16 +2,19 @@ import { Box } from "@primer/react";
 import LinesOfCodeChart from "../components/linesOfCodeChart";
 import { useLinesOfCodeMetricsPageData } from "../hooks/useLinesOfCodeMetricsPageData";
 import ChartDetails from "../../components/chartDetails";
+import { usePageRepositoryContributors } from "../../../hooks/usePageRepositoryContributors";
 
 export default function RepositoryLinesOfCodeAddtionsMetricsPage() {
     const linesOfCodeMetricsData = useLinesOfCodeMetricsPageData();
+    const repositoryCotributors = usePageRepositoryContributors();
 
     return (
         <Box>
-            {linesOfCodeMetricsData && (
+            {linesOfCodeMetricsData && repositoryCotributors && (
                 <LinesOfCodeChart
                     dataKey="addtions"
                     linesOfCodeMetrics={linesOfCodeMetricsData}
+                    repositoryCotributors={repositoryCotributors.results}
                 />
             )}
 

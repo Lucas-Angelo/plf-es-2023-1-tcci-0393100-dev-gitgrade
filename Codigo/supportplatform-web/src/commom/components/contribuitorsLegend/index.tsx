@@ -1,8 +1,9 @@
 import { Box } from "@primer/react";
-import { chartColors } from "../../style/colors";
+import { getContributorChartColor } from "../../style/colors";
 
 interface IContribuitorsLegendProps {
     contributors: Array<{ name: string; id: number }>;
+    repositoryContributors: Array<{ id: number }>;
 }
 
 export default function ContribuitorsLegend(props: IContribuitorsLegendProps) {
@@ -35,8 +36,11 @@ export default function ContribuitorsLegend(props: IContribuitorsLegendProps) {
                         sx={{
                             width: 20,
                             height: 20,
-                            backgroundColor:
-                                chartColors[index % chartColors.length],
+                            backgroundColor: getContributorChartColor(
+                                entry.id,
+                                props.repositoryContributors.map((i) => i.id),
+                                index
+                            ),
                             borderRadius: "100%",
                             flexShrink: 0,
                         }}

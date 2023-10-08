@@ -11,10 +11,11 @@ import {
     Cell,
 } from "recharts";
 import ContribuitorsLegend from "../../../../../../../../commom/components/contribuitorsLegend";
-import { getChartColor } from "../../../../../../../../commom/style/colors";
+import { getContributorChartColor } from "../../../../../../../../commom/style/colors";
 
 interface IAbsoluteCommitChartProps {
     commitMetrics: CommitMetricsDTO;
+    repositoryContributors: Array<{ id: number }>;
 }
 
 export default function AbsoluteCommitChart(props: IAbsoluteCommitChartProps) {
@@ -53,7 +54,13 @@ export default function AbsoluteCommitChart(props: IAbsoluteCommitChartProps) {
                         {chartData.map((entry, index) => (
                             <Cell
                                 key={`cell-${index}`}
-                                fill={getChartColor(index)}
+                                fill={getContributorChartColor(
+                                    entry.id,
+                                    props.repositoryContributors.map(
+                                        (i) => i.id
+                                    ),
+                                    index
+                                )}
                                 name={entry.name}
                             />
                         ))}
@@ -62,7 +69,10 @@ export default function AbsoluteCommitChart(props: IAbsoluteCommitChartProps) {
                     <ChartTooltip cursor={{ opacity: 0.5 }} />
                 </BarChart>
             </ResponsiveContainer>
-            <ContribuitorsLegend contributors={chartData}></ContribuitorsLegend>
+            <ContribuitorsLegend
+                repositoryContributors={props.repositoryContributors}
+                contributors={chartData}
+            ></ContribuitorsLegend>
         </>
     );
 }

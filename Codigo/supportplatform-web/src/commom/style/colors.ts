@@ -21,6 +21,18 @@ export function getChartColor(index: number) {
     return chartColors[index % chartColors.length];
 }
 
+export function getContributorChartColor(
+    id: number,
+    ids: Array<number>,
+    index: number
+) {
+    return id === -1
+        ? noContributorColor
+        : getChartColor(
+              ids.map((i) => i.toString()).indexOf(id.toString()) ?? index
+          );
+}
+
 export const fileChangeColors = {
     additions: "#34D058", // green-400
     deletions: "#EA4A5A", // red-400

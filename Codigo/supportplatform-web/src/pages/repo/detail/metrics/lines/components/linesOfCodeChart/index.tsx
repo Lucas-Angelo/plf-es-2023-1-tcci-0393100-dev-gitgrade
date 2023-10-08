@@ -10,11 +10,12 @@ import {
     YAxis,
     Tooltip as ChartTooltip,
 } from "recharts";
-import { getChartColor } from "../../../../../../../commom/style/colors";
+import { getContributorChartColor } from "../../../../../../../commom/style/colors";
 import ContribuitorsLegend from "../../../../../../../commom/components/contribuitorsLegend";
 
 interface ILinesOfCodeChartProps {
     linesOfCodeMetrics: FileChangeMetricsDTO;
+    repositoryCotributors: Array<{ id: number }>;
     dataKey: "addtions" | "deletions";
 }
 
@@ -56,7 +57,13 @@ export default function LinesOfCodeChart(props: ILinesOfCodeChartProps) {
                         {chartData.map((entry, index) => (
                             <Cell
                                 key={`cell-${index}`}
-                                fill={getChartColor(index)}
+                                fill={getContributorChartColor(
+                                    entry.id,
+                                    props.repositoryCotributors.map(
+                                        (i) => i.id
+                                    ),
+                                    index
+                                )}
                                 name={entry.name}
                             />
                         ))}
@@ -65,7 +72,10 @@ export default function LinesOfCodeChart(props: ILinesOfCodeChartProps) {
                     <ChartTooltip cursor={{ opacity: 0.5 }} />
                 </BarChart>
             </ResponsiveContainer>
-            <ContribuitorsLegend contributors={chartData}></ContribuitorsLegend>
+            <ContribuitorsLegend
+                contributors={chartData}
+                repositoryContributors={props.repositoryCotributors}
+            ></ContribuitorsLegend>
         </>
     );
 }

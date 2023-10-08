@@ -2,16 +2,19 @@ import { Box } from "@primer/react";
 import IssuesChart from "../components/issuesChart";
 import { usePageIssueMetricsData } from "../hooks/useIssueMetricsPageData";
 import ChartDetails from "../../components/chartDetails";
+import { usePageRepositoryContributors } from "../../../hooks/usePageRepositoryContributors";
 
 export default function RepositoryAssigneeIssueMetricsPage() {
     const issueMetricsData = usePageIssueMetricsData();
+    const repositoryCotributors = usePageRepositoryContributors();
 
     return (
         <Box>
-            {issueMetricsData && (
+            {issueMetricsData && repositoryCotributors && (
                 <IssuesChart
                     dataKey="assignedIssuesCount"
                     issueMetrics={issueMetricsData}
+                    repositoryCotributors={repositoryCotributors.results}
                 />
             )}
 

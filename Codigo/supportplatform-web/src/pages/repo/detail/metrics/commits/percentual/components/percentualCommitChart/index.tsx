@@ -7,11 +7,12 @@ import {
     ResponsiveContainer,
     Tooltip as ChartTooltip,
 } from "recharts";
-import { getChartColor } from "../../../../../../../../commom/style/colors";
+import { getContributorChartColor } from "../../../../../../../../commom/style/colors";
 import ContribuitorsLegend from "../../../../../../../../commom/components/contribuitorsLegend";
 
 interface IPercentualCommitChartProps {
     commitMetrics: CommitMetricsDTO;
+    repositoryContributors: Array<{ id: number }>;
 }
 
 export default function PercentualCommitChart(
@@ -51,7 +52,13 @@ export default function PercentualCommitChart(
                         {chartData.map((entry, index) => (
                             <Cell
                                 key={`cell-${entry.id}`}
-                                fill={getChartColor(index)}
+                                fill={getContributorChartColor(
+                                    entry.id,
+                                    props.repositoryContributors.map(
+                                        (i) => i.id
+                                    ),
+                                    index
+                                )}
                                 name={entry.name}
                             />
                         ))}
@@ -65,7 +72,10 @@ export default function PercentualCommitChart(
                     />
                 </PieChart>
             </ResponsiveContainer>
-            <ContribuitorsLegend contributors={chartData} />
+            <ContribuitorsLegend
+                contributors={chartData}
+                repositoryContributors={props.repositoryContributors}
+            />
         </>
     );
 }

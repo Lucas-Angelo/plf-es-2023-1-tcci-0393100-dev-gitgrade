@@ -2,14 +2,19 @@ import { Box } from "@primer/react";
 import PercentualCommitChart from "./components/percentualCommitChart";
 import { useCommitMetricsPageData } from "../hooks/useCommitMetricsPageData";
 import ChartDetails from "../../components/chartDetails";
+import { usePageRepositoryContributors } from "../../../hooks/usePageRepositoryContributors";
 
 export default function RepositoryPercentualCommitMetricsPage() {
     const commitMetricsData = useCommitMetricsPageData();
+    const repositoryContributors = usePageRepositoryContributors();
 
     return (
         <Box>
-            {commitMetricsData && (
-                <PercentualCommitChart commitMetrics={commitMetricsData} />
+            {commitMetricsData && repositoryContributors && (
+                <PercentualCommitChart
+                    repositoryContributors={repositoryContributors.results}
+                    commitMetrics={commitMetricsData}
+                />
             )}
 
             <ChartDetails sx={{ mt: 8 }}>

@@ -4,6 +4,7 @@ import FileContributionsIndicators from "./components/fileContributionsIndicator
 import FileContributionsChart from "./components/fileContributionsChart";
 import ChartDetails from "../components/chartDetails";
 import NoContributorDetails from "../components/noContributorDetails";
+import { usePageRepositoryContributors } from "../../hooks/usePageRepositoryContributors";
 
 export default function RepositoryFileContributionsMetricsPage() {
     const fileChangeMetrics = useFileContributionsMetricsPageData();
@@ -11,6 +12,7 @@ export default function RepositoryFileContributionsMetricsPage() {
         fileChangeMetrics?.fileChangesPerContributor.some(
             (item) => !item.contribuitor
         );
+    const repositoryContributors = usePageRepositoryContributors();
     return (
         <Box>
             <Text sx={{ fontSize: 20, fontWeight: 500, ml: [0, 2, 4, 6] }}>
@@ -28,9 +30,10 @@ export default function RepositoryFileContributionsMetricsPage() {
                         fileChangeMetrics={fileChangeMetrics}
                     />
                 )}
-                {fileChangeMetrics && (
+                {fileChangeMetrics && repositoryContributors && (
                     <FileContributionsChart
                         fileChangeMetrics={fileChangeMetrics}
+                        repositoryContributors={repositoryContributors.results}
                     />
                 )}
 
