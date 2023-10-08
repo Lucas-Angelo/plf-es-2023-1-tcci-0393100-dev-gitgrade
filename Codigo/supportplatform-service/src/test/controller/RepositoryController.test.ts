@@ -418,7 +418,9 @@ describe("PATCH /repository/{id}", () => {
                 automaticSynchronization: true,
             });
 
-        expect(response.body.message).toBe("Evaluation method not found");
+        expect(response.body.message).toBe(
+            'Evaluation method not found by fields {"id":9999}'
+        );
     });
 
     it("should return 401 when no token is provided", async () => {

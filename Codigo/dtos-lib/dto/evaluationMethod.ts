@@ -16,6 +16,11 @@ export interface EvaluationMethodCreateDTO {
    * @isInt year must be an integer
    */
   year: number;
+  /**
+   * @isOptional disabledAt is optional
+   * @isDate disabledAt must be a Date
+   */
+  disabledAt?: Date | null;
 }
 
 /**
@@ -37,9 +42,10 @@ export interface EvaluationMethodUpdateDTO {
    */
   year: number;
   /**
+   * @isOptional disabledAt is optional
    * @isDate disabledAt must be a Date
    */
-  disabledAt: Date | null;
+  disabledAt?: Date | null;
 }
 
 /**
@@ -79,7 +85,7 @@ export interface EvaluationMethodSearchDTO {
    * @isOptional disabledAt is optional
    * @isDate disabledAt must be a Date
    */
-  disabledAt?: Date | null;
+  disabledAt?: Date;
   /**
    * @isOptional
    * @isBoolean forceDisabled must be a boolean
@@ -118,7 +124,7 @@ export interface EvaluationMethodFindOneDTO {
    * @isOptional disabledAt is optional
    * @isDate disabledAt must be a Date
    */
-  disabledAt?: Date | null;
+  disabledAt?: Date;
 }
 
 /**

@@ -66,18 +66,7 @@ export default class EvaluationMethodService {
             this.checkIfIsAValidSemester(data.semester);
 
             logger.info(`Updating evaluation method with id: ${id}`);
-            const evaluationMethod = await EvaluationMethod.findOne({
-                where: { id },
-                paranoid: false,
-            });
-
-            if (!evaluationMethod) {
-                logger.error(`Evaluation method with id: ${id} not found`);
-                throw new AppError(
-                    `Evaluation method with id: ${id} not found`,
-                    404
-                );
-            }
+            const evaluationMethod = await this.findOneBy({ id });
 
             logger.info("Current and new evaluation method data: ", {
                 current: evaluationMethod,
@@ -173,7 +162,12 @@ export default class EvaluationMethodService {
                         fields
                     )}`
                 );
-                throw new AppError("Evaluation method not found", 404);
+                throw new AppError(
+                    `Evaluation method not found by fields ${JSON.stringify(
+                        fields
+                    )}`,
+                    404
+                );
             } else
                 logger.info(
                     `Evaluation method found by fields ${JSON.stringify(
