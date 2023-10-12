@@ -4,6 +4,11 @@ import PageHeader from "./components/pageHeader";
 import PageFooter from "./components/pageFooter";
 import { memo } from "react";
 import PageLoadingIndicator from "./components/pageLoadingIndicator";
+import CreateEvaluationMethodModal from "./components/createEvaluationMethodModal";
+import SearchParamControlledModal from "../../commom/components/searchParamControlledModal";
+import appRoutes from "../../commom/routes/appRoutes";
+
+const pageSearchParams = appRoutes.base.search;
 
 function BasePage() {
     return (
@@ -30,6 +35,16 @@ function BasePage() {
                 </PageLayout.Content>
                 <PageFooter />
             </Box>
+
+            {/* general modals */}
+            <SearchParamControlledModal
+                header="Novo método avaliativo"
+                openValue="evaluationMethod"
+                aria-label="Criar método avaliativo"
+                searchParam={pageSearchParams.creating}
+            >
+                <CreateEvaluationMethodModal />
+            </SearchParamControlledModal>
         </Box>
     );
 }

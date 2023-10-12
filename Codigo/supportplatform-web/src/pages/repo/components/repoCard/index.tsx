@@ -19,7 +19,7 @@ export default function RepoCard(props: IRepoCardProps) {
                     sx={{ mr: 2 }}
                 />
                 <Link
-                    to={appRoutes.repo[":id"].link(props.id)}
+                    to={appRoutes.repo["detail"].link(props.id)}
                     style={{ textDecoration: "none" }}
                 >
                     <PrimerLink as="span">{props.name}</PrimerLink>
@@ -33,7 +33,7 @@ export default function RepoCard(props: IRepoCardProps) {
             <Card.Actions>
                 <Button>Sincronizar</Button>
                 <Link
-                    to={appRoutes.repo[":id"].link(props.id)}
+                    to={appRoutes.repo["detail"].link(props.id)}
                     style={{ textDecoration: "none" }}
                 >
                     <Button variant="primary">Abrir</Button>

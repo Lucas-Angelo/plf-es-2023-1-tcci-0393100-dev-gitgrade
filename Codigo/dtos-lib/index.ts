@@ -20,6 +20,7 @@ import {
   SprintUpdateDTO,
 } from "./dto/sprint";
 import { PaginationResponseDTO } from "./utils/pagination";
+import { ErrorResponseDTO } from './utils/error';
 
 export type {
   CommitMetricsDTO,
@@ -38,4 +39,5 @@ export type {
   SprintResponseDTO,
   SprintSearchDTO,
   SprintUpdateDTO,
+  ErrorResponseDTO,
 };

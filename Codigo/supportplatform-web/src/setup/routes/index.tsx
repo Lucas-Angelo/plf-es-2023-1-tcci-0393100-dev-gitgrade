@@ -35,7 +35,7 @@ const routes = createRoutesFromElements(
                         lazy={() => import("../../pages/repo/list/index")}
                     />
                     <Route
-                        path={appRoutes.repo[":id"].path}
+                        path={appRoutes.repo["detail"].path}
                         element={<div>repo</div>}
                     />
                     <Route
@@ -44,11 +44,20 @@ const routes = createRoutesFromElements(
                     />
                 </Route>
 
-                <Route path={appRoutes.evaluationMethod.path}>
+                <Route
+                    path={appRoutes.evaluationMethod.path}
+                    lazy={() => import("../../pages/evaluationMethod/index")}
+                >
                     <Route
                         path={appRoutes.evaluationMethod.list.path}
                         lazy={() =>
                             import("../../pages/evaluationMethod/list/index")
+                        }
+                    />
+                    <Route
+                        path={appRoutes.evaluationMethod.detail.path}
+                        lazy={() =>
+                            import("../../pages/evaluationMethod/detail/index")
                         }
                     />
                     <Route

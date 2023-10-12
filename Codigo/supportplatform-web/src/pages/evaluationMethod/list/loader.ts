@@ -17,7 +17,8 @@ export default async function evaluationMethodListPageLoader({
 }: LoaderFunctionArgs) {
     const searchParams = new URL(request.url).searchParams;
     const query = getEvaluationMethodQuery({
-        description: searchParams.get(pageSearchParams.filter) ?? undefined,
+        description:
+            searchParams.get(pageSearchParams.description) ?? undefined,
         page: Number(searchParams.get(pageSearchParams.page)) || 1,
         limit: 10,
     });

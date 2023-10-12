@@ -54,12 +54,6 @@
 					"year": {
 						"type": "integer",
 						"format": "int32"
-					},
-					"disabledAt": {
-						"type": "string",
-						"format": "date",
-						"nullable": true,
-						"default": "null"
 					}
 				},
 				"required": [

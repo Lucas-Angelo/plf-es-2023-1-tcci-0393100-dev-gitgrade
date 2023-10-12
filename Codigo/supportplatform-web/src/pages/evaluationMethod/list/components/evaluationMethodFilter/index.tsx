@@ -15,22 +15,28 @@ export default function EvaluationMethodFilter() {
     const inputRef = useRef<HTMLInputElement>(null);
     const [searchParams, setSearchParams] = useSearchParams();
     const defaultFilter =
-        searchParams.get(pageSearchParams.filter) ?? undefined;
+        searchParams.get(pageSearchParams.description) ?? undefined;
 
     function handleSearch(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         const filter = inputRef.current?.value;
 
         setSearchParams((previousSearchParams) => {
-            if (!filter) previousSearchParams.delete(pageSearchParams.filter);
-            previousSearchParams.set(pageSearchParams.filter, filter || "");
+            if (!filter)
+                previousSearchParams.delete(pageSearchParams.description);
+            previousSearchParams.set(
+                pageSearchParams.description,
+                filter || ""
+            );
             previousSearchParams.set(pageSearchParams.page, "1");
             return previousSearchParams;
         });
     }
 
     return (
-        <FilteredSearch sx={{ width: "100%", alignItems: "stretch" }}>
+        <FilteredSearch
+            sx={{ width: "100%", alignItems: "stretch", height: "100%" }}
+        >
             <ActionMenu>
                 <ActionMenu.Button sx={{ height: "100%" }}>
                     Filtrar

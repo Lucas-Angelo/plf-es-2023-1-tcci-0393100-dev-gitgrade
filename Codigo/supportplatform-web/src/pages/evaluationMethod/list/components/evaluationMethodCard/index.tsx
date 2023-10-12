@@ -22,7 +22,7 @@ export default function EvaluationMethodCard(
                     sx={{ mr: 2 }}
                 />
                 <Link
-                    to={appRoutes.evaluationMethod[":id"].link(props.id)}
+                    to={appRoutes.evaluationMethod["detail"].link(props.id)}
                     style={{ textDecoration: "none" }}
                 >
                     <PrimerLink as="span">
@@ -33,7 +33,7 @@ export default function EvaluationMethodCard(
             <Card.Actions>
                 <Button>Duplicar</Button>
                 <Link
-                    to={appRoutes.evaluationMethod[":id"].link(props.id)}
+                    to={appRoutes.evaluationMethod["detail"].link(props.id)}
                     style={{ textDecoration: "none" }}
                 >
                     <Button variant="primary">Abrir</Button>

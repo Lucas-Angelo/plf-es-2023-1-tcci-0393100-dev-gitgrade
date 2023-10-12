@@ -4,6 +4,11 @@ const appRoutes = {
         link() {
             return this.path;
         },
+
+        // necessary to map query string param name per a trustable variable
+        search: {
+            creating: "creating",
+        },
     },
     login: {
         path: "login" as const,
@@ -34,7 +39,7 @@ const appRoutes = {
             },
         },
 
-        ":id": {
+        detail: {
             path: ":id" as const,
             link(id: number) {
                 const path = this.path.replace(":id", id.toString());
@@ -61,10 +66,10 @@ const appRoutes = {
             // necessary to map query string param name per a trustable variable
             search: {
                 page: "page",
-                filter: "filter",
+                description: "description",
             },
         },
-        [":id"]: {
+        detail: {
             path: ":id" as const,
             link(id: number) {
                 const path = this.path.replace(":id", id.toString());
