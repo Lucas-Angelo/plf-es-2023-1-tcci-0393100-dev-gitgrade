@@ -13,6 +13,11 @@ export class RepositoryService {
         if (queryDto?.limit)
             searchParams.set("limit", queryDto.limit.toString());
         if (queryDto?.filter) searchParams.set("filter", queryDto.filter);
+        if (queryDto?.evaluationMethodId !== undefined)
+            searchParams.set(
+                "evaluationMethodId",
+                String(queryDto.evaluationMethodId)
+            );
 
         return api.get<PaginationResponseDTO<RepositoryDTO>>(
             "repository?".concat(searchParams.toString())

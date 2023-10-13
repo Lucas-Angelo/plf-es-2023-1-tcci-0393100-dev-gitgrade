@@ -1,4 +1,8 @@
-import { PaginationResponseDTO, RepositoryPatchDTO } from "@gitgrade/dtos";
+import {
+    GetAllRepositoryQueryDTO,
+    PaginationResponseDTO,
+    RepositoryPatchDTO,
+} from "@gitgrade/dtos";
 import { Op, Sequelize } from "sequelize";
 import logger from "../config/LogConfig";
 import AppError from "../error/AppError";
@@ -6,6 +10,7 @@ import { EvaluationMethod } from "../model/EvaluationMethod";
 import { Repository } from "../model/Repository";
 import { sequelizePagination } from "../utils/pagination";
 import EvaluationMethodService from "./EvaluationMethodService";
+import { RepositoryWhereClauseType } from "../interface/Repository";
 
 export default class RepositoryService {
     private evaluationMethodService: EvaluationMethodService;
@@ -18,21 +23,15 @@ export default class RepositoryService {
         page: number;
         limit: number;
         filter?: string;
+        evaluationMethodId?: number;
     }): Promise<PaginationResponseDTO<Repository>> {
         try {
             logger.info("Searching for all repositories");
-            const loweredFilter = search.filter?.toLowerCase();
+            const whereClause = this._constructWhereClause(search);
+
             const { rows, count } = await Repository.findAndCountAll({
                 ...sequelizePagination(search.page, search.limit),
-                where: loweredFilter
-                    ? [
-                          Sequelize.where(
-                              Sequelize.fn("lower", Sequelize.col("name")),
-                              Op.like,
-                              `%${loweredFilter}%`
-                          ),
-                      ]
-                    : undefined,
+                where: whereClause,
                 include: [
                     {
                         model: EvaluationMethod,
@@ -84,5 +83,36 @@ export default class RepositoryService {
             logger.error(`Error updating repository ${id}:`, { error });
             throw error;
         }
+    }
+
+    /**
+     * Construct the WHERE clause for querying.
+     */
+    private _constructWhereClause(
+        filter: GetAllRepositoryQueryDTO
+    ): RepositoryWhereClauseType {
+        const whereConditions: RepositoryWhereClauseType[typeof Op.and] = [];
+
+        if (filter.filter) {
+            const loweredFilter = filter.filter.toLowerCase();
+            whereConditions.push(
+                Sequelize.where(
+                    Sequelize.fn("lower", Sequelize.col("name")),
+                    Op.like,
+                    `%${loweredFilter}%`
+                )
+            );
+        }
+        if (filter.evaluationMethodId) {
+            whereConditions.push({
+                evaluationMethodId: filter.evaluationMethodId,
+            });
+        }
+
+        const whereClause =
+            whereConditions.length > 0 ? { [Op.and]: whereConditions } : {};
+        logger.info("Constructed where clause: ", { whereClause });
+
+        return whereClause;
     }
 }

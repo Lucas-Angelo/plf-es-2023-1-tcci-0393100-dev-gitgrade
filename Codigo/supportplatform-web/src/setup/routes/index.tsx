@@ -20,7 +20,7 @@ const routes = createRoutesFromElements(
         >
             <Route errorElement={<ErrorElement />}>
                 <Route
-                    path="*"
+                    path=""
                     element={
                         <Navigate
                             replace
@@ -59,7 +59,58 @@ const routes = createRoutesFromElements(
                         lazy={() =>
                             import("../../pages/evaluationMethod/detail/index")
                         }
-                    />
+                    >
+                        <Route
+                            path={appRoutes.evaluationMethod.detail.repo.path}
+                            lazy={() =>
+                                import(
+                                    "../../pages/evaluationMethod/detail/repo/index"
+                                )
+                            }
+                        />
+                        <Route
+                            path={
+                                appRoutes.evaluationMethod.detail
+                                    .consistencyRule.path
+                            }
+                            lazy={() =>
+                                import(
+                                    "../../pages/evaluationMethod/detail/consistencyRule/index"
+                                )
+                            }
+                        />
+                        <Route
+                            path={appRoutes.evaluationMethod.detail.sprint.path}
+                            lazy={() =>
+                                import(
+                                    "../../pages/evaluationMethod/detail/sprint/index"
+                                )
+                            }
+                        />
+                        <Route
+                            path={
+                                appRoutes.evaluationMethod.detail
+                                    .standardizedIssue.path
+                            }
+                            lazy={() =>
+                                import(
+                                    "../../pages/evaluationMethod/detail/standardizedIssue/index"
+                                )
+                            }
+                        />
+                        <Route
+                            path=""
+                            element={
+                                <Navigate
+                                    replace
+                                    to={
+                                        appRoutes.evaluationMethod.detail.repo
+                                            .path
+                                    }
+                                />
+                            }
+                        />
+                    </Route>
                     <Route
                         path=""
                         element={

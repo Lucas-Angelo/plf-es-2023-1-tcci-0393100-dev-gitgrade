@@ -76,6 +76,49 @@ const appRoutes = {
                 return `${appRoutes.evaluationMethod.link()}/${path}`;
             },
             params: ["id"] as const,
+
+            // nested routes
+            repo: {
+                path: "repo" as const,
+                link(id: number) {
+                    const path = this.path.replace(":id", id.toString());
+                    return `${appRoutes.evaluationMethod.detail.link(
+                        id
+                    )}/${path}`;
+                },
+                // necessary to map query string param name per a trustable variable
+                search: {
+                    page: "page",
+                    filter: "filter",
+                },
+            },
+            consistencyRule: {
+                path: "consistencyRule" as const,
+                link(id: number) {
+                    const path = this.path.replace(":id", id.toString());
+                    return `${appRoutes.evaluationMethod.detail.link(
+                        id
+                    )}/${path}`;
+                },
+            },
+            sprint: {
+                path: "sprint" as const,
+                link(id: number) {
+                    const path = this.path.replace(":id", id.toString());
+                    return `${appRoutes.evaluationMethod.detail.link(
+                        id
+                    )}/${path}`;
+                },
+            },
+            standardizedIssue: {
+                path: "standardizedIssue" as const,
+                link(id: number) {
+                    const path = this.path.replace(":id", id.toString());
+                    return `${appRoutes.evaluationMethod.detail.link(
+                        id
+                    )}/${path}`;
+                },
+            },
         },
     },
 };

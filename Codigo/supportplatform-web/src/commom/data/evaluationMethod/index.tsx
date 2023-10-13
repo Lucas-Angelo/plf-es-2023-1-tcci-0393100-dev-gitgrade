@@ -18,3 +18,13 @@ export const getEvaluationMethodQuery = (
 export const useEvaluationMethodList = (
     filterOptions?: EvaluationMethodSearchDTO
 ) => useQuery(getEvaluationMethodQuery(filterOptions));
+
+export const getEvaluationMethodByIdQuery = (id: number) => ({
+    queryKey: ["evaluationMethod", id],
+    queryFn: async () =>
+        new EvaluationMethodService().getById(id).then((res) => res.data),
+    staleTime: Number.MAX_VALUE,
+});
+
+export const useEvaluationMethodById = (id: number) =>
+    useQuery(getEvaluationMethodByIdQuery(id));

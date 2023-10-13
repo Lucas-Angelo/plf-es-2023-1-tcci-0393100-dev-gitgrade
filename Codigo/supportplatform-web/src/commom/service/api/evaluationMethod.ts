@@ -21,6 +21,10 @@ export class EvaluationMethodService {
         );
     }
 
+    async getById(id: number) {
+        return api.get<EvaluationMethodResponseDTO>(`evaluation-method/${id}`);
+    }
+
     async create(evaluationMethod: EvaluationMethodCreateDTO) {
         return api.post<EvaluationMethodResponseDTO>(
             "evaluation-method",

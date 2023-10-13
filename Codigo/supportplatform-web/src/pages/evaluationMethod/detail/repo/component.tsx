@@ -1,17 +1,18 @@
-import { PageLayout, Pagination, Box } from "@primer/react";
+import { Box, Pagination } from "@primer/react";
 import { useLoaderData, useSearchParams } from "react-router-dom";
-import appRoutes from "../../../commom/routes/appRoutes";
-import RepoCard from "../../../commom/components/repoCard";
-import { RepoListPageLoaderData } from "./loader";
-import RepoFilter from "../components/repoFilter";
+import appRoutes from "../../../../commom/routes/appRoutes";
+import { EvaluationMethodRepoListPageLoaderData } from "./loader";
+import EvaluationMethodRepoFilter from "./components/evaluationMethodRepoFilter";
+import RepoCard from "../../../../commom/components/repoCard";
 
-const pageSearchParams = appRoutes.repo.list.search;
+const pageSearchParams = appRoutes.evaluationMethod.detail.repo.search;
 
-export default function RepoListPage() {
+export default function EvaluationMethodRepositoryListPage() {
     const [searchParams, setSearchParams] = useSearchParams();
     const page = Number(searchParams.get(pageSearchParams.page)) || 1;
 
-    const loaderData = useLoaderData() as RepoListPageLoaderData;
+    const loaderData =
+        useLoaderData() as EvaluationMethodRepoListPageLoaderData;
 
     function handlePageChange(e: React.MouseEvent, newPage: number) {
         e.preventDefault();
@@ -20,14 +21,15 @@ export default function RepoListPage() {
             return previousSearchParams;
         });
     }
+
     return (
-        <PageLayout containerWidth="large">
-            <RepoFilter />
+        <div>
+            <EvaluationMethodRepoFilter />
 
             <Box sx={{ width: "100%", my: 5 }}>
                 {loaderData.results.length === 0 && (
                     <Box sx={{ textAlign: "center", color: "gray" }}>
-                        Nenhum repositório encontrado
+                        Nenhum repositório pertencente a esse método avaliativo
                     </Box>
                 )}
                 {loaderData.results.map((repo) => (
@@ -63,6 +65,6 @@ export default function RepoListPage() {
                     />
                 </Box>
             </Box>
-        </PageLayout>
+        </div>
     );
 }

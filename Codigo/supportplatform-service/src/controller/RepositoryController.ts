@@ -41,6 +41,7 @@ export class RepositoryController extends Controller {
             limit: query.limit ?? 10,
             page: query.page ?? 1,
             filter: query.filter,
+            evaluationMethodId: query.evaluationMethodId,
         });
         const mapper = new RepositoryMapper();
         return {
