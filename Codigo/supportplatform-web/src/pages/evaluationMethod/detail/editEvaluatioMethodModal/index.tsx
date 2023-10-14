@@ -2,7 +2,7 @@ import { useFetcher, useSearchParams } from "react-router-dom";
 import { ErrorResponseDTO, EvaluationMethodCreateDTO } from "@gitgrade/dtos";
 import EvaluationMethodForm from "../../../../commom/components/evaluationMethodForm";
 import appRoutes from "../../../../commom/routes/appRoutes";
-import { useEffect, useRef } from "react";
+import { useIsMountedRef } from "../../../../commom/hooks/useIsMountedRef";
 
 interface IEditEvaluationMethodModalProps {
     id: number;
@@ -25,13 +25,7 @@ export default function EditEvaluationMethodModal(
 
     const [, setSearchParams] = useSearchParams();
 
-    const isRenderedRef = useRef(false);
-    useEffect(() => {
-        isRenderedRef.current = true;
-        return () => {
-            isRenderedRef.current = false;
-        };
-    }, []);
+    const isRenderedRef = useIsMountedRef();
 
     if (responseObject?.success && isRenderedRef.current) {
         setSearchParams((previousSearchParams) => {

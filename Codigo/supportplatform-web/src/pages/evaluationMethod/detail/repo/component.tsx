@@ -4,6 +4,7 @@ import appRoutes from "../../../../commom/routes/appRoutes";
 import { EvaluationMethodRepoListPageLoaderData } from "./loader";
 import EvaluationMethodRepoFilter from "./components/evaluationMethodRepoFilter";
 import RepoCard from "../../../../commom/components/repoCard";
+import LinkRepositoryButton from "./components/linkRepositoryButton";
 
 const pageSearchParams = appRoutes.evaluationMethod.detail.repo.search;
 
@@ -23,7 +24,8 @@ export default function EvaluationMethodRepositoryListPage() {
     }
 
     return (
-        <div>
+        <Box>
+            <LinkRepositoryButton />
             <EvaluationMethodRepoFilter />
 
             <Box sx={{ width: "100%", my: 5 }}>
@@ -65,6 +67,6 @@ export default function EvaluationMethodRepositoryListPage() {
                     />
                 </Box>
             </Box>
-        </div>
+        </Box>
     );
 }

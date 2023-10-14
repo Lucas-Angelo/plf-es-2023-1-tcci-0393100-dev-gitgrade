@@ -14,6 +14,8 @@ const appRoutes = {
             modal: {
                 createEvaluationMethod: "createEvaluationMethod",
                 editEvaluationMethod: "editEvaluationMethod",
+                linkRepositoryToEvaluationMethod:
+                    "linkRepositoryToEvaluationMethod",
             },
         },
     },
@@ -96,6 +98,26 @@ const appRoutes = {
                 search: {
                     page: "page",
                     filter: "filter",
+                },
+                // nested routes
+                detail: {
+                    path: ":repoId" as const,
+                    link(id: number, repoId: number) {
+                        const path = this.path.replace(
+                            ":repoId",
+                            repoId.toString()
+                        );
+                        return `${appRoutes.evaluationMethod.detail.repo.link(
+                            id
+                        )}/${path}`;
+                    },
+                    params: ["repoId"] as const,
+                    getParams() {
+                        return [
+                            ...appRoutes.evaluationMethod.detail.params,
+                            ...this.params,
+                        ] as const;
+                    },
                 },
             },
             consistencyRule: {

@@ -23,7 +23,7 @@ export default class RepositoryService {
         page: number;
         limit: number;
         filter?: string;
-        evaluationMethodId?: number;
+        evaluationMethodId?: number | null;
     }): Promise<PaginationResponseDTO<Repository>> {
         try {
             logger.info("Searching for all repositories");
@@ -103,7 +103,7 @@ export default class RepositoryService {
                 )
             );
         }
-        if (filter.evaluationMethodId) {
+        if (filter.evaluationMethodId !== undefined) {
             whereConditions.push({
                 evaluationMethodId: filter.evaluationMethodId,
             });
