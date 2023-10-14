@@ -6,7 +6,8 @@ export default function PageLoadingIndicator() {
     const navigation = useNavigation();
     return (
         <>
-            {navigation.state === "loading" ? (
+            {navigation.state === "loading" ||
+            navigation.state === "submitting" ? (
                 <Box sx={{ width: "100%", position: "sticky", top: 0 }}>
                     <LinearLoading />
                 </Box>

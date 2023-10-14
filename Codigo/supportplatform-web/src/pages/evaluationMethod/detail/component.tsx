@@ -9,6 +9,7 @@ import SearchParamControlledModal from "../../../commom/components/searchParamCo
 import EditEvaluationMethodModal from "./editEvaluatioMethodModal";
 import { useSearchParams } from "react-router-dom";
 import { ArchiveIcon } from "@primer/octicons-react";
+import InactivateEvaluationMethodButton from "./components/inactivateEvaluationMethodButton";
 
 const basePageSearchParams = appRoutes.base.search;
 const pageModalSearchParamsValues = appRoutes.base.searchValues.modal;
@@ -43,6 +44,7 @@ export default function EvaluationMethodDetailPage() {
                     sx={{
                         fontSize: 20,
                         fontWeight: 400,
+                        color: evaluationMethod.disabledAt ? "gray" : undefined,
                     }}
                 >
                     <Box
@@ -54,7 +56,8 @@ export default function EvaluationMethodDetailPage() {
                         <Octicon icon={ArchiveIcon} />
                     </Box>
                     {evaluationMethod.description} - {evaluationMethod.year}/
-                    {evaluationMethod.semester}
+                    {evaluationMethod.semester}{" "}
+                    {evaluationMethod.disabledAt && "(inativo)"}
                 </Heading>
                 <Box
                     sx={{
@@ -72,12 +75,12 @@ export default function EvaluationMethodDetailPage() {
                     >
                         Editar
                     </Button>
-                    <Button
-                        disabled
-                        variant="danger"
-                    >
-                        Inativar
-                    </Button>
+                    <InactivateEvaluationMethodButton
+                        description={evaluationMethod.description}
+                        semester={evaluationMethod.semester}
+                        year={evaluationMethod.year}
+                        disabledAt={evaluationMethod.disabledAt}
+                    />
                     <Button disabled>Duplicar</Button>
                 </Box>
             </Box>

@@ -2,9 +2,7 @@ import { Box, Link, Pagination, Spinner, TextInput } from "@primer/react";
 import { useRepositoryList } from "../../../../../../commom/data/repo";
 import React, { useRef, useState } from "react";
 import { SearchIcon } from "@primer/octicons-react";
-import { useFetcher, useSearchParams } from "react-router-dom";
-import { useIsMountedRef } from "../../../../../../commom/hooks/useIsMountedRef";
-import appRoutes from "../../../../../../commom/routes/appRoutes";
+import { useFetcher } from "react-router-dom";
 
 export default function LinkRepositoryModal() {
     const [page, setPage] = useState(1);
@@ -27,20 +25,6 @@ export default function LinkRepositoryModal() {
           }
         | undefined;
 
-    const [, setSearchParams] = useSearchParams();
-
-    const isRenderedRef = useIsMountedRef();
-
-    if (responseObject?.success && isRenderedRef.current) {
-        setSearchParams((previousSearchParams) => {
-            const previousSearchParamsCopy = new URLSearchParams(
-                previousSearchParams
-            );
-            previousSearchParamsCopy.delete(appRoutes.base.search.modal);
-            return previousSearchParamsCopy;
-        });
-    }
-
     function handleSearch(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         const inputValue = inputRef.current?.value;
@@ -52,20 +36,7 @@ export default function LinkRepositoryModal() {
         fetcher.submit({}, { method: "POST", action: id.toString() });
     }
 
-    if (isLoading || fetcher.state === "submitting")
-        return (
-            <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: "100%",
-                }}
-            >
-                <Spinner />
-            </Box>
-        );
-    if (!data)
+    if (!data && !isLoading)
         return (
             <Box
                 sx={{
@@ -73,16 +44,6 @@ export default function LinkRepositoryModal() {
                 }}
             >
                 Erro ao carregar...
-            </Box>
-        );
-    if (data.results.length === 0)
-        return (
-            <Box
-                sx={{
-                    color: "gray",
-                }}
-            >
-                Nenhum repositório sem método avaliativo vinculado encontrado
             </Box>
         );
 
@@ -100,19 +61,46 @@ export default function LinkRepositoryModal() {
                     sx={{ width: "100%" }}
                 />
             </form>
-            {data.results.map((repo) => (
+            {isLoading && (
                 <Box
-                    key={repo.id}
-                    sx={{ my: 2, cursor: "pointer" }}
-                    onClick={() => handleRepositorySelect(repo.id)}
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "100%",
+                    }}
                 >
-                    <Link>{repo.name}</Link>
+                    <Spinner />
                 </Box>
-            ))}
+            )}
+            {data && (
+                <>
+                    {data.results.length === 0 ? (
+                        <Box
+                            sx={{
+                                color: "gray",
+                            }}
+                        >
+                            Nenhum repositório sem método avaliativo vinculado
+                            encontrado
+                        </Box>
+                    ) : (
+                        data.results.map((repo) => (
+                            <Box
+                                key={repo.id}
+                                sx={{ my: 2, cursor: "pointer" }}
+                                onClick={() => handleRepositorySelect(repo.id)}
+                            >
+                                <Link>{repo.name}</Link>
+                            </Box>
+                        ))
+                    )}
+                </>
+            )}
             <Pagination
                 currentPage={page}
                 onPageChange={(_e, newPage) => setPage(newPage)}
-                pageCount={data.totalPages}
+                pageCount={data?.totalPages || 1}
             />
 
             {responseObject?.error && (

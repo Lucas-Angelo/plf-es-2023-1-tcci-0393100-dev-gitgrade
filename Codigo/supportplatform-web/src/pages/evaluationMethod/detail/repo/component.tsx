@@ -41,9 +41,6 @@ export default function EvaluationMethodRepositoryListPage() {
                     >
                         <RepoCard
                             name={repo.name}
-                            evaluationMethodName={
-                                repo.evaluationMethod?.description
-                            }
                             id={repo.id}
                             key={repo.id}
                         />

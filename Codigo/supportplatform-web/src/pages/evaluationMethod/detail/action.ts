@@ -19,21 +19,22 @@ export default async function EvaluationMethodDetailAction({
     request,
     params,
 }: ActionFunctionArgs) {
+    const evaluationMethodIdParam = params["id" as PagePathParam];
+
+    if (evaluationMethodIdParam === undefined) throw new Error("Invalid URL");
+
+    const evaluationMethodId = Number(evaluationMethodIdParam);
+    if (Number.isNaN(evaluationMethodId))
+        throw new Error("Invalid evaluation method id");
+
+    const formData = await request.formData();
+    const description = formData.get("description");
+    const year = formData.get("year");
+    const semester = formData.get("semester");
+
+    const activate = formData.get("activate");
+
     if (request.method === "put" || request.method === "PUT") {
-        const evaluationMethodIdParam = params["id" as PagePathParam];
-
-        if (evaluationMethodIdParam === undefined)
-            throw new Error("Invalid URL");
-
-        const evaluationMethodId = Number(evaluationMethodIdParam);
-        if (Number.isNaN(evaluationMethodId))
-            throw new Error("Invalid evaluation method id");
-
-        const formData = await request.formData();
-        const description = formData.get("description");
-        const year = formData.get("year");
-        const semester = formData.get("semester");
-
         const errors = new EvaluationMethodValidator().validate({
             description,
             year,
@@ -49,7 +50,10 @@ export default async function EvaluationMethodDetailAction({
         const currentEvaluationMethod = await loadQueryData(
             getEvaluationMethodByIdQuery(evaluationMethodId)
         );
-        const disabledAt = currentEvaluationMethod.disabledAt ?? null;
+        const disabledAt =
+            activate === "true"
+                ? null
+                : currentEvaluationMethod.disabledAt ?? null;
 
         try {
             const createRespose = await new EvaluationMethodService().update(
@@ -98,6 +102,36 @@ export default async function EvaluationMethodDetailAction({
                 ...axiosResponse.response?.data,
                 ...processedError,
             };
+        }
+    } else if (request.method === "delete" || request.method === "DELETE") {
+        try {
+            await new EvaluationMethodService().delete(evaluationMethodId);
+            queryClient.removeQueries(getEvaluationMethodQuery());
+            queryClient.setQueryData(
+                getEvaluationMethodByIdQuery(evaluationMethodId).queryKey,
+                {
+                    id: evaluationMethodId,
+                    disabledAt: new Date(),
+                    year: Number(year),
+                    semester: Number(semester),
+                    description: String(description),
+                }
+            );
+            toast.success("Método avaliativo excluído com sucesso!");
+            return null;
+        } catch (error) {
+            const axiosResponse = error as AxiosError<ErrorResponseDTO>;
+
+            if (!axiosResponse.response) {
+                toast.error("Não foi possível se conectar ao servidor...");
+            } else {
+                toast.error(
+                    axiosResponse.response?.data.message ??
+                        "Não foi possível excluir o método avaliativo"
+                );
+            }
+
+            return null;
         }
     } else return null;
 }

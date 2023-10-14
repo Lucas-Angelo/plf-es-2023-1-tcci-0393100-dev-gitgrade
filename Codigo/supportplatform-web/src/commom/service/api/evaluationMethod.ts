@@ -39,4 +39,8 @@ export class EvaluationMethodService {
             evaluationMethod
         );
     }
+
+    async delete(id: number) {
+        return api.delete(`evaluation-method/${id}`);
+    }
 }
