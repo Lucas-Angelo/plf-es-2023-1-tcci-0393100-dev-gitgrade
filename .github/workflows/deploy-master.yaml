@@ -106,6 +106,8 @@ jobs:
           script: |
             CODE_DIR=${{ env.CODE_DIR }}
 
+            OAUTH_FAILURE_SEARCH_PARAM="message"
+
             cd "$CODE_DIR"
 
             rm -f .env
@@ -143,11 +145,14 @@ jobs:
             echo "GITHUB_APP_CLIENT_SECRET=${{ secrets.GH_APP_CLIENT_SECRET }}" >> "$CODE_DIR/.env"
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> "$CODE_DIR/.env"
             echo "SESSION_SECRET=${{ secrets.SESSION_SECRET }}" >> "$CODE_DIR/.env"
+            echo "OAUTH_FAILURE_SEARCH_PARAM=$OAUTH_FAILURE_SEARCH_PARAM" >> "$CODE_DIR/.env"
+            echo "OAUTH_SUCCESS_REDIRECT_URL=http://${{ secrets.HOST }}:${{ secrets.SUPPORTPLATAFORM_WEB_NODE_PORT }}/login" >> "$CODE_DIR/.env"
 
             echo "# SupportPlataform web docker service envs" >> "$CODE_DIR/.env"
             echo "SUPPORTPLATAFORM_WEB_NODE_PORT=${{ secrets.SUPPORTPLATAFORM_WEB_NODE_PORT }}" >> "$CODE_DIR/.env"
             echo "VITE_API_URL=http://${{ secrets.HOST }}:${{ secrets.SUPPORTPLATFORM_SERVICE_NODE_PORT }}" >> "$CODE_DIR/.env"
             echo "SUPPORTPLATFORM_WEB_HOST=0.0.0.0" >> "$CODE_DIR/.env"
+            echo "VITE_OAUTH_FAILURE_SEARCH_PARAM=$OAUTH_FAILURE_SEARCH_PARAM" >> "$CODE_DIR/.env"
 
       - name: Copy project files to VPS based on Pull Request branch if OPENED, UPDATED or REOPENED
         uses: appleboy/scp-action@master

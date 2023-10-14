@@ -28,8 +28,10 @@ class GitHubIssueService {
                     }
                 );
 
-                const issues: IssueGitHub[] = response.data;
-                allIssues = allIssues.concat(issues);
+                const onlyIssues: IssueGitHub[] = response.data.filter(
+                    (issue: IssueGitHub) => !issue.pull_request
+                );
+                allIssues = allIssues.concat(onlyIssues);
 
                 const linkHeader = response.headers.link;
                 hasNextPage = linkHeader

@@ -46,11 +46,10 @@ describe(`GET ${baseRoute}`, () => {
     });
 
     it("should return 200 when filtering description like 'Work 1' and return 4 results", async () => {
-        const descriptionStringFilter = "Work 1";
-        const asciiString = descriptionStringFilter.replace(/ /g, "%20");
+        const encodedQuery = encodeURIComponent("Work 1");
 
         const response = await supertest(app)
-            .get(`${baseRoute}?description=${asciiString}`)
+            .get(`${baseRoute}?description=${encodedQuery}`)
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
             .send();
@@ -104,12 +103,11 @@ describe(`GET ${baseRoute}`, () => {
     });
 
     it("should return 200 when apply all filters", async () => {
-        const descriptionStringFilter = "Work 1";
-        const asciiString = descriptionStringFilter.replace(/ /g, "%20");
+        const encodedQuery = encodeURIComponent("Work 1");
 
         const response = await supertest(app)
             .get(
-                `${baseRoute}?description=${asciiString}&semester=1&year=2021&forceDisabled=true&disabledAt=2023-09-10`
+                `${baseRoute}?description=${encodedQuery}&semester=1&year=2021&forceDisabled=true&disabledAt=2023-09-10`
             )
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
@@ -252,7 +250,7 @@ describe(`GET ${baseRoute}`, () => {
             .expect(422)
             .send();
 
-        expect(response.body.error?.["query.year"]?.message).toContain(
+        expect(response.body.error?.["query.year"]?.message).toBe(
             "year must be an integer"
         );
     });
@@ -264,7 +262,7 @@ describe(`GET ${baseRoute}`, () => {
             .expect(422)
             .send();
 
-        expect(response.body.error?.["query.disabledAt"]?.message).toContain(
+        expect(response.body.error?.["query.disabledAt"]?.message).toBe(
             "disabledAt must be a Date"
         );
     });
@@ -353,7 +351,9 @@ describe(`GET ${baseRoute}/{id}`, () => {
             .expect(404)
             .send();
 
-        expect(response.body.message).toBe("Evaluation method not found");
+        expect(response.body.message).toBe(
+            'Evaluation method not found by fields {"id":9999}'
+        );
     });
 
     it("should return 422 when id is not a number", async () => {
@@ -414,13 +414,14 @@ describe(`POST ${baseRoute}`, () => {
                 description: "New evaluation method",
                 semester: 1,
                 year: 2023,
+                disabledAt: undefined,
             });
 
         expect(response.body.id).toBe(37);
         expect(response.body.description).toBe("New evaluation method");
         expect(response.body.semester).toBe(1);
         expect(response.body.year).toBe(2023);
-        expect(response.body.disabledAt).toBe(undefined);
+        expect(response.body.disabledAt).toBe(null);
     });
 
     it("should return 201 when creating without disabledAt", async () => {
@@ -438,7 +439,7 @@ describe(`POST ${baseRoute}`, () => {
         expect(response.body.description).toBe("New evaluation method");
         expect(response.body.semester).toBe(1);
         expect(response.body.year).toBe(2023);
-        expect(response.body.disabledAt).toBe(undefined);
+        expect(response.body.disabledAt).toBe(null);
     });
 
     it("should return 422 when description is not provided", async () => {
@@ -449,6 +450,7 @@ describe(`POST ${baseRoute}`, () => {
             .send({
                 semester: 1,
                 year: 2023,
+                disabledAt: undefined,
             });
 
         expect(response.body.error?.["body.description"]?.message).toBe(
@@ -465,6 +467,7 @@ describe(`POST ${baseRoute}`, () => {
                 description: 123,
                 semester: 1,
                 year: 2023,
+                disabledAt: undefined,
             });
 
         expect(response.body.error?.["body.description"]?.message).toBe(
@@ -481,6 +484,7 @@ describe(`POST ${baseRoute}`, () => {
                 description: "",
                 semester: 1,
                 year: 2023,
+                disabledAt: undefined,
             });
 
         expect(response.body.error?.["body.description"]?.message).toBe(
@@ -497,6 +501,7 @@ describe(`POST ${baseRoute}`, () => {
                 description: "a".repeat(256),
                 semester: 1,
                 year: 2023,
+                disabledAt: undefined,
             });
 
         expect(response.body.error?.["body.description"]?.message).toBe(
@@ -512,6 +517,7 @@ describe(`POST ${baseRoute}`, () => {
             .send({
                 description: "New evaluation method",
                 year: 2023,
+                disabledAt: undefined,
             });
 
         expect(response.body.error?.["body.semester"]?.message).toBe(
@@ -528,6 +534,7 @@ describe(`POST ${baseRoute}`, () => {
                 description: "New evaluation method",
                 semester: "abc",
                 year: 2023,
+                disabledAt: undefined,
             });
 
         expect(response.body.error?.["body.semester"]?.message).toBe(
@@ -543,6 +550,7 @@ describe(`POST ${baseRoute}`, () => {
             .send({
                 description: "New evaluation method",
                 semester: 2023,
+                disabledAt: undefined,
             });
 
         expect(response.body.error?.["body.year"]?.message).toBe(
@@ -559,6 +567,7 @@ describe(`POST ${baseRoute}`, () => {
                 description: "New evaluation method",
                 semester: 1,
                 year: "abc",
+                disabledAt: undefined,
             });
 
         expect(response.body.error?.["body.year"]?.message).toBe(
@@ -629,7 +638,7 @@ describe(`PUT ${baseRoute}/{id}`, () => {
                 description: "Updated evaluation method",
                 semester: 2,
                 year: 2024,
-                disabledAt: null,
+                disabledAt: undefined,
             });
 
         expect(response.body.id).toBe("1");
@@ -648,11 +657,11 @@ describe(`PUT ${baseRoute}/{id}`, () => {
                 description: "Updated evaluation method",
                 semester: 2,
                 year: 2024,
-                disabledAt: null,
+                disabledAt: undefined,
             });
 
         expect(response.body.message).toBe(
-            "Evaluation method with id: 9999 not found"
+            'Evaluation method not found by fields {"id":9999}'
         );
     });
 
@@ -666,7 +675,7 @@ describe(`PUT ${baseRoute}/{id}`, () => {
                 description: "Updated evaluation method",
                 semester: 2,
                 year: 2024,
-                disabledAt: null,
+                disabledAt: undefined,
             });
 
         expect(response.body.error?.["body.id"]?.message).toBe(
@@ -682,7 +691,7 @@ describe(`PUT ${baseRoute}/{id}`, () => {
             .send({
                 semester: 2,
                 year: 2024,
-                disabledAt: null,
+                disabledAt: undefined,
             });
 
         expect(response.body.error?.["body.description"]?.message).toBe(
@@ -699,7 +708,7 @@ describe(`PUT ${baseRoute}/{id}`, () => {
                 description: 123,
                 semester: 2,
                 year: 2024,
-                disabledAt: null,
+                disabledAt: undefined,
             });
 
         expect(response.body.error?.["body.description"]?.message).toBe(
@@ -716,7 +725,7 @@ describe(`PUT ${baseRoute}/{id}`, () => {
                 description: "",
                 semester: 2,
                 year: 2024,
-                disabledAt: null,
+                disabledAt: undefined,
             });
 
         expect(response.body.error?.["body.description"]?.message).toBe(
@@ -733,7 +742,7 @@ describe(`PUT ${baseRoute}/{id}`, () => {
                 description: "a".repeat(256),
                 semester: 2,
                 year: 2024,
-                disabledAt: null,
+                disabledAt: undefined,
             });
 
         expect(response.body.error?.["body.description"]?.message).toBe(
@@ -750,7 +759,7 @@ describe(`PUT ${baseRoute}/{id}`, () => {
                 description: "Updated evaluation method",
                 semester: "abc",
                 year: 2024,
-                disabledAt: null,
+                disabledAt: undefined,
             });
 
         expect(response.body.error?.["body.semester"]?.message).toBe(
@@ -767,7 +776,7 @@ describe(`PUT ${baseRoute}/{id}`, () => {
                 description: "Updated evaluation method",
                 semester: 2,
                 year: "abc",
-                disabledAt: null,
+                disabledAt: undefined,
             });
 
         expect(response.body.error?.["body.year"]?.message).toBe(

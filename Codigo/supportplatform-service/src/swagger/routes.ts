@@ -5,6 +5,8 @@ import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute, H
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { BranchController } from './../controller/BranchController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { ConsistencyRuleController } from './../controller/ConsistencyRuleController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ContributorController } from './../controller/ContributorController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { EvaluationMethodController } from './../controller/EvaluationMethodController';
@@ -14,6 +16,8 @@ import { RepositoryController } from './../controller/RepositoryController';
 import { RepositoryMetricsController } from './../controller/RepositoryMetricsController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { SprintController } from './../controller/SprintController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { StandardizedIssueController } from './../controller/StandardizedIssueController';
 import { expressAuthentication } from './../middleware/ExpressAuthentication';
 // @ts-ignore - no great way to install types from subpackage
 const promiseAny = require('promise.any');
@@ -36,6 +40,71 @@ const models: TsoaRoute.Models = {
         "properties": {
             "page": {"dataType":"integer","validators":{"isInt":{"errorMsg":"page must be an integer"},"minimum":{"errorMsg":"page must be greater than or equal to 1","value":1}}},
             "limit": {"dataType":"integer","validators":{"isInt":{"errorMsg":"limit must be an integer"},"minimum":{"errorMsg":"limit must be greater than or equal to 1","value":1}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ValidationType": {
+        "dataType": "refEnum",
+        "enums": ["DEFAULT","CFF"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ConsistencyRuleResponseDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "evaluationMethodId": {"dataType":"double","required":true},
+            "sprintId": {"dataType":"double","required":true},
+            "standardizedIssueId": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "description": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "filePath": {"dataType":"string","required":true},
+            "validationType": {"ref":"ValidationType","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ConsistencyRuleCreateDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "evaluationMethodId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"evaluationMethodId must be an integer"},"minimum":{"errorMsg":"evaluationMethodId must be greater than or equal to 1","value":1}}},
+            "sprintId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"sprintId must be an integer"},"minimum":{"errorMsg":"sprintId must be greater than or equal to 1","value":1}}},
+            "standardizedIssueId": {"dataType":"union","subSchemas":[{"dataType":"integer"},{"dataType":"enum","enums":[null]}],"validators":{"isInt":{"errorMsg":"standardizedIssueId must be an integer"},"minimum":{"errorMsg":"standardizedIssueId must be greater than or equal to 1","value":1}}},
+            "description": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"validators":{"isString":{"errorMsg":"description must be a string"},"minLength":{"errorMsg":"description must have a minimum length of 1","value":1},"maxLength":{"errorMsg":"description must have a maximum length of 255","value":255}}},
+            "filePath": {"dataType":"string","required":true,"validators":{"isString":{"errorMsg":"filePath must be a string"},"minLength":{"errorMsg":"filePath must have a minimum length of 1","value":1},"maxLength":{"errorMsg":"filePath must have a maximum length of 10000","value":10000}}},
+            "validationType": {"ref":"ValidationType","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ConsistencyRuleUpdateDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "evaluationMethodId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"evaluationMethodId must be an integer"},"minimum":{"errorMsg":"evaluationMethodId must be greater than or equal to 1","value":1}}},
+            "sprintId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"sprintId must be an integer"},"minimum":{"errorMsg":"sprintId must be greater than or equal to 1","value":1}}},
+            "standardizedIssueId": {"dataType":"union","subSchemas":[{"dataType":"integer"},{"dataType":"enum","enums":[null]}],"validators":{"isInt":{"errorMsg":"standardizedIssueId must be an integer"},"minimum":{"errorMsg":"standardizedIssueId must be greater than or equal to 1","value":1}}},
+            "description": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"validators":{"isString":{"errorMsg":"description must be a string"},"minLength":{"errorMsg":"description must have a minimum length of 1","value":1},"maxLength":{"errorMsg":"description must have a maximum length of 255","value":255}}},
+            "filePath": {"dataType":"string","required":true,"validators":{"isString":{"errorMsg":"filePath must be a string"},"minLength":{"errorMsg":"filePath must have a minimum length of 1","value":1},"maxLength":{"errorMsg":"filePath must have a maximum length of 10000","value":10000}}},
+            "validationType": {"ref":"ValidationType","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PaginationResponseDTO_ConsistencyRuleResponseDTO_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"results":{"dataType":"array","array":{"dataType":"refObject","ref":"ConsistencyRuleResponseDTO"},"required":true},"totalPages":{"dataType":"double","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ConsistencyRuleSearchDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "page": {"dataType":"integer","default":"1","validators":{"isInt":{"errorMsg":"page must be an integer"},"minimum":{"errorMsg":"page must be greater than or equal to 1","value":1}}},
+            "limit": {"dataType":"integer","default":"10","validators":{"isInt":{"errorMsg":"limit must be an integer"},"minimum":{"errorMsg":"limit must be greater than or equal to 1","value":1}}},
+            "evaluationMethodId": {"dataType":"integer","validators":{"isInt":{"errorMsg":"evaluationMethodId must be an integer"},"minimum":{"errorMsg":"evaluationMethodId must be greater than or equal to 1","value":1}}},
+            "sprintId": {"dataType":"integer","validators":{"isInt":{"errorMsg":"sprintId must be an integer"},"minimum":{"errorMsg":"sprintId must be greater than or equal to 1","value":1}}},
+            "standardizedIssueId": {"dataType":"integer","validators":{"isInt":{"errorMsg":"standardizedIssueId must be an integer"},"minimum":{"errorMsg":"standardizedIssueId must be greater than or equal to 1","value":1}}},
+            "description": {"dataType":"string","validators":{"isString":{"errorMsg":"description must be a string"}}},
+            "filePath": {"dataType":"string","validators":{"isString":{"errorMsg":"filePath must be a string"}}},
+            "validationType": {"ref":"ValidationType"},
         },
         "additionalProperties": false,
     },
@@ -89,7 +158,7 @@ const models: TsoaRoute.Models = {
             "description": {"dataType":"string","required":true,"validators":{"isString":{"errorMsg":"description must be a string"},"minLength":{"errorMsg":"description must have a minimum length of 1","value":1},"maxLength":{"errorMsg":"description must have a maximum length of 255","value":255}}},
             "semester": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"semester must be an integer"}}},
             "year": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"year must be an integer"}}},
-            "disabledAt": {"dataType":"union","subSchemas":[{"dataType":"date"},{"dataType":"enum","enums":[null]}],"required":true,"validators":{"isDate":{"errorMsg":"disabledAt must be a Date"}}},
+            "disabledAt": {"dataType":"union","subSchemas":[{"dataType":"date"},{"dataType":"enum","enums":[null]}],"validators":{"isDate":{"errorMsg":"disabledAt must be a Date"}}},
         },
         "additionalProperties": false,
     },
@@ -107,7 +176,7 @@ const models: TsoaRoute.Models = {
             "description": {"dataType":"string","validators":{"isString":{"errorMsg":"description must be a string"}}},
             "semester": {"dataType":"integer","validators":{"isInt":{"errorMsg":"semester must be an integer"}}},
             "year": {"dataType":"integer","validators":{"isInt":{"errorMsg":"year must be an integer"}}},
-            "disabledAt": {"dataType":"union","subSchemas":[{"dataType":"date"},{"dataType":"enum","enums":[null]}],"validators":{"isDate":{"errorMsg":"disabledAt must be a Date"}}},
+            "disabledAt": {"dataType":"date","validators":{"isDate":{"errorMsg":"disabledAt must be a Date"}}},
             "forceDisabled": {"dataType":"boolean","default":"false","validators":{"isBoolean":{"errorMsg":"forceDisabled must be a boolean"}}},
         },
         "additionalProperties": false,
@@ -259,7 +328,7 @@ const models: TsoaRoute.Models = {
             "name": {"dataType":"string","required":true,"validators":{"isString":{"errorMsg":"name must be a string"},"minLength":{"errorMsg":"name must have a minimum length of 1","value":1},"maxLength":{"errorMsg":"name must have a maximum length of 255","value":255}}},
             "start_date": {"dataType":"date","required":true,"validators":{"isDate":{"errorMsg":"start_date must be a Date"}}},
             "end_date": {"dataType":"date","required":true,"validators":{"isDate":{"errorMsg":"end_date must be a Date"}}},
-            "evaluationMethodId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"evaluationMethodId must be an integer"}}},
+            "evaluationMethodId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"evaluationMethodId must be an integer"},"minimum":{"errorMsg":"evaluationMethodId must be greater than or equal to 1","value":1}}},
         },
         "additionalProperties": false,
     },
@@ -270,7 +339,7 @@ const models: TsoaRoute.Models = {
             "name": {"dataType":"string","required":true,"validators":{"isString":{"errorMsg":"name must be a string"},"minLength":{"errorMsg":"name must have a minimum length of 1","value":1},"maxLength":{"errorMsg":"name must have a maximum length of 255","value":255}}},
             "start_date": {"dataType":"date","required":true,"validators":{"isDate":{"errorMsg":"start_date must be a Date"}}},
             "end_date": {"dataType":"date","required":true,"validators":{"isDate":{"errorMsg":"end_date must be a Date"}}},
-            "evaluationMethodId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"evaluationMethodId must be an integer"}}},
+            "evaluationMethodId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"evaluationMethodId must be an integer"},"minimum":{"errorMsg":"evaluationMethodId must be greater than or equal to 1","value":1}}},
         },
         "additionalProperties": false,
     },
@@ -288,7 +357,55 @@ const models: TsoaRoute.Models = {
             "name": {"dataType":"string","validators":{"isString":{"errorMsg":"name must be a string"},"minLength":{"errorMsg":"name must have a minimum length of 1","value":1},"maxLength":{"errorMsg":"name must have a maximum length of 255","value":255}}},
             "start_date": {"dataType":"date","validators":{"isDate":{"errorMsg":"start_date must be a Date"}}},
             "end_date": {"dataType":"date","validators":{"isDate":{"errorMsg":"end_date must be a Date"}}},
-            "evaluationMethodId": {"dataType":"integer","validators":{"isInt":{"errorMsg":"evaluationMethodId must be an integer"}}},
+            "evaluationMethodId": {"dataType":"integer","validators":{"isInt":{"errorMsg":"evaluationMethodId must be an integer"},"minimum":{"errorMsg":"evaluationMethodId must be greater than or equal to 1","value":1}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StandardizedIssueResponseDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "evaluationMethodId": {"dataType":"double","required":true},
+            "title": {"dataType":"string","required":true},
+            "description": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StandardizedIssueCreateDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "evaluationMethodId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"evaluationMethodId must be an integer"},"minimum":{"errorMsg":"evaluationMethodId must be greater than or equal to 1","value":1}}},
+            "title": {"dataType":"string","required":true,"validators":{"isString":{"errorMsg":"title must be a string"},"minLength":{"errorMsg":"title must have a minimum length of 1","value":1},"maxLength":{"errorMsg":"title must have a maximum length of 255","value":255}}},
+            "description": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"validators":{"isString":{"errorMsg":"description must be a string"},"minLength":{"errorMsg":"description must have a minimum length of 1","value":1}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StandardizedIssueUpdateDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "evaluationMethodId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"evaluationMethodId must be an integer"},"minimum":{"errorMsg":"evaluationMethodId must be greater than or equal to 1","value":1}}},
+            "title": {"dataType":"string","required":true,"validators":{"isString":{"errorMsg":"title must be a string"},"minLength":{"errorMsg":"title must have a minimum length of 1","value":1},"maxLength":{"errorMsg":"title must have a maximum length of 255","value":255}}},
+            "description": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"validators":{"isString":{"errorMsg":"description must be a string"},"minLength":{"errorMsg":"description must have a minimum length of 1","value":1}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PaginationResponseDTO_StandardizedIssueResponseDTO_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"results":{"dataType":"array","array":{"dataType":"refObject","ref":"StandardizedIssueResponseDTO"},"required":true},"totalPages":{"dataType":"double","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StandardizedIssueSearchDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "page": {"dataType":"integer","default":"1","validators":{"isInt":{"errorMsg":"page must be an integer"},"minimum":{"errorMsg":"page must be greater than or equal to 1","value":1}}},
+            "limit": {"dataType":"integer","default":"10","validators":{"isInt":{"errorMsg":"limit must be an integer"},"minimum":{"errorMsg":"limit must be greater than or equal to 1","value":1}}},
+            "evaluationMethodId": {"dataType":"integer","validators":{"isInt":{"errorMsg":"evaluationMethodId must be an integer"},"minimum":{"errorMsg":"evaluationMethodId must be greater than or equal to 1","value":1}}},
+            "title": {"dataType":"string","validators":{"isString":{"errorMsg":"title must be a string"},"minLength":{"errorMsg":"title must have a minimum length of 1","value":1},"maxLength":{"errorMsg":"title must have a maximum length of 255","value":255}}},
+            "description": {"dataType":"string","validators":{"isString":{"errorMsg":"description must be a string"},"minLength":{"errorMsg":"description must have a minimum length of 1","value":1}}},
         },
         "additionalProperties": false,
     },
@@ -325,6 +442,111 @@ export function RegisterRoutes(app: Router) {
 
               const promise = controller.getByRepositoryId.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/consistency-rule',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(ConsistencyRuleController)),
+            ...(fetchMiddlewares<RequestHandler>(ConsistencyRuleController.prototype.create)),
+
+            function ConsistencyRuleController_create(request: any, response: any, next: any) {
+            const args = {
+                    body: {"in":"body","name":"body","required":true,"ref":"ConsistencyRuleCreateDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new ConsistencyRuleController();
+
+
+              const promise = controller.create.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 201, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.put('/consistency-rule/:id',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(ConsistencyRuleController)),
+            ...(fetchMiddlewares<RequestHandler>(ConsistencyRuleController.prototype.update)),
+
+            function ConsistencyRuleController_update(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                    body: {"in":"body","name":"body","required":true,"ref":"ConsistencyRuleUpdateDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new ConsistencyRuleController();
+
+
+              const promise = controller.update.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 200, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/consistency-rule',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(ConsistencyRuleController)),
+            ...(fetchMiddlewares<RequestHandler>(ConsistencyRuleController.prototype.getAll)),
+
+            function ConsistencyRuleController_getAll(request: any, response: any, next: any) {
+            const args = {
+                    query: {"in":"queries","name":"query","required":true,"ref":"ConsistencyRuleSearchDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new ConsistencyRuleController();
+
+
+              const promise = controller.getAll.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 200, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/consistency-rule/:id',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(ConsistencyRuleController)),
+            ...(fetchMiddlewares<RequestHandler>(ConsistencyRuleController.prototype.getOne)),
+
+            function ConsistencyRuleController_getOne(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new ConsistencyRuleController();
+
+
+              const promise = controller.getOne.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 200, next);
             } catch (err) {
                 return next(err);
             }
@@ -799,6 +1021,111 @@ export function RegisterRoutes(app: Router) {
                 validatedArgs = getValidatedArgs(args, request, response);
 
                 const controller = new SprintController();
+
+
+              const promise = controller.getOne.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 200, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/standardized-issue',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(StandardizedIssueController)),
+            ...(fetchMiddlewares<RequestHandler>(StandardizedIssueController.prototype.create)),
+
+            function StandardizedIssueController_create(request: any, response: any, next: any) {
+            const args = {
+                    body: {"in":"body","name":"body","required":true,"ref":"StandardizedIssueCreateDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new StandardizedIssueController();
+
+
+              const promise = controller.create.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 201, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.put('/standardized-issue/:id',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(StandardizedIssueController)),
+            ...(fetchMiddlewares<RequestHandler>(StandardizedIssueController.prototype.update)),
+
+            function StandardizedIssueController_update(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                    body: {"in":"body","name":"body","required":true,"ref":"StandardizedIssueUpdateDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new StandardizedIssueController();
+
+
+              const promise = controller.update.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 200, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/standardized-issue',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(StandardizedIssueController)),
+            ...(fetchMiddlewares<RequestHandler>(StandardizedIssueController.prototype.getAll)),
+
+            function StandardizedIssueController_getAll(request: any, response: any, next: any) {
+            const args = {
+                    query: {"in":"queries","name":"query","required":true,"ref":"StandardizedIssueSearchDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new StandardizedIssueController();
+
+
+              const promise = controller.getAll.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 200, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/standardized-issue/:id',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(StandardizedIssueController)),
+            ...(fetchMiddlewares<RequestHandler>(StandardizedIssueController.prototype.getOne)),
+
+            function StandardizedIssueController_getOne(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new StandardizedIssueController();
 
 
               const promise = controller.getOne.apply(controller, validatedArgs as any);

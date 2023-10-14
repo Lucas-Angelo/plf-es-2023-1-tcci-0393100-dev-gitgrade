@@ -1,3 +1,5 @@
+import env from "../config/env";
+
 const appRoutes = {
     base: {
         path: "/" as const,
@@ -12,7 +14,7 @@ const appRoutes = {
         },
         // necessary to map query string param name per a trustable variable
         search: {
-            message: "message",
+            message: env.oauthFailureSearchParam,
         },
     },
     repo: {

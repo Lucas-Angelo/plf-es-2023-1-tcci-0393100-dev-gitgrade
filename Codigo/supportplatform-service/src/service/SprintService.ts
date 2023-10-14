@@ -31,6 +31,7 @@ export default class SprintService {
             this.validateNotNullAndEmptyFields(data);
 
             await this.checkIfEvaluationMethodExists(data.evaluationMethodId);
+
             this.checkIfStartDateIsBeforeEndDate(
                 data.start_date,
                 data.end_date
@@ -38,7 +39,7 @@ export default class SprintService {
 
             const sprint = await Sprint.create(data);
 
-            logger.info("Successfully created a new sprint: ", {
+            logger.info("Successfully created a new Sprint: ", {
                 sprint,
             });
 
@@ -62,18 +63,14 @@ export default class SprintService {
             this.validateNotNullAndEmptyFields(data);
 
             await this.checkIfEvaluationMethodExists(data.evaluationMethodId);
+
             this.checkIfStartDateIsBeforeEndDate(
                 data.start_date,
                 data.end_date
             );
 
             logger.info(`Updating sprint with id: ${id}`);
-            const sprint = await Sprint.findByPk(id);
-
-            if (!sprint) {
-                logger.error(`Sprint with id: ${id} not found`);
-                throw new AppError(`Sprint with id: ${id} not found`, 404);
-            }
+            const sprint = await this.findOneBy({ id });
 
             logger.info("Current and new sprint data: ", {
                 current: sprint,
@@ -156,7 +153,10 @@ export default class SprintService {
                 logger.info(
                     `Sprint not found by fields ${JSON.stringify(fields)}`
                 );
-                throw new AppError("Sprint not found", 404);
+                throw new AppError(
+                    `Sprint not found by fields ${JSON.stringify(fields)}`,
+                    404
+                );
             } else
                 logger.info(
                     `Sprint found by fields ${JSON.stringify(fields)}:`,

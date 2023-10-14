@@ -11,6 +11,13 @@ import { IssueMetricQueryDTO, IssueMetricsDTO } from "./dto/issueMetrics";
 
 import { CommitMetricsDTO } from "./dto/commitMetrics";
 import {
+  ConsistencyRuleCreateDTO,
+  ConsistencyRuleFindOneDTO,
+  ConsistencyRuleResponseDTO,
+  ConsistencyRuleSearchDTO,
+  ConsistencyRuleUpdateDTO,
+} from "./dto/consistencyRule";
+import {
   EvaluationMethodCreateDTO,
   EvaluationMethodFindOneDTO,
   EvaluationMethodResponseDTO,
@@ -30,9 +37,21 @@ import {
   SprintSearchDTO,
   SprintUpdateDTO,
 } from "./dto/sprint";
+import {
+  StandardizedIssueCreateDTO,
+  StandardizedIssueFindOneDTO,
+  StandardizedIssueResponseDTO,
+  StandardizedIssueSearchDTO,
+  StandardizedIssueUpdateDTO,
+} from "./dto/standardizedIssue";
 import { PaginationResponseDTO } from "./utils/pagination";
 
 export type {
+  ConsistencyRuleCreateDTO,
+  ConsistencyRuleFindOneDTO,
+  ConsistencyRuleResponseDTO,
+  ConsistencyRuleSearchDTO,
+  ConsistencyRuleUpdateDTO,
   EvaluationMethodCreateDTO,
   EvaluationMethodFindOneDTO,
   EvaluationMethodResponseDTO,
@@ -61,4 +80,9 @@ export type {
   IssueMetricQueryDTO,
   IssueMetricsDTO,
   CommitQualityMetricsDTO,
+  StandardizedIssueCreateDTO,
+  StandardizedIssueFindOneDTO,
+  StandardizedIssueResponseDTO,
+  StandardizedIssueSearchDTO,
+  StandardizedIssueUpdateDTO,
 };

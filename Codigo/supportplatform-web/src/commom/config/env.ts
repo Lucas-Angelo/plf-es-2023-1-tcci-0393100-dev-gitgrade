@@ -7,8 +7,13 @@ if (!apiUrl) {
     );
 }
 
+const oauthFailureSearchParam = import.meta.env.VITE_OAUTH_FAILURE_SEARCH_PARAM;
+const defaultOauthFailureSearchParam = "message";
+
 const env = {
     apiUrl: apiUrl ?? defaultApiUrl,
+    oauthFailureSearchParam:
+        oauthFailureSearchParam ?? defaultOauthFailureSearchParam,
 };
 
 export default env;
