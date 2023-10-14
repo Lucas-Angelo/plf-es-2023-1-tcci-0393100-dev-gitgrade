@@ -2,7 +2,6 @@ import CommitService from "../service/CommitService";
 import {
     CommitMetricsDTO,
     RepositoryMetricQueryDTO,
-    ErrorResponseDTO,
     IssueMetricQueryDTO,
     CommitQualityMetricsDTO,
 } from "@gitgrade/dtos";
@@ -14,8 +13,6 @@ import {
     SuccessResponse,
     Tags,
     Queries,
-    Res,
-    TsoaResponse,
 } from "tsoa";
 import { CommitMetricsMapper } from "../mapper/CommitMetricsMapper";
 import { FileChangeMetricsMapper } from "../mapper/FileChangeMetricsMapper";
@@ -24,15 +21,22 @@ import { QueryIntervalValidator } from "../validation/QueryIntervalValidator";
 import IssueService from "../service/IssueService";
 import { CommitQualityMetricsMapper } from "../mapper/CommitQualityMetricsMapper";
 import FileService from "../service/FileService";
+import AppError from "../error/AppError";
 
 @Route("repository/{repositoryId}/metric")
 @Security("bearer", ["admin"])
 @Tags("metrics")
 export class RepositoryMetricsController extends Controller {
-    repositoryService: RepositoryService;
-    commitService: CommitService;
-    fileService: FileService;
-    issueService: IssueService;
+    private repositoryService: RepositoryService;
+    private commitService: CommitService;
+    private fileService: FileService;
+    private issueService: IssueService;
+
+    private commitQualityMetricsMapper: CommitQualityMetricsMapper;
+    private commitMetricsMapper: CommitMetricsMapper;
+    private fileChangeMetricsMapper: FileChangeMetricsMapper;
+
+    private queryIntervalValidator: QueryIntervalValidator;
 
     constructor() {
         super();
@@ -40,6 +44,12 @@ export class RepositoryMetricsController extends Controller {
         this.commitService = new CommitService();
         this.fileService = new FileService();
         this.issueService = new IssueService();
+
+        this.commitQualityMetricsMapper = new CommitQualityMetricsMapper();
+        this.commitMetricsMapper = new CommitMetricsMapper();
+        this.fileChangeMetricsMapper = new FileChangeMetricsMapper();
+
+        this.queryIntervalValidator = new QueryIntervalValidator();
     }
 
     /**
@@ -52,25 +62,17 @@ export class RepositoryMetricsController extends Controller {
     @SuccessResponse("200", "Commit metrics")
     async getCommitMetrics(
         repositoryId: number,
-        @Queries() query: RepositoryMetricQueryDTO,
-        @Res() notFoundResponse: TsoaResponse<404, ErrorResponseDTO>,
-        @Res() unprocessableEntityResponse: TsoaResponse<422, ErrorResponseDTO>
+        @Queries() query: RepositoryMetricQueryDTO
     ): Promise<CommitMetricsDTO> {
-        const validateQueryInterval = new QueryIntervalValidator(
-            unprocessableEntityResponse
-        ).validate(query);
-        if (validateQueryInterval) return validateQueryInterval;
+        this.queryIntervalValidator.validate(query);
 
         const repository = await this.repositoryService.findById(repositoryId);
 
         if (!repository) {
-            return notFoundResponse(404, {
-                message: "Repository not found",
-            });
+            throw new AppError("Repository not found", 404);
         }
 
-        const branchName =
-            query.branchName ?? repository.defaultBranch ?? "master";
+        const branchName = query.branchName ?? repository.defaultBranch!;
         const startedAt =
             query.startedAt ?? new Date(repository.githubCreatedAt);
         const endedAt = query.endedAt ?? new Date();
@@ -86,7 +88,7 @@ export class RepositoryMetricsController extends Controller {
             );
 
         this.setStatus(200);
-        return new CommitMetricsMapper().toDto(serviceResponse);
+        return this.commitMetricsMapper.toDto(serviceResponse);
     }
 
     /**
@@ -99,25 +101,17 @@ export class RepositoryMetricsController extends Controller {
     @SuccessResponse("200", "File change metrics")
     async getChangesMetrics(
         repositoryId: number,
-        @Queries() query: RepositoryMetricQueryDTO,
-        @Res() notFoundResponse: TsoaResponse<404, ErrorResponseDTO>,
-        @Res() unprocessableEntityResponse: TsoaResponse<422, ErrorResponseDTO>
+        @Queries() query: RepositoryMetricQueryDTO
     ) {
-        const validateQueryInterval = new QueryIntervalValidator(
-            unprocessableEntityResponse
-        ).validate(query);
-        if (validateQueryInterval) return validateQueryInterval;
+        this.queryIntervalValidator.validate(query);
 
         const repository = await this.repositoryService.findById(repositoryId);
 
         if (!repository) {
-            return notFoundResponse(404, {
-                message: "Repository not found",
-            });
+            throw new AppError("Repository not found", 404);
         }
 
-        const branchName =
-            query.branchName ?? repository.defaultBranch ?? "master";
+        const branchName = query.branchName ?? repository.defaultBranch!;
         const startedAt =
             query.startedAt ?? new Date(repository.githubCreatedAt);
         const endedAt = query.endedAt ?? new Date();
@@ -132,31 +126,29 @@ export class RepositoryMetricsController extends Controller {
                 query.filterWithNoContributor
             );
         this.setStatus(200);
-        return new FileChangeMetricsMapper().toDto(serviceResponse);
+        return this.fileChangeMetricsMapper.toDto(serviceResponse);
     }
 
+    /**
+     *
+     * @param repositoryId
+     * @param repositoryId @isInt repositoryId repositoryId must be an integer
+     * @param repositoryId @minimum repositoryId 1 repositoryId must be greater than or equal to 1
+     */
     @Get("file-types")
     async getFileTypesMetrics(
         repositoryId: number,
-        @Queries() query: RepositoryMetricQueryDTO,
-        @Res() notFoundResponse: TsoaResponse<404, ErrorResponseDTO>,
-        @Res() unprocessableEntityResponse: TsoaResponse<422, ErrorResponseDTO>
+        @Queries() query: RepositoryMetricQueryDTO
     ) {
-        const validateQueryInterval = new QueryIntervalValidator(
-            unprocessableEntityResponse
-        ).validate(query);
-        if (validateQueryInterval) return validateQueryInterval;
+        this.queryIntervalValidator.validate(query);
 
         const repository = await this.repositoryService.findById(repositoryId);
 
         if (!repository) {
-            return notFoundResponse(404, {
-                message: "Repository not found",
-            });
+            throw new AppError("Repository not found", 404);
         }
 
-        const branchName =
-            query.branchName ?? repository.defaultBranch ?? "master";
+        const branchName = query.branchName ?? repository.defaultBranch!;
         const startedAt =
             query.startedAt ?? new Date(repository.githubCreatedAt);
         const endedAt = query.endedAt ?? new Date();
@@ -170,27 +162,28 @@ export class RepositoryMetricsController extends Controller {
                 query.contributor,
                 query.filterWithNoContributor
             );
+
+        this.setStatus(200);
         return serviceResponse;
     }
 
+    /**
+     *
+     * @param repositoryId
+     * @param repositoryId @isInt repositoryId repositoryId must be an integer
+     * @param repositoryId @minimum repositoryId 1 repositoryId must be greater than or equal to 1
+     */
     @Get("issues")
     async getIssuesMetrics(
         repositoryId: number,
-        @Queries() query: IssueMetricQueryDTO,
-        @Res() notFoundResponse: TsoaResponse<404, ErrorResponseDTO>,
-        @Res() unprocessableEntityResponse: TsoaResponse<422, ErrorResponseDTO>
+        @Queries() query: IssueMetricQueryDTO
     ) {
-        const validateQueryInterval = new QueryIntervalValidator(
-            unprocessableEntityResponse
-        ).validate(query);
-        if (validateQueryInterval) return validateQueryInterval;
+        this.queryIntervalValidator.validate(query);
 
         const repository = await this.repositoryService.findById(repositoryId);
 
         if (!repository) {
-            return notFoundResponse(404, {
-                message: "Repository not found",
-            });
+            throw new AppError("Repository not found", 404);
         }
 
         const startedAt =
@@ -205,6 +198,8 @@ export class RepositoryMetricsController extends Controller {
                 query.contributor,
                 query.filterWithNoContributor
             );
+
+        this.setStatus(200);
         return serviceResponse;
     }
 
@@ -217,25 +212,17 @@ export class RepositoryMetricsController extends Controller {
     @Get("commit-quality")
     async getCommitQualityMetrics(
         repositoryId: number,
-        @Queries() query: RepositoryMetricQueryDTO,
-        @Res() notFoundResponse: TsoaResponse<404, ErrorResponseDTO>,
-        @Res() unprocessableEntityResponse: TsoaResponse<422, ErrorResponseDTO>
+        @Queries() query: RepositoryMetricQueryDTO
     ): Promise<CommitQualityMetricsDTO> {
-        const validateQueryInterval = new QueryIntervalValidator(
-            unprocessableEntityResponse
-        ).validate(query);
-        if (validateQueryInterval) return validateQueryInterval;
+        this.queryIntervalValidator.validate(query);
 
         const repository = await this.repositoryService.findById(repositoryId);
 
         if (!repository) {
-            return notFoundResponse(404, {
-                message: "Repository not found",
-            });
+            throw new AppError("Repository not found", 404);
         }
 
-        const branchName =
-            query.branchName ?? repository.defaultBranch ?? "master";
+        const branchName = query.branchName ?? repository.defaultBranch!;
         const startedAt =
             query.startedAt ?? new Date(repository.githubCreatedAt);
         const endedAt = query.endedAt ?? new Date();
@@ -249,6 +236,8 @@ export class RepositoryMetricsController extends Controller {
                 query.contributor,
                 query.filterWithNoContributor
             );
-        return new CommitQualityMetricsMapper().toDto(serviceResponse);
+
+        this.setStatus(200);
+        return this.commitQualityMetricsMapper.toDto(serviceResponse);
     }
 }

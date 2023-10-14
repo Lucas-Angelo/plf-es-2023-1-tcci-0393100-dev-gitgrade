@@ -4,6 +4,8 @@ export interface RepositoryMetricQueryDTO {
     /** @isDate endedAt must be a valid date */
     endedAt?: Date,
     branchName?: string,
+    /** @isArray contributor must be an array */
     contributor?: Array<string>,
+    /** @isBool  filterWithNoContributor must be a boolean */
     filterWithNoContributor?: boolean
 }

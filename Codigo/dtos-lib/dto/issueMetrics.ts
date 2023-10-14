@@ -18,6 +18,8 @@ export interface IssueMetricQueryDTO {
   startedAt?: Date;
   /** @isDate endedAt must be a valid date */
   endedAt?: Date;
+  /** @isArray contributor must be an array */
   contributor?: Array<string>;
+  /** @isBool  filterWithNoContributor must be a boolean */
   filterWithNoContributor?: boolean;
 }

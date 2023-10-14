@@ -1,34 +1,26 @@
-import { Get, Queries, Res, Route, Security, Tags, TsoaResponse } from "tsoa";
+import { Controller, Get, Queries, Route, Security, Tags } from "tsoa";
 import BranchService from "../service/BranchService";
-import { ErrorResponseDTO, GetAllBranchQueryDTO } from "@gitgrade/dtos";
+import { GetAllBranchQueryDTO } from "@gitgrade/dtos";
 import { BranchMapper } from "../mapper/BranchMapper";
-import RepositoryService from "../service/RepositoryService";
 
 @Security("bearer", ["admin"])
 @Route("repository/{repositoryId}/branch")
 @Tags("branch")
-export class BranchController {
-    private repositoryService: RepositoryService;
+export class BranchController extends Controller {
     private branchService: BranchService;
+    private branchMapper: BranchMapper;
 
     constructor() {
+        super();
+
         this.branchService = new BranchService();
-        this.repositoryService = new RepositoryService();
+        this.branchMapper = new BranchMapper();
     }
     @Get("/")
     async getByRepositoryId(
         repositoryId: number,
-        @Queries() query: GetAllBranchQueryDTO,
-        @Res() notFoundResponse: TsoaResponse<404, ErrorResponseDTO>
+        @Queries() query: GetAllBranchQueryDTO
     ) {
-        const repository = await this.repositoryService.findById(repositoryId);
-
-        if (!repository) {
-            return notFoundResponse(404, {
-                message: "Repository not found",
-            });
-        }
-
         const serviceResponse = await this.branchService.getByRepositoryId(
             repositoryId,
             {
@@ -36,10 +28,12 @@ export class BranchController {
                 page: query.page || 1,
             }
         );
-        const mapper = new BranchMapper();
+
+        this.setStatus(200);
+
         return {
             totalPages: serviceResponse.totalPages,
-            results: serviceResponse.results.map(mapper.toDto),
+            results: serviceResponse.results.map(this.branchMapper.toDto),
         };
     }
 }

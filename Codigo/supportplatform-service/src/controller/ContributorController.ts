@@ -1,35 +1,27 @@
-import { Get, Queries, Res, Route, Security, Tags, TsoaResponse } from "tsoa";
+import { Controller, Get, Queries, Route, Security, Tags } from "tsoa";
 import ContributorService from "../service/ContributorService";
 import ContributorMapper from "../mapper/ContributorMapper";
-import { ErrorResponseDTO, GetAllContributorQueryDTO } from "@gitgrade/dtos";
-import RepositoryService from "../service/RepositoryService";
+import { GetAllContributorQueryDTO } from "@gitgrade/dtos";
 
 @Security("bearer", ["admin"])
 @Route("repository/{repositoryId}/contributor")
 @Tags("contributor")
-export class ContributorController {
+export class ContributorController extends Controller {
     private contributorService: ContributorService;
-    private repositoryService: RepositoryService;
+    private contributorMapper: ContributorMapper;
 
     constructor() {
+        super();
+
         this.contributorService = new ContributorService();
-        this.repositoryService = new RepositoryService();
+        this.contributorMapper = new ContributorMapper();
     }
 
     @Get("/")
     async findbyRepositoryId(
         repositoryId: number,
-        @Queries() query: GetAllContributorQueryDTO,
-        @Res() notFoundResponse: TsoaResponse<404, ErrorResponseDTO>
+        @Queries() query: GetAllContributorQueryDTO
     ) {
-        const repository = await this.repositoryService.findById(repositoryId);
-
-        if (!repository) {
-            return notFoundResponse(404, {
-                message: "Repository not found",
-            });
-        }
-
         const serviceResponse = await this.contributorService.getByRepositoryId(
             repositoryId,
             {
@@ -37,10 +29,12 @@ export class ContributorController {
                 page: query.page || 1,
             }
         );
-        const mapper = new ContributorMapper();
+
+        this.setStatus(200);
+
         return {
             totalPages: serviceResponse.totalPages,
-            results: serviceResponse.results.map(mapper.toDto),
+            results: serviceResponse.results.map(this.contributorMapper.toDto),
         };
     }
 }

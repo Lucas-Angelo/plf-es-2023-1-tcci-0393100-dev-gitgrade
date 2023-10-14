@@ -27,10 +27,12 @@ import RepositoryService from "../service/RepositoryService";
 @Tags("repository")
 export class RepositoryController extends Controller {
     private repositoryService: RepositoryService;
+    private repositoryMapper: RepositoryMapper;
 
     constructor() {
         super();
         this.repositoryService = new RepositoryService();
+        this.repositoryMapper = new RepositoryMapper();
     }
 
     @Get("/")
@@ -44,10 +46,12 @@ export class RepositoryController extends Controller {
             page: query.page ?? 1,
             filter: query.filter,
         });
-        const mapper = new RepositoryMapper();
+
+        this.setStatus(200);
+
         return {
             totalPages: serviceResponse.totalPages,
-            results: serviceResponse.results.map(mapper.toDto),
+            results: serviceResponse.results.map(this.repositoryMapper.toDto),
         };
     }
 

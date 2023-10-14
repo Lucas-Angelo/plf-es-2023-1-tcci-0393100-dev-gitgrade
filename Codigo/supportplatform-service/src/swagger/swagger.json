@@ -6,6 +6,23 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"BranchDTO": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"GetAllBranchQueryDTO": {
 				"properties": {
 					"page": {
@@ -22,25 +39,35 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"Record_string._message-string--value-any_-or-undefined_": {
-				"properties": {},
-				"type": "object",
-				"description": "Construct a type with a set of properties K of type T"
-			},
-			"ErrorResponseDTO": {
+			"ContributorDTO": {
 				"properties": {
-					"message": {
-						"type": "string"
+					"id": {
+						"type": "number",
+						"format": "double"
 					},
-					"error": {
-						"$ref": "#/components/schemas/Record_string._message-string--value-any_-or-undefined_"
+					"githubName": {
+						"type": "string",
+						"nullable": true
 					},
-					"stack": {
-						"type": "string"
+					"githubEmail": {
+						"type": "string",
+						"nullable": true
+					},
+					"githubLogin": {
+						"type": "string",
+						"nullable": true
+					},
+					"githubAvatarUrl": {
+						"type": "string",
+						"nullable": true
 					}
 				},
 				"required": [
-					"message"
+					"id",
+					"githubName",
+					"githubEmail",
+					"githubLogin",
+					"githubAvatarUrl"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -437,6 +464,247 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"FileChangeMetricsDTO": {
+				"properties": {
+					"totalAdditions": {
+						"type": "number",
+						"format": "double"
+					},
+					"totalDeletions": {
+						"type": "number",
+						"format": "double"
+					},
+					"fileCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"fileChangesPerContributor": {
+						"items": {
+							"properties": {
+								"fileCount": {
+									"type": "number",
+									"format": "double"
+								},
+								"deletions": {
+									"properties": {
+										"percentage": {
+											"type": "number",
+											"format": "double"
+										},
+										"sum": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"percentage",
+										"sum"
+									],
+									"type": "object"
+								},
+								"addtions": {
+									"properties": {
+										"percentage": {
+											"type": "number",
+											"format": "double"
+										},
+										"sum": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"percentage",
+										"sum"
+									],
+									"type": "object"
+								},
+								"contribuitor": {
+									"properties": {
+										"githubAvatarUrl": {
+											"type": "string"
+										},
+										"githubLogin": {
+											"type": "string"
+										},
+										"githubName": {
+											"type": "string"
+										},
+										"id": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"githubAvatarUrl",
+										"githubLogin",
+										"githubName",
+										"id"
+									],
+									"type": "object"
+								}
+							},
+							"required": [
+								"fileCount",
+								"deletions",
+								"addtions"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"totalAdditions",
+					"totalDeletions",
+					"fileCount",
+					"fileChangesPerContributor"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FileTypeMetricDTO": {
+				"properties": {
+					"count": {
+						"type": "number",
+						"format": "double"
+					},
+					"extension": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"count",
+					"extension"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FileTypeMetricsDTO": {
+				"properties": {
+					"general": {
+						"items": {
+							"$ref": "#/components/schemas/FileTypeMetricDTO"
+						},
+						"type": "array"
+					},
+					"perContributor": {
+						"items": {
+							"properties": {
+								"fileTypes": {
+									"items": {
+										"$ref": "#/components/schemas/FileTypeMetricDTO"
+									},
+									"type": "array"
+								},
+								"contributor": {
+									"properties": {
+										"githubAvatarUrl": {
+											"type": "string",
+											"nullable": true
+										},
+										"githubLogin": {
+											"type": "string"
+										},
+										"githubName": {
+											"type": "string",
+											"nullable": true
+										},
+										"id": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"githubAvatarUrl",
+										"githubLogin",
+										"githubName",
+										"id"
+									],
+									"type": "object"
+								}
+							},
+							"required": [
+								"fileTypes"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"general",
+					"perContributor"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IssueMetricsDTO": {
+				"properties": {
+					"issueDataPerContributor": {
+						"items": {
+							"properties": {
+								"authoredIssuesCount": {
+									"type": "number",
+									"format": "double"
+								},
+								"assignedIssuesCount": {
+									"type": "number",
+									"format": "double"
+								},
+								"contributor": {
+									"properties": {
+										"githubAvatarUrl": {
+											"type": "string",
+											"nullable": true
+										},
+										"githubLogin": {
+											"type": "string",
+											"nullable": true
+										},
+										"githubName": {
+											"type": "string",
+											"nullable": true
+										},
+										"id": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"githubAvatarUrl",
+										"githubLogin",
+										"githubName",
+										"id"
+									],
+									"type": "object"
+								}
+							},
+							"required": [
+								"authoredIssuesCount",
+								"assignedIssuesCount"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"issuesOpennedCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"issuesClosedCount": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"issueDataPerContributor",
+					"issuesOpennedCount",
+					"issuesClosedCount"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"IssueMetricQueryDTO": {
 				"properties": {
 					"startedAt": {
@@ -722,16 +990,24 @@
 						"description": "Ok",
 						"content": {
 							"application/json": {
-								"schema": {}
-							}
-						}
-					},
-					"404": {
-						"description": "",
-						"content": {
-							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ErrorResponseDTO"
+									"properties": {
+										"results": {
+											"items": {
+												"$ref": "#/components/schemas/BranchDTO"
+											},
+											"type": "array"
+										},
+										"totalPages": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"results",
+										"totalPages"
+									],
+									"type": "object"
 								}
 							}
 						}
@@ -788,16 +1064,24 @@
 						"description": "Ok",
 						"content": {
 							"application/json": {
-								"schema": {}
-							}
-						}
-					},
-					"404": {
-						"description": "",
-						"content": {
-							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ErrorResponseDTO"
+									"properties": {
+										"results": {
+											"items": {
+												"$ref": "#/components/schemas/ContributorDTO"
+											},
+											"type": "array"
+										},
+										"totalPages": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"results",
+										"totalPages"
+									],
+									"type": "object"
 								}
 							}
 						}
@@ -1353,26 +1637,6 @@
 								}
 							}
 						}
-					},
-					"404": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ErrorResponseDTO"
-								}
-							}
-						}
-					},
-					"422": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ErrorResponseDTO"
-								}
-							}
-						}
 					}
 				},
 				"tags": [
@@ -1452,26 +1716,8 @@
 						"description": "File change metrics",
 						"content": {
 							"application/json": {
-								"schema": {}
-							}
-						}
-					},
-					"404": {
-						"description": "",
-						"content": {
-							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ErrorResponseDTO"
-								}
-							}
-						}
-					},
-					"422": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ErrorResponseDTO"
+									"$ref": "#/components/schemas/FileChangeMetricsDTO"
 								}
 							}
 						}
@@ -1554,26 +1800,8 @@
 						"description": "Ok",
 						"content": {
 							"application/json": {
-								"schema": {}
-							}
-						}
-					},
-					"404": {
-						"description": "",
-						"content": {
-							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ErrorResponseDTO"
-								}
-							}
-						}
-					},
-					"422": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ErrorResponseDTO"
+									"$ref": "#/components/schemas/FileTypeMetricsDTO"
 								}
 							}
 						}
@@ -1595,8 +1823,9 @@
 						"name": "repositoryId",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
 						}
 					},
 					{
@@ -1655,26 +1884,8 @@
 						"description": "Ok",
 						"content": {
 							"application/json": {
-								"schema": {}
-							}
-						}
-					},
-					"404": {
-						"description": "",
-						"content": {
-							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ErrorResponseDTO"
-								}
-							}
-						}
-					},
-					"422": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ErrorResponseDTO"
+									"$ref": "#/components/schemas/IssueMetricsDTO"
 								}
 							}
 						}
@@ -1696,8 +1907,9 @@
 						"name": "repositoryId",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
 						}
 					},
 					{
@@ -1750,26 +1962,6 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/CommitQualityMetricsDTO"
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ErrorResponseDTO"
-								}
-							}
-						}
-					},
-					"422": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ErrorResponseDTO"
 								}
 							}
 						}

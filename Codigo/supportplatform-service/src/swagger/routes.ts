@@ -22,6 +22,15 @@ import type { RequestHandler, Router } from 'express';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
 const models: TsoaRoute.Models = {
+    "BranchDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "name": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "GetAllBranchQueryDTO": {
         "dataType": "refObject",
         "properties": {
@@ -31,17 +40,14 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Record_string._message-string--value-any_-or-undefined_": {
-        "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ErrorResponseDTO": {
+    "ContributorDTO": {
         "dataType": "refObject",
         "properties": {
-            "message": {"dataType":"string","required":true},
-            "error": {"ref":"Record_string._message-string--value-any_-or-undefined_"},
-            "stack": {"dataType":"string"},
+            "id": {"dataType":"double","required":true},
+            "githubName": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "githubEmail": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "githubLogin": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "githubAvatarUrl": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
         },
         "additionalProperties": false,
     },
@@ -176,6 +182,45 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "FileChangeMetricsDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "totalAdditions": {"dataType":"double","required":true},
+            "totalDeletions": {"dataType":"double","required":true},
+            "fileCount": {"dataType":"double","required":true},
+            "fileChangesPerContributor": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"fileCount":{"dataType":"double","required":true},"deletions":{"dataType":"nestedObjectLiteral","nestedProperties":{"percentage":{"dataType":"double","required":true},"sum":{"dataType":"double","required":true}},"required":true},"addtions":{"dataType":"nestedObjectLiteral","nestedProperties":{"percentage":{"dataType":"double","required":true},"sum":{"dataType":"double","required":true}},"required":true},"contribuitor":{"dataType":"nestedObjectLiteral","nestedProperties":{"githubAvatarUrl":{"dataType":"string","required":true},"githubLogin":{"dataType":"string","required":true},"githubName":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}}}}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "FileTypeMetricDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "count": {"dataType":"double","required":true},
+            "extension": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "FileTypeMetricsDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "general": {"dataType":"array","array":{"dataType":"refObject","ref":"FileTypeMetricDTO"},"required":true},
+            "perContributor": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"fileTypes":{"dataType":"array","array":{"dataType":"refObject","ref":"FileTypeMetricDTO"},"required":true},"contributor":{"dataType":"nestedObjectLiteral","nestedProperties":{"githubAvatarUrl":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},"githubLogin":{"dataType":"string","required":true},"githubName":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},"id":{"dataType":"double","required":true}}}}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IssueMetricsDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "issueDataPerContributor": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"authoredIssuesCount":{"dataType":"double","required":true},"assignedIssuesCount":{"dataType":"double","required":true},"contributor":{"dataType":"nestedObjectLiteral","nestedProperties":{"githubAvatarUrl":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},"githubLogin":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},"githubName":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},"id":{"dataType":"double","required":true}}}}},"required":true},
+            "issuesOpennedCount": {"dataType":"double","required":true},
+            "issuesClosedCount": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "IssueMetricQueryDTO": {
         "dataType": "refObject",
         "properties": {
@@ -267,7 +312,6 @@ export function RegisterRoutes(app: Router) {
             const args = {
                     repositoryId: {"in":"path","name":"repositoryId","required":true,"dataType":"double"},
                     query: {"in":"queries","name":"query","required":true,"ref":"GetAllBranchQueryDTO"},
-                    notFoundResponse: {"in":"res","name":"404","required":true,"ref":"ErrorResponseDTO"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -295,7 +339,6 @@ export function RegisterRoutes(app: Router) {
             const args = {
                     repositoryId: {"in":"path","name":"repositoryId","required":true,"dataType":"double"},
                     query: {"in":"queries","name":"query","required":true,"ref":"GetAllContributorQueryDTO"},
-                    notFoundResponse: {"in":"res","name":"404","required":true,"ref":"ErrorResponseDTO"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -534,8 +577,6 @@ export function RegisterRoutes(app: Router) {
             const args = {
                     repositoryId: {"in":"path","name":"repositoryId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"repositoryId must be an integer"},"minimum":{"errorMsg":"repositoryId must be greater than or equal to 1","value":1}}},
                     query: {"in":"queries","name":"query","required":true,"ref":"RepositoryMetricQueryDTO"},
-                    notFoundResponse: {"in":"res","name":"404","required":true,"ref":"ErrorResponseDTO"},
-                    unprocessableEntityResponse: {"in":"res","name":"422","required":true,"ref":"ErrorResponseDTO"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -563,8 +604,6 @@ export function RegisterRoutes(app: Router) {
             const args = {
                     repositoryId: {"in":"path","name":"repositoryId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"repositoryId must be an integer"},"minimum":{"errorMsg":"repositoryId must be greater than or equal to 1","value":1}}},
                     query: {"in":"queries","name":"query","required":true,"ref":"RepositoryMetricQueryDTO"},
-                    notFoundResponse: {"in":"res","name":"404","required":true,"ref":"ErrorResponseDTO"},
-                    unprocessableEntityResponse: {"in":"res","name":"422","required":true,"ref":"ErrorResponseDTO"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -590,10 +629,8 @@ export function RegisterRoutes(app: Router) {
 
             function RepositoryMetricsController_getFileTypesMetrics(request: any, response: any, next: any) {
             const args = {
-                    repositoryId: {"in":"path","name":"repositoryId","required":true,"dataType":"double"},
+                    repositoryId: {"in":"path","name":"repositoryId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"repositoryId must be an integer"},"minimum":{"errorMsg":"repositoryId must be greater than or equal to 1","value":1}}},
                     query: {"in":"queries","name":"query","required":true,"ref":"RepositoryMetricQueryDTO"},
-                    notFoundResponse: {"in":"res","name":"404","required":true,"ref":"ErrorResponseDTO"},
-                    unprocessableEntityResponse: {"in":"res","name":"422","required":true,"ref":"ErrorResponseDTO"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -619,10 +656,8 @@ export function RegisterRoutes(app: Router) {
 
             function RepositoryMetricsController_getIssuesMetrics(request: any, response: any, next: any) {
             const args = {
-                    repositoryId: {"in":"path","name":"repositoryId","required":true,"dataType":"double"},
+                    repositoryId: {"in":"path","name":"repositoryId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"repositoryId must be an integer"},"minimum":{"errorMsg":"repositoryId must be greater than or equal to 1","value":1}}},
                     query: {"in":"queries","name":"query","required":true,"ref":"IssueMetricQueryDTO"},
-                    notFoundResponse: {"in":"res","name":"404","required":true,"ref":"ErrorResponseDTO"},
-                    unprocessableEntityResponse: {"in":"res","name":"422","required":true,"ref":"ErrorResponseDTO"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -650,8 +685,6 @@ export function RegisterRoutes(app: Router) {
             const args = {
                     repositoryId: {"in":"path","name":"repositoryId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"repositoryId must be an integer"},"minimum":{"errorMsg":"repositoryId must be greater than or equal to 1","value":1}}},
                     query: {"in":"queries","name":"query","required":true,"ref":"RepositoryMetricQueryDTO"},
-                    notFoundResponse: {"in":"res","name":"404","required":true,"ref":"ErrorResponseDTO"},
-                    unprocessableEntityResponse: {"in":"res","name":"422","required":true,"ref":"ErrorResponseDTO"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
