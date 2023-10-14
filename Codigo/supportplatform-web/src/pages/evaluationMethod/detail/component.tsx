@@ -1,12 +1,29 @@
 import { EvaluationMethodResponseDTO } from "@gitgrade/dtos";
-import { Box, PageLayout, Heading, Button } from "@primer/react";
+import { Box, PageLayout, Heading, Button, Octicon } from "@primer/react";
 import { Outlet, useLoaderData } from "react-router";
 import Divider from "../../../commom/components/divider";
 import { PencilIcon } from "@primer/octicons-react";
 import EvaluationMethodAside from "./components/evaluationMethodAside";
+import appRoutes from "../../../commom/routes/appRoutes";
+import SearchParamControlledModal from "../../../commom/components/searchParamControlledModal";
+import EditEvaluationMethodModal from "./editEvaluatioMethodModal";
+import { useSearchParams } from "react-router-dom";
+import { ArchiveIcon } from "@primer/octicons-react";
+
+const basePageSearchParams = appRoutes.base.search;
+const pageModalSearchParamsValues = appRoutes.base.searchValues.modal;
 
 export default function EvaluationMethodDetailPage() {
     const evaluationMethod = useLoaderData() as EvaluationMethodResponseDTO;
+    const [, setSearchParams] = useSearchParams();
+
+    function handleEditEvaluationMethodClick() {
+        setSearchParams((previousSearchParams) => ({
+            ...previousSearchParams,
+            [basePageSearchParams.modal]:
+                pageModalSearchParamsValues.editEvaluationMethod,
+        }));
+    }
 
     return (
         <PageLayout containerWidth="large">
@@ -28,6 +45,14 @@ export default function EvaluationMethodDetailPage() {
                         fontWeight: 400,
                     }}
                 >
+                    <Box
+                        sx={{
+                            display: "inline-flex",
+                            mr: 2,
+                        }}
+                    >
+                        <Octicon icon={ArchiveIcon} />
+                    </Box>
                     {evaluationMethod.description} - {evaluationMethod.year}/
                     {evaluationMethod.semester}
                 </Heading>
@@ -43,11 +68,17 @@ export default function EvaluationMethodDetailPage() {
                     <Button
                         variant="invisible"
                         leadingIcon={PencilIcon}
+                        onClick={handleEditEvaluationMethodClick}
                     >
                         Editar
                     </Button>
-                    <Button variant="danger">Inativar</Button>
-                    <Button>Sicronizar </Button>
+                    <Button
+                        disabled
+                        variant="danger"
+                    >
+                        Inativar
+                    </Button>
+                    <Button disabled>Duplicar</Button>
                 </Box>
             </Box>
             <Divider />
@@ -63,6 +94,21 @@ export default function EvaluationMethodDetailPage() {
                     <Outlet />
                 </Box>
             </Box>
+
+            {evaluationMethod && (
+                <SearchParamControlledModal
+                    header="Editar método avaliativo"
+                    openValue={pageModalSearchParamsValues.editEvaluationMethod}
+                    searchParam={basePageSearchParams.modal}
+                >
+                    <EditEvaluationMethodModal
+                        description={evaluationMethod.description}
+                        year={evaluationMethod.year}
+                        id={evaluationMethod.id}
+                        semester={evaluationMethod.semester}
+                    />
+                </SearchParamControlledModal>
+            )}
         </PageLayout>
     );
 }

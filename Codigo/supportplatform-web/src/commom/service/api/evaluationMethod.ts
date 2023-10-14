@@ -3,6 +3,7 @@ import {
     PaginationResponseDTO,
     EvaluationMethodResponseDTO,
     EvaluationMethodCreateDTO,
+    EvaluationMethodUpdateDTO,
 } from "@gitgrade/dtos";
 import api from "../config/api";
 
@@ -28,6 +29,13 @@ export class EvaluationMethodService {
     async create(evaluationMethod: EvaluationMethodCreateDTO) {
         return api.post<EvaluationMethodResponseDTO>(
             "evaluation-method",
+            evaluationMethod
+        );
+    }
+
+    async update(id: number, evaluationMethod: EvaluationMethodUpdateDTO) {
+        return api.put<EvaluationMethodResponseDTO>(
+            `evaluation-method/${id}`,
             evaluationMethod
         );
     }

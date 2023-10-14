@@ -7,7 +7,14 @@ const appRoutes = {
 
         // necessary to map query string param name per a trustable variable
         search: {
-            creating: "creating",
+            modal: "modal",
+        },
+        // necessary to map enum search params per a trustable variable
+        searchValues: {
+            modal: {
+                createEvaluationMethod: "createEvaluationMethod",
+                editEvaluationMethod: "editEvaluationMethod",
+            },
         },
     },
     login: {
@@ -81,10 +88,9 @@ const appRoutes = {
             repo: {
                 path: "repo" as const,
                 link(id: number) {
-                    const path = this.path.replace(":id", id.toString());
-                    return `${appRoutes.evaluationMethod.detail.link(
-                        id
-                    )}/${path}`;
+                    return `${appRoutes.evaluationMethod.detail.link(id)}/${
+                        this.path
+                    }`;
                 },
                 // necessary to map query string param name per a trustable variable
                 search: {
@@ -95,28 +101,25 @@ const appRoutes = {
             consistencyRule: {
                 path: "consistencyRule" as const,
                 link(id: number) {
-                    const path = this.path.replace(":id", id.toString());
-                    return `${appRoutes.evaluationMethod.detail.link(
-                        id
-                    )}/${path}`;
+                    return `${appRoutes.evaluationMethod.detail.link(id)}/${
+                        this.path
+                    }`;
                 },
             },
             sprint: {
                 path: "sprint" as const,
                 link(id: number) {
-                    const path = this.path.replace(":id", id.toString());
-                    return `${appRoutes.evaluationMethod.detail.link(
-                        id
-                    )}/${path}`;
+                    return `${appRoutes.evaluationMethod.detail.link(id)}/${
+                        this.path
+                    }`;
                 },
             },
             standardizedIssue: {
                 path: "standardizedIssue" as const,
                 link(id: number) {
-                    const path = this.path.replace(":id", id.toString());
-                    return `${appRoutes.evaluationMethod.detail.link(
-                        id
-                    )}/${path}`;
+                    return `${appRoutes.evaluationMethod.detail.link(id)}/${
+                        this.path
+                    }`;
                 },
             },
         },

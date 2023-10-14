@@ -4,13 +4,15 @@ import { useSearchParams } from "react-router-dom";
 import appRoutes from "../../../../../commom/routes/appRoutes";
 
 const basePageSearchParams = appRoutes.base.search;
+const pageModalSearchParamsValues = appRoutes.base.searchValues.modal;
 
 export default function AddEvaluationMethodButton() {
     const [, setSearchParams] = useSearchParams();
     function handleAddEvaluationMethodButtonClick() {
         setSearchParams((previousSearchParams) => ({
             ...previousSearchParams,
-            [basePageSearchParams.creating]: "evaluationMethod",
+            [basePageSearchParams.modal]:
+                pageModalSearchParamsValues.createEvaluationMethod,
         }));
     }
     return (

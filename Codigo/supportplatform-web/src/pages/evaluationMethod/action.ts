@@ -6,6 +6,8 @@ import { toast } from "react-toastify";
 import appRoutes from "../../commom/routes/appRoutes";
 import queryClient from "../../commom/data/client";
 import { getEvaluationMethodQuery } from "../../commom/data/evaluationMethod";
+import { EvaluationMethodValidator } from "../../commom/validation/EvaluationMethodValidator";
+import ErrorMapper from "../../commom/mapping/ErrorMapper";
 
 export default async function EvaluationMethodCreateAction({
     request,
@@ -15,46 +17,11 @@ export default async function EvaluationMethodCreateAction({
     const year = formData.get("year");
     const semester = formData.get("semester");
 
-    const errors: Array<
-        ErrorResponseDTO<keyof EvaluationMethodCreateDTO>["error"]
-    > = [];
-
-    if (!description) {
-        errors.push({
-            description: {
-                message: "Campo obrigatório",
-                value: description,
-            },
-        });
-    } else if (description.length > 255) {
-        errors.push({
-            description: {
-                message: "Máximo de 255 caracteres",
-            },
-        });
-    }
-
-    if (!year) {
-        errors.push({
-            year: {
-                message: "Campo obrigatório",
-            },
-        });
-    }
-
-    if (!semester) {
-        errors.push({
-            semester: {
-                message: "Campo obrigatório",
-            },
-        });
-    } else if (semester !== "1" && semester !== "2") {
-        errors.push({
-            semester: {
-                message: "Deve ser 1 ou 2",
-            },
-        });
-    }
+    const errors = new EvaluationMethodValidator().validate({
+        description,
+        year,
+        semester,
+    });
 
     if (errors.length > 0) {
         return {
@@ -93,20 +60,15 @@ export default async function EvaluationMethodCreateAction({
             | ErrorResponseDTO<keyof EvaluationMethodCreateDTO>
             | undefined = undefined;
         if (axiosResponse.response?.data.error) {
-            processedError = Object.entries(
-                axiosResponse.response.data.error
-            ).reduce((acc, [key, value]) => {
-                const newKey = key.replace("body.", "");
-                return {
-                    ...acc,
-                    [newKey]: value,
-                };
-            }, {} as ErrorResponseDTO<keyof EvaluationMethodCreateDTO>);
+            processedError = new ErrorMapper().map(
+                axiosResponse.response.data,
+                "body"
+            );
         }
 
         return {
             ...axiosResponse.response?.data,
-            error: processedError,
+            ...processedError,
         };
     }
 }

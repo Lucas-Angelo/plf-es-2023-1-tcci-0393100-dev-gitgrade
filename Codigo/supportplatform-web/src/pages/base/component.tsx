@@ -9,6 +9,7 @@ import SearchParamControlledModal from "../../commom/components/searchParamContr
 import appRoutes from "../../commom/routes/appRoutes";
 
 const pageSearchParams = appRoutes.base.search;
+const pageModalSearchParamsValues = appRoutes.base.searchValues.modal;
 
 function BasePage() {
     return (
@@ -39,9 +40,9 @@ function BasePage() {
             {/* general modals */}
             <SearchParamControlledModal
                 header="Novo método avaliativo"
-                openValue="evaluationMethod"
                 aria-label="Criar método avaliativo"
-                searchParam={pageSearchParams.creating}
+                searchParam={pageSearchParams.modal}
+                openValue={pageModalSearchParamsValues.createEvaluationMethod}
             >
                 <CreateEvaluationMethodModal />
             </SearchParamControlledModal>
