@@ -588,7 +588,7 @@ describe(`POST ${baseRoute}`, () => {
             });
 
         expect(response.body.error?.["body.disabledAt"]?.message).toContain(
-            "disabledAt must be a Date"
+            '"disabledAt" is an excess property and therefore is not allowed'
         );
     });
 

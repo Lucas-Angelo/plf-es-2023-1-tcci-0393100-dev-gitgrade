@@ -1,7 +1,7 @@
 import {
     GetAllRepositoryQueryDTO,
     PaginationResponseDTO,
-    RepositoryDTO,
+    RepositoryResponseDTO,
 } from "@gitgrade/dtos";
 import api from "../config/api";
 
@@ -14,8 +14,12 @@ export class RepositoryService {
             searchParams.set("limit", queryDto.limit.toString());
         if (queryDto?.filter) searchParams.set("filter", queryDto.filter);
 
-        return api.get<PaginationResponseDTO<RepositoryDTO>>(
+        return api.get<PaginationResponseDTO<RepositoryResponseDTO>>(
             "repository?".concat(searchParams.toString())
         );
+    }
+
+    getById(id: number) {
+        return api.get<RepositoryResponseDTO>(`repository/${id}`);
     }
 }

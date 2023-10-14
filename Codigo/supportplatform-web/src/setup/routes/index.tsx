@@ -10,6 +10,7 @@ import appRoutes from "../../commom/routes/appRoutes";
 import * as BasePageRoute from "../../pages/base";
 import * as LoginPageRoute from "../../pages/login";
 import ErrorElement from "../../commom/components/errorElement";
+import NavigateMaintainingSearchParams from "../../commom/components/navigateMaintainingSearchParams";
 
 const routes = createRoutesFromElements(
     <Route errorElement={<ErrorElement />}>
@@ -21,7 +22,12 @@ const routes = createRoutesFromElements(
             <Route errorElement={<ErrorElement />}>
                 <Route
                     path=""
-                    element={<Navigate to={appRoutes.repo.link()} />}
+                    element={
+                        <Navigate
+                            replace
+                            to={appRoutes.repo.link()}
+                        />
+                    }
                 />
 
                 <Route path={appRoutes.repo.path}>
@@ -31,11 +37,244 @@ const routes = createRoutesFromElements(
                     />
                     <Route
                         path={appRoutes.repo[":id"].path}
-                        element={<div>repo</div>}
-                    />
+                        lazy={() => import("../../pages/repo/detail/index")}
+                    >
+                        <Route
+                            path={appRoutes.repo[":id"].metrics.path}
+                            lazy={() =>
+                                import("../../pages/repo/detail/metrics/index")
+                            }
+                            errorElement={<ErrorElement />}
+                        >
+                            <Route
+                                path={
+                                    appRoutes.repo[":id"].metrics.commits.path
+                                }
+                                lazy={() =>
+                                    import(
+                                        "../../pages/repo/detail/metrics/commits/index"
+                                    )
+                                }
+                            >
+                                <Route
+                                    path={
+                                        appRoutes.repo[":id"].metrics.commits
+                                            .absolute.path
+                                    }
+                                    lazy={() =>
+                                        import(
+                                            "../../pages/repo/detail/metrics/commits/absolute/index"
+                                        )
+                                    }
+                                />
+                                <Route
+                                    path={
+                                        appRoutes.repo[":id"].metrics.commits
+                                            .percentual.path
+                                    }
+                                    lazy={() =>
+                                        import(
+                                            "../../pages/repo/detail/metrics/commits/percentual/index"
+                                        )
+                                    }
+                                />
+                                <Route
+                                    path=""
+                                    element={
+                                        <NavigateMaintainingSearchParams
+                                            to={
+                                                appRoutes.repo[":id"].metrics
+                                                    .commits.absolute.path
+                                            }
+                                            replace
+                                        />
+                                    }
+                                />
+                            </Route>
+                            <Route
+                                path={
+                                    appRoutes.repo[":id"].metrics.fileTypes.path
+                                }
+                                lazy={() =>
+                                    import(
+                                        "../../pages/repo/detail/metrics/fileTypes/index"
+                                    )
+                                }
+                            />
+                            <Route
+                                path={
+                                    appRoutes.repo[":id"].metrics.linesOfCode
+                                        .path
+                                }
+                                lazy={() =>
+                                    import(
+                                        "../../pages/repo/detail/metrics/lines/index"
+                                    )
+                                }
+                            >
+                                <Route
+                                    path={
+                                        appRoutes.repo[":id"].metrics
+                                            .linesOfCode.addtions.path
+                                    }
+                                    lazy={() =>
+                                        import(
+                                            "../../pages/repo/detail/metrics/lines/addtions/index"
+                                        )
+                                    }
+                                />
+                                <Route
+                                    path={
+                                        appRoutes.repo[":id"].metrics
+                                            .linesOfCode.deletions.path
+                                    }
+                                    lazy={() =>
+                                        import(
+                                            "../../pages/repo/detail/metrics/lines/deletions/index"
+                                        )
+                                    }
+                                />
+                                <Route
+                                    path={
+                                        appRoutes.repo[":id"].metrics
+                                            .linesOfCode.relative.path
+                                    }
+                                    lazy={() =>
+                                        import(
+                                            "../../pages/repo/detail/metrics/lines/relative/index"
+                                        )
+                                    }
+                                />
+                                <Route
+                                    path=""
+                                    element={
+                                        <NavigateMaintainingSearchParams
+                                            to={
+                                                appRoutes.repo[":id"].metrics
+                                                    .linesOfCode.addtions.path
+                                            }
+                                            replace
+                                        />
+                                    }
+                                />
+                            </Route>
+                            <Route
+                                path={
+                                    appRoutes.repo[":id"].metrics
+                                        .fileContributions.path
+                                }
+                                lazy={() =>
+                                    import(
+                                        "../../pages/repo/detail/metrics/fileContributions/index"
+                                    )
+                                }
+                            />
+                            <Route
+                                path={
+                                    appRoutes.repo[":id"].metrics.commitQuality
+                                        .path
+                                }
+                                lazy={() =>
+                                    import(
+                                        "../../pages/repo/detail/metrics/commitQuality/index"
+                                    )
+                                }
+                            />
+                            <Route
+                                path={appRoutes.repo[":id"].metrics.issues.path}
+                                lazy={() =>
+                                    import(
+                                        "../../pages/repo/detail/metrics/issues/index"
+                                    )
+                                }
+                            >
+                                <Route
+                                    path={
+                                        appRoutes.repo[":id"].metrics.issues
+                                            .author.path
+                                    }
+                                    lazy={() =>
+                                        import(
+                                            "../../pages/repo/detail/metrics/issues/author/index"
+                                        )
+                                    }
+                                />
+
+                                <Route
+                                    path={
+                                        appRoutes.repo[":id"].metrics.issues
+                                            .assignee.path
+                                    }
+                                    lazy={() =>
+                                        import(
+                                            "../../pages/repo/detail/metrics/issues/assignee/index"
+                                        )
+                                    }
+                                />
+
+                                <Route
+                                    path=""
+                                    element={
+                                        <NavigateMaintainingSearchParams
+                                            to={
+                                                appRoutes.repo[":id"].metrics
+                                                    .issues.author.path
+                                            }
+                                        />
+                                    }
+                                />
+                            </Route>
+
+                            <Route
+                                path=""
+                                element={
+                                    <Navigate
+                                        replace
+                                        to={
+                                            appRoutes.repo[":id"].metrics
+                                                .commits.path
+                                        }
+                                    />
+                                }
+                            />
+                        </Route>
+                        <Route
+                            path={appRoutes.repo[":id"].quality.path}
+                            element={<>quality</>}
+                        />
+                        <Route
+                            path={appRoutes.repo[":id"].commits.path}
+                            element={<>commits</>}
+                        />
+                        <Route
+                            path={appRoutes.repo[":id"].consistency.path}
+                            element={<>consistency</>}
+                        />
+                        <Route
+                            path={appRoutes.repo[":id"].config.path}
+                            lazy={() =>
+                                import("../../pages/repo/detail/config/index")
+                            }
+                        />
+
+                        <Route
+                            path=""
+                            element={
+                                <Navigate
+                                    replace
+                                    to={appRoutes.repo[":id"].metrics.path}
+                                />
+                            }
+                        />
+                    </Route>
                     <Route
                         path=""
-                        element={<Navigate to={appRoutes.repo.list.link()} />}
+                        element={
+                            <Navigate
+                                replace
+                                to={appRoutes.repo.list.link()}
+                            />
+                        }
                     />
                 </Route>
 
@@ -50,6 +289,7 @@ const routes = createRoutesFromElements(
                         path=""
                         element={
                             <Navigate
+                                replace
                                 to={appRoutes.evaluationMethod.list.link()}
                             />
                         }

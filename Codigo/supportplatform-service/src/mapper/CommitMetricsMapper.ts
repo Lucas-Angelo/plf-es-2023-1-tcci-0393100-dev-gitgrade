@@ -6,12 +6,14 @@ export class CommitMetricsMapper {
         return {
             totalCommitCount: serviceResponse.totalCommitCount,
             commitsPerContributor: serviceResponse.results.map((item) => ({
-                contribuitor: {
-                    id: Number(item.id),
-                    githubName: item.githubName,
-                    githubLogin: item.githubLogin,
-                    githubAvatarUrl: item.githubAvatarUrl,
-                },
+                contribuitor: item.contributor
+                    ? {
+                          id: Number(item.contributor.id),
+                          githubName: item.contributor.githubName,
+                          githubLogin: item.contributor.githubLogin,
+                          githubAvatarUrl: item.contributor.githubAvatarUrl,
+                      }
+                    : undefined,
                 commitCount: Number(item.commitCount),
                 commtiPercentage:
                     (Number(item.commitCount) /
