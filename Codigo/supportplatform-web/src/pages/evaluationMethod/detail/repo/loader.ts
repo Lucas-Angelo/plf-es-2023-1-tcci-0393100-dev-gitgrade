@@ -1,14 +1,14 @@
 import { LoaderFunctionArgs } from "react-router";
 import appRoutes from "../../../../commom/routes/appRoutes";
-import { getRepoQuery } from "../../../../commom/data/repo";
+import { getRepositoryQuery } from "../../../../commom/data/repo";
 import { loadQueryData } from "../../../../commom/data/utils/load";
-import { PaginationResponseDTO, RepositoryDTO } from "@gitgrade/dtos";
+import { PaginationResponseDTO, RepositoryResponseDTO } from "@gitgrade/dtos";
 
 type PagePathParam = (typeof appRoutes.evaluationMethod.detail.params)[number];
 const pageSearchParams = appRoutes.evaluationMethod.detail.repo.search;
 
 export type EvaluationMethodRepoListPageLoaderData =
-    PaginationResponseDTO<RepositoryDTO>;
+    PaginationResponseDTO<RepositoryResponseDTO>;
 
 export default function EvaluationMethodRepositoryListLoader({
     params,
@@ -23,7 +23,7 @@ export default function EvaluationMethodRepositoryListLoader({
     if (Number.isNaN(evaluationMethodId))
         throw new Error("Invalid evaluation method id");
 
-    const query = getRepoQuery({
+    const query = getRepositoryQuery({
         evaluationMethodId: evaluationMethodId,
         page: Number(searchParams.get(pageSearchParams.page)) || 1,
         filter: searchParams.get(pageSearchParams.filter) || undefined,

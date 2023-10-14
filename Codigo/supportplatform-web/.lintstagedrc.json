@@ -1,5 +1,5 @@
 {
-    "*.{ts,tsx}": "tsc-files src/vite-env.d.ts --noEmit",
+    "*.{ts,tsx}": "tsc-files src/vite-env.d.ts src/commom/types/DateTimeFormat.d.ts --noEmit",
     "src/**/*.{ts,tsx,js,jsx}": "eslint --fix",
     "*.{ts,tsx,js,jsx,md,css,json}": "prettier --write "
 }

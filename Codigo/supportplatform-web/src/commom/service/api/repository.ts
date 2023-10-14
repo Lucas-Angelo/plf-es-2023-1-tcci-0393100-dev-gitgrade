@@ -1,8 +1,8 @@
 import {
     GetAllRepositoryQueryDTO,
     PaginationResponseDTO,
-    RepositoryDTO,
     RepositoryPatchDTO,
+    RepositoryResponseDTO,
 } from "@gitgrade/dtos";
 import api from "../config/api";
 
@@ -20,12 +20,16 @@ export class RepositoryService {
                 String(queryDto.evaluationMethodId)
             );
 
-        return api.get<PaginationResponseDTO<RepositoryDTO>>(
+        return api.get<PaginationResponseDTO<RepositoryResponseDTO>>(
             "repository?".concat(searchParams.toString())
         );
     }
 
     patch(id: number, repository: Partial<RepositoryPatchDTO>) {
-        return api.patch<RepositoryDTO>(`repository/${id}`, repository);
+        return api.patch<RepositoryResponseDTO>(`repository/${id}`, repository);
+    }
+
+    getById(id: number) {
+        return api.get<RepositoryResponseDTO>(`repository/${id}`);
     }
 }

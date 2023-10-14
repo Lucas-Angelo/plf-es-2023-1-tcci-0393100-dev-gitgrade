@@ -6,6 +6,286 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"BranchDTO": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetAllBranchQueryDTO": {
+				"properties": {
+					"page": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"limit": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ValidationType": {
+				"enum": [
+					"DEFAULT",
+					"CFF"
+				],
+				"type": "string"
+			},
+			"ConsistencyRuleResponseDTO": {
+				"description": "ConsistencyRuleResponseDTO - Could be used to structure the response object when sending ConsistencyRules to the client.",
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"evaluationMethodId": {
+						"type": "number",
+						"format": "double"
+					},
+					"sprintId": {
+						"type": "number",
+						"format": "double"
+					},
+					"standardizedIssueId": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"description": {
+						"type": "string",
+						"nullable": true
+					},
+					"filePath": {
+						"type": "string"
+					},
+					"validationType": {
+						"$ref": "#/components/schemas/ValidationType"
+					}
+				},
+				"required": [
+					"id",
+					"evaluationMethodId",
+					"sprintId",
+					"standardizedIssueId",
+					"description",
+					"filePath",
+					"validationType"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ConsistencyRuleCreateDTO": {
+				"description": "ConsistencyRuleCreateDTO - Used for creating a new ConsistencyRule.",
+				"properties": {
+					"evaluationMethodId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"sprintId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"standardizedIssueId": {
+						"type": "integer",
+						"format": "int32",
+						"nullable": true,
+						"minimum": 1
+					},
+					"description": {
+						"type": "string",
+						"nullable": true,
+						"minLength": 1,
+						"maxLength": 255
+					},
+					"filePath": {
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 10000
+					},
+					"validationType": {
+						"$ref": "#/components/schemas/ValidationType"
+					}
+				},
+				"required": [
+					"evaluationMethodId",
+					"sprintId",
+					"filePath",
+					"validationType"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ConsistencyRuleUpdateDTO": {
+				"description": "ConsistencyRuleUpdateDTO - Used for updating an existing ConsistencyRule.",
+				"properties": {
+					"evaluationMethodId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"sprintId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"standardizedIssueId": {
+						"type": "integer",
+						"format": "int32",
+						"nullable": true,
+						"minimum": 1
+					},
+					"description": {
+						"type": "string",
+						"nullable": true,
+						"minLength": 1,
+						"maxLength": 255
+					},
+					"filePath": {
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 10000
+					},
+					"validationType": {
+						"$ref": "#/components/schemas/ValidationType"
+					}
+				},
+				"required": [
+					"evaluationMethodId",
+					"sprintId",
+					"filePath",
+					"validationType"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PaginationResponseDTO_ConsistencyRuleResponseDTO_": {
+				"properties": {
+					"results": {
+						"items": {
+							"$ref": "#/components/schemas/ConsistencyRuleResponseDTO"
+						},
+						"type": "array"
+					},
+					"totalPages": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"results",
+					"totalPages"
+				],
+				"type": "object"
+			},
+			"ConsistencyRuleSearchDTO": {
+				"description": "ConsistencyRuleSearchDTO - Used for searching through ConsistencyRules with pagination and filters.",
+				"properties": {
+					"page": {
+						"type": "integer",
+						"format": "int32",
+						"default": "1",
+						"minimum": 1
+					},
+					"limit": {
+						"type": "integer",
+						"format": "int32",
+						"default": "10",
+						"minimum": 1
+					},
+					"evaluationMethodId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"sprintId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"standardizedIssueId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"description": {
+						"type": "string"
+					},
+					"filePath": {
+						"type": "string"
+					},
+					"validationType": {
+						"$ref": "#/components/schemas/ValidationType"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ContributorDTO": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"githubName": {
+						"type": "string",
+						"nullable": true
+					},
+					"githubEmail": {
+						"type": "string",
+						"nullable": true
+					},
+					"githubLogin": {
+						"type": "string",
+						"nullable": true
+					},
+					"githubAvatarUrl": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"id",
+					"githubName",
+					"githubEmail",
+					"githubLogin",
+					"githubAvatarUrl"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetAllContributorQueryDTO": {
+				"properties": {
+					"page": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"limit": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"EvaluationMethodResponseDTO": {
 				"description": "EvaluationMethodResponseDTO - Could be used to structure the response object when sending EvaluationMethods to the client.",
 				"properties": {
@@ -89,8 +369,7 @@
 				"required": [
 					"description",
 					"semester",
-					"year",
-					"disabledAt"
+					"year"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -142,8 +421,7 @@
 					},
 					"disabledAt": {
 						"type": "string",
-						"format": "date",
-						"nullable": true
+						"format": "date"
 					},
 					"forceDisabled": {
 						"type": "boolean",
@@ -153,7 +431,7 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"RepositoryDTO": {
+			"RepositoryResponseDTO": {
 				"properties": {
 					"id": {
 						"type": "number",
@@ -244,11 +522,11 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"PaginationResponseDTO_RepositoryDTO_": {
+			"PaginationResponseDTO_RepositoryResponseDTO_": {
 				"properties": {
 					"results": {
 						"items": {
-							"$ref": "#/components/schemas/RepositoryDTO"
+							"$ref": "#/components/schemas/RepositoryResponseDTO"
 						},
 						"type": "array"
 					},
@@ -348,8 +626,7 @@
 							},
 							"required": [
 								"commtiPercentage",
-								"commitCount",
-								"contribuitor"
+								"commitCount"
 							],
 							"type": "object"
 						},
@@ -363,6 +640,32 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"RepositoryMetricQueryDTO": {
+				"properties": {
+					"startedAt": {
+						"type": "string",
+						"format": "date"
+					},
+					"endedAt": {
+						"type": "string",
+						"format": "date"
+					},
+					"branchName": {
+						"type": "string"
+					},
+					"contributor": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"filterWithNoContributor": {
+						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"FileChangeMetricsDTO": {
 				"properties": {
 					"totalAdditions": {
@@ -373,9 +676,17 @@
 						"type": "number",
 						"format": "double"
 					},
+					"fileCount": {
+						"type": "number",
+						"format": "double"
+					},
 					"fileChangesPerContributor": {
 						"items": {
 							"properties": {
+								"fileCount": {
+									"type": "number",
+									"format": "double"
+								},
 								"deletions": {
 									"properties": {
 										"percentage": {
@@ -436,9 +747,9 @@
 								}
 							},
 							"required": [
+								"fileCount",
 								"deletions",
-								"addtions",
-								"contribuitor"
+								"addtions"
 							],
 							"type": "object"
 						},
@@ -448,7 +759,258 @@
 				"required": [
 					"totalAdditions",
 					"totalDeletions",
+					"fileCount",
 					"fileChangesPerContributor"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FileTypeMetricDTO": {
+				"properties": {
+					"count": {
+						"type": "number",
+						"format": "double"
+					},
+					"extension": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"count",
+					"extension"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FileTypeMetricsDTO": {
+				"properties": {
+					"general": {
+						"items": {
+							"$ref": "#/components/schemas/FileTypeMetricDTO"
+						},
+						"type": "array"
+					},
+					"perContributor": {
+						"items": {
+							"properties": {
+								"fileTypes": {
+									"items": {
+										"$ref": "#/components/schemas/FileTypeMetricDTO"
+									},
+									"type": "array"
+								},
+								"contributor": {
+									"properties": {
+										"githubAvatarUrl": {
+											"type": "string",
+											"nullable": true
+										},
+										"githubLogin": {
+											"type": "string"
+										},
+										"githubName": {
+											"type": "string",
+											"nullable": true
+										},
+										"id": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"githubAvatarUrl",
+										"githubLogin",
+										"githubName",
+										"id"
+									],
+									"type": "object"
+								}
+							},
+							"required": [
+								"fileTypes"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"general",
+					"perContributor"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IssueMetricsDTO": {
+				"properties": {
+					"issueDataPerContributor": {
+						"items": {
+							"properties": {
+								"authoredIssuesCount": {
+									"type": "number",
+									"format": "double"
+								},
+								"assignedIssuesCount": {
+									"type": "number",
+									"format": "double"
+								},
+								"contributor": {
+									"properties": {
+										"githubAvatarUrl": {
+											"type": "string",
+											"nullable": true
+										},
+										"githubLogin": {
+											"type": "string",
+											"nullable": true
+										},
+										"githubName": {
+											"type": "string",
+											"nullable": true
+										},
+										"id": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"githubAvatarUrl",
+										"githubLogin",
+										"githubName",
+										"id"
+									],
+									"type": "object"
+								}
+							},
+							"required": [
+								"authoredIssuesCount",
+								"assignedIssuesCount"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"issuesOpennedCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"issuesClosedCount": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"issueDataPerContributor",
+					"issuesOpennedCount",
+					"issuesClosedCount"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IssueMetricQueryDTO": {
+				"properties": {
+					"startedAt": {
+						"type": "string",
+						"format": "date"
+					},
+					"endedAt": {
+						"type": "string",
+						"format": "date"
+					},
+					"contributor": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"filterWithNoContributor": {
+						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CommitQualityMetricsDTO": {
+				"properties": {
+					"generalCommitQualityLevel": {
+						"items": {
+							"properties": {
+								"qualityLevelCount": {
+									"type": "number",
+									"format": "double"
+								},
+								"qualityLevel": {
+									"type": "number",
+									"format": "double"
+								}
+							},
+							"required": [
+								"qualityLevelCount",
+								"qualityLevel"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"commitQualityPerContributor": {
+						"items": {
+							"properties": {
+								"commitQualityLevel": {
+									"items": {
+										"properties": {
+											"qualityLevelCount": {
+												"type": "number",
+												"format": "double"
+											},
+											"qualityLevel": {
+												"type": "number",
+												"format": "double"
+											}
+										},
+										"required": [
+											"qualityLevelCount",
+											"qualityLevel"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								},
+								"contributor": {
+									"properties": {
+										"githubAvatarUrl": {
+											"type": "string"
+										},
+										"githubLogin": {
+											"type": "string"
+										},
+										"githubName": {
+											"type": "string"
+										},
+										"id": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"githubAvatarUrl",
+										"githubLogin",
+										"githubName",
+										"id"
+									],
+									"type": "object"
+								}
+							},
+							"required": [
+								"commitQualityLevel"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"generalCommitQualityLevel",
+					"commitQualityPerContributor"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -504,7 +1066,8 @@
 					},
 					"evaluationMethodId": {
 						"type": "integer",
-						"format": "int32"
+						"format": "int32",
+						"minimum": 1
 					}
 				},
 				"required": [
@@ -534,7 +1097,8 @@
 					},
 					"evaluationMethodId": {
 						"type": "integer",
-						"format": "int32"
+						"format": "int32",
+						"minimum": 1
 					}
 				},
 				"required": [
@@ -593,7 +1157,139 @@
 					},
 					"evaluationMethodId": {
 						"type": "integer",
-						"format": "int32"
+						"format": "int32",
+						"minimum": 1
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StandardizedIssueResponseDTO": {
+				"description": "StandardizedIssueResponseDTO - Could be used to structure the response object when sending StandardizedIssues to the client.",
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"evaluationMethodId": {
+						"type": "number",
+						"format": "double"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"id",
+					"evaluationMethodId",
+					"title"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StandardizedIssueCreateDTO": {
+				"description": "StandardizedIssueCreateDTO - Used for creating a new StandardizedIssue.",
+				"properties": {
+					"evaluationMethodId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"title": {
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 255
+					},
+					"description": {
+						"type": "string",
+						"nullable": true,
+						"minLength": 1
+					}
+				},
+				"required": [
+					"evaluationMethodId",
+					"title"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StandardizedIssueUpdateDTO": {
+				"description": "StandardizedIssueUpdateDTO - Used for updating an existing StandardizedIssue.",
+				"properties": {
+					"evaluationMethodId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"title": {
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 255
+					},
+					"description": {
+						"type": "string",
+						"nullable": true,
+						"minLength": 1
+					}
+				},
+				"required": [
+					"evaluationMethodId",
+					"title"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PaginationResponseDTO_StandardizedIssueResponseDTO_": {
+				"properties": {
+					"results": {
+						"items": {
+							"$ref": "#/components/schemas/StandardizedIssueResponseDTO"
+						},
+						"type": "array"
+					},
+					"totalPages": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"results",
+					"totalPages"
+				],
+				"type": "object"
+			},
+			"StandardizedIssueSearchDTO": {
+				"description": "StandardizedIssueSearchDTO - Used for searching through StandardizedIssues with pagination and filters.",
+				"properties": {
+					"page": {
+						"type": "integer",
+						"format": "int32",
+						"default": "1",
+						"minimum": 1
+					},
+					"limit": {
+						"type": "integer",
+						"format": "int32",
+						"default": "10",
+						"minimum": 1
+					},
+					"evaluationMethodId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"title": {
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 255
+					},
+					"description": {
+						"type": "string",
+						"minLength": 1
 					}
 				},
 				"type": "object",
@@ -622,6 +1318,449 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
+		"/repository/{repositoryId}/branch": {
+			"get": {
+				"operationId": "GetByRepositoryId",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"results": {
+											"items": {
+												"$ref": "#/components/schemas/BranchDTO"
+											},
+											"type": "array"
+										},
+										"totalPages": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"results",
+										"totalPages"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"branch"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					}
+				]
+			}
+		},
+		"/consistency-rule": {
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"201": {
+						"description": "ConsistencyRule created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ConsistencyRuleResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"evaluationMethodId": 1,
+											"sprintId": 1,
+											"standardizedIssueId": 1,
+											"description": "ConsistencyRule 1 description",
+											"filePath": "/Documentacao/DocumentoDoProjeto.pdf",
+											"validationType": "DEFAULT"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a new ConsistencyRule.",
+				"tags": [
+					"consistency-rule"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ConsistencyRuleCreateDTO"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Found consistency rules",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PaginationResponseDTO_ConsistencyRuleResponseDTO_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"totalPages": 1,
+											"results": [
+												{
+													"id": 1,
+													"evaluationMethodId": 1,
+													"sprintId": 1,
+													"standardizedIssueId": 1,
+													"description": "ConsistencyRule 1 description",
+													"filePath": "/Documentacao/DocumentoDoProjeto.pdf",
+													"validationType": "DEFAULT"
+												},
+												{
+													"id": 2,
+													"evaluationMethodId": 1,
+													"sprintId": 1,
+													"standardizedIssueId": 1,
+													"description": "ConsistencyRule 2 description",
+													"filePath": "CITATION.cff",
+													"validationType": "CFF"
+												}
+											]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all ConsistencyRules with pagination and filter.",
+				"tags": [
+					"consistency-rule"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": "1",
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"default": "10",
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "evaluationMethodId",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "sprintId",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "standardizedIssueId",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "description",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "filePath",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "validationType",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/ValidationType"
+						}
+					}
+				]
+			}
+		},
+		"/consistency-rule/{id}": {
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "ConsistencyRule updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ConsistencyRuleResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"evaluationMethodId": 1,
+											"sprintId": 1,
+											"standardizedIssueId": 1,
+											"description": "ConsistencyRule 1 description",
+											"filePath": "/Documentacao/DocumentoDoProjeto.pdf",
+											"validationType": "DEFAULT"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Update an existing ConsistencyRule by id.\nNeed body with all fields.",
+				"tags": [
+					"consistency-rule"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ConsistencyRuleUpdateDTO"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetOne",
+				"responses": {
+					"200": {
+						"description": "Found consistency rule",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ConsistencyRuleResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"evaluationMethodId": 1,
+											"sprintId": 1,
+											"standardizedIssueId": 1,
+											"description": "ConsistencyRule 1 description",
+											"filePath": "/Documentacao/DocumentoDoProjeto.pdf",
+											"validationType": "DEFAULT"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Get an existing ConsistencyRule by id.",
+				"tags": [
+					"consistency-rule"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/repository/{repositoryId}/contributor": {
+			"get": {
+				"operationId": "FindbyRepositoryId",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"results": {
+											"items": {
+												"$ref": "#/components/schemas/ContributorDTO"
+											},
+											"type": "array"
+										},
+										"totalPages": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"results",
+										"totalPages"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"contributor"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					}
+				]
+			}
+		},
 		"/evaluation-method": {
 			"post": {
 				"operationId": "Create",
@@ -936,7 +2075,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PaginationResponseDTO_RepositoryDTO_"
+									"$ref": "#/components/schemas/PaginationResponseDTO_RepositoryResponseDTO_"
 								}
 							}
 						}
@@ -995,6 +2134,61 @@
 			}
 		},
 		"/repository/{id}": {
+			"get": {
+				"operationId": "GetById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RepositoryResponseDTO"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"repository"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					}
+				]
+			},
 			"patch": {
 				"operationId": "Patch",
 				"responses": {
@@ -1003,7 +2197,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/RepositoryDTO"
+									"$ref": "#/components/schemas/RepositoryResponseDTO"
 								},
 								"examples": {
 									"Example 1": {
@@ -1038,7 +2232,6 @@
 						}
 					}
 				},
-				"description": "Update a repository.",
 				"tags": [
 					"repository"
 				],
@@ -1051,7 +2244,6 @@
 				],
 				"parameters": [
 					{
-						"description": "Id of the repository to update.",
 						"in": "path",
 						"name": "id",
 						"required": true,
@@ -1062,13 +2254,11 @@
 					}
 				],
 				"requestBody": {
-					"description": "Body of the request.",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/RepositoryPatchDTO",
-								"description": "Body of the request."
+								"$ref": "#/components/schemas/RepositoryPatchDTO"
 							}
 						}
 					}
@@ -1106,8 +2296,27 @@
 						"name": "repositoryId",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "startedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "endedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
 						}
 					},
 					{
@@ -1116,6 +2325,25 @@
 						"required": false,
 						"schema": {
 							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "contributor",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "filterWithNoContributor",
+						"required": false,
+						"schema": {
+							"type": "boolean"
 						}
 					}
 				]
@@ -1152,8 +2380,27 @@
 						"name": "repositoryId",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "startedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "endedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
 						}
 					},
 					{
@@ -1162,6 +2409,269 @@
 						"required": false,
 						"schema": {
 							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "contributor",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "filterWithNoContributor",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/repository/{repositoryId}/metric/file-types": {
+			"get": {
+				"operationId": "GetFileTypesMetrics",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FileTypeMetricsDTO"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"metrics"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "startedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "endedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "branchName",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "contributor",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "filterWithNoContributor",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/repository/{repositoryId}/metric/issues": {
+			"get": {
+				"operationId": "GetIssuesMetrics",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IssueMetricsDTO"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"metrics"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "startedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "endedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "contributor",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "filterWithNoContributor",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/repository/{repositoryId}/metric/commit-quality": {
+			"get": {
+				"operationId": "GetCommitQualityMetrics",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CommitQualityMetricsDTO"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"metrics"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "startedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "endedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "branchName",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "contributor",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "filterWithNoContributor",
+						"required": false,
+						"schema": {
+							"type": "boolean"
 						}
 					}
 				]
@@ -1312,7 +2822,8 @@
 						"required": false,
 						"schema": {
 							"format": "int32",
-							"type": "integer"
+							"type": "integer",
+							"minimum": 1
 						}
 					}
 				]
@@ -1405,6 +2916,251 @@
 				"description": "Get an existing Sprint by id.",
 				"tags": [
 					"sprint"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/standardized-issue": {
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"201": {
+						"description": "StandardizedIssue created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/StandardizedIssueResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"evaluationMethodId": 1,
+											"title": "StandardizedIssue 1 title",
+											"description": "StandardizedIssue 1 description"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"standardized-issue"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/StandardizedIssueCreateDTO"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Found standardized issues",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PaginationResponseDTO_StandardizedIssueResponseDTO_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"totalPages": 1,
+											"results": [
+												{
+													"id": 1,
+													"evaluationMethodId": 1,
+													"title": "StandardizedIssue 1 title",
+													"description": "StandardizedIssue 1 description"
+												}
+											]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"standardized-issue"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": "1",
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"default": "10",
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "evaluationMethodId",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "title",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"minLength": 1,
+							"maxLength": 255
+						}
+					},
+					{
+						"in": "query",
+						"name": "description",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"minLength": 1
+						}
+					}
+				]
+			}
+		},
+		"/standardized-issue/{id}": {
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "StandardizedIssue updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/StandardizedIssueResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"evaluationMethodId": 1,
+											"title": "StandardizedIssue 1 title",
+											"description": "StandardizedIssue 1 description"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"standardized-issue"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/StandardizedIssueUpdateDTO"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetOne",
+				"responses": {
+					"200": {
+						"description": "Found standardized issue",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/StandardizedIssueResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"evaluationMethodId": 1,
+											"title": "StandardizedIssue 1 title",
+											"description": "StandardizedIssue 1 description"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"standardized-issue"
 				],
 				"security": [
 					{

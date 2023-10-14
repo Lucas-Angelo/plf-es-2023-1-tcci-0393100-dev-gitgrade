@@ -5,6 +5,7 @@ export interface FileChangeMetricsServiceQueryDataValues {
     githubAvatarUrl: string;
     additionSum: string;
     deletionsSum: string;
+    fileCount: string;
 }
 
 export interface FileChangeMetricsServiceResponse {
@@ -12,4 +13,5 @@ export interface FileChangeMetricsServiceResponse {
 
     totalAdditions: number;
     totalDeletions: number;
+    fileCount: number;
 }

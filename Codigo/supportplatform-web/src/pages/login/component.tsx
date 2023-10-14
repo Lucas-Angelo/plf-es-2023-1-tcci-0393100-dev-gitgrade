@@ -1,16 +1,19 @@
-import { Box, Avatar, Text } from "@primer/react";
+import { Box, Avatar, Text, Spinner } from "@primer/react";
 
 import GitGradeLogoPng from "../../assets/logo.png";
 import SigninButton from "./components/signinButton";
 import { LoginService } from "../../commom/service/api/login";
 import appRoutes from "../../commom/routes/appRoutes";
 import { useSearchParams } from "react-router-dom";
+import { useState } from "react";
 
 const pageSearchParams = appRoutes.login.search;
 
 export default function LoginPage() {
+    const [isRedirecting, setIsRedirecting] = useState(false);
     function handleSigninButtonClick() {
         new LoginService().redirectToGithubAuth();
+        setIsRedirecting(true);
     }
 
     const [searchParams] = useSearchParams();
@@ -72,6 +75,14 @@ export default function LoginPage() {
                     >
                         {message}
                     </Text>
+                )}
+
+                {isRedirecting && (
+                    <Spinner
+                        sx={{
+                            mt: 4,
+                        }}
+                    />
                 )}
             </Box>
         </Box>

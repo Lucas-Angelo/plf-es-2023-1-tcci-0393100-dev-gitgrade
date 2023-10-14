@@ -5,10 +5,10 @@ import {
 } from "@gitgrade/dtos";
 import { Op, Sequelize } from "sequelize";
 import logger from "../config/LogConfig";
+import { getTotalPages, sequelizePagination } from "../utils/pagination";
 import AppError from "../error/AppError";
 import { EvaluationMethod } from "../model/EvaluationMethod";
 import { Repository } from "../model/Repository";
-import { sequelizePagination } from "../utils/pagination";
 import EvaluationMethodService from "./EvaluationMethodService";
 import { RepositoryWhereClauseType } from "../interface/Repository";
 
@@ -41,10 +41,22 @@ export default class RepositoryService {
             });
             return {
                 results: rows,
-                totalPages: Math.ceil(count / search.limit) || 1,
+                totalPages: getTotalPages(count, search.limit),
             };
         } catch (error) {
             logger.error("Error finding all repositories:", { error });
+            throw error;
+        }
+    }
+
+    async findById(id: number): Promise<Repository | null> {
+        try {
+            logger.info("Searching for repository by id:", { id });
+            const repository = await Repository.findByPk(id);
+
+            return repository;
+        } catch (error) {
+            logger.error("Error finding repository by id:", { error });
             throw error;
         }
     }

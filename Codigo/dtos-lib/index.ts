@@ -1,4 +1,21 @@
+import { CommitQualityMetricsDTO } from "./dto/commitMetrics";
+import {
+  FileTypeMetricsDTO,
+  FileTypeMetricDTO,
+} from "./dto/fileMetrics";
+import { BranchDTO, GetAllBranchQueryDTO } from "./dto/branch";
+import { ContributorDTO, GetAllContributorQueryDTO } from "./dto/contributor";
+import { RepositoryMetricQueryDTO } from "./dto/repositoryMetrics";
+import { IssueMetricQueryDTO, IssueMetricsDTO } from "./dto/issueMetrics";
+
 import { CommitMetricsDTO } from "./dto/commitMetrics";
+import {
+  ConsistencyRuleCreateDTO,
+  ConsistencyRuleFindOneDTO,
+  ConsistencyRuleResponseDTO,
+  ConsistencyRuleSearchDTO,
+  ConsistencyRuleUpdateDTO,
+} from "./dto/consistencyRule";
 import {
   EvaluationMethodCreateDTO,
   EvaluationMethodFindOneDTO,
@@ -9,7 +26,7 @@ import {
 import { FileChangeMetricsDTO } from "./dto/fileMetrics";
 import {
   GetAllRepositoryQueryDTO,
-  RepositoryDTO,
+  RepositoryResponseDTO,
   RepositoryPatchDTO,
 } from "./dto/repository";
 import {
@@ -19,25 +36,53 @@ import {
   SprintSearchDTO,
   SprintUpdateDTO,
 } from "./dto/sprint";
+import {
+  StandardizedIssueCreateDTO,
+  StandardizedIssueFindOneDTO,
+  StandardizedIssueResponseDTO,
+  StandardizedIssueSearchDTO,
+  StandardizedIssueUpdateDTO,
+} from "./dto/standardizedIssue";
 import { PaginationResponseDTO } from "./utils/pagination";
 import { ErrorResponseDTO } from './utils/error';
 
 export type {
-  CommitMetricsDTO,
+  ConsistencyRuleCreateDTO,
+  ConsistencyRuleFindOneDTO,
+  ConsistencyRuleResponseDTO,
+  ConsistencyRuleSearchDTO,
+  ConsistencyRuleUpdateDTO,
   EvaluationMethodCreateDTO,
   EvaluationMethodFindOneDTO,
   EvaluationMethodResponseDTO,
   EvaluationMethodSearchDTO,
   EvaluationMethodUpdateDTO,
-  FileChangeMetricsDTO,
-  GetAllRepositoryQueryDTO,
-  PaginationResponseDTO,
-  RepositoryDTO,
   RepositoryPatchDTO,
   SprintCreateDTO,
   SprintFindOneDTO,
   SprintResponseDTO,
   SprintSearchDTO,
   SprintUpdateDTO,
+  
+  RepositoryResponseDTO,
+  PaginationResponseDTO,
+  GetAllRepositoryQueryDTO,
+  CommitMetricsDTO,
+  FileChangeMetricsDTO,
+  BranchDTO,
+  GetAllBranchQueryDTO,
+  ContributorDTO,
+  GetAllContributorQueryDTO,
   ErrorResponseDTO,
+  RepositoryMetricQueryDTO,
+  FileTypeMetricsDTO,
+  FileTypeMetricDTO,
+  IssueMetricQueryDTO,
+  IssueMetricsDTO,
+  CommitQualityMetricsDTO,
+  StandardizedIssueCreateDTO,
+  StandardizedIssueFindOneDTO,
+  StandardizedIssueResponseDTO,
+  StandardizedIssueSearchDTO,
+  StandardizedIssueUpdateDTO,
 };

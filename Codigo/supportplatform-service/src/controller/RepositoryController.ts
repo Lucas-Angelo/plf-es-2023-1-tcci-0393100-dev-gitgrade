@@ -1,7 +1,7 @@
 import {
     GetAllRepositoryQueryDTO,
     PaginationResponseDTO,
-    RepositoryDTO,
+    RepositoryResponseDTO,
     RepositoryPatchDTO,
 } from "@gitgrade/dtos";
 import {
@@ -12,10 +12,12 @@ import {
     Patch,
     Path,
     Queries,
+    Res,
     Route,
     Security,
     SuccessResponse,
     Tags,
+    TsoaResponse,
 } from "tsoa";
 import { RepositoryMapper } from "../mapper/RepositoryMapper";
 import RepositoryService from "../service/RepositoryService";
@@ -25,17 +27,19 @@ import RepositoryService from "../service/RepositoryService";
 @Tags("repository")
 export class RepositoryController extends Controller {
     private repositoryService: RepositoryService;
+    private repositoryMapper: RepositoryMapper;
 
     constructor() {
         super();
         this.repositoryService = new RepositoryService();
+        this.repositoryMapper = new RepositoryMapper();
     }
 
     @Get("/")
     @SuccessResponse("200", "Found repositories")
     public async getAll(
         @Queries() query: GetAllRepositoryQueryDTO
-    ): Promise<PaginationResponseDTO<RepositoryDTO>> {
+    ): Promise<PaginationResponseDTO<RepositoryResponseDTO>> {
         this.setStatus(200);
         const serviceResponse = await this.repositoryService.findAll({
             limit: query.limit ?? 10,
@@ -43,20 +47,40 @@ export class RepositoryController extends Controller {
             filter: query.filter,
             evaluationMethodId: query.evaluationMethodId,
         });
-        const mapper = new RepositoryMapper();
+
+        this.setStatus(200);
+
         return {
             totalPages: serviceResponse.totalPages,
-            results: serviceResponse.results.map(mapper.toDto),
+            results: serviceResponse.results.map(this.repositoryMapper.toDto),
         };
     }
 
     /**
+     * @param id @isInt id id must be an integer
+     * @param id @minimum id 1 id must be greater than or equal to 1
+     */
+    @Get("/{id}")
+    public async getById(
+        id: number,
+        @Res() notFoundResponse: TsoaResponse<404, { message: string }>
+    ): Promise<RepositoryResponseDTO> {
+        const serviceResponse = await this.repositoryService.findById(id);
+
+        if (!serviceResponse) {
+            return notFoundResponse(404, { message: "Repository not found" });
+        }
+        const mapper = new RepositoryMapper();
+        return mapper.toDto(serviceResponse);
+    }
+
+    /*
      * Update a repository.
      * @param id Id of the repository to update.
      * @param body Body of the request.
      * @returns The updated repository.
      */
-    @Example<RepositoryDTO>({
+    @Example<RepositoryResponseDTO>({
         id: 1,
         evaluationMethod: {
             id: 1,
@@ -86,7 +110,7 @@ export class RepositoryController extends Controller {
     public async patch(
         @Path() id: number,
         @Body() body: RepositoryPatchDTO
-    ): Promise<RepositoryDTO> {
+    ): Promise<RepositoryResponseDTO> {
         this.setStatus(200);
         const serviceResponse = await this.repositoryService.patch(id, body);
         const mapper = new RepositoryMapper();

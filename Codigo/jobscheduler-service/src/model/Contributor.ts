@@ -97,7 +97,6 @@ class Contributor extends Model<IContributorAttributes> {
             foreignKey: "contributor_id",
             as: "commits",
         });
-
         this.hasMany(models.Issue, {
             foreignKey: "authorContributorId",
             as: "authoredIssues",

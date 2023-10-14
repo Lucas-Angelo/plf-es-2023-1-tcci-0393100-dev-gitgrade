@@ -5,7 +5,7 @@ import { ErrorResponseDTO } from "@gitgrade/dtos";
 import { toast } from "react-toastify";
 import { RepositoryService } from "../../../../../commom/service/api/repository";
 import queryClient from "../../../../../commom/data/client";
-import { getRepoQuery } from "../../../../../commom/data/repo";
+import { getRepositoryQuery } from "../../../../../commom/data/repo";
 
 const pageUrlParams = appRoutes.evaluationMethod.detail.repo.detail.getParams();
 type PageUrlParam = (typeof pageUrlParams)[number];
@@ -31,7 +31,7 @@ export default async function EvaluationMethodRepositoryAction({
         await new RepositoryService().patch(repoId, {
             evaluationMethodId,
         });
-        queryClient.removeQueries(getRepoQuery());
+        queryClient.removeQueries(getRepositoryQuery());
 
         toast.success(
             "Repositório adicionado ao método avaliativo com sucesso!"

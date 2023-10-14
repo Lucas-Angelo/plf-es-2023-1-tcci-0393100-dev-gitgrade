@@ -1,5 +1,5 @@
 import { Box, Link, Pagination, Spinner, TextInput } from "@primer/react";
-import { useRepoList } from "../../../../../../commom/data/repo";
+import { useRepositoryList } from "../../../../../../commom/data/repo";
 import React, { useRef, useState } from "react";
 import { SearchIcon } from "@primer/octicons-react";
 import { useFetcher, useSearchParams } from "react-router-dom";
@@ -10,7 +10,7 @@ export default function LinkRepositoryModal() {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
 
-    const { data, isLoading } = useRepoList({
+    const { data, isLoading } = useRepositoryList({
         evaluationMethodId: null,
         page,
         limit: 5,

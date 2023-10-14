@@ -18,6 +18,7 @@ export interface SprintCreateDTO {
   end_date: Date;
   /**
    * @isInt evaluationMethodId must be an integer
+   * @minimum 1 evaluationMethodId must be greater than or equal to 1
    */
   evaluationMethodId: number;
 }
@@ -42,6 +43,7 @@ export interface SprintUpdateDTO {
   end_date: Date;
   /**
    * @isInt evaluationMethodId must be an integer
+   * @minimum 1 evaluationMethodId must be greater than or equal to 1
    */
   evaluationMethodId: number;
 }
@@ -81,6 +83,7 @@ export interface SprintSearchDTO {
   end_date?: Date;
   /**
    * @isInt evaluationMethodId must be an integer
+   * @minimum 1 evaluationMethodId must be greater than or equal to 1
    * @isOptional evaluationMethodId is optional
    */
   evaluationMethodId?: number;
@@ -114,6 +117,7 @@ export interface SprintFindOneDTO {
   end_date?: Date;
   /**
    * @isInt evaluationMethodId must be an integer
+   * @minimum 1 evaluationMethodId must be greater than or equal to 1
    * @isOptional evaluationMethodId is optional
    */
   evaluationMethodId?: number;
