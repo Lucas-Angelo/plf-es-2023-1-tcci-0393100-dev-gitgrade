@@ -1,8 +1,20 @@
+import env from "../config/env";
+
 const appRoutes = {
     base: {
         path: "/" as const,
         link() {
             return this.path;
+        },
+    },
+    login: {
+        path: "login" as const,
+        link() {
+            return `/${this.path}` as const;
+        },
+        // necessary to map query string param name per a trustable variable
+        search: {
+            message: env.oauthFailureSearchParam,
         },
     },
     repo: {
