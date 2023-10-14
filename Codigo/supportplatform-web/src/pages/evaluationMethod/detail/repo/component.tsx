@@ -3,8 +3,8 @@ import { useLoaderData, useSearchParams } from "react-router-dom";
 import appRoutes from "../../../../commom/routes/appRoutes";
 import { EvaluationMethodRepoListPageLoaderData } from "./loader";
 import EvaluationMethodRepoFilter from "./components/evaluationMethodRepoFilter";
-import RepoCard from "../../../../commom/components/repoCard";
 import LinkRepositoryButton from "./components/linkRepositoryButton";
+import EvaluationMethodRepository from "./components/evaluationMethodRepository";
 
 const pageSearchParams = appRoutes.evaluationMethod.detail.repo.search;
 
@@ -35,16 +35,11 @@ export default function EvaluationMethodRepositoryListPage() {
                     </Box>
                 )}
                 {loaderData.results.map((repo) => (
-                    <Box
-                        sx={{ mb: 3 }}
+                    <EvaluationMethodRepository
                         key={repo.id}
-                    >
-                        <RepoCard
-                            name={repo.name}
-                            id={repo.id}
-                            key={repo.id}
-                        />
-                    </Box>
+                        id={repo.id}
+                        name={repo.name}
+                    />
                 ))}
             </Box>
 

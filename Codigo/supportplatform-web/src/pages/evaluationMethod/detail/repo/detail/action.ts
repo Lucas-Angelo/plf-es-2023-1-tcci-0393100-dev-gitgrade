@@ -12,6 +12,7 @@ type PageUrlParam = (typeof pageUrlParams)[number];
 
 export default async function EvaluationMethodRepositoryAction({
     params,
+    request,
 }: ActionFunctionArgs) {
     const { id: evaluationMethodIdParam, repoId: repoIdParam } =
         params as Params<PageUrlParam>;
@@ -27,28 +28,57 @@ export default async function EvaluationMethodRepositoryAction({
     const repoId = Number(repoIdParam);
     if (Number.isNaN(repoId)) throw new Error("Invalid repo id");
 
-    try {
-        await new RepositoryService().patch(repoId, {
-            evaluationMethodId,
-        });
-        queryClient.removeQueries(getRepositoryQuery());
+    if (request.method === "post" || request.method === "POST") {
+        try {
+            await new RepositoryService().patch(repoId, {
+                evaluationMethodId,
+            });
+            queryClient.removeQueries(getRepositoryQuery());
 
-        toast.success(
-            "Repositório adicionado ao método avaliativo com sucesso!"
-        );
-
-        return { success: true };
-    } catch (error) {
-        const axiosResponse = error as AxiosError<ErrorResponseDTO>;
-        if (!axiosResponse.response) {
-            toast.error("Não foi possível se conectar ao servidor...");
-        } else {
-            toast.error(
-                axiosResponse.response?.data.message ??
-                    "Não foi possível atualizar o método avaliativo"
+            toast.success(
+                "Repositório adicionado ao método avaliativo com sucesso!"
             );
-        }
 
-        return { error: axiosResponse.response?.data.message };
+            return { success: true };
+        } catch (error) {
+            const axiosResponse = error as AxiosError<ErrorResponseDTO>;
+            if (!axiosResponse.response) {
+                toast.error("Não foi possível se conectar ao servidor...");
+            } else {
+                toast.error(
+                    axiosResponse.response?.data.message ??
+                        "Não foi possível atualizar o método avaliativo"
+                );
+            }
+
+            return { error: axiosResponse.response?.data.message };
+        }
+    } else if (request.method === "delete" || request.method === "DELETE") {
+        try {
+            await new RepositoryService().patch(repoId, {
+                evaluationMethodId: null,
+            });
+            queryClient.removeQueries(getRepositoryQuery());
+
+            toast.success(
+                "Repositório removido do método avaliativo com sucesso!"
+            );
+
+            return { success: true };
+        } catch (error) {
+            const axiosResponse = error as AxiosError<ErrorResponseDTO>;
+            if (!axiosResponse.response) {
+                toast.error("Não foi possível se conectar ao servidor...");
+            } else {
+                toast.error(
+                    axiosResponse.response?.data.message ??
+                        "Não foi possível atualizar o método avaliativo"
+                );
+            }
+
+            return { error: axiosResponse.response?.data.message };
+        }
+    } else {
+        return null;
     }
 }

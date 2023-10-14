@@ -4,10 +4,10 @@ import { Box } from "@primer/react";
 
 export default function PageLoadingIndicator() {
     const navigation = useNavigation();
+
     return (
         <>
-            {navigation.state === "loading" ||
-            navigation.state === "submitting" ? (
+            {navigation.state === "loading" ? (
                 <Box sx={{ width: "100%", position: "sticky", top: 0 }}>
                     <LinearLoading />
                 </Box>
