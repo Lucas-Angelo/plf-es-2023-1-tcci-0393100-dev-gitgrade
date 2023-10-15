@@ -19,27 +19,28 @@ export default function EvaluationMethodRepository(
                 name={props.name}
                 id={props.id}
                 key={props.id}
-            />
-            <fetcher.Form
-                method="delete"
-                action={props.id.toString()}
             >
-                <Box
-                    sx={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                    }}
+                <fetcher.Form
+                    method="delete"
+                    action={props.id.toString()}
                 >
-                    <Button
-                        variant="invisible"
-                        leadingIcon={XIcon}
-                        disabled={fetcher.state === "submitting"}
-                        type="submit"
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                        }}
                     >
-                        Remover
-                    </Button>
-                </Box>
-            </fetcher.Form>
+                        <Button
+                            variant="danger"
+                            leadingIcon={XIcon}
+                            disabled={fetcher.state === "submitting"}
+                            type="submit"
+                        >
+                            Remover
+                        </Button>
+                    </Box>
+                </fetcher.Form>
+            </RepoCard>
         </Box>
     );
 }

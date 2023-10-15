@@ -3,11 +3,13 @@ import Card from "../card";
 import { Button, Label, Link as PrimerLink, Octicon } from "@primer/react";
 import { RepoIcon } from "@primer/octicons-react";
 import appRoutes from "../../routes/appRoutes";
+import React from "react";
 
 interface IRepoCardProps {
     id: number;
     name: string;
     evaluationMethodName?: string;
+    children?: React.ReactNode;
 }
 
 export default function RepoCard(props: IRepoCardProps) {
@@ -31,6 +33,7 @@ export default function RepoCard(props: IRepoCardProps) {
                 </Card.Labels>
             )}
             <Card.Actions>
+                {props.children}
                 <Button>Sincronizar</Button>
                 <Link
                     to={appRoutes.repo["detail"].link(props.id)}
