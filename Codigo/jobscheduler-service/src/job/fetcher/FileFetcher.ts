@@ -1,3 +1,4 @@
+import logger from "@/config/LogConfig";
 import { BranchService } from "../../service/BranchService";
 import { CommitService } from "../../service/CommitService";
 import { FileService } from "../../service/FileService";
@@ -45,6 +46,14 @@ class FileFetcher {
                             repository.name!,
                             commit.sha
                         )) || [];
+
+                    if (!files) {
+                        logger.error(
+                            "Error on fetching files, files is null:",
+                            { repository, branch, commit }
+                        );
+                        continue;
+                    }
 
                     for (const fileData of files) {
                         if (fileData.status === "removed") {

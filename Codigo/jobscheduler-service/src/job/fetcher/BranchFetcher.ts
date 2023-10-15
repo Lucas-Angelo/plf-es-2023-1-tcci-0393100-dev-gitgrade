@@ -34,6 +34,14 @@ class BranchFetcher {
                     repository.name!
                 );
 
+                if (!branches) {
+                    logger.error(
+                        "Error on fetching branches, branches is null:",
+                        { repository, branches }
+                    );
+                    continue;
+                }
+
                 for (const branchData of branches) {
                     if (!branchData.name) {
                         logger.error(

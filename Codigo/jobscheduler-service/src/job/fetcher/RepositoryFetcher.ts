@@ -25,6 +25,13 @@ class RepositoryFetcher {
                 () => this.gitHubRepositoryService.getAllRepositories(),
                 "Error fetching repositories"
             );
+            if (!repositories) {
+                logger.error(
+                    "Error on fetching repositories, repositories is null:",
+                    { repositories }
+                );
+                return;
+            }
             if (repositories.length == 0) logger.warn("No repositories found");
 
             for (const repoData of repositories)
