@@ -1,4 +1,4 @@
-import logger from "@/config/LogConfig";
+import logger from "../../config/LogConfig";
 import { BranchService } from "../../service/BranchService";
 import { CommitService } from "../../service/CommitService";
 import { FileService } from "../../service/FileService";
