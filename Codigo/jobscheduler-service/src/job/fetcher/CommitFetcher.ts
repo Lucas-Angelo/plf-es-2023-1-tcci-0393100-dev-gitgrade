@@ -58,6 +58,14 @@ class CommitFetcher {
                         branch.name
                     );
 
+                    if (!commits) {
+                        logger.error(
+                            "Error on fetching commits, commits is null:",
+                            { repository, branch }
+                        );
+                        continue;
+                    }
+
                     for (const commitData of commits) {
                         if (!commitData.sha || !commitData.commit) {
                             logger.error(

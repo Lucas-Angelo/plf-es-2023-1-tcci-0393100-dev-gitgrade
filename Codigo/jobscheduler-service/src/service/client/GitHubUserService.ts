@@ -1,5 +1,4 @@
 import GitHubApi from "../../config/GitHubApiConfig";
-import logger from "../../config/LogConfig";
 
 import { Endpoints } from "@octokit/types";
 
@@ -17,7 +16,8 @@ class GitHubUserService {
 
             return userDetails.data;
         } catch (error: unknown) {
-            logger.error("Error fetching user by username:", { error });
+            // Flood for commits without users
+            // logger.error("Error fetching user by username:", { error });
             throw new Error(
                 "Error fetching user by username: " + (error as Error).message
             );
