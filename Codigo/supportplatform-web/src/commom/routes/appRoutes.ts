@@ -18,6 +18,8 @@ const appRoutes = {
                 editEvaluationMethod: "editEvaluationMethod",
                 linkRepositoryToEvaluationMethod:
                     "linkRepositoryToEvaluationMethod",
+                createSprint: "createSprint",
+                editSprint: "editSprint",
             },
         },
     },
@@ -289,6 +291,38 @@ const appRoutes = {
                     return `${appRoutes.evaluationMethod.detail.link(id)}/${
                         this.path
                     }`;
+                },
+                // necessary to map query string param name per a trustable variable
+                search: {
+                    page: "page",
+                    name: "name",
+                    start_date: "start_date",
+                    end_date: "end_date",
+                },
+                // nested routes
+                detail: {
+                    path: ":sprintId" as const,
+                    link(id: number, sprintId: number) {
+                        const path = this.path.replace(
+                            ":sprintId",
+                            sprintId.toString()
+                        );
+                        return `${appRoutes.evaluationMethod.detail.sprint.link(
+                            id
+                        )}/${path}`;
+                    },
+                    params: ["sprintId"] as const,
+                    getParams() {
+                        return [
+                            ...appRoutes.evaluationMethod.detail.params,
+                            ...this.params,
+                        ] as const;
+                    },
+
+                    // necessary to map query string param name per a trustable variable
+                    search: {
+                        id: "id",
+                    },
                 },
             },
             standardizedIssue: {

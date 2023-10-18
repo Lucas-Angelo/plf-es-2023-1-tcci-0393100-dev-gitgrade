@@ -5,7 +5,7 @@ import {
     SprintSearchDTO,
     SprintUpdateDTO,
 } from "@gitgrade/dtos";
-import { Op } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 import logger from "../config/LogConfig";
 import AppError from "../error/AppError";
 import { SprintWhereClauseType } from "../interface/Sprint";
@@ -118,9 +118,7 @@ export default class SprintService {
 
             const { rows, count } = await Sprint.findAndCountAll({
                 ...sequelizePagination(search.page || 1, search.limit || 10),
-                where: Object.keys(whereClause).length
-                    ? whereClause
-                    : undefined,
+                where: whereClause,
             });
 
             logger.info("Successfully found all sprints: ", {
@@ -190,24 +188,44 @@ export default class SprintService {
     private _constructWhereClause(
         filter: SprintFindOneDTO | SprintSearchDTO
     ): SprintWhereClauseType {
-        const whereClause: SprintWhereClauseType = {};
+        const whereConditions: SprintWhereClauseType[typeof Op.and] = [];
 
         if (filter.start_date) {
-            whereClause.start_date = {
-                [Op.gte]: filter.start_date,
-            };
+            whereConditions.push({
+                start_date: {
+                    [Op.gte]: filter.start_date,
+                },
+            });
         }
 
         if (filter.end_date) {
-            whereClause.end_date = {
-                [Op.lte]: filter.end_date,
-            };
+            whereConditions.push({
+                end_date: {
+                    [Op.lte]: filter.end_date,
+                },
+            });
         }
 
         if (filter.evaluationMethodId) {
-            whereClause.evaluationMethodId = filter.evaluationMethodId;
+            whereConditions.push({
+                evaluationMethodId: filter.evaluationMethodId,
+            });
         }
 
+        if (filter.name) {
+            whereConditions.push(
+                Sequelize.where(
+                    Sequelize.fn("lower", Sequelize.col("name")),
+                    Op.like,
+                    `%${filter.name.toLowerCase()}%`
+                )
+            );
+        }
+        logger.info("Constructed where conditions: ", { whereConditions });
+
+        const whereClause = {
+            [Op.and]: whereConditions,
+        };
         return whereClause;
     }
 
