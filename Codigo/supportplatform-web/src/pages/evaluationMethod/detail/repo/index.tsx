@@ -1,7 +1,7 @@
-import EvaluationMethodStandadizedIssueListPage from "./component";
+import EvaluationMethodStandardizedIssueListPage from "./component";
 import EvaluationMethodRepositoryListLoader from "./loader";
 
 export {
-    EvaluationMethodStandadizedIssueListPage as Component,
+    EvaluationMethodStandardizedIssueListPage as Component,
     EvaluationMethodRepositoryListLoader as loader,
 };
