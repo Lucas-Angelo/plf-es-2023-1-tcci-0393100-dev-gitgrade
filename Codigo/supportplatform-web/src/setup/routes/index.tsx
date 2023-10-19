@@ -324,7 +324,19 @@ const routes = createRoutesFromElements(
                                     "../../pages/evaluationMethod/detail/consistencyRule/index"
                                 )
                             }
-                        />
+                        >
+                            <Route
+                                path={
+                                    appRoutes.evaluationMethod.detail
+                                        .consistencyRule.detail.path
+                                }
+                                lazy={() =>
+                                    import(
+                                        "../../pages/evaluationMethod/detail/consistencyRule/detail/index"
+                                    )
+                                }
+                            />
+                        </Route>
                         <Route
                             path={appRoutes.evaluationMethod.detail.sprint.path}
                             lazy={() =>
