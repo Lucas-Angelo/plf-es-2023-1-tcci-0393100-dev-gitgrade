@@ -52,7 +52,14 @@ export default class RepositoryService {
     async findById(id: number): Promise<Repository | null> {
         try {
             logger.info("Searching for repository by id:", { id });
-            const repository = await Repository.findByPk(id);
+            const repository = await Repository.findByPk(id, {
+                include: [
+                    {
+                        model: EvaluationMethod,
+                        as: "evaluationMethod",
+                    },
+                ],
+            });
 
             return repository;
         } catch (error) {

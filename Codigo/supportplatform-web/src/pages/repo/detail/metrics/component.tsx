@@ -27,6 +27,7 @@ export default function RepositoryMetricsPage() {
             <Box display={["block", "block", "block", "table-cell"]}>
                 <DateFilter
                     repositoryGithubCreatedAt={repositoryData?.githubCreatedAt}
+                    evaluationMethodId={repositoryData?.evaluationMethod?.id}
                 />
                 <Divider />
                 <Outlet />
