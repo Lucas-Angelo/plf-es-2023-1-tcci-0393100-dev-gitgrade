@@ -15,7 +15,7 @@ export class StandardizedIssueValidator {
                     value: title,
                 },
             });
-        } else if (title && title.length > 255) {
+        } else if (title && String(title).length > 255) {
             errors.push({
                 title: {
                     message: "Máximo de 255 caracteres",
