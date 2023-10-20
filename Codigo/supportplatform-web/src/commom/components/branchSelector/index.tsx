@@ -17,7 +17,7 @@ export default function BranchSelector(props: IBranchSelectorProps) {
 
     const orderedBranches = useMemo(
         () =>
-            branchesData?.results?.sort((a, b) => {
+            (branchesData?.results ?? []).sort((a, b) => {
                 if (a.name === props.defaultBranchName) return -1;
                 if (b.name === props.defaultBranchName) return 1;
                 return 0;
