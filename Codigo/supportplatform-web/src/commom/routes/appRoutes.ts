@@ -20,6 +20,8 @@ const appRoutes = {
                     "linkRepositoryToEvaluationMethod",
                 createSprint: "createSprint",
                 editSprint: "editSprint",
+                createStandardizedIssue: "createStandardizedIssue",
+                editStandardizedIssue: "editStandardizedIssue",
             },
         },
     },
@@ -331,6 +333,36 @@ const appRoutes = {
                     return `${appRoutes.evaluationMethod.detail.link(id)}/${
                         this.path
                     }`;
+                },
+                // necessary to map query string param name per a trustable variable
+                search: {
+                    page: "page",
+                    title: "title",
+                },
+                // nested routes
+                detail: {
+                    path: ":standardizedIssueId" as const,
+                    link(id: number, standardizedIssueId: number) {
+                        const path = this.path.replace(
+                            ":standardizedIssueId",
+                            standardizedIssueId.toString()
+                        );
+                        return `${appRoutes.evaluationMethod.detail.standardizedIssue.link(
+                            id
+                        )}/${path}`;
+                    },
+                    params: ["standardizedIssueId"] as const,
+                    getParams() {
+                        return [
+                            ...appRoutes.evaluationMethod.detail.params,
+                            ...this.params,
+                        ] as const;
+                    },
+
+                    // necessary to map query string param name per a trustable variable
+                    search: {
+                        id: "id",
+                    },
                 },
             },
         },
