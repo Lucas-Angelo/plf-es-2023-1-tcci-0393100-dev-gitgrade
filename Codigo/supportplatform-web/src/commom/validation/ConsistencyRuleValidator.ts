@@ -19,7 +19,7 @@ export class ConsistencyRuleValidator {
         } = formDataValues;
         const errors = [];
 
-        if (description && description.length > 255) {
+        if (description && String(description).length > 255) {
             errors.push({
                 description: {
                     message: "Máximo de 255 caracteres",
@@ -34,7 +34,7 @@ export class ConsistencyRuleValidator {
                     value: filePath,
                 },
             });
-        } else if (filePath && filePath.length > 10000) {
+        } else if (filePath && String(filePath).length > 10000) {
             errors.push({
                 filePath: {
                     message: "Máximo de 255 caracteres",
