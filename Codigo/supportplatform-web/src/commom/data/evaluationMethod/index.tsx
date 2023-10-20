@@ -20,7 +20,7 @@ export const useEvaluationMethodList = (
 ) => useQuery(getEvaluationMethodQuery(filterOptions));
 
 export const getEvaluationMethodByIdQuery = (id: number) => ({
-    queryKey: ["evaluationMethod", id],
+    queryKey: ["evaluationMethod", id] as const,
     queryFn: async () =>
         new EvaluationMethodService().getById(id).then((res) => res.data),
     staleTime: Number.MAX_VALUE,

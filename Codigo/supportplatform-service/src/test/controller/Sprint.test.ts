@@ -89,16 +89,27 @@ describe(`GET ${baseRoute}`, () => {
         expect(response.body.totalPages).toBe(1);
     });
 
+    it("should return 200 when filtering name equal '1' and return 1 result and 1 pages", async () => {
+        const response = await supertest(app)
+            .get(`${baseRoute}?name=1`)
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        expect(response.body.results).toHaveLength(4);
+        expect(response.body.totalPages).toBe(1);
+    });
+
     it("should return 200 when apply all filters", async () => {
         const response = await supertest(app)
             .get(
-                `${baseRoute}?start_date=2023-01-01&end_date=2023-02-15&evaluationMethodId=13`
+                `${baseRoute}?start_date=2023-01-01&end_date=2023-02-15&evaluationMethodId=13&name=2`
             )
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
             .send();
 
-        expect(response.body.results).toHaveLength(3);
+        expect(response.body.results).toHaveLength(1);
         expect(response.body.totalPages).toBe(1);
     });
 

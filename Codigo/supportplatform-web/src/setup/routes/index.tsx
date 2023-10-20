@@ -332,7 +332,19 @@ const routes = createRoutesFromElements(
                                     "../../pages/evaluationMethod/detail/sprint/index"
                                 )
                             }
-                        />
+                        >
+                            <Route
+                                path={
+                                    appRoutes.evaluationMethod.detail.sprint
+                                        .detail.path
+                                }
+                                lazy={() =>
+                                    import(
+                                        "../../pages/evaluationMethod/detail/sprint/detail/index"
+                                    )
+                                }
+                            />
+                        </Route>
                         <Route
                             path={
                                 appRoutes.evaluationMethod.detail
