@@ -19,7 +19,7 @@ export default function LinesOfCodeMetricsVisualizerControl() {
                 <SegmentedButtonLink
                     leadingIcon={DiffAddedIcon}
                     to={appRoutes.repo[
-                        ":id"
+                        "detail"
                     ].metrics.linesOfCode.addtions.path.concat(
                         searchParamsString
                     )}
@@ -29,7 +29,7 @@ export default function LinesOfCodeMetricsVisualizerControl() {
                 <SegmentedButtonLink
                     leadingIcon={DiffRemovedIcon}
                     to={appRoutes.repo[
-                        ":id"
+                        "detail"
                     ].metrics.linesOfCode.deletions.path.concat(
                         searchParamsString
                     )}
@@ -39,7 +39,7 @@ export default function LinesOfCodeMetricsVisualizerControl() {
                 <SegmentedButtonLink
                     leadingIcon={DiffModifiedIcon}
                     to={appRoutes.repo[
-                        ":id"
+                        "detail"
                     ].metrics.linesOfCode.relative.path.concat(
                         searchParamsString
                     )}

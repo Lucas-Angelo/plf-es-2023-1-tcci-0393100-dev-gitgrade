@@ -217,6 +217,7 @@ const models: TsoaRoute.Models = {
             "page": {"dataType":"integer","validators":{"isInt":{"errorMsg":"page must be an integer"},"minimum":{"errorMsg":"page must be greater than or equal to 1","value":1}}},
             "limit": {"dataType":"integer","validators":{"isInt":{"errorMsg":"limit must be an integer"},"minimum":{"errorMsg":"limit must be greater than or equal to 1","value":1}}},
             "filter": {"dataType":"string"},
+            "evaluationMethodId": {"dataType":"union","subSchemas":[{"dataType":"integer"},{"dataType":"enum","enums":[null]}],"validators":{"isInt":{"errorMsg":"evaluationMethodId must be an integer"},"minimum":{"errorMsg":"evaluationMethodId must be greater than or equal to 1","value":1}}},
         },
         "additionalProperties": false,
     },

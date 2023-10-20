@@ -7,7 +7,7 @@ interface IBranchQueryNavigationMenuProps {
     repositoryId: number;
 }
 
-const pageRouteSearchParams = appRoutes.repo[":id"].metrics.search;
+const pageRouteSearchParams = appRoutes.repo["detail"].metrics.search;
 
 export default function BranchQueryNavigationMenu(
     props: IBranchQueryNavigationMenuProps

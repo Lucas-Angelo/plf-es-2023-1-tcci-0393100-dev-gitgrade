@@ -13,15 +13,15 @@ export default function IssuesMetricsVisualizerControl() {
                 aria-describedby="scCaption-horiz"
             >
                 <SegmentedButtonLink
-                    to={appRoutes.repo[":id"].metrics.issues.author.path.concat(
-                        searchParamsString
-                    )}
+                    to={appRoutes.repo[
+                        "detail"
+                    ].metrics.issues.author.path.concat(searchParamsString)}
                 >
                     Autor
                 </SegmentedButtonLink>
                 <SegmentedButtonLink
                     to={appRoutes.repo[
-                        ":id"
+                        "detail"
                     ].metrics.issues.assignee.path.concat(searchParamsString)}
                 >
                     Atribuído

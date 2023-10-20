@@ -33,7 +33,7 @@ interface IRepoHeadProps {
     }>;
 }
 
-const repoRoutes = appRoutes.repo[":id"];
+const repoRoutes = appRoutes.repo["detail"];
 
 export default function RepoHead(props: IRepoHeadProps) {
     return (

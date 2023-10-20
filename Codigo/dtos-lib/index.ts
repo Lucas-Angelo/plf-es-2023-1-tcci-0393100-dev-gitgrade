@@ -5,7 +5,6 @@ import {
 } from "./dto/fileMetrics";
 import { BranchDTO, GetAllBranchQueryDTO } from "./dto/branch";
 import { ContributorDTO, GetAllContributorQueryDTO } from "./dto/contributor";
-import { ErrorResponseDTO } from "./utils/error";
 import { RepositoryMetricQueryDTO } from "./dto/repositoryMetrics";
 import { IssueMetricQueryDTO, IssueMetricsDTO } from "./dto/issueMetrics";
 
@@ -45,6 +44,7 @@ import {
   StandardizedIssueUpdateDTO,
 } from "./dto/standardizedIssue";
 import { PaginationResponseDTO } from "./utils/pagination";
+import { ErrorResponseDTO } from './utils/error';
 
 export type {
   ConsistencyRuleCreateDTO,

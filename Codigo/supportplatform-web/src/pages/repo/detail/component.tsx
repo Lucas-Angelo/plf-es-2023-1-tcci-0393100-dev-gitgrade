@@ -5,7 +5,7 @@ import appRoutes from "../../../commom/routes/appRoutes";
 import { useRepositoryById } from "../../../commom/data/repo";
 import { useContributorsByRepositoryId } from "../../../commom/data/contributor";
 
-const pageRouteParams = appRoutes.repo[":id"].params;
+const pageRouteParams = appRoutes.repo["detail"].params;
 type PageRouteParams = (typeof pageRouteParams)[number];
 
 export default function RepoPage() {

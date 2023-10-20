@@ -1,39 +1,39 @@
 import { Link } from "react-router-dom";
 import Card from "../../../../../commom/components/card";
-import { Button, Label, Link as PrimerLink, Octicon } from "@primer/react";
-import { RepoIcon } from "@primer/octicons-react";
+import { Button, Link as PrimerLink, Octicon } from "@primer/react";
+import { ArchiveIcon } from "@primer/octicons-react";
 import appRoutes from "../../../../../commom/routes/appRoutes";
 
-interface IRepoCardProps {
+interface IEvaluationMethodCardProps {
     id: number;
     name: string;
-    evaluationMethodName?: string;
+    semester: number;
+    year: number;
 }
 
-export default function RepoCard(props: IRepoCardProps) {
+export default function EvaluationMethodCard(
+    props: IEvaluationMethodCardProps
+) {
     return (
         <Card.Root>
             <Card.Title>
                 <Octicon
-                    icon={RepoIcon}
+                    icon={ArchiveIcon}
                     sx={{ mr: 2 }}
                 />
                 <Link
-                    to={appRoutes.repo[":id"].link(props.id)}
+                    to={appRoutes.evaluationMethod["detail"].link(props.id)}
                     style={{ textDecoration: "none" }}
                 >
-                    <PrimerLink as="span">{props.name}</PrimerLink>
+                    <PrimerLink as="span">
+                        {props.name} - {props.year}/{props.semester}
+                    </PrimerLink>
                 </Link>
             </Card.Title>
-            {props.evaluationMethodName && (
-                <Card.Labels>
-                    <Label variant="accent">{props.evaluationMethodName}</Label>
-                </Card.Labels>
-            )}
             <Card.Actions>
-                <Button>Sincronizar</Button>
+                <Button>Duplicar</Button>
                 <Link
-                    to={appRoutes.repo[":id"].link(props.id)}
+                    to={appRoutes.evaluationMethod["detail"].link(props.id)}
                     style={{ textDecoration: "none" }}
                 >
                     <Button variant="primary">Abrir</Button>

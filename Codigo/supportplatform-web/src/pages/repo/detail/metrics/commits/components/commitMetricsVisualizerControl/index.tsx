@@ -15,14 +15,14 @@ export default function CommitMetricsVisualizerControl() {
                 <SegmentedButtonLink
                     leadingIcon={HashIcon}
                     to={appRoutes.repo[
-                        ":id"
+                        "detail"
                     ].metrics.commits.absolute.path.concat(searchParamsString)}
                 >
                     Quantidade
                 </SegmentedButtonLink>
                 <SegmentedButtonLink
                     to={appRoutes.repo[
-                        ":id"
+                        "detail"
                     ].metrics.commits.percentual.path.concat(
                         searchParamsString
                     )}

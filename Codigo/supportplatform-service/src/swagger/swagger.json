@@ -555,6 +555,12 @@
 					},
 					"filter": {
 						"type": "string"
+					},
+					"evaluationMethodId": {
+						"type": "integer",
+						"format": "int32",
+						"nullable": true,
+						"minimum": 1
 					}
 				},
 				"type": "object",
@@ -2112,6 +2118,16 @@
 						"required": false,
 						"schema": {
 							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "evaluationMethodId",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
 						}
 					}
 				]

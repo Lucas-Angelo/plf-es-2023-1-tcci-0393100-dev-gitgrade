@@ -36,11 +36,11 @@ const routes = createRoutesFromElements(
                         lazy={() => import("../../pages/repo/list/index")}
                     />
                     <Route
-                        path={appRoutes.repo[":id"].path}
+                        path={appRoutes.repo.detail.path}
                         lazy={() => import("../../pages/repo/detail/index")}
                     >
                         <Route
-                            path={appRoutes.repo[":id"].metrics.path}
+                            path={appRoutes.repo.detail.metrics.path}
                             lazy={() =>
                                 import("../../pages/repo/detail/metrics/index")
                             }
@@ -48,7 +48,7 @@ const routes = createRoutesFromElements(
                         >
                             <Route
                                 path={
-                                    appRoutes.repo[":id"].metrics.commits.path
+                                    appRoutes.repo.detail.metrics.commits.path
                                 }
                                 lazy={() =>
                                     import(
@@ -58,7 +58,7 @@ const routes = createRoutesFromElements(
                             >
                                 <Route
                                     path={
-                                        appRoutes.repo[":id"].metrics.commits
+                                        appRoutes.repo.detail.metrics.commits
                                             .absolute.path
                                     }
                                     lazy={() =>
@@ -69,7 +69,7 @@ const routes = createRoutesFromElements(
                                 />
                                 <Route
                                     path={
-                                        appRoutes.repo[":id"].metrics.commits
+                                        appRoutes.repo.detail.metrics.commits
                                             .percentual.path
                                     }
                                     lazy={() =>
@@ -83,7 +83,7 @@ const routes = createRoutesFromElements(
                                     element={
                                         <NavigateMaintainingSearchParams
                                             to={
-                                                appRoutes.repo[":id"].metrics
+                                                appRoutes.repo.detail.metrics
                                                     .commits.absolute.path
                                             }
                                             replace
@@ -93,7 +93,7 @@ const routes = createRoutesFromElements(
                             </Route>
                             <Route
                                 path={
-                                    appRoutes.repo[":id"].metrics.fileTypes.path
+                                    appRoutes.repo.detail.metrics.fileTypes.path
                                 }
                                 lazy={() =>
                                     import(
@@ -103,7 +103,7 @@ const routes = createRoutesFromElements(
                             />
                             <Route
                                 path={
-                                    appRoutes.repo[":id"].metrics.linesOfCode
+                                    appRoutes.repo.detail.metrics.linesOfCode
                                         .path
                                 }
                                 lazy={() =>
@@ -114,7 +114,7 @@ const routes = createRoutesFromElements(
                             >
                                 <Route
                                     path={
-                                        appRoutes.repo[":id"].metrics
+                                        appRoutes.repo.detail.metrics
                                             .linesOfCode.addtions.path
                                     }
                                     lazy={() =>
@@ -125,7 +125,7 @@ const routes = createRoutesFromElements(
                                 />
                                 <Route
                                     path={
-                                        appRoutes.repo[":id"].metrics
+                                        appRoutes.repo.detail.metrics
                                             .linesOfCode.deletions.path
                                     }
                                     lazy={() =>
@@ -136,7 +136,7 @@ const routes = createRoutesFromElements(
                                 />
                                 <Route
                                     path={
-                                        appRoutes.repo[":id"].metrics
+                                        appRoutes.repo.detail.metrics
                                             .linesOfCode.relative.path
                                     }
                                     lazy={() =>
@@ -150,7 +150,7 @@ const routes = createRoutesFromElements(
                                     element={
                                         <NavigateMaintainingSearchParams
                                             to={
-                                                appRoutes.repo[":id"].metrics
+                                                appRoutes.repo.detail.metrics
                                                     .linesOfCode.addtions.path
                                             }
                                             replace
@@ -160,7 +160,7 @@ const routes = createRoutesFromElements(
                             </Route>
                             <Route
                                 path={
-                                    appRoutes.repo[":id"].metrics
+                                    appRoutes.repo.detail.metrics
                                         .fileContributions.path
                                 }
                                 lazy={() =>
@@ -171,7 +171,7 @@ const routes = createRoutesFromElements(
                             />
                             <Route
                                 path={
-                                    appRoutes.repo[":id"].metrics.commitQuality
+                                    appRoutes.repo.detail.metrics.commitQuality
                                         .path
                                 }
                                 lazy={() =>
@@ -181,7 +181,7 @@ const routes = createRoutesFromElements(
                                 }
                             />
                             <Route
-                                path={appRoutes.repo[":id"].metrics.issues.path}
+                                path={appRoutes.repo.detail.metrics.issues.path}
                                 lazy={() =>
                                     import(
                                         "../../pages/repo/detail/metrics/issues/index"
@@ -190,7 +190,7 @@ const routes = createRoutesFromElements(
                             >
                                 <Route
                                     path={
-                                        appRoutes.repo[":id"].metrics.issues
+                                        appRoutes.repo.detail.metrics.issues
                                             .author.path
                                     }
                                     lazy={() =>
@@ -202,7 +202,7 @@ const routes = createRoutesFromElements(
 
                                 <Route
                                     path={
-                                        appRoutes.repo[":id"].metrics.issues
+                                        appRoutes.repo.detail.metrics.issues
                                             .assignee.path
                                     }
                                     lazy={() =>
@@ -217,7 +217,7 @@ const routes = createRoutesFromElements(
                                     element={
                                         <NavigateMaintainingSearchParams
                                             to={
-                                                appRoutes.repo[":id"].metrics
+                                                appRoutes.repo.detail.metrics
                                                     .issues.author.path
                                             }
                                         />
@@ -231,7 +231,7 @@ const routes = createRoutesFromElements(
                                     <Navigate
                                         replace
                                         to={
-                                            appRoutes.repo[":id"].metrics
+                                            appRoutes.repo.detail.metrics
                                                 .commits.path
                                         }
                                     />
@@ -239,19 +239,19 @@ const routes = createRoutesFromElements(
                             />
                         </Route>
                         <Route
-                            path={appRoutes.repo[":id"].quality.path}
+                            path={appRoutes.repo.detail.quality.path}
                             element={<>quality</>}
                         />
                         <Route
-                            path={appRoutes.repo[":id"].commits.path}
+                            path={appRoutes.repo.detail.commits.path}
                             element={<>commits</>}
                         />
                         <Route
-                            path={appRoutes.repo[":id"].consistency.path}
+                            path={appRoutes.repo.detail.consistency.path}
                             element={<>consistency</>}
                         />
                         <Route
-                            path={appRoutes.repo[":id"].config.path}
+                            path={appRoutes.repo.detail.config.path}
                             lazy={() =>
                                 import("../../pages/repo/detail/config/index")
                             }
@@ -262,7 +262,7 @@ const routes = createRoutesFromElements(
                             element={
                                 <Navigate
                                     replace
-                                    to={appRoutes.repo[":id"].metrics.path}
+                                    to={appRoutes.repo.detail.metrics.path}
                                 />
                             }
                         />
@@ -278,13 +278,85 @@ const routes = createRoutesFromElements(
                     />
                 </Route>
 
-                <Route path={appRoutes.evaluationMethod.path}>
+                <Route
+                    path={appRoutes.evaluationMethod.path}
+                    lazy={() => import("../../pages/evaluationMethod/index")}
+                >
                     <Route
                         path={appRoutes.evaluationMethod.list.path}
                         lazy={() =>
                             import("../../pages/evaluationMethod/list/index")
                         }
                     />
+                    <Route
+                        path={appRoutes.evaluationMethod.detail.path}
+                        lazy={() =>
+                            import("../../pages/evaluationMethod/detail/index")
+                        }
+                    >
+                        <Route
+                            path={appRoutes.evaluationMethod.detail.repo.path}
+                            lazy={() =>
+                                import(
+                                    "../../pages/evaluationMethod/detail/repo/index"
+                                )
+                            }
+                        >
+                            <Route
+                                path={
+                                    appRoutes.evaluationMethod.detail.repo
+                                        .detail.path
+                                }
+                                lazy={() =>
+                                    import(
+                                        "../../pages/evaluationMethod/detail/repo/detail/index"
+                                    )
+                                }
+                            />
+                        </Route>
+                        <Route
+                            path={
+                                appRoutes.evaluationMethod.detail
+                                    .consistencyRule.path
+                            }
+                            lazy={() =>
+                                import(
+                                    "../../pages/evaluationMethod/detail/consistencyRule/index"
+                                )
+                            }
+                        />
+                        <Route
+                            path={appRoutes.evaluationMethod.detail.sprint.path}
+                            lazy={() =>
+                                import(
+                                    "../../pages/evaluationMethod/detail/sprint/index"
+                                )
+                            }
+                        />
+                        <Route
+                            path={
+                                appRoutes.evaluationMethod.detail
+                                    .standardizedIssue.path
+                            }
+                            lazy={() =>
+                                import(
+                                    "../../pages/evaluationMethod/detail/standardizedIssue/index"
+                                )
+                            }
+                        />
+                        <Route
+                            path=""
+                            element={
+                                <Navigate
+                                    replace
+                                    to={
+                                        appRoutes.evaluationMethod.detail.repo
+                                            .path
+                                    }
+                                />
+                            }
+                        />
+                    </Route>
                     <Route
                         path=""
                         element={

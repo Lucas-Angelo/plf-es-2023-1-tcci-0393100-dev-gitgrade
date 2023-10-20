@@ -6,6 +6,20 @@ const appRoutes = {
         link() {
             return this.path;
         },
+
+        // necessary to map query string param name per a trustable variable
+        search: {
+            modal: "modal",
+        },
+        // necessary to map enum search params per a trustable variable
+        searchValues: {
+            modal: {
+                createEvaluationMethod: "createEvaluationMethod",
+                editEvaluationMethod: "editEvaluationMethod",
+                linkRepositoryToEvaluationMethod:
+                    "linkRepositoryToEvaluationMethod",
+            },
+        },
     },
     login: {
         path: "login" as const,
@@ -36,7 +50,7 @@ const appRoutes = {
             },
         },
 
-        ":id": {
+        detail: {
             path: ":id" as const,
             link(id: number) {
                 const path = this.path.replace(":id", id.toString());
@@ -48,7 +62,7 @@ const appRoutes = {
             metrics: {
                 path: "metrics" as const,
                 link(id: number) {
-                    return `${appRoutes.repo[":id"].link(id)}/${this.path}`;
+                    return `${appRoutes.repo.detail.link(id)}/${this.path}`;
                 },
                 // necessary to map query string param name per a trustable variable
                 search: {
@@ -63,7 +77,7 @@ const appRoutes = {
                 commits: {
                     path: "commits" as const,
                     link(id: number) {
-                        return `${appRoutes.repo[":id"].metrics.link(id)}/${
+                        return `${appRoutes.repo.detail.metrics.link(id)}/${
                             this.path
                         }`;
                     },
@@ -72,24 +86,24 @@ const appRoutes = {
                     absolute: {
                         path: "absolute" as const,
                         link(id: number) {
-                            return `${appRoutes.repo[
-                                ":id"
-                            ].metrics.commits.link(id)}/${this.path}`;
+                            return `${appRoutes.repo.detail.metrics.commits.link(
+                                id
+                            )}/${this.path}`;
                         },
                     },
                     percentual: {
                         path: "percentual" as const,
                         link(id: number) {
-                            return `${appRoutes.repo[
-                                ":id"
-                            ].metrics.commits.link(id)}/${this.path}`;
+                            return `${appRoutes.repo.detail.metrics.commits.link(
+                                id
+                            )}/${this.path}`;
                         },
                     },
                 },
                 fileTypes: {
                     path: "file-types" as const,
                     link(id: number) {
-                        return `${appRoutes.repo[":id"].metrics.link(id)}/${
+                        return `${appRoutes.repo.detail.metrics.link(id)}/${
                             this.path
                         }`;
                     },
@@ -97,7 +111,7 @@ const appRoutes = {
                 linesOfCode: {
                     path: "lines-of-code" as const,
                     link(id: number) {
-                        return `${appRoutes.repo[":id"].metrics.link(id)}/${
+                        return `${appRoutes.repo.detail.metrics.link(id)}/${
                             this.path
                         }`;
                     },
@@ -106,32 +120,32 @@ const appRoutes = {
                     addtions: {
                         path: "addtions" as const,
                         link(id: number) {
-                            return `${appRoutes.repo[
-                                ":id"
-                            ].metrics.linesOfCode.link(id)}/${this.path}`;
+                            return `${appRoutes.repo.detail.metrics.linesOfCode.link(
+                                id
+                            )}/${this.path}`;
                         },
                     },
                     deletions: {
                         path: "deletions" as const,
                         link(id: number) {
-                            return `${appRoutes.repo[
-                                ":id"
-                            ].metrics.linesOfCode.link(id)}/${this.path}`;
+                            return `${appRoutes.repo.detail.metrics.linesOfCode.link(
+                                id
+                            )}/${this.path}`;
                         },
                     },
                     relative: {
                         path: "relative" as const,
                         link(id: number) {
-                            return `${appRoutes.repo[
-                                ":id"
-                            ].metrics.linesOfCode.link(id)}/${this.path}`;
+                            return `${appRoutes.repo.detail.metrics.linesOfCode.link(
+                                id
+                            )}/${this.path}`;
                         },
                     },
                 },
                 fileContributions: {
                     path: "file-contributions" as const,
                     link(id: number) {
-                        return `${appRoutes.repo[":id"].metrics.link(id)}/${
+                        return `${appRoutes.repo.detail.metrics.link(id)}/${
                             this.path
                         }`;
                     },
@@ -139,7 +153,7 @@ const appRoutes = {
                 commitQuality: {
                     path: "commit-quality" as const,
                     link(id: number) {
-                        return `${appRoutes.repo[":id"].metrics.link(id)}/${
+                        return `${appRoutes.repo.detail.metrics.link(id)}/${
                             this.path
                         }`;
                     },
@@ -147,7 +161,7 @@ const appRoutes = {
                 issues: {
                     path: "issues" as const,
                     link(id: number) {
-                        return `${appRoutes.repo[":id"].metrics.link(id)}/${
+                        return `${appRoutes.repo.detail.metrics.link(id)}/${
                             this.path
                         }`;
                     },
@@ -156,7 +170,7 @@ const appRoutes = {
                     author: {
                         path: "author" as const,
                         link(id: number) {
-                            return `${appRoutes.repo[":id"].metrics.issues.link(
+                            return `${appRoutes.repo.detail.metrics.issues.link(
                                 id
                             )}/${this.path}`;
                         },
@@ -164,7 +178,7 @@ const appRoutes = {
                     assignee: {
                         path: "assignee" as const,
                         link(id: number) {
-                            return `${appRoutes.repo[":id"].metrics.issues.link(
+                            return `${appRoutes.repo.detail.metrics.issues.link(
                                 id
                             )}/${this.path}`;
                         },
@@ -174,32 +188,32 @@ const appRoutes = {
             quality: {
                 path: "quality" as const,
                 link(id: number) {
-                    return `${appRoutes.repo[":id"].link(id)}/${this.path}`;
+                    return `${appRoutes.repo.detail.link(id)}/${this.path}`;
                 },
             },
             commits: {
                 path: "commits" as const,
                 link(id: number) {
-                    return `${appRoutes.repo[":id"].link(id)}/${this.path}`;
+                    return `${appRoutes.repo.detail.link(id)}/${this.path}`;
                 },
             },
             consistency: {
                 path: "consistency" as const,
                 link(id: number) {
-                    return `${appRoutes.repo[":id"].link(id)}/${this.path}`;
+                    return `${appRoutes.repo.detail.link(id)}/${this.path}`;
                 },
             },
             config: {
                 path: "config" as const,
                 link(id: number) {
-                    return `${appRoutes.repo[":id"].link(id)}/${this.path}`;
+                    return `${appRoutes.repo.detail.link(id)}/${this.path}`;
                 },
             },
         },
     },
 
     evaluationMethod: {
-        path: "eval" as const,
+        path: "evaluationMethod" as const,
         link() {
             return `/${this.path}` as const;
         },
@@ -211,6 +225,79 @@ const appRoutes = {
                 return `${appRoutes.evaluationMethod.link()}/${
                     this.path
                 }` as const;
+            },
+
+            // necessary to map query string param name per a trustable variable
+            search: {
+                page: "page",
+                description: "description",
+            },
+        },
+        detail: {
+            path: ":id" as const,
+            link(id: number) {
+                const path = this.path.replace(":id", id.toString());
+                return `${appRoutes.evaluationMethod.link()}/${path}`;
+            },
+            params: ["id"] as const,
+
+            // nested routes
+            repo: {
+                path: "repo" as const,
+                link(id: number) {
+                    return `${appRoutes.evaluationMethod.detail.link(id)}/${
+                        this.path
+                    }`;
+                },
+                // necessary to map query string param name per a trustable variable
+                search: {
+                    page: "page",
+                    filter: "filter",
+                },
+                // nested routes
+                detail: {
+                    path: ":repoId" as const,
+                    link(id: number, repoId: number) {
+                        const path = this.path.replace(
+                            ":repoId",
+                            repoId.toString()
+                        );
+                        return `${appRoutes.evaluationMethod.detail.repo.link(
+                            id
+                        )}/${path}`;
+                    },
+                    params: ["repoId"] as const,
+                    getParams() {
+                        return [
+                            ...appRoutes.evaluationMethod.detail.params,
+                            ...this.params,
+                        ] as const;
+                    },
+                },
+            },
+            consistencyRule: {
+                path: "consistencyRule" as const,
+                link(id: number) {
+                    return `${appRoutes.evaluationMethod.detail.link(id)}/${
+                        this.path
+                    }`;
+                },
+            },
+            sprint: {
+                path: "sprint" as const,
+                link(id: number) {
+                    return `${appRoutes.evaluationMethod.detail.link(id)}/${
+                        this.path
+                    }`;
+                },
+            },
+            standardizedIssue: {
+                path: "standardizedIssue" as const,
+                link(id: number) {
+                    return `${appRoutes.evaluationMethod.detail.link(id)}/${
+                        this.path
+                    }`;
+                },
             },
         },
     },

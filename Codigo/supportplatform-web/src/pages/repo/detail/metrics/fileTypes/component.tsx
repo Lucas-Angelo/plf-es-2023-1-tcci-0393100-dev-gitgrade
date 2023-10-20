@@ -6,10 +6,10 @@ import { useSearchParams } from "react-router-dom";
 import { useFileTypeMetricsGroupedByContributorByRepositoryId } from "../../../../../commom/data/repo/metrics/fileTypes";
 import ChartDetails from "../components/chartDetails";
 
-const pageRouteParams = appRoutes.repo[":id"].params;
+const pageRouteParams = appRoutes.repo["detail"].params;
 type PageRouteParams = (typeof pageRouteParams)[number];
 
-const pageRouteSearchParams = appRoutes.repo[":id"].metrics.search;
+const pageRouteSearchParams = appRoutes.repo["detail"].metrics.search;
 
 export default function RepositoryFileTypeMetricsPage() {
     const params = useParams<PageRouteParams>();

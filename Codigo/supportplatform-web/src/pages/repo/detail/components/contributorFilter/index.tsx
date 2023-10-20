@@ -17,7 +17,7 @@ interface IContributorFilterProps {
     }>;
 }
 
-const pageSearchParams = appRoutes.repo[":id"].metrics.search;
+const pageSearchParams = appRoutes.repo["detail"].metrics.search;
 
 export default function ContributorFilter(props: IContributorFilterProps) {
     const [searchParams, setSearchParams] = useSearchParams();

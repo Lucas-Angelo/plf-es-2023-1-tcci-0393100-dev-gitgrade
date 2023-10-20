@@ -1,7 +1,7 @@
 import { PageLayout, Pagination, Box } from "@primer/react";
 import { useLoaderData, useSearchParams } from "react-router-dom";
 import appRoutes from "../../../commom/routes/appRoutes";
-import RepoCard from "./components/repoCard";
+import RepoCard from "../../../commom/components/repoCard";
 import { RepoListPageLoaderData } from "./loader";
 import RepoFilter from "./components/repoFilter";
 

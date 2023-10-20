@@ -6,7 +6,7 @@ import DateFilter from "./components/dateFilter";
 import appRoutes from "../../../../commom/routes/appRoutes";
 import { useRepositoryById } from "../../../../commom/data/repo";
 
-const pageRouteParams = appRoutes.repo[":id"].params;
+const pageRouteParams = appRoutes.repo["detail"].params;
 type PageRouteParams = (typeof pageRouteParams)[number];
 
 export default function RepositoryMetricsPage() {

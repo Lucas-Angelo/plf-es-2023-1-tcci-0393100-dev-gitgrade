@@ -2,10 +2,10 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { useIssuesMetricsGroupedByContributorByRepositoryId } from "../../../../../../commom/data/repo/metrics/issues";
 import appRoutes from "../../../../../../commom/routes/appRoutes";
 
-const pageRouteParams = appRoutes.repo[":id"].params;
+const pageRouteParams = appRoutes.repo["detail"].params;
 type PageRouteParams = (typeof pageRouteParams)[number];
 
-const pageRouteSearchParams = appRoutes.repo[":id"].metrics.search;
+const pageRouteSearchParams = appRoutes.repo["detail"].metrics.search;
 
 export function usePageIssueMetricsData() {
     const params = useParams<PageRouteParams>();

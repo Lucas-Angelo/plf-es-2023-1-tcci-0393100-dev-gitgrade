@@ -3,7 +3,7 @@ import { loadQueryData } from "../../../../../commom/data/utils/load";
 import appRoutes from "../../../../../commom/routes/appRoutes";
 import { getFileChangesMetricsGroupedByContributorByRepositoryIdQuery } from "../../../../../commom/data/repo/metrics/fileChanges";
 
-const pageRouteSearchParams = appRoutes.repo[":id"].metrics.search;
+const pageRouteSearchParams = appRoutes.repo.detail.metrics.search;
 
 export default function repositoryLinesOfCodeMetricsPageLoader({
     params,

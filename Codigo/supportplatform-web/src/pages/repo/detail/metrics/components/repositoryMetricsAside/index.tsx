@@ -7,9 +7,9 @@ import Divider from "../../../../../../commom/components/divider";
 import BranchQueryNavigationMenu from "../branchQueryNavigationMenu";
 import { useSearchParamsString } from "../../../../../../commom/hooks/useRemainingSearchParams";
 
-const repositoryMetricsRoutes = appRoutes.repo[":id"].metrics;
+const repositoryMetricsRoutes = appRoutes.repo["detail"].metrics;
 
-const pageRouteParams = appRoutes.repo[":id"].params;
+const pageRouteParams = appRoutes.repo["detail"].params;
 type PageRouteParams = (typeof pageRouteParams)[number];
 
 export default function RepositoryMetricsAside() {

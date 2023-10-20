@@ -3,10 +3,10 @@ import { useSearchParams } from "react-router-dom";
 import { useCommitMetricsGroupedByContributorByRepositoryId } from "../../../../../../commom/data/repo/metrics/commits";
 import appRoutes from "../../../../../../commom/routes/appRoutes";
 
-const pageRouteParams = appRoutes.repo[":id"].params;
+const pageRouteParams = appRoutes.repo["detail"].params;
 type PageRouteParams = (typeof pageRouteParams)[number];
 
-const pageRouteSearchParams = appRoutes.repo[":id"].metrics.search;
+const pageRouteSearchParams = appRoutes.repo["detail"].metrics.search;
 
 export function useCommitMetricsPageData() {
     const params = useParams<PageRouteParams>();

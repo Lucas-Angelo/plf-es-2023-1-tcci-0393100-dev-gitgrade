@@ -46,7 +46,7 @@ export function formatDateRange(
     return dateTimeFormat.formatRange(finalStartedAt, finalEndedAt);
 }
 
-const pageRouteSearchParams = appRoutes.repo[":id"].metrics.search;
+const pageRouteSearchParams = appRoutes.repo["detail"].metrics.search;
 
 export default function DateFilter(props: IDateFilterProps) {
     const [isOpen, setIsOpen] = useState(false);

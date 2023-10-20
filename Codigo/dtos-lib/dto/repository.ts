@@ -23,6 +23,11 @@ export interface RepositoryResponseDTO {
 
 export interface GetAllRepositoryQueryDTO  extends PaginationRequestDTO{
     filter?: string
+    /**
+     * @isInt evaluationMethodId must be an integer
+     * @minimum 1 evaluationMethodId must be greater than or equal to 1
+     */
+    evaluationMethodId?: number | null;
 }
 
 /**
