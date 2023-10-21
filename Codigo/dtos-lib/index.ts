@@ -1,13 +1,10 @@
 import { CommitQualityMetricsDTO } from "./dto/commitMetrics";
-import {
-  FileTypeMetricsDTO,
-  FileTypeMetricDTO,
-} from "./dto/fileMetrics";
+import { FileTypeMetricsDTO, FileTypeMetricDTO } from "./dto/fileMetrics";
 import { BranchDTO, GetAllBranchQueryDTO } from "./dto/branch";
 import { ContributorDTO, GetAllContributorQueryDTO } from "./dto/contributor";
 import { RepositoryMetricQueryDTO } from "./dto/repositoryMetrics";
 import { IssueMetricQueryDTO, IssueMetricsDTO } from "./dto/issueMetrics";
-
+import { CommitResponseDTO, CommitSearchDTO } from "./dto/commit";
 import { CommitMetricsDTO } from "./dto/commitMetrics";
 import {
   ConsistencyRuleCreateDTO,
@@ -44,7 +41,7 @@ import {
   StandardizedIssueUpdateDTO,
 } from "./dto/standardizedIssue";
 import { PaginationResponseDTO } from "./utils/pagination";
-import { ErrorResponseDTO } from './utils/error';
+import { ErrorResponseDTO } from "./utils/error";
 
 export type {
   ConsistencyRuleCreateDTO,
@@ -63,7 +60,6 @@ export type {
   SprintResponseDTO,
   SprintSearchDTO,
   SprintUpdateDTO,
-  
   RepositoryResponseDTO,
   PaginationResponseDTO,
   GetAllRepositoryQueryDTO,
@@ -80,6 +76,8 @@ export type {
   IssueMetricQueryDTO,
   IssueMetricsDTO,
   CommitQualityMetricsDTO,
+  CommitResponseDTO,
+  CommitSearchDTO,
   StandardizedIssueCreateDTO,
   StandardizedIssueFindOneDTO,
   StandardizedIssueResponseDTO,
