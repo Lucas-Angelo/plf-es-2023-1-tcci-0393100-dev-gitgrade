@@ -17,7 +17,7 @@ export class SprintValidator {
                     value: name,
                 },
             });
-        } else if (name && name.length > 255) {
+        } else if (name && String(name).length > 255) {
             errors.push({
                 name: {
                     message: "Máximo de 255 caracteres",

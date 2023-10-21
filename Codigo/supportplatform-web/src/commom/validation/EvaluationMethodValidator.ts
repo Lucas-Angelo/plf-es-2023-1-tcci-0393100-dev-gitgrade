@@ -18,7 +18,7 @@ export class EvaluationMethodValidator {
                     value: description,
                 },
             });
-        } else if (description.length > 255) {
+        } else if (String(description).length > 255) {
             errors.push({
                 description: {
                     message: "Máximo de 255 caracteres",
