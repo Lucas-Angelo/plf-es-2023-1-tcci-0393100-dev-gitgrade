@@ -1,6 +1,6 @@
-import logger from "./config/LogConfig";
-import { JobScheduler } from "./cron/JobScheduler";
-import SequelizeDatabase from "./database/SequelizeDatabase";
+import logger from "./src/config/LogConfig";
+import SequelizeDatabase from "./src/database/SequelizeDatabase";
+import { JobExecutor } from "./src/job/JobExecutor";
 
 class Database {
     private sequelizeDatabase: SequelizeDatabase;
@@ -33,11 +33,11 @@ class Database {
 
 class ApplicationInitializer {
     private database: Database;
-    private jobScheduler: JobScheduler;
+    private jobExecutor: JobExecutor;
 
     constructor() {
         this.database = new Database();
-        this.jobScheduler = new JobScheduler();
+        this.jobExecutor = new JobExecutor();
     }
 
     async initializeApp() {
@@ -46,13 +46,11 @@ class ApplicationInitializer {
 
             await this.database.connect();
 
-            this.jobScheduler.start();
+            await this.jobExecutor.runFetchers();
 
-            // The database disconnection is not called here because
-            // the app should remain running for the scheduler to execute the tasks.
-            // If you decide to close the app, make sure to disconnect from the database.
+            await this.database.disconnect();
 
-            logger.info("Application started with scheduler!");
+            logger.info("Application finished with success!");
         } catch (error) {
             logger.error("Error occurred during application initialization:", {
                 error,

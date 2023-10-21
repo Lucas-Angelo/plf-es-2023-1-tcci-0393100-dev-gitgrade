@@ -3,13 +3,15 @@
     "version": "1.0.0",
     "description": "Job Scheduler service to sync data with GitHub",
     "author": "Lucas Ângelo Oliveira Martins Rocha (https://lucasangelo.com/)",
-    "main": "src/index.ts",
+    "main": "index.ts",
     "scripts": {
         "test": "jest",
         "lint:check": "npx eslint --ignore-path .eslintignore --ext .js,.ts ./",
         "lint:fix": "npx eslint --ignore-path --fix --ext .js,.ts ./",
-        "start": "npx ts-node src/index.ts",
-        "start:dev": "npx ts-node-dev src/index.dev.ts",
+        "prettify": "npx prettier -w .",
+        "prettify:check": "npx prettier -c .",
+        "start": "npx ts-node index.ts",
+        "start:dev": "npx ts-node-dev index.dev.ts",
         "build": "npx tsc --outDir dist",
         "start:builded": "npx ts-node --transpile-only dist/index.js",
         "start:prod": "npm run build && npm run start:builded"

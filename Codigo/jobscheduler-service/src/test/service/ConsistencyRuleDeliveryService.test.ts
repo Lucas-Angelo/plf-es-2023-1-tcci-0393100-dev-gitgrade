@@ -1,4 +1,4 @@
-import { ConsistencyRule } from "@/model/ConsistencyRule";
+import { ConsistencyRule } from "../../model/ConsistencyRule";
 import {
     ConsistencyRuleDelivery,
     ConsistencyRuleDeliveryStatus,
