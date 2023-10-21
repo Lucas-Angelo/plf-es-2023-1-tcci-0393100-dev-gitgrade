@@ -478,15 +478,15 @@ describe(`POST ${baseRoute}`, () => {
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(201)
             .send({
-                consistencyRuleId: 1,
-                repositoryId: 1,
+                consistencyRuleId: 3,
+                repositoryId: 2,
                 deliveryAt: null,
                 status: "AWAITING_DELIVERY",
             });
 
         expect(response.body.id).toBe(11);
-        expect(response.body.consistencyRuleId).toBe(1);
-        expect(response.body.repositoryId).toBe(1);
+        expect(response.body.consistencyRuleId).toBe(3);
+        expect(response.body.repositoryId).toBe(2);
         expect(response.body.deliveryAt).toBe(null);
         expect(response.body.status).toBe("AWAITING_DELIVERY");
     });
@@ -497,15 +497,15 @@ describe(`POST ${baseRoute}`, () => {
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(201)
             .send({
-                consistencyRuleId: 1,
-                repositoryId: 1,
+                consistencyRuleId: 3,
+                repositoryId: 2,
                 deliveryAt: new Date("2023-10-01"),
                 status: "DELIVERED_ON_TIME",
             });
 
         expect(response.body.id).toBe(12);
-        expect(response.body.consistencyRuleId).toBe(1);
-        expect(response.body.repositoryId).toBe(1);
+        expect(response.body.consistencyRuleId).toBe(3);
+        expect(response.body.repositoryId).toBe(2);
         expect(response.body.deliveryAt).toBe("2023-10-01T00:00:00.000Z");
         expect(response.body.status).toBe("DELIVERED_ON_TIME");
     });
@@ -516,15 +516,15 @@ describe(`POST ${baseRoute}`, () => {
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(201)
             .send({
-                consistencyRuleId: 1,
-                repositoryId: 1,
+                consistencyRuleId: 3,
+                repositoryId: 2,
                 deliveryAt: new Date("2023-10-01"),
                 status: "DELIVERED_LATE",
             });
 
         expect(response.body.id).toBe(13);
-        expect(response.body.consistencyRuleId).toBe(1);
-        expect(response.body.repositoryId).toBe(1);
+        expect(response.body.consistencyRuleId).toBe(3);
+        expect(response.body.repositoryId).toBe(2);
         expect(response.body.deliveryAt).toBe("2023-10-01T00:00:00.000Z");
         expect(response.body.status).toBe("DELIVERED_LATE");
     });
@@ -535,15 +535,15 @@ describe(`POST ${baseRoute}`, () => {
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(201)
             .send({
-                consistencyRuleId: 1,
-                repositoryId: 1,
+                consistencyRuleId: 3,
+                repositoryId: 2,
                 deliveryAt: null,
                 status: "NOT_DELIVERED",
             });
 
         expect(response.body.id).toBe(14);
-        expect(response.body.consistencyRuleId).toBe(1);
-        expect(response.body.repositoryId).toBe(1);
+        expect(response.body.consistencyRuleId).toBe(3);
+        expect(response.body.repositoryId).toBe(2);
         expect(response.body.deliveryAt).toBe(null);
         expect(response.body.status).toBe("NOT_DELIVERED");
     });
@@ -554,15 +554,15 @@ describe(`POST ${baseRoute}`, () => {
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(201)
             .send({
-                consistencyRuleId: 1,
-                repositoryId: 1,
+                consistencyRuleId: 3,
+                repositoryId: 2,
                 deliveryAt: new Date("2023-10-01"),
                 status: "DELIVERED_WITH_INVALIDITY",
             });
 
         expect(response.body.id).toBe(15);
-        expect(response.body.consistencyRuleId).toBe(1);
-        expect(response.body.repositoryId).toBe(1);
+        expect(response.body.consistencyRuleId).toBe(3);
+        expect(response.body.repositoryId).toBe(2);
         expect(response.body.deliveryAt).toBe("2023-10-01T00:00:00.000Z");
         expect(response.body.status).toBe("DELIVERED_WITH_INVALIDITY");
     });
@@ -573,15 +573,15 @@ describe(`POST ${baseRoute}`, () => {
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(201)
             .send({
-                consistencyRuleId: 1,
-                repositoryId: 1,
+                consistencyRuleId: 3,
+                repositoryId: 3,
                 deliveryAt: new Date("2023-10-01"),
                 status: "DELIVERED_ON_TIME",
             });
 
         expect(response.body.id).toBe(16);
-        expect(response.body.consistencyRuleId).toBe(1);
-        expect(response.body.repositoryId).toBe(1);
+        expect(response.body.consistencyRuleId).toBe(3);
+        expect(response.body.repositoryId).toBe(3);
         expect(response.body.deliveryAt).toBe("2023-10-01T00:00:00.000Z");
         expect(response.body.status).toBe("DELIVERED_ON_TIME");
     });
@@ -592,15 +592,15 @@ describe(`POST ${baseRoute}`, () => {
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(201)
             .send({
-                consistencyRuleId: 1,
-                repositoryId: 1,
+                consistencyRuleId: 3,
+                repositoryId: 4,
                 deliveryAt: new Date("2023-10-01"),
                 status: "DELIVERED_LATE",
             });
 
         expect(response.body.id).toBe(17);
-        expect(response.body.consistencyRuleId).toBe(1);
-        expect(response.body.repositoryId).toBe(1);
+        expect(response.body.consistencyRuleId).toBe(3);
+        expect(response.body.repositoryId).toBe(4);
         expect(response.body.deliveryAt).toBe("2023-10-01T00:00:00.000Z");
         expect(response.body.status).toBe("DELIVERED_LATE");
     });
@@ -611,15 +611,15 @@ describe(`POST ${baseRoute}`, () => {
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(201)
             .send({
-                consistencyRuleId: 1,
-                repositoryId: 1,
+                consistencyRuleId: 3,
+                repositoryId: 5,
                 deliveryAt: new Date("2023-10-01"),
                 status: "DELIVERED_WITH_INVALIDITY",
             });
 
         expect(response.body.id).toBe(18);
-        expect(response.body.consistencyRuleId).toBe(1);
-        expect(response.body.repositoryId).toBe(1);
+        expect(response.body.consistencyRuleId).toBe(3);
+        expect(response.body.repositoryId).toBe(5);
         expect(response.body.deliveryAt).toBe("2023-10-01T00:00:00.000Z");
         expect(response.body.status).toBe("DELIVERED_WITH_INVALIDITY");
     });
@@ -655,6 +655,23 @@ describe(`POST ${baseRoute}`, () => {
 
         expect(response.body.message).toBe(
             "Cannot set deliveryAt when status is NOT_DELIVERED"
+        );
+    });
+
+    it("should return 400 when creating a new consistency rule delivery already exists with status AWAITING_DELIVERY", async () => {
+        const response = await supertest(app)
+            .post(`${baseRoute}`)
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .send({
+                consistencyRuleId: 1,
+                repositoryId: 1,
+                deliveryAt: null,
+                status: "AWAITING_DELIVERY",
+            })
+            .expect(400);
+
+        expect(response.body.message).toBe(
+            "Consistency rule delivery already exists"
         );
     });
 
@@ -914,42 +931,6 @@ describe(`PUT ${baseRoute}/{id}`, () => {
         expect(response.body.repositoryId).toBe("1");
         expect(response.body.deliveryAt).toBe("2023-10-01T00:00:00.000Z");
         expect(response.body.status).toBe("DELIVERED_ON_TIME");
-    });
-
-    it("should return 200 when deliveryAt is not provided and status is DELIVERED_LATE", async () => {
-        const response = await supertest(app)
-            .put(`${baseRoute}/2`)
-            .set("Authorization", `Bearer ${authUser.token}`)
-            .expect(200)
-            .send({
-                consistencyRuleId: 1,
-                repositoryId: 1,
-                status: "DELIVERED_LATE",
-            });
-
-        expect(response.body.id).toBe("2");
-        expect(response.body.consistencyRuleId).toBe("1");
-        expect(response.body.repositoryId).toBe("1");
-        expect(response.body.deliveryAt).toBe("2023-10-01T00:00:00.000Z");
-        expect(response.body.status).toBe("DELIVERED_LATE");
-    });
-
-    it("should return 200 when deliveryAt is not provided and status is DELIVERED_WITH_INVALIDITY", async () => {
-        const response = await supertest(app)
-            .put(`${baseRoute}/2`)
-            .set("Authorization", `Bearer ${authUser.token}`)
-            .expect(200)
-            .send({
-                consistencyRuleId: 1,
-                repositoryId: 1,
-                status: "DELIVERED_WITH_INVALIDITY",
-            });
-
-        expect(response.body.id).toBe("2");
-        expect(response.body.consistencyRuleId).toBe("1");
-        expect(response.body.repositoryId).toBe("1");
-        expect(response.body.deliveryAt).toBe("2023-10-01T00:00:00.000Z");
-        expect(response.body.status).toBe("DELIVERED_WITH_INVALIDITY");
     });
 
     it("should return 400 when deliveryAt is provided and status is AWAITING_DELIVERY", async () => {

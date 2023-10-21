@@ -4,6 +4,7 @@ import { Box } from "@primer/react";
 
 export default function PageLoadingIndicator() {
     const navigation = useNavigation();
+
     return (
         <>
             {navigation.state === "loading" ? (

@@ -51,6 +51,13 @@ class IssueFetcher {
                 const issues = await this.fetchIssuesWithRetry(
                     repository.name!
                 );
+                if (!issues) {
+                    logger.error("Error on fetching issues, issues is null:", {
+                        repository,
+                        issues,
+                    });
+                    continue;
+                }
                 if (issues.length === 0) {
                     logger.warn(
                         `No issues found for repository "${repository.name}"`

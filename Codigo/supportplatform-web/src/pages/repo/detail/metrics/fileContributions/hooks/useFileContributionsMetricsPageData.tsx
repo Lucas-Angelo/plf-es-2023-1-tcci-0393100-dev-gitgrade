@@ -1,0 +1,36 @@
+import { useParams } from "react-router";
+import { useSearchParams } from "react-router-dom";
+import { useFileChangesMetricsGroupedByContributorByRepositoryId } from "../../../../../../commom/data/repo/metrics/fileChanges";
+import appRoutes from "../../../../../../commom/routes/appRoutes";
+
+const pageRouteParams = appRoutes.repo["detail"].params;
+type PageRouteParams = (typeof pageRouteParams)[number];
+
+const pageRouteSearchParams = appRoutes.repo["detail"].metrics.search;
+
+export function useFileContributionsMetricsPageData() {
+    const params = useParams<PageRouteParams>();
+    const id = Number(params.id);
+    const [searchParams] = useSearchParams();
+
+    const { data: linesOfCodeMetricsData } =
+        useFileChangesMetricsGroupedByContributorByRepositoryId(id, {
+            branchName:
+                searchParams.get(pageRouteSearchParams.branch) ?? undefined,
+            endedAt:
+                searchParams.get(pageRouteSearchParams.endedAt) ?? undefined,
+            startedAt:
+                searchParams.get(pageRouteSearchParams.startedAt) ?? undefined,
+            contributors:
+                searchParams.getAll(pageRouteSearchParams.contributor) ??
+                undefined,
+            filterWithNoContributor:
+                searchParams.get(
+                    pageRouteSearchParams.filterWithNoContributor
+                ) === "true"
+                    ? true
+                    : undefined,
+        });
+
+    return linesOfCodeMetricsData;
+}

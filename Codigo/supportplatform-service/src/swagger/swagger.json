@@ -6,6 +6,39 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"BranchDTO": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetAllBranchQueryDTO": {
+				"properties": {
+					"page": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"limit": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ValidationType": {
 				"enum": [
 					"DEFAULT",
@@ -369,6 +402,55 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ContributorDTO": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"githubName": {
+						"type": "string",
+						"nullable": true
+					},
+					"githubEmail": {
+						"type": "string",
+						"nullable": true
+					},
+					"githubLogin": {
+						"type": "string",
+						"nullable": true
+					},
+					"githubAvatarUrl": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"id",
+					"githubName",
+					"githubEmail",
+					"githubLogin",
+					"githubAvatarUrl"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetAllContributorQueryDTO": {
+				"properties": {
+					"page": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"limit": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"EvaluationMethodResponseDTO": {
 				"description": "EvaluationMethodResponseDTO - Could be used to structure the response object when sending EvaluationMethods to the client.",
 				"properties": {
@@ -417,11 +499,6 @@
 					"year": {
 						"type": "integer",
 						"format": "int32"
-					},
-					"disabledAt": {
-						"type": "string",
-						"format": "date",
-						"nullable": true
 					}
 				},
 				"required": [
@@ -519,7 +596,7 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"RepositoryDTO": {
+			"RepositoryResponseDTO": {
 				"properties": {
 					"id": {
 						"type": "number",
@@ -610,11 +687,11 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"PaginationResponseDTO_RepositoryDTO_": {
+			"PaginationResponseDTO_RepositoryResponseDTO_": {
 				"properties": {
 					"results": {
 						"items": {
-							"$ref": "#/components/schemas/RepositoryDTO"
+							"$ref": "#/components/schemas/RepositoryResponseDTO"
 						},
 						"type": "array"
 					},
@@ -643,6 +720,12 @@
 					},
 					"filter": {
 						"type": "string"
+					},
+					"evaluationMethodId": {
+						"type": "integer",
+						"format": "int32",
+						"nullable": true,
+						"minimum": 1
 					}
 				},
 				"type": "object",
@@ -708,8 +791,7 @@
 							},
 							"required": [
 								"commtiPercentage",
-								"commitCount",
-								"contribuitor"
+								"commitCount"
 							],
 							"type": "object"
 						},
@@ -723,6 +805,32 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"RepositoryMetricQueryDTO": {
+				"properties": {
+					"startedAt": {
+						"type": "string",
+						"format": "date"
+					},
+					"endedAt": {
+						"type": "string",
+						"format": "date"
+					},
+					"branchName": {
+						"type": "string"
+					},
+					"contributor": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"filterWithNoContributor": {
+						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"FileChangeMetricsDTO": {
 				"properties": {
 					"totalAdditions": {
@@ -733,9 +841,17 @@
 						"type": "number",
 						"format": "double"
 					},
+					"fileCount": {
+						"type": "number",
+						"format": "double"
+					},
 					"fileChangesPerContributor": {
 						"items": {
 							"properties": {
+								"fileCount": {
+									"type": "number",
+									"format": "double"
+								},
 								"deletions": {
 									"properties": {
 										"percentage": {
@@ -796,9 +912,9 @@
 								}
 							},
 							"required": [
+								"fileCount",
 								"deletions",
-								"addtions",
-								"contribuitor"
+								"addtions"
 							],
 							"type": "object"
 						},
@@ -808,7 +924,258 @@
 				"required": [
 					"totalAdditions",
 					"totalDeletions",
+					"fileCount",
 					"fileChangesPerContributor"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FileTypeMetricDTO": {
+				"properties": {
+					"count": {
+						"type": "number",
+						"format": "double"
+					},
+					"extension": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"count",
+					"extension"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FileTypeMetricsDTO": {
+				"properties": {
+					"general": {
+						"items": {
+							"$ref": "#/components/schemas/FileTypeMetricDTO"
+						},
+						"type": "array"
+					},
+					"perContributor": {
+						"items": {
+							"properties": {
+								"fileTypes": {
+									"items": {
+										"$ref": "#/components/schemas/FileTypeMetricDTO"
+									},
+									"type": "array"
+								},
+								"contributor": {
+									"properties": {
+										"githubAvatarUrl": {
+											"type": "string",
+											"nullable": true
+										},
+										"githubLogin": {
+											"type": "string"
+										},
+										"githubName": {
+											"type": "string",
+											"nullable": true
+										},
+										"id": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"githubAvatarUrl",
+										"githubLogin",
+										"githubName",
+										"id"
+									],
+									"type": "object"
+								}
+							},
+							"required": [
+								"fileTypes"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"general",
+					"perContributor"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IssueMetricsDTO": {
+				"properties": {
+					"issueDataPerContributor": {
+						"items": {
+							"properties": {
+								"authoredIssuesCount": {
+									"type": "number",
+									"format": "double"
+								},
+								"assignedIssuesCount": {
+									"type": "number",
+									"format": "double"
+								},
+								"contributor": {
+									"properties": {
+										"githubAvatarUrl": {
+											"type": "string",
+											"nullable": true
+										},
+										"githubLogin": {
+											"type": "string",
+											"nullable": true
+										},
+										"githubName": {
+											"type": "string",
+											"nullable": true
+										},
+										"id": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"githubAvatarUrl",
+										"githubLogin",
+										"githubName",
+										"id"
+									],
+									"type": "object"
+								}
+							},
+							"required": [
+								"authoredIssuesCount",
+								"assignedIssuesCount"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"issuesOpennedCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"issuesClosedCount": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"issueDataPerContributor",
+					"issuesOpennedCount",
+					"issuesClosedCount"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IssueMetricQueryDTO": {
+				"properties": {
+					"startedAt": {
+						"type": "string",
+						"format": "date"
+					},
+					"endedAt": {
+						"type": "string",
+						"format": "date"
+					},
+					"contributor": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"filterWithNoContributor": {
+						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CommitQualityMetricsDTO": {
+				"properties": {
+					"generalCommitQualityLevel": {
+						"items": {
+							"properties": {
+								"qualityLevelCount": {
+									"type": "number",
+									"format": "double"
+								},
+								"qualityLevel": {
+									"type": "number",
+									"format": "double"
+								}
+							},
+							"required": [
+								"qualityLevelCount",
+								"qualityLevel"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"commitQualityPerContributor": {
+						"items": {
+							"properties": {
+								"commitQualityLevel": {
+									"items": {
+										"properties": {
+											"qualityLevelCount": {
+												"type": "number",
+												"format": "double"
+											},
+											"qualityLevel": {
+												"type": "number",
+												"format": "double"
+											}
+										},
+										"required": [
+											"qualityLevelCount",
+											"qualityLevel"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								},
+								"contributor": {
+									"properties": {
+										"githubAvatarUrl": {
+											"type": "string"
+										},
+										"githubLogin": {
+											"type": "string"
+										},
+										"githubName": {
+											"type": "string"
+										},
+										"id": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"githubAvatarUrl",
+										"githubLogin",
+										"githubName",
+										"id"
+									],
+									"type": "object"
+								}
+							},
+							"required": [
+								"commitQualityLevel"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"generalCommitQualityLevel",
+					"commitQualityPerContributor"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1116,6 +1483,80 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
+		"/repository/{repositoryId}/branch": {
+			"get": {
+				"operationId": "GetByRepositoryId",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"results": {
+											"items": {
+												"$ref": "#/components/schemas/BranchDTO"
+											},
+											"type": "array"
+										},
+										"totalPages": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"results",
+										"totalPages"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"branch"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					}
+				]
+			}
+		},
 		"/consistency-rule": {
 			"post": {
 				"operationId": "Create",
@@ -1688,6 +2129,80 @@
 				]
 			}
 		},
+		"/repository/{repositoryId}/contributor": {
+			"get": {
+				"operationId": "FindbyRepositoryId",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"results": {
+											"items": {
+												"$ref": "#/components/schemas/ContributorDTO"
+											},
+											"type": "array"
+										},
+										"totalPages": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"results",
+										"totalPages"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"contributor"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					}
+				]
+			}
+		},
 		"/evaluation-method": {
 			"post": {
 				"operationId": "Create",
@@ -2002,7 +2517,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PaginationResponseDTO_RepositoryDTO_"
+									"$ref": "#/components/schemas/PaginationResponseDTO_RepositoryResponseDTO_"
 								}
 							}
 						}
@@ -2046,11 +2561,76 @@
 						"schema": {
 							"type": "string"
 						}
+					},
+					{
+						"in": "query",
+						"name": "evaluationMethodId",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
 					}
 				]
 			}
 		},
 		"/repository/{id}": {
+			"get": {
+				"operationId": "GetById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RepositoryResponseDTO"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"repository"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					}
+				]
+			},
 			"patch": {
 				"operationId": "Patch",
 				"responses": {
@@ -2059,7 +2639,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/RepositoryDTO"
+									"$ref": "#/components/schemas/RepositoryResponseDTO"
 								},
 								"examples": {
 									"Example 1": {
@@ -2094,7 +2674,6 @@
 						}
 					}
 				},
-				"description": "Update a repository.",
 				"tags": [
 					"repository"
 				],
@@ -2107,7 +2686,6 @@
 				],
 				"parameters": [
 					{
-						"description": "Id of the repository to update.",
 						"in": "path",
 						"name": "id",
 						"required": true,
@@ -2118,13 +2696,11 @@
 					}
 				],
 				"requestBody": {
-					"description": "Body of the request.",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/RepositoryPatchDTO",
-								"description": "Body of the request."
+								"$ref": "#/components/schemas/RepositoryPatchDTO"
 							}
 						}
 					}
@@ -2162,8 +2738,27 @@
 						"name": "repositoryId",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "startedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "endedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
 						}
 					},
 					{
@@ -2172,6 +2767,25 @@
 						"required": false,
 						"schema": {
 							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "contributor",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "filterWithNoContributor",
+						"required": false,
+						"schema": {
+							"type": "boolean"
 						}
 					}
 				]
@@ -2208,8 +2822,27 @@
 						"name": "repositoryId",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "startedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "endedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
 						}
 					},
 					{
@@ -2218,6 +2851,269 @@
 						"required": false,
 						"schema": {
 							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "contributor",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "filterWithNoContributor",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/repository/{repositoryId}/metric/file-types": {
+			"get": {
+				"operationId": "GetFileTypesMetrics",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FileTypeMetricsDTO"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"metrics"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "startedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "endedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "branchName",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "contributor",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "filterWithNoContributor",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/repository/{repositoryId}/metric/issues": {
+			"get": {
+				"operationId": "GetIssuesMetrics",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IssueMetricsDTO"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"metrics"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "startedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "endedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "contributor",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "filterWithNoContributor",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/repository/{repositoryId}/metric/commit-quality": {
+			"get": {
+				"operationId": "GetCommitQualityMetrics",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CommitQualityMetricsDTO"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"metrics"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "startedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "endedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "branchName",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "contributor",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "filterWithNoContributor",
+						"required": false,
+						"schema": {
+							"type": "boolean"
 						}
 					}
 				]

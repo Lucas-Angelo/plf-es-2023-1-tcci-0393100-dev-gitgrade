@@ -9,7 +9,10 @@ import { Op } from "sequelize";
 import logger from "../config/LogConfig";
 import AppError from "../error/AppError";
 import { ConsistencyRuleDeliveryWhereClauseType } from "../interface/ConsistencyRuleDelivery";
-import { ConsistencyRuleDelivery } from "../model/ConsistencyRuleDelivery";
+import {
+    ConsistencyRuleDelivery,
+    ConsistencyRuleDeliveryStatus,
+} from "../model/ConsistencyRuleDelivery";
 import { SequelizeUtil } from "../utils/SequelizeUtil";
 import { sequelizePagination } from "../utils/pagination";
 import ConsistencyRuleService from "./ConsistencyRuleService";
@@ -48,6 +51,14 @@ export default class ConsistencyRuleDeliveryService {
             });
 
             await this.repositoryService.findOneBy({ id: data.repositoryId });
+
+            logger.info("Checking if consistency rule delivery already exists");
+
+            await this.checkIfAlreadyExistsConsistencyRuleDelivery(
+                data.repositoryId,
+                data.consistencyRuleId,
+                data.status
+            );
 
             const consistencyRuleDelivery =
                 await ConsistencyRuleDelivery.create(data);
@@ -147,7 +158,7 @@ export default class ConsistencyRuleDeliveryService {
     /**
      * Find all ConsistencyRuleDeliveries based on given filters.
      */
-    async findAll(
+    async findAllBy(
         search: ConsistencyRuleDeliverySearchDTO
     ): Promise<PaginationResponseDTO<ConsistencyRuleDelivery>> {
         try {
@@ -321,6 +332,23 @@ export default class ConsistencyRuleDeliveryService {
                 "Cannot set deliveryAt when status is NOT_DELIVERED",
                 400
             );
+        }
+    }
+
+    private async checkIfAlreadyExistsConsistencyRuleDelivery(
+        repositoryId: number,
+        consistencyRuleId: number,
+        status: ConsistencyRuleDeliveryStatus
+    ): Promise<void> {
+        const existentConsistencyRuleDelivery = await this.findAllBy({
+            repositoryId,
+            consistencyRuleId,
+            status,
+        });
+
+        if (existentConsistencyRuleDelivery.results.length > 0) {
+            logger.error(`Consistency rule delivery already exists`, 400);
+            throw new AppError(`Consistency rule delivery already exists`, 400);
         }
     }
 }

@@ -1,12 +1,13 @@
-import { Box } from "@primer/react";
+import { Box, BoxProps } from "@primer/react";
 
-export interface ICardRootProps {
+export interface ICardRootProps extends BoxProps {
     children?: React.ReactNode;
 }
 
 export default function CardRoot(props: ICardRootProps) {
     return (
         <Box
+            {...props}
             sx={{
                 display: "flex",
                 flexDirection: ["column", "column", "row"],
@@ -17,6 +18,7 @@ export default function CardRoot(props: ICardRootProps) {
                 alignItems: ["flex-start", "flex-start", "center"],
                 borderRadius: 4,
                 backgroundColor: "canvas.subtle",
+                ...props.sx,
             }}
         >
             {props.children}

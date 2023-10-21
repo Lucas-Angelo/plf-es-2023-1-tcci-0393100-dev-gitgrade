@@ -1,3 +1,10 @@
+import { BranchDTO, GetAllBranchQueryDTO } from "./dto/branch";
+import { CommitQualityMetricsDTO } from "./dto/commitMetrics";
+import { ContributorDTO, GetAllContributorQueryDTO } from "./dto/contributor";
+import { FileTypeMetricDTO, FileTypeMetricsDTO } from "./dto/fileMetrics";
+import { IssueMetricQueryDTO, IssueMetricsDTO } from "./dto/issueMetrics";
+import { RepositoryMetricQueryDTO } from "./dto/repositoryMetrics";
+
 import { CommitMetricsDTO } from "./dto/commitMetrics";
 import {
   ConsistencyRuleCreateDTO,
@@ -23,9 +30,9 @@ import {
 import { FileChangeMetricsDTO } from "./dto/fileMetrics";
 import {
   GetAllRepositoryQueryDTO,
-  RepositoryDTO,
   RepositoryFindOneDTO,
   RepositoryPatchDTO,
+  RepositoryResponseDTO,
 } from "./dto/repository";
 import {
   SprintCreateDTO,
@@ -41,10 +48,13 @@ import {
   StandardizedIssueSearchDTO,
   StandardizedIssueUpdateDTO,
 } from "./dto/standardizedIssue";
+import { ErrorResponseDTO } from "./utils/error";
 import { PaginationResponseDTO } from "./utils/pagination";
 
 export type {
+  BranchDTO,
   CommitMetricsDTO,
+  CommitQualityMetricsDTO,
   ConsistencyRuleCreateDTO,
   ConsistencyRuleDeliveryCreateDTO,
   ConsistencyRuleDeliveryFindOneDTO,
@@ -55,17 +65,26 @@ export type {
   ConsistencyRuleResponseDTO,
   ConsistencyRuleSearchDTO,
   ConsistencyRuleUpdateDTO,
+  ContributorDTO,
+  ErrorResponseDTO,
   EvaluationMethodCreateDTO,
   EvaluationMethodFindOneDTO,
   EvaluationMethodResponseDTO,
   EvaluationMethodSearchDTO,
   EvaluationMethodUpdateDTO,
   FileChangeMetricsDTO,
+  FileTypeMetricDTO,
+  FileTypeMetricsDTO,
+  GetAllBranchQueryDTO,
+  GetAllContributorQueryDTO,
   GetAllRepositoryQueryDTO,
+  IssueMetricQueryDTO,
+  IssueMetricsDTO,
   PaginationResponseDTO,
-  RepositoryDTO,
   RepositoryFindOneDTO,
+  RepositoryMetricQueryDTO,
   RepositoryPatchDTO,
+  RepositoryResponseDTO,
   SprintCreateDTO,
   SprintFindOneDTO,
   SprintResponseDTO,
@@ -75,6 +94,5 @@ export type {
   StandardizedIssueFindOneDTO,
   StandardizedIssueResponseDTO,
   StandardizedIssueSearchDTO,
-  StandardizedIssueUpdateDTO
+  StandardizedIssueUpdateDTO,
 };
-

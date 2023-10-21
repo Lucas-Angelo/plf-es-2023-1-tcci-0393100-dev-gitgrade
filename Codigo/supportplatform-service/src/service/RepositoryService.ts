@@ -1,4 +1,5 @@
 import {
+    GetAllRepositoryQueryDTO,
     PaginationResponseDTO,
     RepositoryFindOneDTO,
     RepositoryPatchDTO,
@@ -6,9 +7,10 @@ import {
 import { Op, Sequelize } from "sequelize";
 import logger from "../config/LogConfig";
 import AppError from "../error/AppError";
+import { RepositoryWhereClauseType } from "../interface/Repository";
 import { EvaluationMethod } from "../model/EvaluationMethod";
 import { Repository } from "../model/Repository";
-import { sequelizePagination } from "../utils/pagination";
+import { getTotalPages, sequelizePagination } from "../utils/pagination";
 import EvaluationMethodService from "./EvaluationMethodService";
 
 export default class RepositoryService {
@@ -54,21 +56,15 @@ export default class RepositoryService {
         page: number;
         limit: number;
         filter?: string;
+        evaluationMethodId?: number | null;
     }): Promise<PaginationResponseDTO<Repository>> {
         try {
             logger.info("Searching for all repositories");
-            const loweredFilter = search.filter?.toLowerCase();
+            const whereClause = this._constructWhereClause(search);
+
             const { rows, count } = await Repository.findAndCountAll({
                 ...sequelizePagination(search.page, search.limit),
-                where: loweredFilter
-                    ? [
-                          Sequelize.where(
-                              Sequelize.fn("lower", Sequelize.col("name")),
-                              Op.like,
-                              `%${loweredFilter}%`
-                          ),
-                      ]
-                    : undefined,
+                where: whereClause,
                 include: [
                     {
                         model: EvaluationMethod,
@@ -78,10 +74,22 @@ export default class RepositoryService {
             });
             return {
                 results: rows,
-                totalPages: Math.ceil(count / search.limit) || 1,
+                totalPages: getTotalPages(count, search.limit),
             };
         } catch (error) {
             logger.error("Error finding all repositories:", { error });
+            throw error;
+        }
+    }
+
+    async findById(id: number): Promise<Repository | null> {
+        try {
+            logger.info("Searching for repository by id:", { id });
+            const repository = await Repository.findByPk(id);
+
+            return repository;
+        } catch (error) {
+            logger.error("Error finding repository by id:", { error });
             throw error;
         }
     }
@@ -120,5 +128,36 @@ export default class RepositoryService {
             logger.error(`Error updating repository ${id}:`, { error });
             throw error;
         }
+    }
+
+    /**
+     * Construct the WHERE clause for querying.
+     */
+    private _constructWhereClause(
+        filter: GetAllRepositoryQueryDTO
+    ): RepositoryWhereClauseType {
+        const whereConditions: RepositoryWhereClauseType[typeof Op.and] = [];
+
+        if (filter.filter) {
+            const loweredFilter = filter.filter.toLowerCase();
+            whereConditions.push(
+                Sequelize.where(
+                    Sequelize.fn("lower", Sequelize.col("name")),
+                    Op.like,
+                    `%${loweredFilter}%`
+                )
+            );
+        }
+        if (filter.evaluationMethodId !== undefined) {
+            whereConditions.push({
+                evaluationMethodId: filter.evaluationMethodId,
+            });
+        }
+
+        const whereClause =
+            whereConditions.length > 0 ? { [Op.and]: whereConditions } : {};
+        logger.info("Constructed where clause: ", { whereClause });
+
+        return whereClause;
     }
 }

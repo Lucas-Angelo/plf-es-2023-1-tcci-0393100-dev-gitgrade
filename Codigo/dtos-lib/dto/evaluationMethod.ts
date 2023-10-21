@@ -16,11 +16,6 @@ export interface EvaluationMethodCreateDTO {
    * @isInt year must be an integer
    */
   year: number;
-  /**
-   * @isOptional disabledAt is optional
-   * @isDate disabledAt must be a Date
-   */
-  disabledAt?: Date | null;
 }
 
 /**

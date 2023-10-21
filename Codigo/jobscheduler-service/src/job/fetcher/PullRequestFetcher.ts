@@ -51,6 +51,12 @@ class PullRequestFetcher {
                 const pullRequests = await this.fetchPullRequestsWithRetry(
                     repository.name!
                 );
+                if (!pullRequests) {
+                    logger.warn(
+                        `No pull requests found for repository "${repository.name}"`
+                    );
+                    continue;
+                }
                 if (pullRequests.length === 0) {
                     logger.warn(
                         `No pull requests found for repository "${repository.name}"`

@@ -1,3 +1,7 @@
 import EvaluationMethodListPage from "./component";
+import evaluationMethodListPageLoader from "./loader";
 
-export { EvaluationMethodListPage as Component };
+export {
+    EvaluationMethodListPage as Component,
+    evaluationMethodListPageLoader as loader,
+};

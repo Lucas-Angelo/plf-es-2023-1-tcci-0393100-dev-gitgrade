@@ -3,6 +3,10 @@ import app from "../..";
 import { generateToken } from "../../config/JwtConfig";
 import Database from "../../database";
 
+beforeAll(async () => {
+    await new Database().connect();
+});
+
 describe("GET /repository", () => {
     const authUser = generateToken(1);
 
@@ -183,14 +187,14 @@ describe("PATCH /repository/{id}", () => {
             });
 
         // Keep same fields
-        expect(response.body.id).toBe("1");
+        expect(response.body.id).toBe(1);
         expect(response.body.name).toBe("typescript-utilsTxT");
         expect(response.body.defaultBranch).toBe("main");
         expect(response.body.description).toBe(
             "Collection of utility functions for TypeScript"
         );
         expect(response.body.forkCount).toBe("25");
-        expect(response.body.githubCreatedAt).toBe("2022-01-10T00:00:00.000Z");
+        expect(response.body.githubCreatedAt).toBe("2023-01-10T00:00:00.000Z");
         expect(response.body.githubId).toBe("repo1");
         expect(response.body.hasIssuesEnabled).toBe(true);
         expect(response.body.hasProjectsEnabled).toBe(true);
@@ -221,14 +225,14 @@ describe("PATCH /repository/{id}", () => {
             });
 
         // Keep same fields
-        expect(response.body.id).toBe("1");
+        expect(response.body.id).toBe(1);
         expect(response.body.name).toBe("typescript-utilsTxT");
         expect(response.body.defaultBranch).toBe("main");
         expect(response.body.description).toBe(
             "Collection of utility functions for TypeScript"
         );
         expect(response.body.forkCount).toBe("25");
-        expect(response.body.githubCreatedAt).toBe("2022-01-10T00:00:00.000Z");
+        expect(response.body.githubCreatedAt).toBe("2023-01-10T00:00:00.000Z");
         expect(response.body.githubId).toBe("repo1");
         expect(response.body.hasIssuesEnabled).toBe(true);
         expect(response.body.hasProjectsEnabled).toBe(true);
@@ -253,14 +257,14 @@ describe("PATCH /repository/{id}", () => {
             });
 
         // Keep same fields
-        expect(response.body.id).toBe("1");
+        expect(response.body.id).toBe(1);
         expect(response.body.name).toBe("typescript-utilsTxT");
         expect(response.body.defaultBranch).toBe("main");
         expect(response.body.description).toBe(
             "Collection of utility functions for TypeScript"
         );
         expect(response.body.forkCount).toBe("25");
-        expect(response.body.githubCreatedAt).toBe("2022-01-10T00:00:00.000Z");
+        expect(response.body.githubCreatedAt).toBe("2023-01-10T00:00:00.000Z");
         expect(response.body.githubId).toBe("repo1");
         expect(response.body.hasIssuesEnabled).toBe(true);
         expect(response.body.hasProjectsEnabled).toBe(true);
@@ -284,14 +288,14 @@ describe("PATCH /repository/{id}", () => {
             });
 
         // Keep same fields
-        expect(response.body.id).toBe("1");
+        expect(response.body.id).toBe(1);
         expect(response.body.name).toBe("typescript-utilsTxT");
         expect(response.body.defaultBranch).toBe("main");
         expect(response.body.description).toBe(
             "Collection of utility functions for TypeScript"
         );
         expect(response.body.forkCount).toBe("25");
-        expect(response.body.githubCreatedAt).toBe("2022-01-10T00:00:00.000Z");
+        expect(response.body.githubCreatedAt).toBe("2023-01-10T00:00:00.000Z");
         expect(response.body.githubId).toBe("repo1");
         expect(response.body.hasIssuesEnabled).toBe(true);
         expect(response.body.hasProjectsEnabled).toBe(true);
@@ -322,14 +326,14 @@ describe("PATCH /repository/{id}", () => {
             });
 
         // Keep same fields
-        expect(response.body.id).toBe("1");
+        expect(response.body.id).toBe(1);
         expect(response.body.name).toBe("typescript-utilsTxT");
         expect(response.body.defaultBranch).toBe("main");
         expect(response.body.description).toBe(
             "Collection of utility functions for TypeScript"
         );
         expect(response.body.forkCount).toBe("25");
-        expect(response.body.githubCreatedAt).toBe("2022-01-10T00:00:00.000Z");
+        expect(response.body.githubCreatedAt).toBe("2023-01-10T00:00:00.000Z");
         expect(response.body.githubId).toBe("repo1");
         expect(response.body.hasIssuesEnabled).toBe(true);
         expect(response.body.hasProjectsEnabled).toBe(true);
@@ -445,6 +449,87 @@ describe("PATCH /repository/{id}", () => {
     it("should return 401 when token is invalid", async () => {
         const response = await supertest(app)
             .patch("/repository/1")
+            .set("Authorization", `Bearer invalid-token`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid token");
+    });
+});
+
+describe("GET /repository/:id", () => {
+    const authUser = generateToken(1);
+
+    beforeAll(async () => {
+        await new Database().connect();
+    });
+
+    it("should return 422 when id is not a number", async () => {
+        const response = await supertest(app)
+            .get("/repository/abc")
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(422)
+            .send();
+
+        expect(response.body.error?.["id"]?.message).toBe(
+            "id must be an integer"
+        );
+    });
+
+    it("should return 422 when id is lesser than 1", async () => {
+        const response = await supertest(app)
+            .get("/repository/0")
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(422)
+            .send();
+
+        expect(response.body.error?.["id"]?.message).toBe(
+            "id must be greater than or equal to 1"
+        );
+    });
+
+    it("should return 404 when id is not found", async () => {
+        const response = await supertest(app)
+            .get("/repository/999999")
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(404)
+            .send();
+
+        expect(response.body.message).toBe("Repository not found");
+    });
+
+    it("should return 200 OK when id is found", async () => {
+        const response = await supertest(app)
+            .get("/repository/1")
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        expect(response.body.id).toBe(1);
+    });
+
+    it("should return 401 when no token is provided", async () => {
+        const response = await supertest(app)
+            .get("/repository/1")
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("No authorization header provided");
+    });
+
+    it("should return 401 when token is not Bearer", async () => {
+        const response = await supertest(app)
+            .get("/repository/1")
+            .set("Authorization", `Basic ${authUser.token}`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid authorization header");
+    });
+
+    it("should return 401 when token is invalid", async () => {
+        const response = await supertest(app)
+            .get("/repository/1")
             .set("Authorization", `Bearer invalid-token`)
             .expect(401)
             .send();

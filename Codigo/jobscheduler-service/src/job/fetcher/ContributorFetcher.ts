@@ -77,6 +77,12 @@ class ContributorFetcher {
             );
             const organizationMembers: MemberGitHub[] =
                 await this.gitHubContributorService.getAllOrganizationMembers();
+            if (!organizationMembers) {
+                logger.error("Error on fetching members, members is null:", {
+                    organizationMembers,
+                });
+                return [];
+            }
             if (organizationMembers.length === 0)
                 logger.warn("No members found for organization", {
                     organizationName:

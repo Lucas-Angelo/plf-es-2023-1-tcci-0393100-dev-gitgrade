@@ -1,18 +1,10 @@
-import {
-    Avatar,
-    Header,
-    TextInput,
-    ActionMenu,
-    ActionList,
-    Box,
-    Octicon,
-    Truncate,
-} from "@primer/react";
-import { TriangleDownIcon, PlusIcon } from "@primer/octicons-react";
+import { Avatar, Header, TextInput, Truncate } from "@primer/react";
 import { Link } from "react-router-dom";
 import GitGradeLogoPng from "../../../../assets/logo.png";
 import appRoutes from "../../../../commom/routes/appRoutes";
 import MobileMenu from "../mobileMenu";
+import OptionsMenu from "../optionsMenu";
+import AddMenu from "../addMenu";
 
 export default function PageHeader() {
     return (
@@ -104,66 +96,10 @@ export default function PageHeader() {
                 sx={{ mr: 2, display: "flex", justifyContent: "flex-end" }}
                 full
             >
-                <ActionMenu>
-                    <ActionMenu.Anchor>
-                        <Box
-                            sx={{
-                                ":hover": {
-                                    bg: "gray",
-                                },
-                                p: 1,
-                                borderRadius: 4,
-                            }}
-                        >
-                            <Octicon icon={PlusIcon} />
-                            <Octicon icon={TriangleDownIcon} />
-                        </Box>
-                    </ActionMenu.Anchor>
-
-                    <ActionMenu.Overlay>
-                        <ActionList>
-                            <ActionList.Item
-                                sx={{ color: "grayText" }}
-                                onSelect={() => console.log("Em breve")}
-                            >
-                                Em breve...
-                            </ActionList.Item>
-                        </ActionList>
-                    </ActionMenu.Overlay>
-                </ActionMenu>
+                <AddMenu />
             </Header.Item>
             <Header.Item sx={{ mr: 0 }}>
-                <ActionMenu>
-                    <ActionMenu.Anchor>
-                        <Box
-                            sx={{
-                                ":hover": {
-                                    bg: "gray",
-                                },
-                                px: 1,
-                                borderRadius: 4,
-                            }}
-                        >
-                            <Avatar
-                                src="https://github.com/octocat.png"
-                                size={32}
-                                alt="@octocat"
-                            />
-                            <Octicon icon={TriangleDownIcon} />
-                        </Box>
-                    </ActionMenu.Anchor>
-
-                    <ActionMenu.Overlay>
-                        <ActionList>
-                            <ActionList.Item
-                                sx={{ color: "grayText" }}
-                                onSelect={() => console.log("Em breve")}
-                            >
-                                Em breve...
-                            </ActionList.Item>
-                        </ActionList>
-                    </ActionMenu.Overlay>
-                </ActionMenu>
+                <OptionsMenu />
             </Header.Item>
         </Header>
     );

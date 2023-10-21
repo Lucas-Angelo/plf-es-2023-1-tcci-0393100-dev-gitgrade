@@ -109,7 +109,7 @@ export class ConsistencyRuleDeliveryController extends Controller {
     ): Promise<PaginationResponseDTO<ConsistencyRuleDeliveryResponseDTO>> {
         this.setStatus(200);
         const serviceResponse =
-            await this.consistencyRuleDeliveryService.findAll(query);
+            await this.consistencyRuleDeliveryService.findAllBy(query);
         return {
             totalPages: serviceResponse.totalPages,
             results: serviceResponse.results.map(

@@ -54,6 +54,8 @@ class EnvironmentConfig {
             GITHUB_APP_CLIENT_SECRET: process.env.GITHUB_APP_CLIENT_SECRET,
             JWT_SECRET: process.env.JWT_SECRET,
             SESSION_SECRET: process.env.SESSION_SECRET,
+            OAUTH_SUCCESS_REDIRECT_URL: process.env.OAUTH_SUCCESS_REDIRECT_URL,
+            OAUTH_FAILURE_SEARCH_PARAM: process.env.OAUTH_FAILURE_SEARCH_PARAM,
         };
     }
 
