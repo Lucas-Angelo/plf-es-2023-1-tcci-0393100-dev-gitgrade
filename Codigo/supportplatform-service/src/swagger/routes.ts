@@ -5,6 +5,8 @@ import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute, H
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ConsistencyRuleController } from './../controller/ConsistencyRuleController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { ConsistencyRuleDeliveryController } from './../controller/ConsistencyRuleDeliveryController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { EvaluationMethodController } from './../controller/EvaluationMethodController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { RepositoryController } from './../controller/RepositoryController';
@@ -83,6 +85,65 @@ const models: TsoaRoute.Models = {
             "description": {"dataType":"string","validators":{"isString":{"errorMsg":"description must be a string"}}},
             "filePath": {"dataType":"string","validators":{"isString":{"errorMsg":"filePath must be a string"}}},
             "validationType": {"ref":"ValidationType"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ConsistencyRuleDeliveryStatus": {
+        "dataType": "refEnum",
+        "enums": ["AWAITING_DELIVERY","DELIVERED_ON_TIME","DELIVERED_LATE","NOT_DELIVERED","DELIVERED_WITH_INVALIDITY"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ConsistencyRuleDeliveryResponseDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "consistencyRuleId": {"dataType":"double","required":true},
+            "repositoryId": {"dataType":"double","required":true},
+            "deliveryAt": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}],"required":true},
+            "status": {"ref":"ConsistencyRuleDeliveryStatus","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ConsistencyRuleDeliveryCreateDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "consistencyRuleId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"consistencyRuleId must be an integer"},"minimum":{"errorMsg":"consistencyRuleId must be greater than or equal to 1","value":1}}},
+            "repositoryId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"repositoryId must be an integer"},"minimum":{"errorMsg":"repositoryId must be greater than or equal to 1","value":1}}},
+            "deliveryAt": {"dataType":"union","subSchemas":[{"dataType":"date"},{"dataType":"enum","enums":[null]}],"validators":{"isDate":{"errorMsg":"deliveryAt must be a Date"}}},
+            "status": {"ref":"ConsistencyRuleDeliveryStatus","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ConsistencyRuleDeliveryUpdateDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "consistencyRuleId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"consistencyRuleId must be an integer"},"minimum":{"errorMsg":"consistencyRuleId must be greater than or equal to 1","value":1}}},
+            "repositoryId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"repositoryId must be an integer"},"minimum":{"errorMsg":"repositoryId must be greater than or equal to 1","value":1}}},
+            "deliveryAt": {"dataType":"union","subSchemas":[{"dataType":"date"},{"dataType":"enum","enums":[null]}],"validators":{"isDate":{"errorMsg":"deliveryAt must be a Date"}}},
+            "status": {"ref":"ConsistencyRuleDeliveryStatus","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PaginationResponseDTO_ConsistencyRuleDeliveryResponseDTO_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"results":{"dataType":"array","array":{"dataType":"refObject","ref":"ConsistencyRuleDeliveryResponseDTO"},"required":true},"totalPages":{"dataType":"double","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ConsistencyRuleDeliverySearchDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "page": {"dataType":"integer","validators":{"isInt":{"errorMsg":"page must be an integer"},"minimum":{"errorMsg":"page must be greater than or equal to 1","value":1}}},
+            "limit": {"dataType":"integer","validators":{"isInt":{"errorMsg":"limit must be an integer"},"minimum":{"errorMsg":"limit must be greater than or equal to 1","value":1}}},
+            "consistencyRuleId": {"dataType":"integer","validators":{"isInt":{"errorMsg":"consistencyRuleId must be an integer"},"minimum":{"errorMsg":"consistencyRuleId must be greater than or equal to 1","value":1}}},
+            "repositoryId": {"dataType":"integer","validators":{"isInt":{"errorMsg":"repositoryId must be an integer"},"minimum":{"errorMsg":"repositoryId must be greater than or equal to 1","value":1}}},
+            "deliveryAt": {"dataType":"date","validators":{"isDate":{"errorMsg":"deliveryAt must be a Date"}}},
+            "deliveryAtStart": {"dataType":"date","validators":{"isDate":{"errorMsg":"deliveryAtStart must be a Date"}}},
+            "deliveryAtEnd": {"dataType":"date","validators":{"isDate":{"errorMsg":"deliveryAtEnd must be a Date"}}},
+            "status": {"ref":"ConsistencyRuleDeliveryStatus"},
         },
         "additionalProperties": false,
     },
@@ -413,6 +474,111 @@ export function RegisterRoutes(app: Router) {
                 validatedArgs = getValidatedArgs(args, request, response);
 
                 const controller = new ConsistencyRuleController();
+
+
+              const promise = controller.getOne.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 200, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/consistency-rule-delivery',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(ConsistencyRuleDeliveryController)),
+            ...(fetchMiddlewares<RequestHandler>(ConsistencyRuleDeliveryController.prototype.create)),
+
+            function ConsistencyRuleDeliveryController_create(request: any, response: any, next: any) {
+            const args = {
+                    body: {"in":"body","name":"body","required":true,"ref":"ConsistencyRuleDeliveryCreateDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new ConsistencyRuleDeliveryController();
+
+
+              const promise = controller.create.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 201, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.put('/consistency-rule-delivery/:id',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(ConsistencyRuleDeliveryController)),
+            ...(fetchMiddlewares<RequestHandler>(ConsistencyRuleDeliveryController.prototype.update)),
+
+            function ConsistencyRuleDeliveryController_update(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                    body: {"in":"body","name":"body","required":true,"ref":"ConsistencyRuleDeliveryUpdateDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new ConsistencyRuleDeliveryController();
+
+
+              const promise = controller.update.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 200, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/consistency-rule-delivery',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(ConsistencyRuleDeliveryController)),
+            ...(fetchMiddlewares<RequestHandler>(ConsistencyRuleDeliveryController.prototype.getAll)),
+
+            function ConsistencyRuleDeliveryController_getAll(request: any, response: any, next: any) {
+            const args = {
+                    query: {"in":"queries","name":"query","required":true,"ref":"ConsistencyRuleDeliverySearchDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new ConsistencyRuleDeliveryController();
+
+
+              const promise = controller.getAll.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 200, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/consistency-rule-delivery/:id',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(ConsistencyRuleDeliveryController)),
+            ...(fetchMiddlewares<RequestHandler>(ConsistencyRuleDeliveryController.prototype.getOne)),
+
+            function ConsistencyRuleDeliveryController_getOne(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new ConsistencyRuleDeliveryController();
 
 
               const promise = controller.getOne.apply(controller, validatedArgs as any);

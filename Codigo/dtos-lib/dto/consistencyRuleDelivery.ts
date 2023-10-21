@@ -3,6 +3,7 @@ export enum ConsistencyRuleDeliveryStatus {
   DELIVERED_ON_TIME = "DELIVERED_ON_TIME",
   DELIVERED_LATE = "DELIVERED_LATE",
   NOT_DELIVERED = "NOT_DELIVERED",
+  DELIVERED_WITH_INVALIDITY = "DELIVERED_WITH_INVALIDITY",
 }
 
 /**
@@ -20,11 +21,12 @@ export interface ConsistencyRuleDeliveryCreateDTO {
    */
   repositoryId: number;
   /**
+   * @isOptional deliveryAt is optional
    * @isDate deliveryAt must be a Date
    */
-  deliveryAt: Date;
+  deliveryAt?: Date | null;
   /**
-   * @isEnum ConsistencyRuleDeliveryStatus must be a valid ConsistencyRuleDeliveryStatus
+   * @isEnum status must be one of ['AWAITING_DELIVERY', 'DELIVERED_ON_TIME', 'DELIVERED_LATE', 'NOT_DELIVERED', 'DELIVERED_WITH_INVALIDITY']
    */
   status: ConsistencyRuleDeliveryStatus;
 }
@@ -44,11 +46,13 @@ export interface ConsistencyRuleDeliveryUpdateDTO {
    */
   repositoryId: number;
   /**
+   * @isOptional deliveryAt is optional
    * @isDate deliveryAt must be a Date
    */
-  deliveryAt: Date;
+  deliveryAt?: Date | null;
   /**
-   * @isEnum ConsistencyRuleDeliveryStatus must be a valid ConsistencyRuleDeliveryStatus
+   * @isEnum status must be one of ['AWAITING_DELIVERY', 'DELIVERED_ON_TIME', 'DELIVERED_LATE', 'NOT_DELIVERED', 'DELIVERED_WITH_INVALIDITY']
+   * @isOptional status is optional
    */
   status: ConsistencyRuleDeliveryStatus;
 }
@@ -97,7 +101,7 @@ export interface ConsistencyRuleDeliverySearchDTO {
    */
   deliveryAtEnd?: Date;
   /**
-   * @isEnum ConsistencyRuleDeliveryStatus must be a valid ConsistencyRuleDeliveryStatus
+   * @isEnum status must be one of ['AWAITING_DELIVERY', 'DELIVERED_ON_TIME', 'DELIVERED_LATE', 'NOT_DELIVERED', 'DELIVERED_WITH_INVALIDITY']
    * @isOptional status is optional
    */
   status?: ConsistencyRuleDeliveryStatus;
@@ -140,7 +144,7 @@ export interface ConsistencyRuleDeliveryFindOneDTO {
    */
   deliveryAtEnd?: Date;
   /**
-   * @isEnum ConsistencyRuleDeliveryStatus must be a valid ConsistencyRuleDeliveryStatus
+   * @isEnum status must be one of ['AWAITING_DELIVERY', 'DELIVERED_ON_TIME', 'DELIVERED_LATE', 'NOT_DELIVERED', 'DELIVERED_WITH_INVALIDITY']
    * @isOptional status is optional
    */
   status?: ConsistencyRuleDeliveryStatus;
@@ -153,6 +157,6 @@ export interface ConsistencyRuleDeliveryResponseDTO {
   id: number;
   consistencyRuleId: number;
   repositoryId: number;
-  deliveryAt: Date;
+  deliveryAt: Date | null;
   status: ConsistencyRuleDeliveryStatus;
 }

@@ -32,10 +32,17 @@ export default class RepositoryService {
                     },
                 ],
             });
+
             if (!repository) {
-                logger.error("Error finding one repository:");
-                throw new AppError("Repository not found", 404);
+                logger.error(
+                    `Repository not found by fields ${JSON.stringify(fields)}`
+                );
+                throw new AppError(
+                    `Repository not found by fields ${JSON.stringify(fields)}`,
+                    404
+                );
             }
+
             return repository;
         } catch (error) {
             logger.error("Error finding one repository:", { error });

@@ -37,6 +37,12 @@ export default class ConsistencyRuleDeliveryService {
 
             this.validateNotNullAndEmptyFields(data);
 
+            if (data.status && data.deliveryAt)
+                this.checkIfStatusAndDeliveryAtAreValid(
+                    data.status,
+                    data.deliveryAt
+                );
+
             await this.consistencyRuleService.findOneBy({
                 id: data.consistencyRuleId,
             });
@@ -80,6 +86,12 @@ export default class ConsistencyRuleDeliveryService {
             }
 
             this.validateNotNullAndEmptyFields(data);
+
+            if (data.status && data.deliveryAt)
+                this.checkIfStatusAndDeliveryAtAreValid(
+                    data.status,
+                    data.deliveryAt
+                );
 
             await this.consistencyRuleService.findOneBy({
                 id: data.consistencyRuleId,
@@ -188,11 +200,15 @@ export default class ConsistencyRuleDeliveryService {
                 fields,
             });
 
-            await this.consistencyRuleService.findOneBy({
-                id: fields.consistencyRuleId,
-            });
+            if (fields.consistencyRuleId)
+                await this.consistencyRuleService.findOneBy({
+                    id: fields.consistencyRuleId,
+                });
 
-            await this.repositoryService.findOneBy({ id: fields.repositoryId });
+            if (fields.repositoryId)
+                await this.repositoryService.findOneBy({
+                    id: fields.repositoryId,
+                });
 
             const consistencyRuleDelivery =
                 await ConsistencyRuleDelivery.findOne({
@@ -202,19 +218,19 @@ export default class ConsistencyRuleDeliveryService {
 
             if (!consistencyRuleDelivery) {
                 logger.info(
-                    `ConsistencyRuleDelivery not found by fields ${JSON.stringify(
+                    `Consistency rule delivery not found by fields ${JSON.stringify(
                         fields
                     )}`
                 );
                 throw new AppError(
-                    `ConsistencyRuleDelivery not found by fields ${JSON.stringify(
+                    `Consistency rule delivery not found by fields ${JSON.stringify(
                         fields
                     )}`,
                     404
                 );
             } else
                 logger.info(
-                    `ConsistencyRuleDelivery found by fields ${JSON.stringify(
+                    `Consistency rule delivery found by fields ${JSON.stringify(
                         fields
                     )}:`,
                     { consistencyRuleDelivery }
@@ -276,6 +292,35 @@ export default class ConsistencyRuleDeliveryService {
 
         if (filter.repositoryId) whereClause.repositoryId = filter.repositoryId;
 
+        if (filter.status) whereClause.status = filter.status;
+
         return whereClause;
+    }
+
+    private checkIfStatusAndDeliveryAtAreValid(
+        status: string,
+        deliveryAt: Date
+    ): void {
+        if (status === "AWAITING_DELIVERY" && deliveryAt) {
+            logger.error(
+                "Cannot set deliveryAt when status is AWAITING_DELIVERY",
+                400
+            );
+            throw new AppError(
+                "Cannot set deliveryAt when status is AWAITING_DELIVERY",
+                400
+            );
+        }
+
+        if (status === "NOT_DELIVERED" && deliveryAt) {
+            logger.error(
+                "Cannot set deliveryAt when status is NOT_DELIVERED",
+                400
+            );
+            throw new AppError(
+                "Cannot set deliveryAt when status is NOT_DELIVERED",
+                400
+            );
+        }
     }
 }

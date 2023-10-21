@@ -5,6 +5,7 @@ import {
     ConsistencyRuleDeliveryUpdateDTO,
     PaginationResponseDTO,
 } from "@gitgrade/dtos";
+import { ConsistencyRuleDeliveryStatus } from "@gitgrade/dtos/dto/consistencyRuleDelivery";
 import {
     Body,
     Controller,
@@ -27,11 +28,14 @@ import ConsistencyRuleDeliveryService from "../service/ConsistencyRuleDeliverySe
 @Tags("ConsistencyRuleDelivery")
 export class ConsistencyRuleDeliveryController extends Controller {
     private consistencyRuleDeliveryService: ConsistencyRuleDeliveryService;
+    private consistencyRuleDeliveryMapper: ConsistencyRuleDeliveryMapper;
 
     constructor() {
         super();
         this.consistencyRuleDeliveryService =
             new ConsistencyRuleDeliveryService();
+        this.consistencyRuleDeliveryMapper =
+            new ConsistencyRuleDeliveryMapper();
     }
 
     /**
@@ -43,6 +47,7 @@ export class ConsistencyRuleDeliveryController extends Controller {
         consistencyRuleId: 1,
         repositoryId: 1,
         deliveryAt: new Date("2023-01-01"),
+        status: ConsistencyRuleDeliveryStatus.DELIVERED_ON_TIME,
     })
     @Post("/")
     @SuccessResponse("201", "ConsistencyRuleDelivery created")
@@ -52,8 +57,7 @@ export class ConsistencyRuleDeliveryController extends Controller {
         this.setStatus(201);
         const serviceResponse =
             await this.consistencyRuleDeliveryService.create(body);
-        const mapper = new ConsistencyRuleDeliveryMapper();
-        return mapper.toDto(serviceResponse);
+        return this.consistencyRuleDeliveryMapper.toDto(serviceResponse);
     }
 
     /**
@@ -67,6 +71,7 @@ export class ConsistencyRuleDeliveryController extends Controller {
         consistencyRuleId: 1,
         repositoryId: 1,
         deliveryAt: new Date("2023-01-02"),
+        status: ConsistencyRuleDeliveryStatus.DELIVERED_ON_TIME,
     })
     @Put("/{id}")
     @SuccessResponse("200", "ConsistencyRuleDelivery updated")
@@ -77,8 +82,7 @@ export class ConsistencyRuleDeliveryController extends Controller {
         this.setStatus(200);
         const serviceResponse =
             await this.consistencyRuleDeliveryService.update(id, body);
-        const mapper = new ConsistencyRuleDeliveryMapper();
-        return mapper.toDto(serviceResponse);
+        return this.consistencyRuleDeliveryMapper.toDto(serviceResponse);
     }
 
     /**
@@ -94,6 +98,7 @@ export class ConsistencyRuleDeliveryController extends Controller {
                 consistencyRuleId: 1,
                 repositoryId: 1,
                 deliveryAt: new Date("2023-01-01"),
+                status: ConsistencyRuleDeliveryStatus.DELIVERED_ON_TIME,
             },
         ],
     })
@@ -105,10 +110,11 @@ export class ConsistencyRuleDeliveryController extends Controller {
         this.setStatus(200);
         const serviceResponse =
             await this.consistencyRuleDeliveryService.findAll(query);
-        const mapper = new ConsistencyRuleDeliveryMapper();
         return {
             totalPages: serviceResponse.totalPages,
-            results: serviceResponse.results.map(mapper.toDto),
+            results: serviceResponse.results.map(
+                this.consistencyRuleDeliveryMapper.toDto
+            ),
         };
     }
 
@@ -121,6 +127,7 @@ export class ConsistencyRuleDeliveryController extends Controller {
         consistencyRuleId: 1,
         repositoryId: 1,
         deliveryAt: new Date("2023-01-01"),
+        status: ConsistencyRuleDeliveryStatus.DELIVERED_ON_TIME,
     })
     @Get("/{id}")
     @SuccessResponse("200", "Found consistency rule delivery")
@@ -132,7 +139,6 @@ export class ConsistencyRuleDeliveryController extends Controller {
             await this.consistencyRuleDeliveryService.findOneBy({
                 id: id,
             });
-        const mapper = new ConsistencyRuleDeliveryMapper();
-        return mapper.toDto(serviceResponse);
+        return this.consistencyRuleDeliveryMapper.toDto(serviceResponse);
     }
 }

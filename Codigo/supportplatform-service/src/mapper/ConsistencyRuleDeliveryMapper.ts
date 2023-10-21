@@ -10,7 +10,9 @@ export class ConsistencyRuleDeliveryMapper {
             new ConsistencyRuleDeliveryStatusMapper();
     }
 
-    toDto(model: ConsistencyRuleDelivery): ConsistencyRuleDeliveryResponseDTO {
+    toDto = (
+        model: ConsistencyRuleDelivery
+    ): ConsistencyRuleDeliveryResponseDTO => {
         return {
             id: model.id,
             consistencyRuleId: model.consistencyRuleId,
@@ -20,5 +22,5 @@ export class ConsistencyRuleDeliveryMapper {
                 model.status
             ),
         };
-    }
+    };
 }

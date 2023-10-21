@@ -75,5 +75,6 @@ export type {
   StandardizedIssueFindOneDTO,
   StandardizedIssueResponseDTO,
   StandardizedIssueSearchDTO,
-  StandardizedIssueUpdateDTO,
+  StandardizedIssueUpdateDTO
 };
+

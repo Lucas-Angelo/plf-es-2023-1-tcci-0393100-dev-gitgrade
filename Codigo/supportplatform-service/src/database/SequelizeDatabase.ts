@@ -8,6 +8,7 @@ import SequelizeOptions from "../config/SequelizeConfig";
 import { Branch } from "../model/Branch";
 import { Commit } from "../model/Commit";
 import { ConsistencyRule } from "../model/ConsistencyRule";
+import { ConsistencyRuleDelivery } from "../model/ConsistencyRuleDelivery";
 import { Contributor } from "../model/Contributor";
 import { EvaluationMethod } from "../model/EvaluationMethod";
 import { File } from "../model/File";
@@ -43,7 +44,8 @@ class SequelizeDatabase {
         try {
             await this.sequelize.authenticate();
             // TODO: create migrations
-            if (EnvConfig.NODE_ENV == "development") await this.sync();
+            if (EnvConfig.NODE_ENV == "development")
+                await this.sequelize.sync();
             this.logConnectionSuccess();
         } catch (error) {
             this.logConnectionError(error);
@@ -71,6 +73,7 @@ class SequelizeDatabase {
             Sprint.initModel(this.sequelize);
             StandardizedIssue.initModel(this.sequelize);
             ConsistencyRule.initModel(this.sequelize);
+            ConsistencyRuleDelivery.initModel(this.sequelize);
         } catch (error) {
             logger.error("Error initializing models:", error);
             throw error;
@@ -97,6 +100,7 @@ class SequelizeDatabase {
                 Issue,
                 PullRequest,
                 EvaluationMethod,
+                ConsistencyRuleDelivery,
             });
             EvaluationMethod.associate({ Repository, Sprint });
             Sprint.associate({ EvaluationMethod });
@@ -105,6 +109,10 @@ class SequelizeDatabase {
                 EvaluationMethod,
                 Sprint,
                 StandardizedIssue,
+            });
+            ConsistencyRuleDelivery.associate({
+                ConsistencyRule,
+                Repository,
             });
         } catch (error) {
             logger.error("Error associating models:", error);
