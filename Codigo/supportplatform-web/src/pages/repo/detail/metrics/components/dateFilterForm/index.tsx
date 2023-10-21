@@ -1,22 +1,27 @@
 import { Box, Button, FormControl, TextInput } from "@primer/react";
 import { useRef, useState } from "react";
 import {
+    getDateToForm,
     getIfDateIsValid,
     getIfDateRangeIsValid,
 } from "../../../../../../commom/utils/date";
 
 interface IDateFilterFormProps {
     onSubmit?: (startedAt: string, endedAt: string) => void;
-    defaultStartedAt?: string;
-    defaultEndedAt?: string;
+    defaultStartedAtDate?: Date;
+    defaultEndedAtDate?: Date;
 }
 
 export default function DateFilterForm(props: IDateFilterFormProps) {
     const startedAtInputRef = useRef<HTMLInputElement>(null);
     const endedAtInputRef = useRef<HTMLInputElement>(null);
     const [formData, setFormData] = useState({
-        startedAt: props.defaultStartedAt ?? "",
-        endedAt: props.defaultEndedAt ?? "",
+        startedAt: props.defaultStartedAtDate
+            ? getDateToForm(props.defaultStartedAtDate)
+            : "",
+        endedAt: props.defaultEndedAtDate
+            ? getDateToForm(props.defaultEndedAtDate)
+            : "",
     });
 
     const [isDateRangeInvalid, setIsDateRangeInvalid] = useState(false);
@@ -92,7 +97,7 @@ export default function DateFilterForm(props: IDateFilterFormProps) {
                         }
                         ref={startedAtInputRef}
                         name="startedAt"
-                        type="date"
+                        type="datetime-local"
                         sx={{ width: "100%" }}
                         value={formData.startedAt}
                     />
@@ -106,7 +111,7 @@ export default function DateFilterForm(props: IDateFilterFormProps) {
                         }
                         ref={endedAtInputRef}
                         name="endedAt"
-                        type="date"
+                        type="datetime-local"
                         sx={{ width: "100%" }}
                         value={formData.endedAt}
                     />

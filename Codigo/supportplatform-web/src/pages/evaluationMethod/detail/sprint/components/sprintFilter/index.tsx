@@ -14,7 +14,6 @@ export default function SprintFilter() {
     function handleSearch(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         const filter = inputRef.current?.value;
-        console.log("ola rapazes", filter);
 
         setSearchParams((previousSearchParams) => {
             if (!filter) previousSearchParams.delete(pageSearchParams.name);

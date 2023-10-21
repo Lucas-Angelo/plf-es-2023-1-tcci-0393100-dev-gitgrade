@@ -1,23 +1,27 @@
-import { AnchoredOverlay, Box, IconButton } from "@primer/react";
+import { AnchoredOverlay, Box, Octicon } from "@primer/react";
 import { FilterIcon } from "@primer/octicons-react";
 import React, { useState } from "react";
 import DateFilterForm from "../dateFilterForm";
 import { useSearchParams } from "react-router-dom";
 import {
     getIfDateRangeIsValid,
-    getTimeZoneAdjustedDate,
     getIfDateIsValid,
 } from "../../../../../../commom/utils/date";
 import appRoutes from "../../../../../../commom/routes/appRoutes";
+import SprintFilter from "../sprintFilter";
+import { SprintResponseDTO } from "@gitgrade/dtos";
 
 interface IDateFilterProps {
     repositoryGithubCreatedAt?: Date;
+    evaluationMethodId: number | undefined;
 }
 
 const dateTimeFormat = new Intl.DateTimeFormat("pt-BR", {
     year: "numeric",
     month: "long",
     day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
 });
 
 export function formatDateRange(
@@ -29,19 +33,13 @@ export function formatDateRange(
     const isStartedAtAValidDate = startedAt && getIfDateIsValid(startedAt);
     const isEndedAtAValidDate = endedAt && getIfDateIsValid(endedAt);
     const isRangeValid =
-        !startedAt ||
-        !endedAt ||
-        isStartedAtAValidDate ||
-        isEndedAtAValidDate ||
+        !isStartedAtAValidDate ||
+        !isEndedAtAValidDate ||
         getIfDateRangeIsValid(startedAt, endedAt);
     const finalStartedAt =
-        startedAt && getIfDateIsValid(startedAt) && isRangeValid
-            ? startedAt
-            : fallbackStartedAt;
+        isStartedAtAValidDate && isRangeValid ? startedAt : fallbackStartedAt;
     const finalEndedAt =
-        endedAt && getIfDateIsValid(endedAt) && isRangeValid
-            ? endedAt
-            : fallbackEndedAt;
+        isEndedAtAValidDate && isRangeValid ? endedAt : fallbackEndedAt;
 
     return dateTimeFormat.formatRange(finalStartedAt, finalEndedAt);
 }
@@ -53,12 +51,20 @@ export default function DateFilter(props: IDateFilterProps) {
     const openOverlay = React.useCallback(() => setIsOpen(true), [setIsOpen]);
     const closeOverlay = React.useCallback(() => setIsOpen(false), [setIsOpen]);
 
+    const [selectedSprint, setSelectedSprint] = useState<SprintResponseDTO>();
+
     const [searchParams, setSearchParams] = useSearchParams();
     const startedAt = searchParams.get(pageRouteSearchParams.startedAt) ?? "";
     const endedAt = searchParams.get(pageRouteSearchParams.endedAt) ?? "";
 
-    const startedAtDate = getTimeZoneAdjustedDate(startedAt);
-    const endedAtDate = getTimeZoneAdjustedDate(endedAt);
+    const startedAtDate = new Date(startedAt);
+    const endedAtDate = new Date(endedAt);
+    const isStillFilteringBySelectedSprint =
+        selectedSprint &&
+        startedAt &&
+        endedAt &&
+        new Date(selectedSprint?.start_date).toISOString() === startedAt &&
+        new Date(selectedSprint?.end_date).toISOString() === endedAt;
 
     const isStartedAtAValidDate = startedAt && getIfDateIsValid(startedAtDate);
     const isEndedAtAValidDate = endedAt && getIfDateIsValid(endedAtDate);
@@ -78,50 +84,113 @@ export default function DateFilter(props: IDateFilterProps) {
         setSearchParams((previousSearchParams) => {
             previousSearchParams.set(
                 pageRouteSearchParams.startedAt,
-                startedAt
+                startedAt ? new Date(startedAt).toISOString() : ""
             );
-            previousSearchParams.set(pageRouteSearchParams.endedAt, endedAt);
+            previousSearchParams.set(
+                pageRouteSearchParams.endedAt,
+                endedAt ? new Date(endedAt).toISOString() : ""
+            );
 
             return previousSearchParams;
         });
+        setSelectedSprint(undefined);
         closeOverlay();
+    }
+
+    function handleSprintChange(sprint: SprintResponseDTO | undefined) {
+        setSelectedSprint(sprint);
+        setSearchParams((previousSearchParams) => {
+            previousSearchParams.set(
+                pageRouteSearchParams.startedAt,
+                sprint ? new Date(sprint.start_date).toISOString() : ""
+            );
+            previousSearchParams.set(
+                pageRouteSearchParams.endedAt,
+                sprint ? new Date(sprint.end_date).toISOString() : ""
+            );
+
+            return previousSearchParams;
+        });
     }
 
     return (
         <Box
             sx={{
-                fontWeight: "bold",
-                fontSize: 20,
-                fontStyle: "italic",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
                 mb: 2,
+                gap: 4,
+                flexWrap: "wrap",
             }}
         >
-            {formatDateRange(
-                startedAtDate,
-                endedAtDate,
-                fallbackStartedAt,
-                fallbackEndedAt
-            )}
             <AnchoredOverlay
-                renderAnchor={(anchorProps) => (
-                    <IconButton
-                        icon={FilterIcon}
-                        {...anchorProps}
-                        aria-label={undefined}
-                        aria-labelledby="filtro"
-                        sx={{ ml: 2 }}
-                    />
-                )}
                 open={isOpen}
                 onOpen={openOverlay}
                 onClose={closeOverlay}
+                renderAnchor={(anchorProps) => (
+                    <Box
+                        sx={{
+                            fontWeight: "bold",
+                            fontSize: 20,
+                            fontStyle: "italic",
+                            textDecoration: "underline",
+                            cursor: "pointer",
+                            transition: "opacity 0.2s",
+                            ":hover": {
+                                opacity: 0.8,
+                            },
+                        }}
+                        {...anchorProps}
+                    >
+                        <Octicon
+                            icon={FilterIcon}
+                            aria-label={undefined}
+                            aria-labelledby="filtro"
+                            sx={{ mr: 2, mb: 1 }}
+                        />
+                        {formatDateRange(
+                            startedAtDate,
+                            endedAtDate,
+                            fallbackStartedAt,
+                            fallbackEndedAt
+                        )}
+                    </Box>
+                )}
             >
                 <DateFilterForm
                     onSubmit={handleDateFilterFormSubmit}
-                    defaultStartedAt={isDateRangeValid ? startedAt : undefined}
-                    defaultEndedAt={isDateRangeValid ? endedAt : undefined}
+                    defaultStartedAtDate={
+                        isDateRangeValid && isStartedAtAValidDate
+                            ? startedAtDate
+                            : undefined
+                    }
+                    defaultEndedAtDate={
+                        isDateRangeValid && isEndedAtAValidDate
+                            ? endedAtDate
+                            : undefined
+                    }
                 />
             </AnchoredOverlay>
+            {props.evaluationMethodId && (
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        flexGrow: 1,
+                    }}
+                >
+                    <SprintFilter
+                        evaluationMethodId={props.evaluationMethodId}
+                        onSelectedSprintSelect={handleSprintChange}
+                        selectedSprint={
+                            isStillFilteringBySelectedSprint
+                                ? selectedSprint
+                                : undefined
+                        }
+                    />
+                </Box>
+            )}
         </Box>
     );
 }
