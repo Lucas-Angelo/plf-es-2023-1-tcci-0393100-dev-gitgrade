@@ -7,11 +7,6 @@ import {
     FileChangeMetricsServiceQueryDataValues,
     FileChangeMetricsServiceResponse,
 } from "../interface/FileMetrics";
-import {
-    getDateInDayEnd,
-    getDateInDayStart,
-    getDateInServerTimeZone,
-} from "../utils/date";
 import { FileTypeMetricsDTO } from "@gitgrade/dtos";
 import { getContributorWhere } from "../utils/contributorFilter";
 
@@ -72,14 +67,7 @@ export default class FileService {
                         attributes: [],
                         where: {
                             committedDate: {
-                                [sequelize.Op.between]: [
-                                    getDateInDayStart(
-                                        getDateInServerTimeZone(startedAt)
-                                    ),
-                                    getDateInDayEnd(
-                                        getDateInServerTimeZone(endedAt)
-                                    ),
-                                ],
+                                [sequelize.Op.between]: [startedAt, endedAt],
                             },
                         },
                         include: [
@@ -145,14 +133,7 @@ export default class FileService {
                         attributes: [],
                         where: {
                             committedDate: {
-                                [sequelize.Op.between]: [
-                                    getDateInDayStart(
-                                        getDateInServerTimeZone(startedAt)
-                                    ),
-                                    getDateInDayEnd(
-                                        getDateInServerTimeZone(endedAt)
-                                    ),
-                                ],
+                                [sequelize.Op.between]: [startedAt, endedAt],
                             },
                             contributorId: null,
                         },
@@ -210,14 +191,7 @@ export default class FileService {
                     as: "commit",
                     where: {
                         committedDate: {
-                            [sequelize.Op.between]: [
-                                getDateInDayStart(
-                                    getDateInServerTimeZone(startedAt)
-                                ),
-                                getDateInDayEnd(
-                                    getDateInServerTimeZone(endedAt)
-                                ),
-                            ],
+                            [sequelize.Op.between]: [startedAt, endedAt],
                         },
                     },
                     include: [
@@ -271,14 +245,7 @@ export default class FileService {
                     attributes: ["id"],
                     where: {
                         committedDate: {
-                            [sequelize.Op.between]: [
-                                getDateInDayStart(
-                                    getDateInServerTimeZone(startedAt)
-                                ),
-                                getDateInDayEnd(
-                                    getDateInServerTimeZone(endedAt)
-                                ),
-                            ],
+                            [sequelize.Op.between]: [startedAt, endedAt],
                         },
                     },
                     include: [

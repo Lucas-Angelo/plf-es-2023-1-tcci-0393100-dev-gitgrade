@@ -1,5 +1,6 @@
 import { IssueMetricsDTO } from "@gitgrade/dtos";
 import api from "../config/api";
+import { getIfDateIsValid, getIfDateRangeIsValid } from "../../utils/date";
 
 export class IssueService {
     async getIssueMetricsGroupedByContributorByRepositoryIdQuery(
@@ -12,8 +13,21 @@ export class IssueService {
         }
     ) {
         const searchParams = new URLSearchParams();
-        if (query?.startedAt) searchParams.set("startedAt", query.startedAt);
-        if (query?.endedAt) searchParams.set("endedAt", query.endedAt);
+        const isStartedAtValid =
+            query?.startedAt && getIfDateIsValid(new Date(query.startedAt));
+        const isEndedAtValid =
+            query?.endedAt && getIfDateIsValid(new Date(query.endedAt));
+        const isDateRangeValid =
+            !isStartedAtValid ||
+            !isEndedAtValid ||
+            getIfDateRangeIsValid(
+                new Date(query.startedAt ?? ""),
+                new Date(query.endedAt ?? "")
+            );
+        if (query?.startedAt && isStartedAtValid && isDateRangeValid)
+            searchParams.set("startedAt", query.startedAt);
+        if (query?.endedAt && isEndedAtValid && isDateRangeValid)
+            searchParams.set("endedAt", query.endedAt);
 
         if (query?.contributors) {
             query.contributors.forEach((contributor) => {

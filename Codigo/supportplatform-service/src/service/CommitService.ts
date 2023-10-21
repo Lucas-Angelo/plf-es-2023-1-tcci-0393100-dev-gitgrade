@@ -8,11 +8,6 @@ import {
     CommitQualityMetricsServiceQueryDataValues,
     CommitQualityMetricsServiceResponse,
 } from "../interface/CommitMetrics";
-import {
-    getDateInDayEnd,
-    getDateInDayStart,
-    getDateInServerTimeZone,
-} from "../utils/date";
 import { Op } from "sequelize";
 import { getContributorWhere } from "../utils/contributorFilter";
 
@@ -65,10 +60,7 @@ export default class CommitService {
             ],
             where: {
                 committedDate: {
-                    [sequelize.Op.between]: [
-                        getDateInDayStart(getDateInServerTimeZone(startedAt)),
-                        getDateInDayEnd(getDateInServerTimeZone(endedAt)),
-                    ],
+                    [sequelize.Op.between]: [startedAt, endedAt],
                 },
                 ...contributorWhere,
             },
@@ -181,10 +173,7 @@ export default class CommitService {
                     ],
                 },
                 committedDate: {
-                    [sequelize.Op.between]: [
-                        getDateInDayStart(getDateInServerTimeZone(startedAt)),
-                        getDateInDayEnd(getDateInServerTimeZone(endedAt)),
-                    ],
+                    [sequelize.Op.between]: [startedAt, endedAt],
                 },
                 ...contributorWhere,
             },

@@ -50,7 +50,7 @@ describe("GET /repository/:id/metric/commit", () => {
     it("should return 422 when search param startedAt is greater than endedAt", async () => {
         const response = await supertest(app)
             .get(
-                `/repository/${repositoryTestingSeed[0].id}/metric/commit?startedAt=2021-01-01&endedAt=2020-01-01`
+                `/repository/${repositoryTestingSeed[0].id}/metric/commit?startedAt=2021-01-01T00:00-03:00&endedAt=2020-01-01T23:59-03:00`
             )
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(422)
@@ -157,10 +157,10 @@ describe("GET /repository/:id/metric/commit", () => {
         expect(contributor3?.commtiPercentage).toBe(50);
     });
 
-    it("should return 200 the three last commits, when startedAt = 2023-02-04", async () => {
+    it("should return 200 the three last commits, when startedAt = 2023-02-04T00:00-03:00", async () => {
         const response = await supertest(app)
             .get(
-                `/repository/${repositoryTestingSeed[0].id}/metric/commit?startedAt=2023-02-04`
+                `/repository/${repositoryTestingSeed[0].id}/metric/commit?startedAt=2023-02-04T00:00-03:00`
             )
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
@@ -193,7 +193,7 @@ describe("GET /repository/:id/metric/commit", () => {
     it("should return 200 and the two last commits, when startedAt = 2023-02-04 and branch = dev", async () => {
         const response = await supertest(app)
             .get(
-                `/repository/${repositoryTestingSeed[0].id}/metric/commit?startedAt=2023-02-04&branchName=dev`
+                `/repository/${repositoryTestingSeed[0].id}/metric/commit?startedAt=2023-02-04T00:00-03:00&branchName=dev`
             )
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
@@ -217,10 +217,10 @@ describe("GET /repository/:id/metric/commit", () => {
         expect(contributor3?.commtiPercentage).toBe(100);
     });
 
-    it("should return 200 and the two first commits, when endedAt = 2023-02-03", async () => {
+    it("should return 200 and the two first commits, when endedAt = 2023-02-03T23:59", async () => {
         const response = await supertest(app)
             .get(
-                `/repository/${repositoryTestingSeed[0].id}/metric/commit?endedAt=2023-02-03`
+                `/repository/${repositoryTestingSeed[0].id}/metric/commit?endedAt=2023-02-03T23:59-03:00`
             )
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
@@ -250,10 +250,10 @@ describe("GET /repository/:id/metric/commit", () => {
         expect(contributor2?.commtiPercentage).toBe(50);
     });
 
-    it("should return 200 and the two middle commits, when startedAt = 2023-02-03  and endedAt = 2023-02-04", async () => {
+    it("should return 200 and the two middle commits, when startedAt = 2023-02-03T00:00-03:00  and endedAt = 2023-02-04T23:59-03:00", async () => {
         const response = await supertest(app)
             .get(
-                `/repository/${repositoryTestingSeed[0].id}/metric/commit?endedAt=2023-02-04&startedAt=2023-02-03`
+                `/repository/${repositoryTestingSeed[0].id}/metric/commit?endedAt=2023-02-04T23:59-03:00&startedAt=2023-02-03T00:00-03:00`
             )
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
@@ -434,7 +434,7 @@ describe("GET /repository/:id/metric/commit-quality", () => {
     it("should return 422 when search param startedAt is greater than endedAt", async () => {
         const response = await supertest(app)
             .get(
-                `/repository/${repositoryTestingSeed[0].id}/metric/commit-quality?startedAt=2021-01-01&endedAt=2020-01-01`
+                `/repository/${repositoryTestingSeed[0].id}/metric/commit-quality?startedAt=2021-01-01T00:00-03:00&endedAt=2020-01-01T23:59-03:00`
             )
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(422)
@@ -589,7 +589,7 @@ describe("GET /repository/:id/metric/commit-quality", () => {
     it("should return 200 when endedAt is provided", async () => {
         const response = await supertest(app)
             .get(
-                `/repository/${repositoryTestingSeed[3].id}/metric/commit-quality?endedAt=2023-02-07`
+                `/repository/${repositoryTestingSeed[3].id}/metric/commit-quality?endedAt=2023-02-07T23:59-03:00`
             )
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
@@ -879,7 +879,7 @@ describe("GET /repository/:id/metric/issues", () => {
     it("should return 422 when search param startedAt is greater than endedAt", async () => {
         const response = await supertest(app)
             .get(
-                `/repository/${repositoryTestingSeed[0].id}/metric/issues?startedAt=2021-01-01&endedAt=2020-01-01`
+                `/repository/${repositoryTestingSeed[0].id}/metric/issues?startedAt=2021-01-01&endedAt=2020-01-01T23:59-03:00`
             )
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(422)
@@ -948,7 +948,7 @@ describe("GET /repository/:id/metric/issues", () => {
     it("should return 200 when provide startedAt", async () => {
         const response = await supertest(app)
             .get(
-                `/repository/${repositoryTestingSeed[3].id}/metric/issues?startedAt=2023-04-20`
+                `/repository/${repositoryTestingSeed[3].id}/metric/issues?startedAt=2023-04-20T00:00-03:00`
             )
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
@@ -991,7 +991,7 @@ describe("GET /repository/:id/metric/issues", () => {
     it("should return 200 when provide endedAt", async () => {
         const response = await supertest(app)
             .get(
-                `/repository/${repositoryTestingSeed[3].id}/metric/issues?endedAt=2023-03-20`
+                `/repository/${repositoryTestingSeed[3].id}/metric/issues?endedAt=2023-03-20T23:59-03:00`
             )
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
@@ -1189,7 +1189,7 @@ describe("GET /repository/:id/metric/file-types", () => {
     it("should return 422 when search param startedAt is greater than endedAt", async () => {
         const response = await supertest(app)
             .get(
-                `/repository/${repositoryTestingSeed[0].id}/metric/file-types?startedAt=2021-01-01&endedAt=2020-01-01`
+                `/repository/${repositoryTestingSeed[0].id}/metric/file-types?startedAt=2021-01-01T00:00-03:00&endedAt=2020-01-01T23:59-03:00`
             )
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(422)
@@ -1300,7 +1300,7 @@ describe("GET /repository/:id/metric/file-types", () => {
     it("should return 200 when provided startedAt", async () => {
         const response = await supertest(app)
             .get(
-                `/repository/${repositoryTestingSeed[0].id}/metric/file-types?startedAt=2023-02-04`
+                `/repository/${repositoryTestingSeed[0].id}/metric/file-types?startedAt=2023-02-04T00:00-03:00`
             )
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
@@ -1364,7 +1364,7 @@ describe("GET /repository/:id/metric/file-types", () => {
     it("should return 200 when provided endedAt", async () => {
         const response = await supertest(app)
             .get(
-                `/repository/${repositoryTestingSeed[0].id}/metric/file-types?endedAt=2023-02-03`
+                `/repository/${repositoryTestingSeed[0].id}/metric/file-types?endedAt=2023-02-03T23:59-03:00`
             )
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
@@ -1648,7 +1648,7 @@ describe("GET /repository/:id/metric/changes", () => {
     it("should return 422 when search param startedAt is greater than endedAt", async () => {
         const response = await supertest(app)
             .get(
-                `/repository/${repositoryTestingSeed[0].id}/metric/changes?startedAt=2021-01-01&endedAt=2020-01-01`
+                `/repository/${repositoryTestingSeed[0].id}/metric/changes?startedAt=2021-01-01T00:00-03:00&endedAt=2020-01-01T23:59-03:00`
             )
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(422)
@@ -1729,7 +1729,7 @@ describe("GET /repository/:id/metric/changes", () => {
     it("should return 200 when provided startedAt", async () => {
         const response = await supertest(app)
             .get(
-                `/repository/${repositoryTestingSeed[0].id}/metric/changes?startedAt=2023-02-04`
+                `/repository/${repositoryTestingSeed[0].id}/metric/changes?startedAt=2023-02-04T00:00-03:00`
             )
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
@@ -1768,7 +1768,7 @@ describe("GET /repository/:id/metric/changes", () => {
     it("should return 200 when provided endedAt", async () => {
         const response = await supertest(app)
             .get(
-                `/repository/${repositoryTestingSeed[0].id}/metric/changes?endedAt=2023-02-03`
+                `/repository/${repositoryTestingSeed[0].id}/metric/changes?endedAt=2023-02-03T23:59-03:00`
             )
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)

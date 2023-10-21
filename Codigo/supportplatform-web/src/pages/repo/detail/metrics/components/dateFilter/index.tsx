@@ -1,11 +1,10 @@
-import { AnchoredOverlay, Box, IconButton } from "@primer/react";
+import { AnchoredOverlay, Box, Octicon } from "@primer/react";
 import { FilterIcon } from "@primer/octicons-react";
 import React, { useState } from "react";
 import DateFilterForm from "../dateFilterForm";
 import { useSearchParams } from "react-router-dom";
 import {
     getIfDateRangeIsValid,
-    getTimeZoneAdjustedDate,
     getIfDateIsValid,
 } from "../../../../../../commom/utils/date";
 import appRoutes from "../../../../../../commom/routes/appRoutes";
@@ -21,6 +20,8 @@ const dateTimeFormat = new Intl.DateTimeFormat("pt-BR", {
     year: "numeric",
     month: "long",
     day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
 });
 
 export function formatDateRange(
@@ -32,19 +33,13 @@ export function formatDateRange(
     const isStartedAtAValidDate = startedAt && getIfDateIsValid(startedAt);
     const isEndedAtAValidDate = endedAt && getIfDateIsValid(endedAt);
     const isRangeValid =
-        !startedAt ||
-        !endedAt ||
-        isStartedAtAValidDate ||
-        isEndedAtAValidDate ||
+        !isStartedAtAValidDate ||
+        !isEndedAtAValidDate ||
         getIfDateRangeIsValid(startedAt, endedAt);
     const finalStartedAt =
-        startedAt && getIfDateIsValid(startedAt) && isRangeValid
-            ? startedAt
-            : fallbackStartedAt;
+        isStartedAtAValidDate && isRangeValid ? startedAt : fallbackStartedAt;
     const finalEndedAt =
-        endedAt && getIfDateIsValid(endedAt) && isRangeValid
-            ? endedAt
-            : fallbackEndedAt;
+        isEndedAtAValidDate && isRangeValid ? endedAt : fallbackEndedAt;
 
     return dateTimeFormat.formatRange(finalStartedAt, finalEndedAt);
 }
@@ -62,8 +57,8 @@ export default function DateFilter(props: IDateFilterProps) {
     const startedAt = searchParams.get(pageRouteSearchParams.startedAt) ?? "";
     const endedAt = searchParams.get(pageRouteSearchParams.endedAt) ?? "";
 
-    const startedAtDate = getTimeZoneAdjustedDate(startedAt);
-    const endedAtDate = getTimeZoneAdjustedDate(endedAt);
+    const startedAtDate = new Date(startedAt);
+    const endedAtDate = new Date(endedAt);
     const isStillFilteringBySelectedSprint =
         selectedSprint &&
         startedAt &&
@@ -89,9 +84,12 @@ export default function DateFilter(props: IDateFilterProps) {
         setSearchParams((previousSearchParams) => {
             previousSearchParams.set(
                 pageRouteSearchParams.startedAt,
-                startedAt
+                startedAt ? new Date(startedAt).toISOString() : ""
             );
-            previousSearchParams.set(pageRouteSearchParams.endedAt, endedAt);
+            previousSearchParams.set(
+                pageRouteSearchParams.endedAt,
+                endedAt ? new Date(endedAt).toISOString() : ""
+            );
 
             return previousSearchParams;
         });
@@ -99,16 +97,16 @@ export default function DateFilter(props: IDateFilterProps) {
         closeOverlay();
     }
 
-    function handleSprintChange(sprint: SprintResponseDTO) {
+    function handleSprintChange(sprint: SprintResponseDTO | undefined) {
         setSelectedSprint(sprint);
         setSearchParams((previousSearchParams) => {
             previousSearchParams.set(
                 pageRouteSearchParams.startedAt,
-                new Date(sprint.start_date).toISOString()
+                sprint ? new Date(sprint.start_date).toISOString() : ""
             );
             previousSearchParams.set(
                 pageRouteSearchParams.endedAt,
-                new Date(sprint.end_date).toISOString()
+                sprint ? new Date(sprint.end_date).toISOString() : ""
             );
 
             return previousSearchParams;
@@ -126,52 +124,72 @@ export default function DateFilter(props: IDateFilterProps) {
                 flexWrap: "wrap",
             }}
         >
-            <Box
-                sx={{
-                    fontWeight: "bold",
-                    fontSize: 20,
-                    fontStyle: "italic",
-                }}
-            >
-                {formatDateRange(
-                    startedAtDate,
-                    endedAtDate,
-                    fallbackStartedAt,
-                    fallbackEndedAt
-                )}
-                <AnchoredOverlay
-                    renderAnchor={(anchorProps) => (
-                        <IconButton
+            <AnchoredOverlay
+                open={isOpen}
+                onOpen={openOverlay}
+                onClose={closeOverlay}
+                renderAnchor={(anchorProps) => (
+                    <Box
+                        sx={{
+                            fontWeight: "bold",
+                            fontSize: 20,
+                            fontStyle: "italic",
+                            textDecoration: "underline",
+                            cursor: "pointer",
+                            transition: "opacity 0.2s",
+                            ":hover": {
+                                opacity: 0.8,
+                            },
+                        }}
+                        {...anchorProps}
+                    >
+                        <Octicon
                             icon={FilterIcon}
-                            {...anchorProps}
                             aria-label={undefined}
                             aria-labelledby="filtro"
-                            sx={{ ml: 2 }}
+                            sx={{ mr: 2, mb: 1 }}
                         />
-                    )}
-                    open={isOpen}
-                    onOpen={openOverlay}
-                    onClose={closeOverlay}
-                >
-                    <DateFilterForm
-                        onSubmit={handleDateFilterFormSubmit}
-                        defaultStartedAt={
-                            isDateRangeValid ? startedAt : undefined
-                        }
-                        defaultEndedAt={isDateRangeValid ? endedAt : undefined}
-                    />
-                </AnchoredOverlay>
-            </Box>
-            {props.evaluationMethodId && (
-                <SprintFilter
-                    evaluationMethodId={props.evaluationMethodId}
-                    onSelectedSprintSelect={handleSprintChange}
-                    selectedSprint={
-                        isStillFilteringBySelectedSprint
-                            ? selectedSprint
+                        {formatDateRange(
+                            startedAtDate,
+                            endedAtDate,
+                            fallbackStartedAt,
+                            fallbackEndedAt
+                        )}
+                    </Box>
+                )}
+            >
+                <DateFilterForm
+                    onSubmit={handleDateFilterFormSubmit}
+                    defaultStartedAtDate={
+                        isDateRangeValid && isStartedAtAValidDate
+                            ? startedAtDate
+                            : undefined
+                    }
+                    defaultEndedAtDate={
+                        isDateRangeValid && isEndedAtAValidDate
+                            ? endedAtDate
                             : undefined
                     }
                 />
+            </AnchoredOverlay>
+            {props.evaluationMethodId && (
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        flexGrow: 1,
+                    }}
+                >
+                    <SprintFilter
+                        evaluationMethodId={props.evaluationMethodId}
+                        onSelectedSprintSelect={handleSprintChange}
+                        selectedSprint={
+                            isStillFilteringBySelectedSprint
+                                ? selectedSprint
+                                : undefined
+                        }
+                    />
+                </Box>
             )}
         </Box>
     );

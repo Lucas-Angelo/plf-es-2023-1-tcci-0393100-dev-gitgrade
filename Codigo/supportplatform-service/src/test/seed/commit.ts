@@ -16,7 +16,7 @@ const commitTestingSeed = [
         contributorId: contributorTestingSeed[1].id,
         sha: "sha2",
         message: "message2",
-        committedDate: new Date("2023-02-03T15:52:12-03:00"),
+        committedDate: new Date("2023-02-03T23:52:12-03:00"),
     },
     {
         id: 3,

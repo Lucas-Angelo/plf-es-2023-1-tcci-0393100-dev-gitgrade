@@ -1,28 +1,13 @@
 import { SprintResponseDTO } from "@gitgrade/dtos";
 import { useEvaluationMethodSprintList } from "../../../../../../commom/data/sprint";
-import {
-    Truncate,
-    ActionMenu,
-    ActionList,
-    Text,
-    Spinner,
-    Box,
-} from "@primer/react";
+import { Select, Box } from "@primer/react";
 
 interface ISprintFilterProps {
     evaluationMethodId: number;
 
     selectedSprint?: SprintResponseDTO;
-    onSelectedSprintSelect?: (sprintId: SprintResponseDTO) => void;
+    onSelectedSprintSelect?: (sprintId: SprintResponseDTO | undefined) => void;
 }
-
-const dateTimeFormat = new Intl.DateTimeFormat("pt-BR", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-});
 
 export default function SprintFilter(props: ISprintFilterProps) {
     const { data: sprintList, isLoading } = useEvaluationMethodSprintList(
@@ -40,51 +25,49 @@ export default function SprintFilter(props: ISprintFilterProps) {
             ? props.selectedSprint
             : undefined;
 
-    return (
-        <ActionMenu>
-            <ActionMenu.Button>
-                <Truncate
-                    maxWidth={100}
-                    title={sprint?.name ?? "Filtrar sprint"}
-                >
-                    {sprint?.name ?? "Filtrar sprint"}
-                </Truncate>
-            </ActionMenu.Button>
+    function handleSprintSelectChange(
+        event: React.ChangeEvent<HTMLSelectElement>
+    ) {
+        const sprintId = parseInt(event.target.value);
+        const sprint = sprintList?.results.find(
+            (sprint) => sprint.id == sprintId
+        );
+        props.onSelectedSprintSelect?.(sprint);
+    }
 
-            <ActionMenu.Overlay>
-                <ActionList>
-                    {isLoading && (
-                        <ActionList.Item disabled>
-                            Carregando <Spinner />
-                        </ActionList.Item>
-                    )}
-                    {sprintList?.results.map((sprint) => (
-                        <ActionList.Item
-                            key={sprint.id.toString()}
-                            onSelect={() =>
-                                props.onSelectedSprintSelect?.(sprint)
-                            }
-                        >
-                            <Text sx={{ fontWeight: "bold" }}>
-                                {sprint.name}
-                                <Box
-                                    sx={{
-                                        fontSize: 12,
-                                        color: "gray",
-                                    }}
-                                >
-                                    (
-                                    {dateTimeFormat.formatRange(
-                                        new Date(sprint.start_date),
-                                        new Date(sprint.end_date)
-                                    )}
-                                    )
-                                </Box>
-                            </Text>
-                        </ActionList.Item>
-                    ))}
-                </ActionList>
-            </ActionMenu.Overlay>
-        </ActionMenu>
+    return (
+        <Box
+            sx={{
+                maxWidth: "150px",
+            }}
+        >
+            <Select
+                value={sprint?.id.toString()}
+                sx={{
+                    maxWidth: "300px",
+                }}
+                onChange={handleSprintSelectChange}
+            >
+                {isLoading && (
+                    <Select.Option
+                        value="-1"
+                        disabled
+                    >
+                        Carregando...
+                    </Select.Option>
+                )}
+                <Select.Option value="0">
+                    {sprint ? "Limpar filtro" : "Filtrar por sprint"}
+                </Select.Option>
+                {sprintList?.results.map((sprint) => (
+                    <Select.Option
+                        key={sprint.id}
+                        value={sprint.id.toString()}
+                    >
+                        {sprint.name}
+                    </Select.Option>
+                ))}
+            </Select>
+        </Box>
     );
 }
