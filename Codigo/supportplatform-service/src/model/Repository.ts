@@ -2,6 +2,7 @@ import { DataTypes, Model, Sequelize } from "sequelize";
 
 import EnvConfig from "../config/EnvConfig";
 import { Branch } from "./Branch";
+import { ConsistencyRuleDelivery } from "./ConsistencyRuleDelivery";
 import { Contributor } from "./Contributor";
 import { EvaluationMethod } from "./EvaluationMethod";
 import { Issue } from "./Issue";
@@ -22,7 +23,7 @@ interface IRepositoryAttributes {
     hasIssuesEnabled?: boolean;
     primaryLanguage?: string | null;
     licenseName?: string | null;
-    defaultBranch?: string | null;
+    defaultBranch?: string;
     automaticSynchronization?: boolean;
     synchronizing?: boolean;
     lastSyncAt?: Date | null;
@@ -42,7 +43,7 @@ class Repository extends Model<IRepositoryAttributes> {
     public hasIssuesEnabled!: boolean;
     public primaryLanguage!: string | null;
     public licenseName!: string | null;
-    public defaultBranch!: string | null;
+    public defaultBranch!: string;
     public automaticSynchronization!: boolean;
     public synchronizing!: boolean;
     public lastSyncAt!: Date | null;
@@ -180,6 +181,7 @@ class Repository extends Model<IRepositoryAttributes> {
         Issue: typeof Issue;
         PullRequest: typeof PullRequest;
         EvaluationMethod: typeof EvaluationMethod;
+        ConsistencyRuleDelivery: typeof ConsistencyRuleDelivery;
     }): void {
         this.hasMany(models.Branch, {
             foreignKey: "repositoryId",
@@ -202,7 +204,10 @@ class Repository extends Model<IRepositoryAttributes> {
             foreignKey: "evaluationMethodId",
             as: "evaluationMethod",
         });
-        // TODO: consistency rule delivery association
+        this.hasMany(models.ConsistencyRuleDelivery, {
+            foreignKey: "repositoryId",
+            as: "consistencyRuleDeliveries",
+        });
     }
 }
 

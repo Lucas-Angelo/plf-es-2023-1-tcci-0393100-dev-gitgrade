@@ -61,10 +61,10 @@ const config: Config = {
     // forceCoverageMatch: [],
 
     // A path to a module which exports an async function that is triggered once before all test suites
-    globalSetup: "<rootDir>/src/test/setup.ts",
+    // globalSetup: "<rootDir>/src/test/setup.ts",
 
     // A path to a module which exports an async function that is triggered once after all test suites
-    globalTeardown: "<rootDir>/src/test/teardown.ts",
+    // globalTeardown: "<rootDir>/src/test/teardown.ts",
 
     // A set of global variables that need to be available in all test environments
     // globals: {},
@@ -123,7 +123,7 @@ const config: Config = {
     // restoreMocks: false,
 
     // The root directory that Jest should scan for tests and modules within
-    // rootDir: undefined,
+    // rootDir: "src",
 
     // A list of paths to directories that Jest should use to search for files in
     // roots: [
@@ -137,7 +137,7 @@ const config: Config = {
     // setupFiles: [],
 
     // A list of paths to modules that run some code to configure or set up the testing framework before each test
-    // setupFilesAfterEnv: ["<rootDir>/src/test/jest.setup.ts"],
+    // setupFilesAfterEnv: [],
 
     // The number of seconds after which a test is considered as slow and reported as such in the results.
     // slowTestThreshold: 5,

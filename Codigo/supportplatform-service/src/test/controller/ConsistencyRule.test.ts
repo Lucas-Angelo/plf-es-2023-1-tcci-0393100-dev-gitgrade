@@ -12,7 +12,7 @@ describe(`GET ${baseRoute}`, () => {
         await new Database().connect();
     });
 
-    it("should return 200 when no limit and page is provided and return by default 10 consistency rules", async () => {
+    it("should return 200 when no limit and page is provided and return by default 6 consistency rules", async () => {
         const response = await supertest(app)
             .get(`${baseRoute}`)
             .set("Authorization", `Bearer ${authUser.token}`)

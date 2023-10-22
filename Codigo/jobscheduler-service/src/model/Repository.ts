@@ -2,7 +2,9 @@ import { DataTypes, Model, Sequelize } from "sequelize";
 
 import EnvConfig from "../config/EnvConfig";
 import { Branch } from "./Branch";
+import { ConsistencyRuleDelivery } from "./ConsistencyRuleDelivery";
 import { Contributor } from "./Contributor";
+import { EvaluationMethod } from "./EvaluationMethod";
 import { Issue } from "./Issue";
 import { PullRequest } from "./PullRequest";
 import { RepositoryHasContributor } from "./RepositoryHasContributor";
@@ -21,7 +23,7 @@ interface IRepositoryAttributes {
     hasIssuesEnabled?: boolean;
     primaryLanguage?: string | null;
     licenseName?: string | null;
-    defaultBranch?: string | null;
+    defaultBranch?: string;
     automaticSynchronization?: boolean;
     synchronizing?: boolean;
     lastSyncAt?: Date | null;
@@ -41,10 +43,11 @@ class Repository extends Model<IRepositoryAttributes> {
     public hasIssuesEnabled!: boolean;
     public primaryLanguage!: string | null;
     public licenseName!: string | null;
-    public defaultBranch!: string | null;
+    public defaultBranch!: string;
     public automaticSynchronization!: boolean;
     public synchronizing!: boolean;
     public lastSyncAt!: Date | null;
+    public evaluationMethod!: EvaluationMethod | null;
 
     public static initModel(sequelize: Sequelize): void {
         this.init(
@@ -61,6 +64,10 @@ class Repository extends Model<IRepositoryAttributes> {
                     field: "evaluation_method_id",
                     type: DataTypes.BIGINT.UNSIGNED,
                     allowNull: true,
+                    references: {
+                        model: EvaluationMethod,
+                        key: "id",
+                    },
                 },
                 githubId: {
                     field: "github_id",
@@ -173,6 +180,8 @@ class Repository extends Model<IRepositoryAttributes> {
         Contributor: typeof Contributor;
         Issue: typeof Issue;
         PullRequest: typeof PullRequest;
+        EvaluationMethod: typeof EvaluationMethod;
+        ConsistencyRuleDelivery: typeof ConsistencyRuleDelivery;
     }): void {
         this.hasMany(models.Branch, {
             foreignKey: "repositoryId",
@@ -191,8 +200,14 @@ class Repository extends Model<IRepositoryAttributes> {
             foreignKey: "repositoryId",
             as: "pullRequests",
         });
-        // EvaluationMethod association
-        // ConsistencyRuleDelivery association
+        this.belongsTo(models.EvaluationMethod, {
+            foreignKey: "evaluationMethodId",
+            as: "evaluationMethod",
+        });
+        this.hasMany(models.ConsistencyRuleDelivery, {
+            foreignKey: "repositoryId",
+            as: "consistencyRuleDeliveries",
+        });
     }
 }
 

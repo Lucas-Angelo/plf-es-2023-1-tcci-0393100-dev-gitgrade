@@ -1,4 +1,5 @@
 import logger from "../config/LogConfig";
+import { EvaluationMethod } from "../model/EvaluationMethod";
 import { IRepositoryAttributes, Repository } from "../model/Repository";
 import { SequelizeUtil } from "../util/SequelizeUtil";
 
@@ -117,7 +118,6 @@ class RepositoryService {
         }
     }
 
-    // sets all repositories with automaticSynchronization enabled to Synchronizing true
     async setAllAutomaticSynchronizationEnableRepositoriesToSynchronizingTrue(): Promise<
         Repository[]
     > {
@@ -159,6 +159,36 @@ class RepositoryService {
                     error,
                 }
             );
+            throw error;
+        }
+    }
+
+    async findAllRepositoriesWithEvaluationMethod(): Promise<Repository[]> {
+        try {
+            logger.info("Searching for repositories with evaluation method...");
+            const repositories = await Repository.findAll({
+                include: [
+                    {
+                        model: EvaluationMethod,
+                        as: "evaluationMethod",
+                        where: {
+                            disabledAt: null,
+                        },
+                        required: true,
+                    },
+                ],
+            });
+            logger.info(
+                "Quantity of repositories found with evaluation method:",
+                {
+                    quantity: repositories.length,
+                }
+            );
+            return repositories;
+        } catch (error) {
+            logger.error("Error finding repositories with evaluation method:", {
+                error,
+            });
             throw error;
         }
     }
