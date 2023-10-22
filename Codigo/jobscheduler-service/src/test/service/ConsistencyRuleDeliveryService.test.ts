@@ -71,41 +71,34 @@ describe("isNeededOpenIssueForNotDeliveredConsistencyRule", () => {
         ConsistencyRuleDeliveryStatus.DELIVERED_WITH_INVALIDITY,
         ConsistencyRuleDeliveryStatus.NOT_DELIVERED,
     ];
-    const isOnTimeToDeliveries = [true, false];
     const standardizedIssueIds = [null, 1, 2];
 
     for (const persistedConsistencyRuleDelivery of persistedConsistencyRuleDeliveries) {
         for (const status of possibleStatus) {
-            for (const isOnTimeToDelivery of isOnTimeToDeliveries) {
-                for (const standardizedIssueId of standardizedIssueIds) {
-                    // Skip the expectedTrue case you already handled manually
-                    if (
-                        !persistedConsistencyRuleDelivery &&
-                        status ===
-                            ConsistencyRuleDeliveryStatus.NOT_DELIVERED &&
-                        !isOnTimeToDelivery &&
-                        standardizedIssueId
-                    ) {
-                        testCases.push({
-                            persistedConsistencyRuleDelivery,
-                            status,
-                            isOnTimeToDelivery,
-                            consistencyRule: {
-                                standardizedIssueId,
-                            },
-                            expectedResult: true,
-                        });
-                    } else {
-                        testCases.push({
-                            persistedConsistencyRuleDelivery,
-                            status,
-                            isOnTimeToDelivery,
-                            consistencyRule: {
-                                standardizedIssueId,
-                            },
-                            expectedResult: false,
-                        });
-                    }
+            for (const standardizedIssueId of standardizedIssueIds) {
+                // Skip the expectedTrue case you already handled manually
+                if (
+                    !persistedConsistencyRuleDelivery &&
+                    status === ConsistencyRuleDeliveryStatus.NOT_DELIVERED &&
+                    standardizedIssueId
+                ) {
+                    testCases.push({
+                        persistedConsistencyRuleDelivery,
+                        status,
+                        consistencyRule: {
+                            standardizedIssueId,
+                        },
+                        expectedResult: true,
+                    });
+                } else {
+                    testCases.push({
+                        persistedConsistencyRuleDelivery,
+                        status,
+                        consistencyRule: {
+                            standardizedIssueId,
+                        },
+                        expectedResult: false,
+                    });
                 }
             }
         }
@@ -115,7 +108,6 @@ describe("isNeededOpenIssueForNotDeliveredConsistencyRule", () => {
         (
             {
                 status,
-                isOnTimeToDelivery,
                 persistedConsistencyRuleDelivery,
                 consistencyRule,
                 expectedResult,
@@ -128,7 +120,6 @@ describe("isNeededOpenIssueForNotDeliveredConsistencyRule", () => {
                 const result =
                     consistencyRuleDeliveryService.isNeededOpenIssueForNotDeliveredConsistencyRule(
                         status,
-                        isOnTimeToDelivery,
                         persistedConsistencyRuleDelivery as unknown as ConsistencyRuleDelivery,
                         consistencyRule as unknown as ConsistencyRule
                     );
@@ -141,7 +132,7 @@ describe("isNeededOpenIssueForNotDeliveredConsistencyRule", () => {
 
     const duplicatedTestCases: number[] = [];
     testCases.forEach((testCase, index) => {
-        const representation = `${testCase.persistedConsistencyRuleDelivery}-${testCase.status}-${testCase.isOnTimeToDelivery}-${testCase.consistencyRule.standardizedIssueId}`;
+        const representation = `${testCase.persistedConsistencyRuleDelivery}-${testCase.status}-${testCase.consistencyRule.standardizedIssueId}`;
         if (testCasesSet.has(representation)) {
             duplicatedTestCases.push(index + 1);
         } else {
@@ -296,21 +287,25 @@ describe("defineDeliveryStatus", () => {
         {
             status: "not_exists",
             isOnTimeToDelivery: true,
+            deliveredOnTime: false,
             expectedResult: ConsistencyRuleDeliveryStatus.AWAITING_DELIVERY,
         },
         {
             status: "exists",
             isOnTimeToDelivery: true,
+            deliveredOnTime: true,
             expectedResult: ConsistencyRuleDeliveryStatus.DELIVERED_ON_TIME,
         },
         {
             status: "exists",
             isOnTimeToDelivery: false,
+            deliveredOnTime: false,
             expectedResult: ConsistencyRuleDeliveryStatus.DELIVERED_LATE,
         },
         {
             status: "not_exists",
             isOnTimeToDelivery: false,
+            deliveredOnTime: false,
             expectedResult: ConsistencyRuleDeliveryStatus.NOT_DELIVERED,
         },
     ];
@@ -328,7 +323,8 @@ describe("defineDeliveryStatus", () => {
         } - Test Case ${index + 1}`, () => {
             const result = consistencyRuleDeliveryService.defineDeliveryStatus(
                 gitHubFileStatus as unknown as IGitHubFileStatus,
-                gitHubFileStatus.isOnTimeToDelivery
+                gitHubFileStatus.isOnTimeToDelivery,
+                gitHubFileStatus.deliveredOnTime
             );
             expect(result).toBe(expectedResult);
         });

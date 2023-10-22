@@ -48,9 +48,15 @@ class ConsistencyRuleDeliveryService {
                 sprint
             );
 
+            let deliveredOnTime = false;
+            if (gitHubFileStatus.deliveryDate)
+                deliveredOnTime =
+                    gitHubFileStatus.deliveryDate <= sprint.end_date;
+
             const status = this.defineDeliveryStatus(
                 gitHubFileStatus,
-                isOnTimeToDelivery
+                isOnTimeToDelivery,
+                deliveredOnTime
             );
             const deliveryAt = this.defineDeliveryAtByStatus(
                 status,
@@ -89,7 +95,6 @@ class ConsistencyRuleDeliveryService {
             const isNeedOpenIssueForNotDeliveredConsistencyRule =
                 this.isNeededOpenIssueForNotDeliveredConsistencyRule(
                     status,
-                    isOnTimeToDelivery,
                     persistedConsistencyRuleDelivery,
                     consistencyRule
                 );
@@ -147,17 +152,15 @@ class ConsistencyRuleDeliveryService {
 
     defineDeliveryStatus(
         gitHubFileStatus: IGitHubFileStatus,
-        isOnTimeToDelivery: boolean
+        isOnTimeToDelivery: boolean,
+        deliveredOnTime: boolean
     ): ConsistencyRuleDeliveryStatus {
         let status: ConsistencyRuleDeliveryStatus;
         if (gitHubFileStatus.status === "not_exists" && isOnTimeToDelivery) {
             status = ConsistencyRuleDeliveryStatus.AWAITING_DELIVERY;
-        } else if (gitHubFileStatus.status === "exists" && isOnTimeToDelivery) {
+        } else if (gitHubFileStatus.status === "exists" && deliveredOnTime) {
             status = ConsistencyRuleDeliveryStatus.DELIVERED_ON_TIME;
-        } else if (
-            gitHubFileStatus.status === "exists" &&
-            !isOnTimeToDelivery
-        ) {
+        } else if (gitHubFileStatus.status === "exists" && !deliveredOnTime) {
             status = ConsistencyRuleDeliveryStatus.DELIVERED_LATE;
         } else if (
             gitHubFileStatus.status === "not_exists" &&
@@ -228,14 +231,12 @@ class ConsistencyRuleDeliveryService {
 
     isNeededOpenIssueForNotDeliveredConsistencyRule(
         status: ConsistencyRuleDeliveryStatus,
-        isOnTimeToDelivery: boolean,
         persistedConsistencyRuleDelivery: ConsistencyRuleDelivery | null,
         consistencyRule: ConsistencyRule
     ) {
         if (
             !persistedConsistencyRuleDelivery &&
             status === ConsistencyRuleDeliveryStatus.NOT_DELIVERED &&
-            !isOnTimeToDelivery &&
             consistencyRule.standardizedIssueId
         )
             return true;
