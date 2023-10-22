@@ -151,7 +151,12 @@ class GitHubFileService {
             await this.gitHubCommitService.getAllCommitsOfFile(repo, path, ref);
 
         for (const commit of allCommitsOfTheFile) {
-            if (commit.commit.committer && commit.commit.committer.date) {
+            if (commit.commit.author && commit.commit.author.date) {
+                return new Date(commit.commit.author.date);
+            } else if (
+                commit.commit.committer &&
+                commit.commit.committer.date
+            ) {
                 return new Date(commit.commit.committer.date);
             }
         }
