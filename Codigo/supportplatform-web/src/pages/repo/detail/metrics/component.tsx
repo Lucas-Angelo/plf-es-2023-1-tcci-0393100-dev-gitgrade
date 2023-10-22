@@ -2,7 +2,7 @@ import { Box } from "@primer/react";
 import RepositoryMetricsAside from "./components/repositoryMetricsAside";
 import { Outlet, useParams } from "react-router";
 import Divider from "../../../../commom/components/divider";
-import DateFilter from "./components/dateFilter";
+import DateFilter from "../components/dateFilter";
 import appRoutes from "../../../../commom/routes/appRoutes";
 import { useRepositoryById } from "../../../../commom/data/repo";
 

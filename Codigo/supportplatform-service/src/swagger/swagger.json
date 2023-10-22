@@ -39,6 +39,140 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ContributorDTO": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"githubName": {
+						"type": "string",
+						"nullable": true
+					},
+					"githubEmail": {
+						"type": "string",
+						"nullable": true
+					},
+					"githubLogin": {
+						"type": "string",
+						"nullable": true
+					},
+					"githubAvatarUrl": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"id",
+					"githubName",
+					"githubEmail",
+					"githubLogin",
+					"githubAvatarUrl"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CommitResponseDTO": {
+				"description": "CommitResponseDTO - Could be used to structure the response object when sending Commits to the client.",
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"message": {
+						"type": "string",
+						"nullable": true
+					},
+					"committedDate": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"branch": {
+						"$ref": "#/components/schemas/BranchDTO"
+					},
+					"contributor": {
+						"$ref": "#/components/schemas/ContributorDTO"
+					},
+					"sha": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"message",
+					"committedDate",
+					"branch",
+					"sha"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PaginationResponseDTO_CommitResponseDTO_": {
+				"properties": {
+					"results": {
+						"items": {
+							"$ref": "#/components/schemas/CommitResponseDTO"
+						},
+						"type": "array"
+					},
+					"totalPages": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"results",
+					"totalPages"
+				],
+				"type": "object"
+			},
+			"CommitSearchDTO": {
+				"description": "CommitSearchDTO - Used for searching through Commits with pagination and filters.",
+				"properties": {
+					"page": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"limit": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"message": {
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 255
+					},
+					"startedAt": {
+						"type": "string",
+						"format": "date"
+					},
+					"endedAt": {
+						"type": "string",
+						"format": "date"
+					},
+					"repositoryId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"branchName": {
+						"type": "string"
+					},
+					"contributor": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"filterWithNoContributor": {
+						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ValidationType": {
 				"enum": [
 					"DEFAULT",
@@ -399,39 +533,6 @@
 						"$ref": "#/components/schemas/ConsistencyRuleDeliveryStatus"
 					}
 				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ContributorDTO": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"githubName": {
-						"type": "string",
-						"nullable": true
-					},
-					"githubEmail": {
-						"type": "string",
-						"nullable": true
-					},
-					"githubLogin": {
-						"type": "string",
-						"nullable": true
-					},
-					"githubAvatarUrl": {
-						"type": "string",
-						"nullable": true
-					}
-				},
-				"required": [
-					"id",
-					"githubName",
-					"githubEmail",
-					"githubLogin",
-					"githubAvatarUrl"
-				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -1552,6 +1653,147 @@
 							"format": "int32",
 							"type": "integer",
 							"minimum": 1
+						}
+					}
+				]
+			}
+		},
+		"/commit": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Found commits",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PaginationResponseDTO_CommitResponseDTO_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"totalPages": 1,
+											"results": [
+												{
+													"id": 1,
+													"message": "Commit 1",
+													"committedDate": "2023-01-01T00:00:00.000Z",
+													"branch": {
+														"id": 1,
+														"name": "master"
+													},
+													"sha": "1234567890",
+													"contributor": {
+														"id": 1,
+														"githubAvatarUrl": "https://avatars.githubusercontent.com/u/1?v=4",
+														"githubLogin": "octocat",
+														"githubEmail": "pessoa@email.com",
+														"githubName": "Octo Cat"
+													}
+												}
+											]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all Commits with pagination and filter.\nCan filter by start_date, end_date, and evaluationMethodId.",
+				"tags": [
+					"commit"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "message",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"minLength": 1,
+							"maxLength": 255
+						}
+					},
+					{
+						"in": "query",
+						"name": "startedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "endedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "repositoryId",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "branchName",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "contributor",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "filterWithNoContributor",
+						"required": false,
+						"schema": {
+							"type": "boolean"
 						}
 					}
 				]

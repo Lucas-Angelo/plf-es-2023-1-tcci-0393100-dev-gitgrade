@@ -9,7 +9,7 @@ import ChartDetails from "../components/chartDetails";
 const pageRouteParams = appRoutes.repo["detail"].params;
 type PageRouteParams = (typeof pageRouteParams)[number];
 
-const pageRouteSearchParams = appRoutes.repo["detail"].metrics.search;
+const pageRouteSearchParams = appRoutes.repo["detail"].search;
 
 export default function RepositoryFileTypeMetricsPage() {
     const params = useParams<PageRouteParams>();

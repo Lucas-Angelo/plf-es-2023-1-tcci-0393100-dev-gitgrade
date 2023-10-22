@@ -1,8 +1,9 @@
-import { BranchDTO, GetAllBranchQueryDTO } from "./dto/branch";
 import { CommitQualityMetricsDTO } from "./dto/commitMetrics";
+import { FileTypeMetricsDTO, FileTypeMetricDTO } from "./dto/fileMetrics";
+import { BranchDTO, GetAllBranchQueryDTO } from "./dto/branch";
 import { ContributorDTO, GetAllContributorQueryDTO } from "./dto/contributor";
-import { FileTypeMetricDTO, FileTypeMetricsDTO } from "./dto/fileMetrics";
 import { IssueMetricQueryDTO, IssueMetricsDTO } from "./dto/issueMetrics";
+import { CommitResponseDTO, CommitSearchDTO } from "./dto/commit";
 import { RepositoryMetricQueryDTO } from "./dto/repositoryMetrics";
 
 import { CommitMetricsDTO } from "./dto/commitMetrics";
@@ -90,6 +91,8 @@ export type {
   SprintResponseDTO,
   SprintSearchDTO,
   SprintUpdateDTO,
+  CommitResponseDTO,
+  CommitSearchDTO,
   StandardizedIssueCreateDTO,
   StandardizedIssueFindOneDTO,
   StandardizedIssueResponseDTO,

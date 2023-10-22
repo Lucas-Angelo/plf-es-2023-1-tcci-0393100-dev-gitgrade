@@ -64,19 +64,24 @@ const appRoutes = {
             },
             params: ["id"] as const,
 
+            // necessary to map query string param name per a trustable variable
+            search: {
+                branch: "branch",
+                startedAt: "startedAt",
+                endedAt: "endedAt",
+                contributor: "contributor",
+                filterWithNoContributor: "filterWithNoContributor",
+            },
+
+            getSearchParamsList() {
+                return Object.values(this.search);
+            },
+
             //nested routes
             metrics: {
                 path: "metrics" as const,
                 link(id: number) {
                     return `${appRoutes.repo.detail.link(id)}/${this.path}`;
-                },
-                // necessary to map query string param name per a trustable variable
-                search: {
-                    branch: "branch",
-                    startedAt: "startedAt",
-                    endedAt: "endedAt",
-                    contributor: "contributor",
-                    filterWithNoContributor: "filterWithNoContributor",
                 },
 
                 // nested routes
@@ -201,6 +206,11 @@ const appRoutes = {
                 path: "commits" as const,
                 link(id: number) {
                     return `${appRoutes.repo.detail.link(id)}/${this.path}`;
+                },
+
+                // necessary to map query string param name per a trustable variable
+                search: {
+                    page: "page",
                 },
             },
             consistency: {

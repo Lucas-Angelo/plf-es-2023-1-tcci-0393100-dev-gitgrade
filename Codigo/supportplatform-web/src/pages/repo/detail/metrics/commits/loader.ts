@@ -3,7 +3,7 @@ import { loadQueryData } from "../../../../../commom/data/utils/load";
 import { getCommitMetricsGroupedByContributorByRepositoryIdQuery } from "../../../../../commom/data/repo/metrics/commits";
 import appRoutes from "../../../../../commom/routes/appRoutes";
 
-const pageRouteSearchParams = appRoutes.repo["detail"].metrics.search;
+const pageRouteSearchParams = appRoutes.repo["detail"].search;
 
 export default function repositoryCommitMetricsPageLoader({
     params,

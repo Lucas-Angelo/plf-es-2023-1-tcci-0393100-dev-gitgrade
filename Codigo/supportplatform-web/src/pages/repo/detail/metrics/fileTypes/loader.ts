@@ -3,7 +3,7 @@ import appRoutes from "../../../../../commom/routes/appRoutes";
 import { loadQueryData } from "../../../../../commom/data/utils/load";
 import { getFileTypeMetricsGroupedByContributorByRepositoryIdQuery } from "../../../../../commom/data/repo/metrics/fileTypes";
 
-const pageRouteSearchParams = appRoutes.repo["detail"].metrics.search;
+const pageRouteSearchParams = appRoutes.repo["detail"].search;
 
 export default function repositoryFileTypeMetricsLoader({
     params,

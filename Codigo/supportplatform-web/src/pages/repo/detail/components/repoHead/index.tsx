@@ -1,25 +1,11 @@
-import {
-    Box,
-    Button,
-    Label,
-    Link,
-    Octicon,
-    UnderlineNav2,
-} from "@primer/react";
-import {
-    RepoIcon,
-    PaperclipIcon,
-    GraphIcon,
-    CodeIcon,
-    IssueOpenedIcon,
-    ClockIcon,
-    GearIcon,
-} from "@primer/octicons-react";
+import { Box, Button, Label, Link, Octicon } from "@primer/react";
+import { RepoIcon, PaperclipIcon } from "@primer/octicons-react";
 
 import "./styles.css";
-import UnderlineNavItemLink from "../../../../../commom/components/underlineNavItemLink";
-import appRoutes from "../../../../../commom/routes/appRoutes";
 import ContributorFilter from "../contributorFilter";
+import RepoHeadNavigation from "../repoHeadNavigation";
+import { useSearchParams } from "react-router-dom";
+import appRoutes from "../../../../../commom/routes/appRoutes";
 
 interface IRepoHeadProps {
     orgName: string;
@@ -33,9 +19,11 @@ interface IRepoHeadProps {
     }>;
 }
 
-const repoRoutes = appRoutes.repo["detail"];
+const pageSearchParams = appRoutes.repo.detail.search;
 
 export default function RepoHead(props: IRepoHeadProps) {
+    const [searchParams] = useSearchParams();
+
     return (
         <Box
             sx={{
@@ -87,7 +75,14 @@ export default function RepoHead(props: IRepoHeadProps) {
                         flexGrow: 1,
                     }}
                 >
-                    <ContributorFilter contributors={props.contributors} />
+                    <ContributorFilter
+                        key={`${searchParams
+                            .getAll(pageSearchParams.contributor)
+                            .join(";")}${searchParams.get(
+                            pageSearchParams.filterWithNoContributor
+                        )}`}
+                        contributors={props.contributors}
+                    />
                 </Box>
 
                 <Box>
@@ -100,66 +95,7 @@ export default function RepoHead(props: IRepoHeadProps) {
             </Box>
 
             <Box className="underline-nav-wrapper">
-                <UnderlineNav2
-                    aria-label="Repository"
-                    sx={{
-                        mb: 0,
-                    }}
-                >
-                    <UnderlineNavItemLink
-                        to={repoRoutes.metrics.path}
-                        aria-current="page"
-                    >
-                        <Box>
-                            <Octicon
-                                icon={GraphIcon}
-                                sx={{ mr: 2 }}
-                                color="fg.muted"
-                            />
-                            Métricas do repositório
-                        </Box>
-                    </UnderlineNavItemLink>
-                    <UnderlineNavItemLink to={repoRoutes.quality.path}>
-                        <Box>
-                            <Octicon
-                                icon={CodeIcon}
-                                sx={{ mr: 2 }}
-                                color="fg.muted"
-                            />
-                            Qualidade de código
-                        </Box>
-                    </UnderlineNavItemLink>
-                    <UnderlineNavItemLink to={repoRoutes.commits.path}>
-                        <Box>
-                            <Octicon
-                                icon={ClockIcon}
-                                sx={{ mr: 2 }}
-                                color="fg.muted"
-                            />
-                            Histórico de commits
-                        </Box>
-                    </UnderlineNavItemLink>
-                    <UnderlineNavItemLink to={repoRoutes.consistency.path}>
-                        <Box>
-                            <Octicon
-                                icon={IssueOpenedIcon}
-                                sx={{ mr: 2 }}
-                                color="fg.muted"
-                            />
-                            Consistência
-                        </Box>
-                    </UnderlineNavItemLink>
-                    <UnderlineNavItemLink to="config">
-                        <Box>
-                            <Octicon
-                                icon={GearIcon}
-                                sx={{ mr: 2 }}
-                                color="fg.muted"
-                            />
-                            Configurações
-                        </Box>
-                    </UnderlineNavItemLink>
-                </UnderlineNav2>
+                <RepoHeadNavigation />
             </Box>
         </Box>
     );

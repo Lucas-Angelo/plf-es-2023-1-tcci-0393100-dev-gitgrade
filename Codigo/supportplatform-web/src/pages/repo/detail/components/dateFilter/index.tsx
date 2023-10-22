@@ -6,14 +6,15 @@ import { useSearchParams } from "react-router-dom";
 import {
     getIfDateRangeIsValid,
     getIfDateIsValid,
-} from "../../../../../../commom/utils/date";
-import appRoutes from "../../../../../../commom/routes/appRoutes";
-import SprintFilter from "../sprintFilter";
+} from "../../../../../commom/utils/date";
+import appRoutes from "../../../../../commom/routes/appRoutes";
+import SprintFilter from "../../metrics/components/sprintFilter";
 import { SprintResponseDTO } from "@gitgrade/dtos";
 
 interface IDateFilterProps {
     repositoryGithubCreatedAt?: Date;
     evaluationMethodId: number | undefined;
+    children?: React.ReactNode;
 }
 
 const dateTimeFormat = new Intl.DateTimeFormat("pt-BR", {
@@ -44,7 +45,7 @@ export function formatDateRange(
     return dateTimeFormat.formatRange(finalStartedAt, finalEndedAt);
 }
 
-const pageRouteSearchParams = appRoutes.repo["detail"].metrics.search;
+const pageRouteSearchParams = appRoutes.repo["detail"].search;
 
 export default function DateFilter(props: IDateFilterProps) {
     const [isOpen, setIsOpen] = useState(false);
@@ -172,25 +173,26 @@ export default function DateFilter(props: IDateFilterProps) {
                     }
                 />
             </AnchoredOverlay>
-            {props.evaluationMethodId && (
-                <Box
-                    sx={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        flexGrow: 1,
-                    }}
-                >
-                    <SprintFilter
-                        evaluationMethodId={props.evaluationMethodId}
-                        onSelectedSprintSelect={handleSprintChange}
-                        selectedSprint={
-                            isStillFilteringBySelectedSprint
-                                ? selectedSprint
-                                : undefined
-                        }
-                    />
-                </Box>
-            )}
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    flexGrow: 1,
+                    gap: 2,
+                    flexWrap: "wrap",
+                }}
+            >
+                <SprintFilter
+                    evaluationMethodId={props.evaluationMethodId}
+                    onSelectedSprintSelect={handleSprintChange}
+                    selectedSprint={
+                        isStillFilteringBySelectedSprint
+                            ? selectedSprint
+                            : undefined
+                    }
+                />
+                {props.children}
+            </Box>
         </Box>
     );
 }

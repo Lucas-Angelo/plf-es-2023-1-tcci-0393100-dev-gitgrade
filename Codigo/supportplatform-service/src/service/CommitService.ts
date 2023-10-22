@@ -1,4 +1,4 @@
-import sequelize from "sequelize";
+import sequelize, { Sequelize } from "sequelize";
 import { Branch } from "../model/Branch";
 import { Commit } from "../model/Commit";
 import { Contributor } from "../model/Contributor";
@@ -10,6 +10,11 @@ import {
 } from "../interface/CommitMetrics";
 import { Op } from "sequelize";
 import { getContributorWhere } from "../utils/contributorFilter";
+import { CommitSearchDTO, PaginationResponseDTO } from "@gitgrade/dtos";
+import logger from "../config/LogConfig";
+import AppError from "../error/AppError";
+import { CommitWhereClauseType } from "../interface/Commit";
+import { sequelizePagination } from "../utils/pagination";
 
 export default class CommitService {
     async getCommitMetricsGroupedByContributor(
@@ -235,5 +240,125 @@ export default class CommitService {
         };
 
         return response;
+    }
+
+    /**
+     * Find all Commits based on given filters.
+     */
+    async findAll(
+        search: CommitSearchDTO
+    ): Promise<PaginationResponseDTO<Commit>> {
+        try {
+            logger.info("Searching for all commits");
+
+            const whereClause = this._constructWhereClause(search);
+
+            const { rows, count } = await Commit.findAndCountAll({
+                ...sequelizePagination(search.page || 1, search.limit || 10),
+                where: whereClause,
+                order: [["committedDate", "DESC"]],
+                include: [
+                    {
+                        model: Branch,
+                        as: "branch",
+                        attributes: ["name", "id"],
+                    },
+                    {
+                        model: Contributor,
+                        as: "contributor",
+                        attributes: [
+                            "id",
+                            "githubName",
+                            "githubLogin",
+                            "githubAvatarUrl",
+                            "githubEmail",
+                        ],
+                    },
+                ],
+            });
+
+            logger.info("Successfully found all commits: ", {
+                count,
+            });
+
+            return {
+                results: rows,
+                totalPages: Math.ceil(count / (search.limit || 10)) || 1,
+            };
+        } catch (error) {
+            logger.error("Error finding all commits:", { error });
+            throw new AppError("Failed to find all commits", 500, error);
+        }
+    }
+
+    /**
+     * Construct where clause for sequelize query.
+     */
+    private _constructWhereClause(
+        filter: CommitSearchDTO
+    ): CommitWhereClauseType {
+        const whereConditions: CommitWhereClauseType[typeof Op.and] = [];
+
+        if (filter.startedAt && filter.endedAt) {
+            whereConditions.push({
+                committedDate: {
+                    [Op.between]: [filter.startedAt, filter.endedAt],
+                },
+            });
+        } else if (filter.startedAt) {
+            whereConditions.push({
+                committedDate: {
+                    [Op.gte]: filter.startedAt,
+                },
+            });
+        } else if (filter.endedAt) {
+            whereConditions.push({
+                committedDate: {
+                    [Op.lte]: filter.endedAt,
+                },
+            });
+        }
+
+        if (filter.repositoryId) {
+            whereConditions.push({
+                ["$branch.repository_id$"]: filter.repositoryId,
+            });
+        }
+
+        if (filter.branchName) {
+            whereConditions.push({
+                ["$branch.name$"]: filter.branchName,
+            });
+        }
+
+        if (filter.contributor?.length || filter.filterWithNoContributor) {
+            whereConditions.push(
+                getContributorWhere(
+                    filter.contributor,
+                    filter.filterWithNoContributor,
+                    {
+                        contributorIdFilterKey: "contributorId",
+                        contributorLoginFilterKey: "$contributor.github_login$",
+                    }
+                )
+            );
+        }
+
+        if (filter.message) {
+            whereConditions.push(
+                Sequelize.where(
+                    Sequelize.fn("lower", Sequelize.col("message")),
+                    Op.like,
+                    `%${filter.message.toLowerCase()}%`
+                )
+            );
+        }
+
+        logger.info("Constructed where conditions: ", { whereConditions });
+
+        const whereClause = {
+            [Op.and]: whereConditions,
+        };
+        return whereClause;
     }
 }
