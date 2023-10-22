@@ -3,21 +3,21 @@ import AppError from "../error/AppError";
 
 export class ConsistencyRuleDeliveryStatusMapper {
     toDto(
-        sonsistencyRuleDeliveryStatusFromModel: string
+        consistencyRuleDeliveryStatusFromModel: string
     ): ConsistencyRuleDeliveryStatus {
         if (
             !(
-                sonsistencyRuleDeliveryStatusFromModel in
+                consistencyRuleDeliveryStatusFromModel in
                 ConsistencyRuleDeliveryStatus
             )
         ) {
             throw new AppError(
-                `Unknown consistency rule delivery status: ${sonsistencyRuleDeliveryStatusFromModel}`,
+                `Unknown consistency rule delivery status: ${consistencyRuleDeliveryStatusFromModel}`,
                 500
             );
         }
         return ConsistencyRuleDeliveryStatus[
-            sonsistencyRuleDeliveryStatusFromModel as keyof typeof ConsistencyRuleDeliveryStatus
+            consistencyRuleDeliveryStatusFromModel as keyof typeof ConsistencyRuleDeliveryStatus
         ];
     }
 }
