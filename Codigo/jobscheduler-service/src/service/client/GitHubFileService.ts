@@ -70,7 +70,7 @@ class GitHubFileService {
         }
     }
 
-    async getFileCreationDate(
+    async getFileCreationStatus(
         repo: string,
         path: string,
         ref: string

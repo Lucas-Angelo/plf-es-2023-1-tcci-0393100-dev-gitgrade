@@ -41,7 +41,7 @@ class ConsistencyRuleDeliverySynchronizer {
 
                 for (const consistencyRule of consistencyRulesWithSprintAndStdIssue) {
                     const gitHubFileStatus =
-                        await this.fetchGitHubFileCreationDateWithRetry(
+                        await this.fetchGitHubFileCreationStatus(
                             repository.name,
                             consistencyRule.filePath,
                             repository.defaultBranch
@@ -62,13 +62,13 @@ class ConsistencyRuleDeliverySynchronizer {
         }
     }
 
-    private async fetchGitHubFileCreationDateWithRetry(
+    private async fetchGitHubFileCreationStatus(
         repositoryName: string,
         filePath: string,
         branch: string
     ): Promise<IGitHubFileStatus> {
         return await this.fetchUtil.retry<IGitHubFileStatus>(async () => {
-            return await this.gitHubFileService.getFileCreationDate(
+            return await this.gitHubFileService.getFileCreationStatus(
                 repositoryName,
                 filePath,
                 branch
