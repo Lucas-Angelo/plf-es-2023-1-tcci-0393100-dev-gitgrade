@@ -182,17 +182,15 @@ export default function DateFilter(props: IDateFilterProps) {
                     flexWrap: "wrap",
                 }}
             >
-                {props.evaluationMethodId && (
-                    <SprintFilter
-                        evaluationMethodId={props.evaluationMethodId}
-                        onSelectedSprintSelect={handleSprintChange}
-                        selectedSprint={
-                            isStillFilteringBySelectedSprint
-                                ? selectedSprint
-                                : undefined
-                        }
-                    />
-                )}
+                <SprintFilter
+                    evaluationMethodId={props.evaluationMethodId}
+                    onSelectedSprintSelect={handleSprintChange}
+                    selectedSprint={
+                        isStillFilteringBySelectedSprint
+                            ? selectedSprint
+                            : undefined
+                    }
+                />
                 {props.children}
             </Box>
         </Box>

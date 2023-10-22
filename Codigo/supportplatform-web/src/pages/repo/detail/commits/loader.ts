@@ -40,7 +40,7 @@ export default async function RepositoryCommitsLoader({
 
     const query = getRepositoryCommitQuery(repositoryId, {
         page: Number(searchParams.get(pageSearchParams.page)) || 1,
-        limit: 10,
+        limit: 35,
         startedAt:
             startedAt_param && getIfDateIsValid(new Date(startedAt_param))
                 ? new Date(startedAt_param)

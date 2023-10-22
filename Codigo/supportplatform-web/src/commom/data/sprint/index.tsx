@@ -22,9 +22,13 @@ export const getEvaluationMethodSprintQuery = (
 
 export const useEvaluationMethodSprintList = (
     evaluationMethodId: number,
-    filterOptions?: SprintSearchDTO
+    filterOptions?: SprintSearchDTO,
+    enabled?: boolean
 ) =>
-    useQuery(getEvaluationMethodSprintQuery(evaluationMethodId, filterOptions));
+    useQuery({
+        ...getEvaluationMethodSprintQuery(evaluationMethodId, filterOptions),
+        enabled,
+    });
 
 export const getEvaluationMethodSprintByIdQuery = (
     evaluationMethodId: number,

@@ -3,7 +3,7 @@ import { useEvaluationMethodSprintList } from "../../../../../../commom/data/spr
 import { Select, Box } from "@primer/react";
 
 interface ISprintFilterProps {
-    evaluationMethodId: number;
+    evaluationMethodId: number | undefined;
 
     selectedSprint?: SprintResponseDTO;
     onSelectedSprintSelect?: (sprintId: SprintResponseDTO | undefined) => void;
@@ -11,10 +11,11 @@ interface ISprintFilterProps {
 
 export default function SprintFilter(props: ISprintFilterProps) {
     const { data: sprintList, isLoading } = useEvaluationMethodSprintList(
-        props.evaluationMethodId,
+        props.evaluationMethodId!,
         {
             limit: 1000,
-        }
+        },
+        Boolean(props.evaluationMethodId)
     );
 
     const sprint =
@@ -47,6 +48,7 @@ export default function SprintFilter(props: ISprintFilterProps) {
                     maxWidth: "300px",
                 }}
                 onChange={handleSprintSelectChange}
+                disabled={!props.evaluationMethodId}
             >
                 {isLoading && (
                     <Select.Option

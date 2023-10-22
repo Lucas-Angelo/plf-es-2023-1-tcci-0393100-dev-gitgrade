@@ -18,9 +18,14 @@ const dateFormater = new Intl.DateTimeFormat("pt-BR", {
     day: "numeric",
 });
 
-function getCommitDate(commit: CommitResponseDTO) {
+function getCommitDay(commit: CommitResponseDTO) {
     const commitedDate = new Date(commit.committedDate);
-    return commitedDate.toISOString().split("T")[0];
+    return `${commitedDate.getFullYear()}-${(commitedDate.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}-${commitedDate
+        .getDate()
+        .toString()
+        .padStart(2, "0")}`;
 }
 
 const pageSearchParams = {
@@ -34,7 +39,7 @@ export default function CommitListGroupByDate(
     const [, setSearchParams] = useSearchParams();
     const commitsByDate = useMemo(
         () =>
-            Array.from(groupBy(props.commits, getCommitDate).entries())
+            Array.from(groupBy(props.commits, getCommitDay).entries())
                 .sort()
                 .reverse(),
         [props.commits]
@@ -70,7 +75,8 @@ export default function CommitListGroupByDate(
                         <Octicon icon={CommitIcon} />
                     </Timeline.Badge>
                     <Timeline.Body>
-                        Commits em {dateFormater.format(new Date(dateString))}
+                        Commits em{" "}
+                        {dateFormater.format(new Date(`${dateString}T00:00`))}
                         {commits.map((commit, index) => (
                             <CommitCard
                                 key={commit.id}

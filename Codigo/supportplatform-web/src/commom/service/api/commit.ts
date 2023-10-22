@@ -37,6 +37,7 @@ export class CommitService {
             searchParams.set("repositoryId", query.repositoryId.toString());
         }
         if (query?.page) searchParams.set("page", query.page.toString());
+        if (query?.limit) searchParams.set("limit", query.limit.toString());
 
         return api.get<PaginationResponseDTO<CommitResponseDTO>>(
             `/commit?${searchParams.toString()}`
