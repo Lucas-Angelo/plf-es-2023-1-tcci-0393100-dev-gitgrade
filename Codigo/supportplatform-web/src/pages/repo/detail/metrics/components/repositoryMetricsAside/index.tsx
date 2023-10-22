@@ -4,7 +4,7 @@ import appRoutes from "../../../../../../commom/routes/appRoutes";
 import { useRepositoryById } from "../../../../../../commom/data/repo";
 import { useParams } from "react-router";
 import Divider from "../../../../../../commom/components/divider";
-import BranchQueryNavigationMenu from "../branchQueryNavigationMenu";
+import BranchQueryNavigationMenu from "../../../components/branchQueryNavigationMenu";
 import { useSearchParamsString } from "../../../../../../commom/hooks/useRemainingSearchParams";
 
 const repositoryMetricsRoutes = appRoutes.repo["detail"].metrics;

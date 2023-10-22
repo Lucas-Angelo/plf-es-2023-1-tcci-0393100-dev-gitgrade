@@ -17,7 +17,7 @@ interface IContributorFilterProps {
     }>;
 }
 
-const pageSearchParams = appRoutes.repo["detail"].metrics.search;
+const pageSearchParams = appRoutes.repo["detail"].search;
 
 export default function ContributorFilter(props: IContributorFilterProps) {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -41,31 +41,51 @@ export default function ContributorFilter(props: IContributorFilterProps) {
             }
 
             setContributorsFilter(newContributorsFilter);
-            setSearchParams((searchParams) => ({
-                ...searchParams,
-                [pageSearchParams.filterWithNoContributor]:
-                    isFilteringWithNoContributor,
-                [pageSearchParams.contributor]: Array.from(
+            setSearchParams((currentSearchParams) => {
+                const newSearchParams = new URLSearchParams(
+                    currentSearchParams
+                );
+                newSearchParams.delete(pageSearchParams.contributor);
+                console.log(
+                    newSearchParams.getAll(pageSearchParams.contributor),
                     newContributorsFilter
-                ),
-            }));
+                );
+                newContributorsFilter.forEach((contributor) =>
+                    newSearchParams.append(
+                        pageSearchParams.contributor,
+                        contributor
+                    )
+                );
+                return newSearchParams;
+            });
         }
     }
 
     function handleNoContributorClick() {
         toggleIsFilteringWithNoContributor();
-        const newIsFilteringWithNoContributorObj: Record<string, boolean> = {};
-        if (!isFilteringWithNoContributor) {
-            newIsFilteringWithNoContributorObj[
-                pageSearchParams.filterWithNoContributor
-            ] = true;
-        }
 
-        setSearchParams((currentSearchParams) => ({
-            ...currentSearchParams,
-            ...newIsFilteringWithNoContributorObj,
-            [pageSearchParams.contributor]: Array.from(constributorsFilterSet),
-        }));
+        setSearchParams((currentSearchParams) => {
+            const newSearchParams = new URLSearchParams(currentSearchParams);
+            newSearchParams.delete(pageSearchParams.contributor);
+            constributorsFilterSet.forEach((contributor) =>
+                newSearchParams.append(
+                    pageSearchParams.contributor,
+                    contributor
+                )
+            );
+            if (!isFilteringWithNoContributor) {
+                newSearchParams.set(
+                    pageSearchParams.filterWithNoContributor,
+                    "true"
+                );
+            } else {
+                newSearchParams.delete(
+                    pageSearchParams.filterWithNoContributor
+                );
+            }
+
+            return newSearchParams;
+        });
     }
 
     const hasAnyFilter =

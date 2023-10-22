@@ -256,6 +256,7 @@ export default class CommitService {
             const { rows, count } = await Commit.findAndCountAll({
                 ...sequelizePagination(search.page || 1, search.limit || 10),
                 where: whereClause,
+                order: [["committedDate", "DESC"]],
                 include: [
                     {
                         model: Branch,

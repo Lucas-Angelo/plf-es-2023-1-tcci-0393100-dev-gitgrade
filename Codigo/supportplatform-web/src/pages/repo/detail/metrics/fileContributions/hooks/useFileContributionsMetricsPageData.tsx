@@ -6,7 +6,7 @@ import appRoutes from "../../../../../../commom/routes/appRoutes";
 const pageRouteParams = appRoutes.repo["detail"].params;
 type PageRouteParams = (typeof pageRouteParams)[number];
 
-const pageRouteSearchParams = appRoutes.repo["detail"].metrics.search;
+const pageRouteSearchParams = appRoutes.repo["detail"].search;
 
 export function useFileContributionsMetricsPageData() {
     const params = useParams<PageRouteParams>();

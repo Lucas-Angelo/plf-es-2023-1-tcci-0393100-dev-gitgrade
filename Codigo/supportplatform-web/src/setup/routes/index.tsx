@@ -228,7 +228,7 @@ const routes = createRoutesFromElements(
                             <Route
                                 path=""
                                 element={
-                                    <Navigate
+                                    <NavigateMaintainingSearchParams
                                         replace
                                         to={
                                             appRoutes.repo.detail.metrics
@@ -244,7 +244,9 @@ const routes = createRoutesFromElements(
                         />
                         <Route
                             path={appRoutes.repo.detail.commits.path}
-                            element={<>commits</>}
+                            lazy={() =>
+                                import("../../pages/repo/detail/commits/index")
+                            }
                         />
                         <Route
                             path={appRoutes.repo.detail.consistency.path}
@@ -260,7 +262,7 @@ const routes = createRoutesFromElements(
                         <Route
                             path=""
                             element={
-                                <Navigate
+                                <NavigateMaintainingSearchParams
                                     replace
                                     to={appRoutes.repo.detail.metrics.path}
                                 />

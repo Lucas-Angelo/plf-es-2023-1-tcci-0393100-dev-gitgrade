@@ -1,13 +1,13 @@
 import { useSearchParams } from "react-router-dom";
-import appRoutes from "../../../../../../commom/routes/appRoutes";
-import BranchSelector from "../../../../../../commom/components/branchSelector";
+import appRoutes from "../../../../../commom/routes/appRoutes";
+import BranchSelector from "../../../../../commom/components/branchSelector";
 
 interface IBranchQueryNavigationMenuProps {
     defaultBranchName?: string | null;
     repositoryId: number;
 }
 
-const pageRouteSearchParams = appRoutes.repo["detail"].metrics.search;
+const pageRouteSearchParams = appRoutes.repo["detail"].search;
 
 export default function BranchQueryNavigationMenu(
     props: IBranchQueryNavigationMenuProps

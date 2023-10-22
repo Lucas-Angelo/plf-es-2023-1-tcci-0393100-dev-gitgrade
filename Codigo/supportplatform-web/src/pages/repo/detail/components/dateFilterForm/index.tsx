@@ -4,7 +4,7 @@ import {
     getDateToForm,
     getIfDateIsValid,
     getIfDateRangeIsValid,
-} from "../../../../../../commom/utils/date";
+} from "../../../../../commom/utils/date";
 
 interface IDateFilterFormProps {
     onSubmit?: (startedAt: string, endedAt: string) => void;
