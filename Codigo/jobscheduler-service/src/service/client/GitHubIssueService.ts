@@ -49,6 +49,31 @@ class GitHubIssueService {
             );
         }
     }
+
+    async createIssue(
+        repositoryName: string,
+        title: string,
+        body: string
+    ): Promise<IssueGitHub> {
+        try {
+            const response = await GitHubApi.request(
+                "POST /repos/{owner}/{repo}/issues",
+                {
+                    owner: organizationName,
+                    repo: repositoryName,
+                    title,
+                    body,
+                }
+            );
+
+            return response.data;
+        } catch (error: unknown) {
+            logger.error("Error creating issue:", { error });
+            throw new Error(
+                "Error creating issue: " + (error as Error).message
+            );
+        }
+    }
 }
 
 export { GitHubIssueService, IssueGitHub };

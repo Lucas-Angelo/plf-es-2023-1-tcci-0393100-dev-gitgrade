@@ -194,16 +194,20 @@ class CommitFetcher {
         commitData: CommitGitHub,
         authorContributorId?: number | null
     ): ICommitAttributes {
+        const commitedDate =
+            commitData.commit.author && commitData.commit.author.date
+                ? new Date(commitData.commit.author.date)
+                : commitData.commit.committer &&
+                  commitData.commit.committer.date
+                ? new Date(commitData.commit.committer.date)
+                : new Date();
         const commitAttributes = {
             branchId: branchId,
             contributorId: authorContributorId,
             githubId: commitData.sha,
             sha: commitData.sha,
             message: commitData.commit.message,
-            committedDate:
-                commitData.commit.committer && commitData.commit.committer.date
-                    ? new Date(commitData.commit.committer.date)
-                    : new Date(),
+            committedDate: commitedDate,
         };
         this.commitCache.set(commitData.sha, commitAttributes);
         return commitAttributes;

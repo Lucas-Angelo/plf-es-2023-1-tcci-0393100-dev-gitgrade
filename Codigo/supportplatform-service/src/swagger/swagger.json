@@ -371,6 +371,171 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ConsistencyRuleDeliveryStatus": {
+				"enum": [
+					"AWAITING_DELIVERY",
+					"DELIVERED_ON_TIME",
+					"DELIVERED_LATE",
+					"NOT_DELIVERED",
+					"DELIVERED_WITH_INVALIDITY"
+				],
+				"type": "string"
+			},
+			"ConsistencyRuleDeliveryResponseDTO": {
+				"description": "ConsistencyRuleDeliveryResponseDTO - Could be used to structure the response object when sending ConsistencyRuleDeliveries to the client.",
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"consistencyRuleId": {
+						"type": "number",
+						"format": "double"
+					},
+					"repositoryId": {
+						"type": "number",
+						"format": "double"
+					},
+					"deliveryAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"status": {
+						"$ref": "#/components/schemas/ConsistencyRuleDeliveryStatus"
+					}
+				},
+				"required": [
+					"id",
+					"consistencyRuleId",
+					"repositoryId",
+					"deliveryAt",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ConsistencyRuleDeliveryCreateDTO": {
+				"description": "ConsistencyRuleDeliveryCreateDTO - Used for creating a new ConsistencyRuleDelivery.",
+				"properties": {
+					"consistencyRuleId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"repositoryId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"deliveryAt": {
+						"type": "string",
+						"format": "date",
+						"nullable": true
+					},
+					"status": {
+						"$ref": "#/components/schemas/ConsistencyRuleDeliveryStatus"
+					}
+				},
+				"required": [
+					"consistencyRuleId",
+					"repositoryId",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ConsistencyRuleDeliveryUpdateDTO": {
+				"description": "ConsistencyRuleDeliveryUpdateDTO - Used for updating an existing ConsistencyRuleDelivery.",
+				"properties": {
+					"consistencyRuleId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"repositoryId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"deliveryAt": {
+						"type": "string",
+						"format": "date",
+						"nullable": true
+					},
+					"status": {
+						"$ref": "#/components/schemas/ConsistencyRuleDeliveryStatus"
+					}
+				},
+				"required": [
+					"consistencyRuleId",
+					"repositoryId",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PaginationResponseDTO_ConsistencyRuleDeliveryResponseDTO_": {
+				"properties": {
+					"results": {
+						"items": {
+							"$ref": "#/components/schemas/ConsistencyRuleDeliveryResponseDTO"
+						},
+						"type": "array"
+					},
+					"totalPages": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"results",
+					"totalPages"
+				],
+				"type": "object"
+			},
+			"ConsistencyRuleDeliverySearchDTO": {
+				"description": "ConsistencyRuleDeliverySearchDTO - Used for searching through ConsistencyRuleDeliveries with pagination and filters.",
+				"properties": {
+					"page": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"limit": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"consistencyRuleId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"repositoryId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"deliveryAt": {
+						"type": "string",
+						"format": "date"
+					},
+					"deliveryAtStart": {
+						"type": "string",
+						"format": "date"
+					},
+					"deliveryAtEnd": {
+						"type": "string",
+						"format": "date"
+					},
+					"status": {
+						"$ref": "#/components/schemas/ConsistencyRuleDeliveryStatus"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"GetAllContributorQueryDTO": {
 				"properties": {
 					"page": {
@@ -1908,6 +2073,283 @@
 				"description": "Get an existing ConsistencyRule by id.",
 				"tags": [
 					"consistency-rule"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/consistency-rule-delivery": {
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"201": {
+						"description": "ConsistencyRuleDelivery created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ConsistencyRuleDeliveryResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"consistencyRuleId": 1,
+											"repositoryId": 1,
+											"deliveryAt": "2023-01-01T00:00:00.000Z",
+											"status": "DELIVERED_ON_TIME"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a new ConsistencyRuleDelivery.",
+				"tags": [
+					"ConsistencyRuleDelivery"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ConsistencyRuleDeliveryCreateDTO"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Found consistency rule deliveries",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PaginationResponseDTO_ConsistencyRuleDeliveryResponseDTO_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"totalPages": 1,
+											"results": [
+												{
+													"id": 1,
+													"consistencyRuleId": 1,
+													"repositoryId": 1,
+													"deliveryAt": "2023-01-01T00:00:00.000Z",
+													"status": "DELIVERED_ON_TIME"
+												}
+											]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all ConsistencyRuleDeliveries with pagination and filter.\nCan filter by deliveryAt, consistencyRuleId, and repositoryId.",
+				"tags": [
+					"ConsistencyRuleDelivery"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "consistencyRuleId",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "repositoryId",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "deliveryAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "deliveryAtStart",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "deliveryAtEnd",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/ConsistencyRuleDeliveryStatus"
+						}
+					}
+				]
+			}
+		},
+		"/consistency-rule-delivery/{id}": {
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "ConsistencyRuleDelivery updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ConsistencyRuleDeliveryResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"consistencyRuleId": 1,
+											"repositoryId": 1,
+											"deliveryAt": "2023-01-02T00:00:00.000Z",
+											"status": "DELIVERED_ON_TIME"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Update an existing ConsistencyRuleDelivery by id.\nNeed body with all fields.",
+				"tags": [
+					"ConsistencyRuleDelivery"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ConsistencyRuleDeliveryUpdateDTO"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetOne",
+				"responses": {
+					"200": {
+						"description": "Found consistency rule delivery",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ConsistencyRuleDeliveryResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"consistencyRuleId": 1,
+											"repositoryId": 1,
+											"deliveryAt": "2023-01-01T00:00:00.000Z",
+											"status": "DELIVERED_ON_TIME"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Get an existing ConsistencyRuleDelivery by id.",
+				"tags": [
+					"ConsistencyRuleDelivery"
 				],
 				"security": [
 					{

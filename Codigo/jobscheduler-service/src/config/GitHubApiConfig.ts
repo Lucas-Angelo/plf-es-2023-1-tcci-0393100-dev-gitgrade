@@ -44,7 +44,7 @@ class GitHubApiConfig {
             const currentTime = new Date();
             logger.info(`Rate limit remaining: ${remaining} requests`);
 
-            if (remaining === 0) {
+            if (remaining <= 100) {
                 const sleepTime = resetTime.getTime() - currentTime.getTime();
 
                 logger.warn(

@@ -1,6 +1,6 @@
 import { exit } from "process";
-import { seedDatabase } from "./database/seed";
 import Database from "../database";
+import { seedDatabase } from "./database/seed";
 
 export default async () => {
     try {

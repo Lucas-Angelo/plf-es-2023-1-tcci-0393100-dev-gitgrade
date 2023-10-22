@@ -7,6 +7,7 @@ import { FileFetcher } from "./fetcher/FileFetcher";
 import { IssueFetcher } from "./fetcher/IssueFetcher";
 import { PullRequestFetcher } from "./fetcher/PullRequestFetcher";
 import { RepositoryFetcher } from "./fetcher/RepositoryFetcher";
+import { ConsistencyRuleDeliverySynchronizer } from "./synchronizer/ConsistencyRuleDeliverySynchronizer";
 
 class JobExecutor {
     private repositoryService: RepositoryService;
@@ -19,6 +20,8 @@ class JobExecutor {
     private commitFetcher: CommitFetcher;
     private fileFetcher: FileFetcher;
 
+    private consistencyRuleDeliverySynchronizer: ConsistencyRuleDeliverySynchronizer;
+
     constructor() {
         this.repositoryService = new RepositoryService();
 
@@ -29,6 +32,9 @@ class JobExecutor {
         this.branchFetcher = new BranchFetcher();
         this.commitFetcher = new CommitFetcher();
         this.fileFetcher = new FileFetcher();
+
+        this.consistencyRuleDeliverySynchronizer =
+            new ConsistencyRuleDeliverySynchronizer();
     }
 
     async runFetchers() {
@@ -47,6 +53,8 @@ class JobExecutor {
             await this.branchFetcher.fetchBranchesForRepositories();
             await this.commitFetcher.fetchCommitsForRepositories();
             await this.fileFetcher.fetchFilesForRepositories();
+
+            await this.consistencyRuleDeliverySynchronizer.syncConsistencyRuleDeliveriesAndStdIssues();
 
             await this.repositoryService.setAllRepositoriesToSynchronizingFalse(
                 repositoriesSyncing
