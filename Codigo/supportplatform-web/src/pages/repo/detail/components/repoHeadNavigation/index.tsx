@@ -5,6 +5,7 @@ import {
     CodeIcon,
     IssueOpenedIcon,
     ClockIcon,
+    FileDiffIcon,
     GearIcon,
 } from "@primer/octicons-react";
 import appRoutes from "../../../../../commom/routes/appRoutes";
@@ -39,18 +40,6 @@ export default function RepoHeadNavigation() {
                 </Box>
             </UnderlineNavItemLink>
             <UnderlineNavItemLink
-                to={repoRoutes.quality.path.concat(searchParamsString)}
-            >
-                <Box>
-                    <Octicon
-                        icon={CodeIcon}
-                        sx={{ mr: 2 }}
-                        color="fg.muted"
-                    />
-                    Qualidade de código
-                </Box>
-            </UnderlineNavItemLink>
-            <UnderlineNavItemLink
                 to={repoRoutes.commits.path.concat(searchParamsString)}
             >
                 <Box>
@@ -63,6 +52,18 @@ export default function RepoHeadNavigation() {
                 </Box>
             </UnderlineNavItemLink>
             <UnderlineNavItemLink
+                to={repoRoutes.files.path.concat(searchParamsString)}
+            >
+                <Box>
+                    <Octicon
+                        icon={FileDiffIcon}
+                        sx={{ mr: 2 }}
+                        color="fg.muted"
+                    />
+                    Arquivos contribuídos
+                </Box>
+            </UnderlineNavItemLink>
+            <UnderlineNavItemLink
                 to={repoRoutes.consistency.path.concat(searchParamsString)}
             >
                 <Box>
@@ -72,6 +73,18 @@ export default function RepoHeadNavigation() {
                         color="fg.muted"
                     />
                     Consistência
+                </Box>
+            </UnderlineNavItemLink>
+            <UnderlineNavItemLink
+                to={repoRoutes.quality.path.concat(searchParamsString)}
+            >
+                <Box>
+                    <Octicon
+                        icon={CodeIcon}
+                        sx={{ mr: 2 }}
+                        color="fg.muted"
+                    />
+                    Qualidade de código
                 </Box>
             </UnderlineNavItemLink>
             <UnderlineNavItemLink

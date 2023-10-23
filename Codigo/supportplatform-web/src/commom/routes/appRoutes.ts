@@ -213,6 +213,18 @@ const appRoutes = {
                     page: "page",
                 },
             },
+            files: {
+                path: "files" as const,
+                link(id: number) {
+                    return `${appRoutes.repo.detail.link(id)}/${this.path}`;
+                },
+
+                // necessary to map query string param name per a trustable variable
+                search: {
+                    page: "page",
+                    path: "path",
+                },
+            },
             consistency: {
                 path: "consistency" as const,
                 link(id: number) {
