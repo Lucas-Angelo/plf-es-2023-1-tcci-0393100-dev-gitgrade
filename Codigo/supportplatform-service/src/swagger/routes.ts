@@ -298,6 +298,7 @@ const models: TsoaRoute.Models = {
             "branchName": {"dataType":"string"},
             "contributor": {"dataType":"array","array":{"dataType":"string"}},
             "filterWithNoContributor": {"dataType":"boolean"},
+            "shouldGetContributors": {"dataType":"boolean"},
         },
         "additionalProperties": false,
     },

@@ -1,5 +1,4 @@
 import { ToggleSwitch, Box } from "@primer/react";
-import "./styles.css";
 
 export default function RepositoryConfigPage() {
     return (

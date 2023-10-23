@@ -466,45 +466,6 @@ export default class FileService {
                 count: count.length,
             });
 
-            // Consulta para obter contribuidores agrupados por arquivo (buscando pelos commits)
-            const commitsAndFiles = await Commit.findAll({
-                attributes: [],
-                include: [
-                    {
-                        model: Branch,
-                        as: "branch",
-                        attributes: ["name", "id"],
-                    },
-                    {
-                        model: Contributor,
-                        as: "contributor",
-                        attributes: [
-                            "id",
-                            "githubName",
-                            "githubLogin",
-                            "githubAvatarUrl",
-                            "githubEmail",
-                        ],
-                    },
-                    {
-                        model: File,
-                        as: "files",
-                        attributes: ["path"],
-                        required: true,
-                        where: {
-                            path: {
-                                [Op.in]: rows.map((file) => file.path),
-                            },
-                        },
-                    },
-                ],
-                where: this._constructWhereClauseForGroupedCommitSearch(search),
-            });
-
-            logger.info("Successfully found all files' commits: ", {
-                count: commitsAndFiles.length,
-            });
-
             const filePathContributorSetMap = new Map<
                 string,
                 Set<number | null>
@@ -513,38 +474,86 @@ export default class FileService {
                 number,
                 Contributor | null
             >();
-            commitsAndFiles.forEach((commitAndFiles) => {
-                const contributor = commitAndFiles.contributor;
-                if (contributor) {
-                    contributorIdContributorMap.set(
-                        contributor.id,
-                        contributor
-                    );
-                }
-                commitAndFiles.files.forEach((file) => {
-                    const fileContributors = filePathContributorSetMap.get(
-                        file.path
-                    );
-                    if (fileContributors) {
-                        fileContributors.add(contributor?.id || null);
-                    } else {
-                        filePathContributorSetMap.set(
-                            file.path,
-                            new Set([contributor?.id || null])
-                        );
-                    }
-                });
+
+            logger.info("Should get contributors: ", {
+                shouldGetContributors: search.shouldGetContributors,
             });
 
-            logger.info(
-                "Successfully processed : filePathContributorSetMap and contributorIdContributorMap",
-                {
-                    contributorIdContributorMapSize:
-                        contributorIdContributorMap.size,
-                    filePathContributorSetMapSize:
-                        filePathContributorSetMap.size,
-                }
-            );
+            if (search.shouldGetContributors) {
+                // Consulta para obter contribuidores agrupados por arquivo (buscando pelos commits)
+                const commitsAndFiles = await Commit.findAll({
+                    attributes: [],
+                    include: [
+                        {
+                            model: Branch,
+                            as: "branch",
+                            attributes: ["name", "id"],
+                        },
+                        {
+                            model: Contributor,
+                            as: "contributor",
+                            attributes: [
+                                "id",
+                                "githubName",
+                                "githubLogin",
+                                "githubAvatarUrl",
+                                "githubEmail",
+                            ],
+                        },
+                        {
+                            model: File,
+                            as: "files",
+                            attributes: ["path"],
+                            required: true,
+                            where: {
+                                path: {
+                                    [Op.in]: rows.map((file) => file.path),
+                                },
+                            },
+                        },
+                    ],
+                    where: this._constructWhereClauseForGroupedCommitSearch(
+                        search
+                    ),
+                });
+
+                logger.info("Successfully found all files' commits: ", {
+                    count: commitsAndFiles.length,
+                });
+
+                commitsAndFiles.forEach((commitAndFiles) => {
+                    const contributor = commitAndFiles.contributor;
+                    if (contributor) {
+                        contributorIdContributorMap.set(
+                            contributor.id,
+                            contributor
+                        );
+                    }
+                    commitAndFiles.files.forEach((file) => {
+                        const fileContributors = filePathContributorSetMap.get(
+                            file.path
+                        );
+                        if (fileContributors) {
+                            fileContributors.add(contributor?.id || null);
+                        } else {
+                            filePathContributorSetMap.set(
+                                file.path,
+                                new Set([contributor?.id || null])
+                            );
+                        }
+                    });
+                });
+
+                logger.info(
+                    "Successfully processed : filePathContributorSetMap and contributorIdContributorMap",
+                    {
+                        contributorIdContributorMapSize:
+                            contributorIdContributorMap.size,
+                        filePathContributorSetMapSize:
+                            filePathContributorSetMap.size,
+                    }
+                );
+            }
 
             const fileGroupedWithContributors = rows.map((file) => {
                 const fileContributors = filePathContributorSetMap.get(

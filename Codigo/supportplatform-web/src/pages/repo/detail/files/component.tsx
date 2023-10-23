@@ -8,6 +8,7 @@ import { RepositoryFileListLoaderData } from "./loader";
 import { useSearchParams } from "react-router-dom";
 import FileCard from "./components/fileCard";
 import FileFilter from "./components/fileFilter";
+import ShowContributorsToggle from "./components/showContributorsToggle";
 
 const pageRouteParams = appRoutes.repo["detail"].params;
 type PageRouteParams = (typeof pageRouteParams)[number];
@@ -74,6 +75,15 @@ export default function RepositoryFilesPage() {
                     defaultBranchName={repositoryData?.defaultBranch}
                 />
             </DateFilter>
+
+            <ShowContributorsToggle
+                key={
+                    searchParams.get(pageSearchParams.shouldGetContributors) ===
+                    "true"
+                        ? "1"
+                        : "0"
+                }
+            />
 
             <Box
                 sx={{

@@ -55,6 +55,11 @@ export default async function RepositoryFilesLoader({
             "true"
                 ? true
                 : undefined,
+
+        shouldGetContributors:
+            searchParams.get(pageSearchParams.shouldGetContributors) === "true"
+                ? true
+                : undefined,
         contributor: searchParams
             .getAll(pageSearchParams.contributor)
             .filter((c) => c !== ""),

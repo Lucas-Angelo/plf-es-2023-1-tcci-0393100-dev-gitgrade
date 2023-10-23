@@ -223,6 +223,7 @@ const appRoutes = {
                 search: {
                     page: "page",
                     path: "path",
+                    shouldGetContributors: "shouldGetContributors",
                 },
             },
             consistency: {

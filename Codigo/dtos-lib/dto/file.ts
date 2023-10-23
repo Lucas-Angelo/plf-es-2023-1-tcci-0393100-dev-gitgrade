@@ -30,6 +30,8 @@ export interface FileSearchDTO extends PaginationRequestDTO {
   contributor?: Array<string>;
   /** @isBool  filterWithNoContributor must be a boolean */
   filterWithNoContributor?: boolean;
+  /** @isBool  getContributors must be a boolean */
+  shouldGetContributors?: boolean;
 }
 
 /**

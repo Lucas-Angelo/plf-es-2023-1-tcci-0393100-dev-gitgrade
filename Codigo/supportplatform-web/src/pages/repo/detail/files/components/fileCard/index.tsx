@@ -52,43 +52,45 @@ export default function FileCard(props: IFileCardProps) {
                         flexWrap: "wrap",
                     }}
                 >
-                    <AvatarStack>
-                        {props.contributors?.map((contributor) => (
-                            <Avatar
-                                tabIndex={props.onAvatarClick ? 0 : -1}
-                                onClick={() =>
-                                    props.onAvatarClick?.(
-                                        contributor?.githubLogin ?? null
-                                    )
-                                }
-                                src={
-                                    contributor
-                                        ? contributor?.githubAvatarUrl ??
-                                          AvatarFallbackLogoImage
-                                        : QuestionMarkImage
-                                }
-                                alt={
-                                    contributor
-                                        ? contributor?.githubLogin ??
-                                          "Desconhecido"
-                                        : "Sem contribuidor"
-                                }
-                                title={
-                                    contributor
-                                        ? contributor?.githubLogin ??
-                                          "Desconhecido"
-                                        : "Sem contribuidor"
-                                }
-                                size={20}
-                                key={contributor?.id ?? -1}
-                                sx={{
-                                    cursor: props.onAvatarClick
-                                        ? "pointer"
-                                        : "default",
-                                }}
-                            />
-                        ))}
-                    </AvatarStack>
+                    {props.contributors?.length !== 0 && (
+                        <AvatarStack>
+                            {props.contributors?.map((contributor) => (
+                                <Avatar
+                                    tabIndex={props.onAvatarClick ? 0 : -1}
+                                    onClick={() =>
+                                        props.onAvatarClick?.(
+                                            contributor?.githubLogin ?? null
+                                        )
+                                    }
+                                    src={
+                                        contributor
+                                            ? contributor?.githubAvatarUrl ??
+                                              AvatarFallbackLogoImage
+                                            : QuestionMarkImage
+                                    }
+                                    alt={
+                                        contributor
+                                            ? contributor?.githubLogin ??
+                                              "Desconhecido"
+                                            : "Sem contribuidor"
+                                    }
+                                    title={
+                                        contributor
+                                            ? contributor?.githubLogin ??
+                                              "Desconhecido"
+                                            : "Sem contribuidor"
+                                    }
+                                    size={20}
+                                    key={contributor?.id ?? -1}
+                                    sx={{
+                                        cursor: props.onAvatarClick
+                                            ? "pointer"
+                                            : "default",
+                                    }}
+                                />
+                            ))}
+                        </AvatarStack>
+                    )}
                     <Box
                         sx={{
                             color: fileChangeColors.additions,

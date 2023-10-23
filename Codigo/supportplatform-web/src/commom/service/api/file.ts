@@ -114,6 +114,8 @@ export class FileService {
             searchParams.set("endedAt", query.endedAt.toISOString());
         if (query?.filterWithNoContributor)
             searchParams.set("filterWithNoContributor", "true");
+        if (query?.shouldGetContributors)
+            searchParams.set("shouldGetContributors", "true");
         if (query?.contributor) {
             query.contributor.forEach((c) => {
                 searchParams.append("contributor", c);

@@ -766,6 +766,9 @@
 					},
 					"filterWithNoContributor": {
 						"type": "boolean"
+					},
+					"shouldGetContributors": {
+						"type": "boolean"
 					}
 				},
 				"required": [
@@ -2934,6 +2937,14 @@
 					{
 						"in": "query",
 						"name": "filterWithNoContributor",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "shouldGetContributors",
 						"required": false,
 						"schema": {
 							"type": "boolean"

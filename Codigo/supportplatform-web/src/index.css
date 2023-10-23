@@ -38,3 +38,7 @@ body {
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
+.toggle-switch-wrapper:not(a) > div > span {
+    display: none;
+}
