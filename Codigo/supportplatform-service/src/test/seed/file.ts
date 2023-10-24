@@ -97,6 +97,22 @@ const fileTestingSeed: Array<IFileAttributes> = [
         path: "src/pagina3.html",
         extension: "html",
     },
+    {
+        id: 12,
+        additions: 25,
+        deletions: 0,
+        commitId: commitTestingSeed[5].id,
+        path: "src/style.css",
+        extension: "css",
+    },
+    {
+        id: 13,
+        additions: 25,
+        deletions: 0,
+        commitId: commitTestingSeed[11].id,
+        path: "src/style.css",
+        extension: "css",
+    },
 ];
 
 export { fileTestingSeed };

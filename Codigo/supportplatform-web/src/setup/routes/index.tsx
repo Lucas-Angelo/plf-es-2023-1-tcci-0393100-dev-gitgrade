@@ -249,6 +249,12 @@ const routes = createRoutesFromElements(
                             }
                         />
                         <Route
+                            path={appRoutes.repo.detail.files.path}
+                            lazy={() =>
+                                import("../../pages/repo/detail/files/index")
+                            }
+                        />
+                        <Route
                             path={appRoutes.repo.detail.consistency.path}
                             element={<>consistency</>}
                         />

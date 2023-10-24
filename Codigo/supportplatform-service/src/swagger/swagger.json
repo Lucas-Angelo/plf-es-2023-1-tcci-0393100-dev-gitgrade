@@ -697,6 +697,86 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"PaginationResponseDTO__path-string__": {
+				"properties": {
+					"results": {
+						"items": {
+							"properties": {
+								"path": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"path"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"totalPages": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"results",
+					"totalPages"
+				],
+				"type": "object"
+			},
+			"FileSearchDTO": {
+				"description": "FileSearchDTO - Used for searching through Files with pagination and filters.",
+				"properties": {
+					"page": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"limit": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"path": {
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 255
+					},
+					"startedAt": {
+						"type": "string",
+						"format": "date"
+					},
+					"endedAt": {
+						"type": "string",
+						"format": "date"
+					},
+					"repositoryId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"branchName": {
+						"type": "string"
+					},
+					"contributor": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"filterWithNoContributor": {
+						"type": "boolean"
+					},
+					"shouldGetContributors": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"repositoryId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"RepositoryResponseDTO": {
 				"properties": {
 					"id": {
@@ -2745,6 +2825,129 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/file": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Found files",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PaginationResponseDTO__path-string__"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all Files with pagination and filter.\nCan filter by start_date, end_date, and evaluationMethodId.",
+				"tags": [
+					"file"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "path",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"minLength": 1,
+							"maxLength": 255
+						}
+					},
+					{
+						"in": "query",
+						"name": "startedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "endedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "branchName",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "contributor",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "filterWithNoContributor",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "shouldGetContributors",
+						"required": false,
+						"schema": {
+							"type": "boolean"
 						}
 					}
 				]

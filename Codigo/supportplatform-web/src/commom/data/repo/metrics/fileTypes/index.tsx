@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import FileService from "../../../../service/api/file";
+import { FileService } from "../../../../service/api/file";
 
 export const getFileTypeMetricsGroupedByContributorByRepositoryIdQuery = (
     id: number,

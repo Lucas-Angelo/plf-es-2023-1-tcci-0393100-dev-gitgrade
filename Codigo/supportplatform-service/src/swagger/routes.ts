@@ -15,6 +15,8 @@ import { ContributorController } from './../controller/ContributorController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { EvaluationMethodController } from './../controller/EvaluationMethodController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { FileController } from './../controller/FileController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { RepositoryController } from './../controller/RepositoryController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { RepositoryMetricsController } from './../controller/RepositoryMetricsController';
@@ -275,6 +277,28 @@ const models: TsoaRoute.Models = {
             "year": {"dataType":"integer","validators":{"isInt":{"errorMsg":"year must be an integer"}}},
             "disabledAt": {"dataType":"date","validators":{"isDate":{"errorMsg":"disabledAt must be a Date"}}},
             "forceDisabled": {"dataType":"boolean","default":"false","validators":{"isBoolean":{"errorMsg":"forceDisabled must be a boolean"}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PaginationResponseDTO__path-string__": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"results":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"path":{"dataType":"string","required":true}}},"required":true},"totalPages":{"dataType":"double","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "FileSearchDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "page": {"dataType":"integer","validators":{"isInt":{"errorMsg":"page must be an integer"},"minimum":{"errorMsg":"page must be greater than or equal to 1","value":1}}},
+            "limit": {"dataType":"integer","validators":{"isInt":{"errorMsg":"limit must be an integer"},"minimum":{"errorMsg":"limit must be greater than or equal to 1","value":1}}},
+            "path": {"dataType":"string","validators":{"isString":{"errorMsg":"message must be a string"},"minLength":{"errorMsg":"message must have a minimum length of 1","value":1},"maxLength":{"errorMsg":"message must have a maximum length of 255","value":255}}},
+            "startedAt": {"dataType":"date","validators":{"isDate":{"errorMsg":"startedAt must be a Date"}}},
+            "endedAt": {"dataType":"date","validators":{"isDate":{"errorMsg":"endedAt must be a Date"}}},
+            "repositoryId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"repositoryId must be an integer"},"minimum":{"errorMsg":"repositoryId must be greater than or equal to 1","value":1}}},
+            "branchName": {"dataType":"string"},
+            "contributor": {"dataType":"array","array":{"dataType":"string"}},
+            "filterWithNoContributor": {"dataType":"boolean"},
+            "shouldGetContributors": {"dataType":"boolean"},
         },
         "additionalProperties": false,
     },
@@ -934,6 +958,32 @@ export function RegisterRoutes(app: Router) {
 
               const promise = controller.delete.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, 204, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/file',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(FileController)),
+            ...(fetchMiddlewares<RequestHandler>(FileController.prototype.getAll)),
+
+            function FileController_getAll(request: any, response: any, next: any) {
+            const args = {
+                    query: {"in":"queries","name":"query","required":true,"ref":"FileSearchDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new FileController();
+
+
+              const promise = controller.getAll.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 200, next);
             } catch (err) {
                 return next(err);
             }
