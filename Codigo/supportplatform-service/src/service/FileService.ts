@@ -424,7 +424,6 @@ export default class FileService {
                 order: [["path", "ASC"]],
                 attributes: [
                     "path",
-                    "extension",
                     [
                         sequelize.fn("SUM", sequelize.col("additions")),
                         "additions",
@@ -439,23 +438,17 @@ export default class FileService {
                     {
                         model: Commit,
                         as: "commit",
-                        attributes: ["committedDate"],
+                        attributes: [],
                         include: [
                             {
                                 model: Branch,
                                 as: "branch",
-                                attributes: ["name", "id"],
+                                attributes: [],
                             },
                             {
                                 model: Contributor,
                                 as: "contributor",
-                                attributes: [
-                                    "id",
-                                    "githubName",
-                                    "githubLogin",
-                                    "githubAvatarUrl",
-                                    "githubEmail",
-                                ],
+                                attributes: [],
                             },
                         ],
                     },
