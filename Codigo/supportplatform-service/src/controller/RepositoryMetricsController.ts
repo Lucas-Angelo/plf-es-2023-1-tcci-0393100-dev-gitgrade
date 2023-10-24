@@ -73,8 +73,7 @@ export class RepositoryMetricsController extends Controller {
         }
 
         const branchName = query.branchName ?? repository.defaultBranch!;
-        const startedAt =
-            query.startedAt ?? new Date(repository.githubCreatedAt);
+        const startedAt = query.startedAt ?? new Date(0);
         const endedAt = query.endedAt ?? new Date();
 
         const serviceResponse =
@@ -112,8 +111,7 @@ export class RepositoryMetricsController extends Controller {
         }
 
         const branchName = query.branchName ?? repository.defaultBranch!;
-        const startedAt =
-            query.startedAt ?? new Date(repository.githubCreatedAt);
+        const startedAt = query.startedAt ?? new Date(0);
         const endedAt = query.endedAt ?? new Date();
 
         const serviceResponse =
@@ -149,8 +147,7 @@ export class RepositoryMetricsController extends Controller {
         }
 
         const branchName = query.branchName ?? repository.defaultBranch!;
-        const startedAt =
-            query.startedAt ?? new Date(repository.githubCreatedAt);
+        const startedAt = query.startedAt ?? new Date(0);
         const endedAt = query.endedAt ?? new Date();
 
         const serviceResponse =
@@ -186,8 +183,7 @@ export class RepositoryMetricsController extends Controller {
             throw new AppError("Repository not found", 404);
         }
 
-        const startedAt =
-            query.startedAt ?? new Date(repository.githubCreatedAt);
+        const startedAt = query.startedAt ?? new Date(0);
         const endedAt = query.endedAt ?? new Date();
 
         const serviceResponse =
@@ -223,8 +219,7 @@ export class RepositoryMetricsController extends Controller {
         }
 
         const branchName = query.branchName ?? repository.defaultBranch!;
-        const startedAt =
-            query.startedAt ?? new Date(repository.githubCreatedAt);
+        const startedAt = query.startedAt ?? new Date(0);
         const endedAt = query.endedAt ?? new Date();
 
         const serviceResponse =

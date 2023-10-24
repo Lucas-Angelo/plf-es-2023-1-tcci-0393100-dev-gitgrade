@@ -8,7 +8,7 @@ const repositoryTestingSeed: IRepositoryAttributes[] = [
         description: "Collection of utility functions for TypeScript",
         stargazerCount: 100,
         forkCount: 25,
-        githubCreatedAt: new Date("2023-01-10"),
+        githubCreatedAt: new Date("2023-02-01"),
         githubUpdatedAt: new Date("2023-08-15"),
         hasProjectsEnabled: true,
         hasIssuesEnabled: true,
