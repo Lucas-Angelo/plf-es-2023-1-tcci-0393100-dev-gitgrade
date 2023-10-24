@@ -5,7 +5,10 @@ import { ErrorResponseDTO } from "@gitgrade/dtos";
 import { toast } from "react-toastify";
 import { RepositoryService } from "../../../../../commom/service/api/repository";
 import queryClient from "../../../../../commom/data/client";
-import { getRepositoryQuery } from "../../../../../commom/data/repo";
+import {
+    getRepositoryByIdQuery,
+    getRepositoryQuery,
+} from "../../../../../commom/data/repo";
 
 const pageUrlParams = appRoutes.evaluationMethod.detail.repo.detail.getParams();
 type PageUrlParam = (typeof pageUrlParams)[number];
@@ -30,10 +33,14 @@ export default async function EvaluationMethodRepositoryAction({
 
     if (request.method === "post" || request.method === "POST") {
         try {
-            await new RepositoryService().patch(repoId, {
+            const patchReponse = await new RepositoryService().patch(repoId, {
                 evaluationMethodId,
             });
-            queryClient.removeQueries(getRepositoryQuery());
+            await queryClient.invalidateQueries(getRepositoryQuery().queryKey);
+            queryClient.setQueryData(
+                getRepositoryByIdQuery(repoId).queryKey,
+                patchReponse.data
+            );
 
             toast.success(
                 "Repositório adicionado ao método avaliativo com sucesso!"
@@ -55,10 +62,14 @@ export default async function EvaluationMethodRepositoryAction({
         }
     } else if (request.method === "delete" || request.method === "DELETE") {
         try {
-            await new RepositoryService().patch(repoId, {
+            const patchReponse = await new RepositoryService().patch(repoId, {
                 evaluationMethodId: null,
             });
-            queryClient.removeQueries(getRepositoryQuery());
+            await queryClient.invalidateQueries(getRepositoryQuery().queryKey);
+            queryClient.setQueryData(
+                getRepositoryByIdQuery(repoId).queryKey,
+                patchReponse.data
+            );
 
             toast.success(
                 "Repositório removido do método avaliativo com sucesso!"

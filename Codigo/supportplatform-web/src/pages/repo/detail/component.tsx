@@ -27,6 +27,7 @@ export default function RepoPage() {
                 orgName="ICEI-PUC-Minas-PPLES-TI"
                 repoName={repositoryData!.name}
                 contributors={repositoryContributorsData!.results}
+                evaluationMethod={repositoryData?.evaluationMethod ?? undefined}
             />
 
             <Box
