@@ -1,8 +1,9 @@
-import { ToggleSwitch, Box } from "@primer/react";
+import { Box } from "@primer/react";
 import RepositoryEvaluationMethodSelector from "./components/repositoryEvaluationMethodSelector";
 import { useRepositoryById } from "../../../../commom/data/repo";
 import appRoutes from "../../../../commom/routes/appRoutes";
 import { useParams } from "react-router";
+import RepositoryAutoSyncToggle from "./components/repositoryAutoSyncToggle";
 
 const pageRouteParams = appRoutes.repo["detail"].params;
 type PageRouteParams = (typeof pageRouteParams)[number];
@@ -30,18 +31,14 @@ export default function RepositoryConfigPage() {
                     evaluationMethodString={evaluationMethodName}
                 />
             )}
-            <Box
-                sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 2,
-                    mt: 4,
-                }}
-                className="toggle-switch-wrapper"
-            >
-                Sincronização automática
-                <ToggleSwitch aria-labelledby="Sincronização automática" />
-            </Box>
+            {repository && (
+                <RepositoryAutoSyncToggle
+                    automaticSynchronization={
+                        repository.automaticSynchronization
+                    }
+                    repositoryId={repository.id}
+                />
+            )}
 
             {repository?.lastSyncAt && (
                 <Box
