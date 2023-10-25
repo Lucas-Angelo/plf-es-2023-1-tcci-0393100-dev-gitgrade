@@ -77,8 +77,6 @@ export default class BranchService {
                 logger.error(`Error updating branch ${id}:`);
                 throw new AppError("Branch not found", 404);
             }
-
-            console.log("ola manitos", id, body);
             await Branch.update(body, {
                 where: { id },
             });
