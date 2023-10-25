@@ -21,7 +21,6 @@ export default async function EvaluationMethodStandardizedIssueDetailAction({
     request,
     params,
 }: ActionFunctionArgs) {
-    console.log("acionei");
     const { id: evaluationMethodIdParam } = params as Params<PageUrlParam>;
 
     if (evaluationMethodIdParam === undefined) throw new Error("Invalid URL");

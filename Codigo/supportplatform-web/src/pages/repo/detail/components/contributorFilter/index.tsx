@@ -46,10 +46,6 @@ export default function ContributorFilter(props: IContributorFilterProps) {
                     currentSearchParams
                 );
                 newSearchParams.delete(pageSearchParams.contributor);
-                console.log(
-                    newSearchParams.getAll(pageSearchParams.contributor),
-                    newContributorsFilter
-                );
                 newContributorsFilter.forEach((contributor) =>
                     newSearchParams.append(
                         pageSearchParams.contributor,

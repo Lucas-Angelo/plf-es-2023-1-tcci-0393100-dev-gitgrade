@@ -14,7 +14,8 @@ export async function loadQueryData<
     >
 ): Promise<TData> {
     const queryState = queryClient.getQueryState<TData>(query.queryKey);
-    if (!queryState?.data || !queryState?.isInvalidated) {
+
+    if (!queryState?.data || queryState?.isInvalidated) {
         return await queryClient.fetchQuery(query);
     } else return queryState.data;
 }

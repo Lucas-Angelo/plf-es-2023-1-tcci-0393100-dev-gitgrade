@@ -14,11 +14,24 @@
 					},
 					"name": {
 						"type": "string"
+					},
+					"commitAutomaticSynchronization": {
+						"type": "boolean"
+					},
+					"fileAutomaticSynchronization": {
+						"type": "boolean"
+					},
+					"repositoryId": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
 					"id",
-					"name"
+					"name",
+					"commitAutomaticSynchronization",
+					"fileAutomaticSynchronization",
+					"repositoryId"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -34,6 +47,18 @@
 						"type": "integer",
 						"format": "int32",
 						"minimum": 1
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BranchPatchDTO": {
+				"properties": {
+					"commitAutomaticSynchronization": {
+						"type": "boolean"
+					},
+					"fileAutomaticSynchronization": {
+						"type": "boolean"
 					}
 				},
 				"type": "object",
@@ -1738,6 +1763,63 @@
 				]
 			}
 		},
+		"/repository/{repositoryId}/branch/{id}": {
+			"patch": {
+				"operationId": "Patch",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BranchDTO"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"branch"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/BranchPatchDTO"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/commit": {
 			"get": {
 				"operationId": "GetAll",
@@ -1760,7 +1842,10 @@
 													"committedDate": "2023-01-01T00:00:00.000Z",
 													"branch": {
 														"id": 1,
-														"name": "master"
+														"name": "master",
+														"commitAutomaticSynchronization": true,
+														"fileAutomaticSynchronization": true,
+														"repositoryId": 1
 													},
 													"sha": "1234567890",
 													"contributor": {

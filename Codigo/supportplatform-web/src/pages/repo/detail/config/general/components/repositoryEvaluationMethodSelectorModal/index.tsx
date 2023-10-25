@@ -7,11 +7,11 @@ import {
     IconButton,
     Octicon,
 } from "@primer/react";
-import { useEvaluationMethodList } from "../../../../../../commom/data/evaluationMethod";
+import { useEvaluationMethodList } from "../../../../../../../commom/data/evaluationMethod";
 import React, { useEffect, useRef, useState } from "react";
 import { useFetcher } from "react-router-dom";
 import { SearchIcon, XIcon } from "@primer/octicons-react";
-import appRoutes from "../../../../../../commom/routes/appRoutes";
+import appRoutes from "../../../../../../../commom/routes/appRoutes";
 
 interface IRepositoryEvaluationMethodSelectorModalProps {
     onClose?: () => void;

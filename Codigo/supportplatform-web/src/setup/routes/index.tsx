@@ -263,7 +263,50 @@ const routes = createRoutesFromElements(
                             lazy={() =>
                                 import("../../pages/repo/detail/config/index")
                             }
-                        />
+                        >
+                            <Route
+                                path={appRoutes.repo.detail.config.general.path}
+                                lazy={() =>
+                                    import(
+                                        "../../pages/repo/detail/config/general/index"
+                                    )
+                                }
+                            />
+                            <Route
+                                path={
+                                    appRoutes.repo.detail.config.branches.path
+                                }
+                                lazy={() =>
+                                    import(
+                                        "../../pages/repo/detail/config/branches/index"
+                                    )
+                                }
+                            >
+                                <Route
+                                    path={
+                                        appRoutes.repo.detail.config.branches
+                                            .detail.path
+                                    }
+                                    lazy={() =>
+                                        import(
+                                            "../../pages/repo/detail/config/branches/detail/index"
+                                        )
+                                    }
+                                />
+                            </Route>
+                            <Route
+                                path=""
+                                element={
+                                    <NavigateMaintainingSearchParams
+                                        replace
+                                        to={
+                                            appRoutes.repo.detail.config.general
+                                                .path
+                                        }
+                                    />
+                                }
+                            />
+                        </Route>
 
                         <Route
                             path=""

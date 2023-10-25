@@ -1,4 +1,4 @@
-import { Box, Button, Label, Link as PrimerLink, Octicon } from "@primer/react";
+import { Box, Button, Link as PrimerLink, Octicon } from "@primer/react";
 import { RepoIcon, PaperclipIcon } from "@primer/octicons-react";
 
 import "./styles.css";
@@ -6,7 +6,7 @@ import ContributorFilter from "../contributorFilter";
 import RepoHeadNavigation from "../repoHeadNavigation";
 import { useSearchParams } from "react-router-dom";
 import appRoutes from "../../../../../commom/routes/appRoutes";
-import { Link } from "react-router-dom";
+import EvaluationMethodLink from "../../../../../commom/components/evaluationMethodLink";
 
 interface IRepoHeadProps {
     orgName: string;
@@ -92,28 +92,12 @@ export default function RepoHead(props: IRepoHeadProps) {
                 </Box>
 
                 {props.evaluationMethod && (
-                    <Link
-                        to={appRoutes.evaluationMethod.detail.link(
-                            props.evaluationMethod.id
-                        )}
-                    >
-                        <Box>
-                            <Label
-                                variant="accent"
-                                sx={{
-                                    ":hover": {
-                                        cursor: "pointer",
-                                        opacity: 0.8,
-                                        transition: "opacity 0.2s",
-                                    },
-                                }}
-                            >
-                                {props.evaluationMethod.description} -{" "}
-                                {props.evaluationMethod.year}/
-                                {props.evaluationMethod.semester}
-                            </Label>
-                        </Box>
-                    </Link>
+                    <EvaluationMethodLink
+                        description={props.evaluationMethod.description}
+                        semester={props.evaluationMethod.semester}
+                        year={props.evaluationMethod.year}
+                        id={props.evaluationMethod.id}
+                    />
                 )}
 
                 <Box>
