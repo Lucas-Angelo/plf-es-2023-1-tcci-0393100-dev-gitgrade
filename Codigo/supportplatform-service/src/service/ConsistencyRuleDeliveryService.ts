@@ -17,6 +17,7 @@ import { SequelizeUtil } from "../utils/SequelizeUtil";
 import { sequelizePagination } from "../utils/pagination";
 import ConsistencyRuleService from "./ConsistencyRuleService";
 import RepositoryService from "./RepositoryService";
+import { ConsistencyRule } from "../model/ConsistencyRule";
 
 export default class ConsistencyRuleDeliveryService {
     private sequelizeUtil: SequelizeUtil;
@@ -175,6 +176,13 @@ export default class ConsistencyRuleDeliveryService {
                     where: Object.keys(whereClause).length
                         ? whereClause
                         : undefined,
+                    include: [
+                        {
+                            model: ConsistencyRule,
+                            as: "consistencyRule",
+                        },
+                    ],
+                    order: [["id", "DESC"]],
                 });
 
             logger.info(
@@ -224,6 +232,12 @@ export default class ConsistencyRuleDeliveryService {
             const consistencyRuleDelivery =
                 await ConsistencyRuleDelivery.findOne({
                     where: { ...fields },
+                    include: [
+                        {
+                            model: ConsistencyRule,
+                            as: "consistencyRule",
+                        },
+                    ],
                     paranoid: false,
                 });
 
@@ -297,6 +311,10 @@ export default class ConsistencyRuleDeliveryService {
                     [Op.lte]: filter.deliveryAtEnd,
                 };
         }
+
+        if (filter.evaluationMethodId)
+            whereClause["$consistencyRule.evaluation_method_id$"] =
+                filter.evaluationMethodId;
 
         if (filter.consistencyRuleId)
             whereClause.consistencyRuleId = filter.consistencyRuleId;

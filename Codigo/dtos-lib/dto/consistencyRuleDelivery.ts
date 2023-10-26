@@ -1,3 +1,5 @@
+import { ConsistencyRuleResponseDTO } from "./consistencyRule";
+
 export enum ConsistencyRuleDeliveryStatus {
   AWAITING_DELIVERY = "AWAITING_DELIVERY",
   DELIVERED_ON_TIME = "DELIVERED_ON_TIME",
@@ -80,6 +82,12 @@ export interface ConsistencyRuleDeliverySearchDTO {
    */
   consistencyRuleId?: number;
   /**
+   * @isInt evaluationMethodId must be an integer
+   * @minimum 1 evaluationMethodId must be greater than or equal to 1
+   * @isOptional evaluationMethodId is optional
+   */
+  evaluationMethodId?: number;
+  /**
    * @isInt repositoryId must be an integer
    * @minimum 1 repositoryId must be greater than or equal to 1
    * @isOptional repositoryId is optional
@@ -123,6 +131,12 @@ export interface ConsistencyRuleDeliveryFindOneDTO {
    */
   consistencyRuleId?: number;
   /**
+   * @isInt evaluationMethodId must be an integer
+   * @minimum 1 evaluationMethodId must be greater than or equal to 1
+   * @isOptional evaluationMethodId is optional
+   */
+  evaluationMethodId?: number;
+  /**
    * @isInt repositoryId must be an integer
    * @minimum 1 repositoryId must be greater than or equal to 1
    * @isOptional repositoryId is optional
@@ -159,4 +173,5 @@ export interface ConsistencyRuleDeliveryResponseDTO {
   repositoryId: number;
   deliveryAt: Date | null;
   status: ConsistencyRuleDeliveryStatus;
+  consistencyRule: ConsistencyRuleResponseDTO;
 }

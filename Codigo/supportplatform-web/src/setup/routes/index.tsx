@@ -38,6 +38,7 @@ const routes = createRoutesFromElements(
                     <Route
                         path={appRoutes.repo.detail.path}
                         lazy={() => import("../../pages/repo/detail/index")}
+                        errorElement={<ErrorElement />}
                     >
                         <Route
                             path={appRoutes.repo.detail.metrics.path}
@@ -50,6 +51,7 @@ const routes = createRoutesFromElements(
                                 path={
                                     appRoutes.repo.detail.metrics.commits.path
                                 }
+                                errorElement={<ErrorElement />}
                                 lazy={() =>
                                     import(
                                         "../../pages/repo/detail/metrics/commits/index"
@@ -95,6 +97,7 @@ const routes = createRoutesFromElements(
                                 path={
                                     appRoutes.repo.detail.metrics.fileTypes.path
                                 }
+                                errorElement={<ErrorElement />}
                                 lazy={() =>
                                     import(
                                         "../../pages/repo/detail/metrics/fileTypes/index"
@@ -106,6 +109,7 @@ const routes = createRoutesFromElements(
                                     appRoutes.repo.detail.metrics.linesOfCode
                                         .path
                                 }
+                                errorElement={<ErrorElement />}
                                 lazy={() =>
                                     import(
                                         "../../pages/repo/detail/metrics/lines/index"
@@ -163,6 +167,7 @@ const routes = createRoutesFromElements(
                                     appRoutes.repo.detail.metrics
                                         .fileContributions.path
                                 }
+                                errorElement={<ErrorElement />}
                                 lazy={() =>
                                     import(
                                         "../../pages/repo/detail/metrics/fileContributions/index"
@@ -174,6 +179,7 @@ const routes = createRoutesFromElements(
                                     appRoutes.repo.detail.metrics.commitQuality
                                         .path
                                 }
+                                errorElement={<ErrorElement />}
                                 lazy={() =>
                                     import(
                                         "../../pages/repo/detail/metrics/commitQuality/index"
@@ -182,6 +188,7 @@ const routes = createRoutesFromElements(
                             />
                             <Route
                                 path={appRoutes.repo.detail.metrics.issues.path}
+                                errorElement={<ErrorElement />}
                                 lazy={() =>
                                     import(
                                         "../../pages/repo/detail/metrics/issues/index"
@@ -244,22 +251,30 @@ const routes = createRoutesFromElements(
                         />
                         <Route
                             path={appRoutes.repo.detail.commits.path}
+                            errorElement={<ErrorElement />}
                             lazy={() =>
                                 import("../../pages/repo/detail/commits/index")
                             }
                         />
                         <Route
                             path={appRoutes.repo.detail.files.path}
+                            errorElement={<ErrorElement />}
                             lazy={() =>
                                 import("../../pages/repo/detail/files/index")
                             }
                         />
                         <Route
                             path={appRoutes.repo.detail.consistency.path}
-                            element={<>consistency</>}
+                            errorElement={<ErrorElement />}
+                            lazy={() =>
+                                import(
+                                    "../../pages/repo/detail/consistency/index"
+                                )
+                            }
                         />
                         <Route
                             path={appRoutes.repo.detail.config.path}
+                            errorElement={<ErrorElement />}
                             lazy={() =>
                                 import("../../pages/repo/detail/config/index")
                             }

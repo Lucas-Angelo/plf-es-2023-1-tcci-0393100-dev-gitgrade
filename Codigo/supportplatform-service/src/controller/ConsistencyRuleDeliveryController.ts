@@ -22,6 +22,7 @@ import {
 } from "tsoa";
 import { ConsistencyRuleDeliveryMapper } from "../mapper/ConsistencyRuleDeliveryMapper";
 import ConsistencyRuleDeliveryService from "../service/ConsistencyRuleDeliveryService";
+import { ValidationType } from "../model/ConsistencyRule";
 
 @Route("consistency-rule-delivery")
 @Security("bearer", ["admin"])
@@ -48,6 +49,15 @@ export class ConsistencyRuleDeliveryController extends Controller {
         repositoryId: 1,
         deliveryAt: new Date("2023-01-01"),
         status: ConsistencyRuleDeliveryStatus.DELIVERED_ON_TIME,
+        consistencyRule: {
+            id: 1,
+            evaluationMethodId: 1,
+            sprintId: 1,
+            standardizedIssueId: 1,
+            description: "ConsistencyRule 1 description",
+            filePath: "/Documentacao/DocumentoDoProjeto.pdf",
+            validationType: ValidationType.DEFAULT,
+        },
     })
     @Post("/")
     @SuccessResponse("201", "ConsistencyRuleDelivery created")
@@ -72,6 +82,15 @@ export class ConsistencyRuleDeliveryController extends Controller {
         repositoryId: 1,
         deliveryAt: new Date("2023-01-02"),
         status: ConsistencyRuleDeliveryStatus.DELIVERED_ON_TIME,
+        consistencyRule: {
+            id: 1,
+            evaluationMethodId: 1,
+            sprintId: 1,
+            standardizedIssueId: 1,
+            description: "ConsistencyRule 1 description",
+            filePath: "/Documentacao/DocumentoDoProjeto.pdf",
+            validationType: ValidationType.DEFAULT,
+        },
     })
     @Put("/{id}")
     @SuccessResponse("200", "ConsistencyRuleDelivery updated")
@@ -99,6 +118,15 @@ export class ConsistencyRuleDeliveryController extends Controller {
                 repositoryId: 1,
                 deliveryAt: new Date("2023-01-01"),
                 status: ConsistencyRuleDeliveryStatus.DELIVERED_ON_TIME,
+                consistencyRule: {
+                    id: 1,
+                    evaluationMethodId: 1,
+                    sprintId: 1,
+                    standardizedIssueId: 1,
+                    description: "ConsistencyRule 1 description",
+                    filePath: "/Documentacao/DocumentoDoProjeto.pdf",
+                    validationType: ValidationType.DEFAULT,
+                },
             },
         ],
     })
@@ -128,6 +156,15 @@ export class ConsistencyRuleDeliveryController extends Controller {
         repositoryId: 1,
         deliveryAt: new Date("2023-01-01"),
         status: ConsistencyRuleDeliveryStatus.DELIVERED_ON_TIME,
+        consistencyRule: {
+            id: 1,
+            evaluationMethodId: 1,
+            sprintId: 1,
+            standardizedIssueId: 1,
+            description: "ConsistencyRule 1 description",
+            filePath: "/Documentacao/DocumentoDoProjeto.pdf",
+            validationType: ValidationType.DEFAULT,
+        },
     })
     @Get("/{id}")
     @SuccessResponse("200", "Found consistency rule delivery")

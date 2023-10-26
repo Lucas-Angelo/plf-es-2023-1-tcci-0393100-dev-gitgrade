@@ -403,6 +403,9 @@
 					},
 					"status": {
 						"$ref": "#/components/schemas/ConsistencyRuleDeliveryStatus"
+					},
+					"consistencyRule": {
+						"$ref": "#/components/schemas/ConsistencyRuleResponseDTO"
 					}
 				},
 				"required": [
@@ -410,7 +413,8 @@
 					"consistencyRuleId",
 					"repositoryId",
 					"deliveryAt",
-					"status"
+					"status",
+					"consistencyRule"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -508,6 +512,11 @@
 						"minimum": 1
 					},
 					"consistencyRuleId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"evaluationMethodId": {
 						"type": "integer",
 						"format": "int32",
 						"minimum": 1
@@ -2192,7 +2201,16 @@
 											"consistencyRuleId": 1,
 											"repositoryId": 1,
 											"deliveryAt": "2023-01-01T00:00:00.000Z",
-											"status": "DELIVERED_ON_TIME"
+											"status": "DELIVERED_ON_TIME",
+											"consistencyRule": {
+												"id": 1,
+												"evaluationMethodId": 1,
+												"sprintId": 1,
+												"standardizedIssueId": 1,
+												"description": "ConsistencyRule 1 description",
+												"filePath": "/Documentacao/DocumentoDoProjeto.pdf",
+												"validationType": "DEFAULT"
+											}
 										}
 									}
 								}
@@ -2243,7 +2261,16 @@
 													"consistencyRuleId": 1,
 													"repositoryId": 1,
 													"deliveryAt": "2023-01-01T00:00:00.000Z",
-													"status": "DELIVERED_ON_TIME"
+													"status": "DELIVERED_ON_TIME",
+													"consistencyRule": {
+														"id": 1,
+														"evaluationMethodId": 1,
+														"sprintId": 1,
+														"standardizedIssueId": 1,
+														"description": "ConsistencyRule 1 description",
+														"filePath": "/Documentacao/DocumentoDoProjeto.pdf",
+														"validationType": "DEFAULT"
+													}
 												}
 											]
 										}
@@ -2288,6 +2315,16 @@
 					{
 						"in": "query",
 						"name": "consistencyRuleId",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "evaluationMethodId",
 						"required": false,
 						"schema": {
 							"format": "int32",
@@ -2361,7 +2398,16 @@
 											"consistencyRuleId": 1,
 											"repositoryId": 1,
 											"deliveryAt": "2023-01-02T00:00:00.000Z",
-											"status": "DELIVERED_ON_TIME"
+											"status": "DELIVERED_ON_TIME",
+											"consistencyRule": {
+												"id": 1,
+												"evaluationMethodId": 1,
+												"sprintId": 1,
+												"standardizedIssueId": 1,
+												"description": "ConsistencyRule 1 description",
+												"filePath": "/Documentacao/DocumentoDoProjeto.pdf",
+												"validationType": "DEFAULT"
+											}
 										}
 									}
 								}
@@ -2419,7 +2465,16 @@
 											"consistencyRuleId": 1,
 											"repositoryId": 1,
 											"deliveryAt": "2023-01-01T00:00:00.000Z",
-											"status": "DELIVERED_ON_TIME"
+											"status": "DELIVERED_ON_TIME",
+											"consistencyRule": {
+												"id": 1,
+												"evaluationMethodId": 1,
+												"sprintId": 1,
+												"standardizedIssueId": 1,
+												"description": "ConsistencyRule 1 description",
+												"filePath": "/Documentacao/DocumentoDoProjeto.pdf",
+												"validationType": "DEFAULT"
+											}
 										}
 									}
 								}
