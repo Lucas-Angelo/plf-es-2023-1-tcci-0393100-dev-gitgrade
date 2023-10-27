@@ -167,6 +167,7 @@ jobs:
             echo "DB_COLLATE=${{ secrets.DB_COLLATE }}" >> "$CODE_DIR/.env"
             echo "DB_TIMEZONE=${{ secrets.DB_TIMEZONE }}" >> "$CODE_DIR/.env"
             echo "GITHUB_ORGANIZATION_NAME=${{ secrets.GH_ORGANIZATION_NAME }}" >> "$CODE_DIR/.env"
+            echo "GITHUB_PERSONAL_ACCESS_TOKEN=${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}" >> "$CODE_DIR/.env"
 
             echo "# MySQL docker service envs" >> "$CODE_DIR/.env"
             echo "DB_HOST=${{ secrets.DB_HOST }}" >> "$CODE_DIR/.env"
@@ -179,7 +180,6 @@ jobs:
             echo "# Jobscheduler docker service envs" >> "$CODE_DIR/.env"
             echo "JOBSCHEDULER_SERVICE_NODE_PORT=$JOBSCHEDULER_SERVICE_NODE_PORT" >> "$CODE_DIR/.env"
             echo "SYNC_TIME=${{ secrets.SYNC_TIME }}" >> "$CODE_DIR/.env"
-            echo "GITHUB_PERSONAL_ACCESS_TOKEN=${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}" >> "$CODE_DIR/.env"
             echo "TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}" >> "$CODE_DIR/.env"
             echo "TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}" >> "$CODE_DIR/.env"
 

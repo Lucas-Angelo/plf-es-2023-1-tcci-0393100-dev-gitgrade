@@ -1,5 +1,5 @@
 {
-    "*.ts": "tsc-files --noEmit",
+    "*.ts": "tsc-files @types/sonarqube-scanner.d.ts @types/dirname.d.ts --noEmit",
     "src/**/*.{ts,js}": "eslint --fix",
     "*.{ts,js,md,css,json}": "prettier --write "
 }

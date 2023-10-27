@@ -1,16 +1,16 @@
 # Base image
-FROM node:18-alpine3.17
+FROM node:18-buster
 
-# Update and install dependency
-RUN apk update && \
-    apk upgrade && \
-    apk add --no-cache git bash inotify-tools tzdata
+# Update and install dependencies
+RUN apt-get update && \
+  apt-get upgrade -y && \
+  apt-get install -y git bash inotify-tools tzdata
 
 # Set timezone
 RUN ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && \
-    echo "America/Sao_Paulo" > /etc/timezone
+  echo "America/Sao_Paulo" > /etc/timezone
 
-# create destination directories
+# Create destination directories
 RUN mkdir -p /usr/src/gitgrade/supportplatform_service
 RUN mkdir -p /usr/src/gitgrade/dtos-lib
 

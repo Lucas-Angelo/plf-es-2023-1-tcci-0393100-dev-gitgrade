@@ -6,6 +6,7 @@ import logger from "../config/LogConfig";
 import SequelizeOptions from "../config/SequelizeOptions";
 
 import { Branch } from "../model/Branch";
+import { CodeQuality } from "../model/CodeQuality";
 import { Commit } from "../model/Commit";
 import { ConsistencyRule } from "../model/ConsistencyRule";
 import { ConsistencyRuleDelivery } from "../model/ConsistencyRuleDelivery";
@@ -73,6 +74,7 @@ class SequelizeDatabase {
             StandardizedIssue.initModel(this.sequelize);
             ConsistencyRule.initModel(this.sequelize);
             ConsistencyRuleDelivery.initModel(this.sequelize);
+            CodeQuality.initModel(this.sequelize);
         } catch (error) {
             logger.error("Error initializing models:", error);
             throw error;
@@ -113,6 +115,7 @@ class SequelizeDatabase {
                 ConsistencyRule,
                 Repository,
             });
+            CodeQuality.associate({ Repository });
         } catch (error) {
             logger.error("Error associating models:", error);
             throw error;

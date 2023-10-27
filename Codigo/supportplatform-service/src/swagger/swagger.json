@@ -39,6 +39,34 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"CodeQualityResponseDTO": {
+				"description": "CodeQualityResponseDTO - DTO for code quality analysis response.",
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"repositoryId": {
+						"type": "number",
+						"format": "double"
+					},
+					"path": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"repositoryId",
+					"path",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ContributorDTO": {
 				"properties": {
 					"id": {
@@ -1658,6 +1686,55 @@
 				]
 			}
 		},
+		"/code-quality/{repositoryId}": {
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"201": {
+						"description": "Code quality analysis for repository created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CodeQualityResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"path": "/dashboard?id=repositoryNameTimeStamp",
+											"repositoryId": 1,
+											"createdAt": "2023-01-01T00:00:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a code quality analysis for a repository.",
+				"tags": [
+					"code-quality"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
 		"/commit": {
 			"get": {
 				"operationId": "GetAll",
@@ -2122,7 +2199,7 @@
 				},
 				"description": "Create a new ConsistencyRuleDelivery.",
 				"tags": [
-					"ConsistencyRuleDelivery"
+					"consistency-rule-delivery"
 				],
 				"security": [
 					{
@@ -2175,7 +2252,7 @@
 				},
 				"description": "Get all ConsistencyRuleDeliveries with pagination and filter.\nCan filter by deliveryAt, consistencyRuleId, and repositoryId.",
 				"tags": [
-					"ConsistencyRuleDelivery"
+					"consistency-rule-delivery"
 				],
 				"security": [
 					{
@@ -2291,7 +2368,7 @@
 				},
 				"description": "Update an existing ConsistencyRuleDelivery by id.\nNeed body with all fields.",
 				"tags": [
-					"ConsistencyRuleDelivery"
+					"consistency-rule-delivery"
 				],
 				"security": [
 					{
@@ -2349,7 +2426,7 @@
 				},
 				"description": "Get an existing ConsistencyRuleDelivery by id.",
 				"tags": [
-					"ConsistencyRuleDelivery"
+					"consistency-rule-delivery"
 				],
 				"security": [
 					{
