@@ -41,6 +41,11 @@ export default class BranchService {
                 where: {
                     repositoryId,
                 },
+                order: [
+                    ["commitAutomaticSynchronization", "DESC"],
+                    ["fileAutomaticSynchronization", "DESC"],
+                    ["name", "ASC"],
+                ],
             });
             return {
                 results: rows,
