@@ -1,4 +1,5 @@
 import { ConsistencyRuleResponseDTO } from "./consistencyRule";
+import { SprintResponseDTO } from "./sprint";
 
 export enum ConsistencyRuleDeliveryStatus {
   AWAITING_DELIVERY = "AWAITING_DELIVERY",
@@ -82,6 +83,12 @@ export interface ConsistencyRuleDeliverySearchDTO {
    */
   consistencyRuleId?: number;
   /**
+   * @isInt sprintId must be an integer
+   * @minimum 1 sprintId must be greater than or equal to 1
+   * @isOptional sprintId is optional
+   */
+  sprintId?: number;
+  /**
    * @isInt evaluationMethodId must be an integer
    * @minimum 1 evaluationMethodId must be greater than or equal to 1
    * @isOptional evaluationMethodId is optional
@@ -143,6 +150,12 @@ export interface ConsistencyRuleDeliveryFindOneDTO {
    */
   repositoryId?: number;
   /**
+   * @isInt sprintId must be an integer
+   * @minimum 1 sprintId must be greater than or equal to 1
+   * @isOptional sprintId is optional
+   */
+  sprintId?: number;
+  /**
    * @isDate deliveryAt must be a Date
    * @isOptional deliveryAt is optional
    */
@@ -173,5 +186,5 @@ export interface ConsistencyRuleDeliveryResponseDTO {
   repositoryId: number;
   deliveryAt: Date | null;
   status: ConsistencyRuleDeliveryStatus;
-  consistencyRule: ConsistencyRuleResponseDTO;
+  consistencyRule: ConsistencyRuleResponseDTO & { sprint: SprintResponseDTO };
 }

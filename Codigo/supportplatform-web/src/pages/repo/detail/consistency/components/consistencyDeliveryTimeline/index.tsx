@@ -14,6 +14,8 @@ import {
     StopwatchIcon,
     CircleSlashIcon,
     FileIcon,
+    MoonIcon,
+    CalendarIcon,
     Icon,
 } from "@primer/octicons-react";
 import { ConsistencyRuleDeliveryStatus } from "@gitgrade/dtos/dto/consistencyRuleDelivery";
@@ -21,6 +23,14 @@ import { ConsistencyRuleDeliveryStatus } from "@gitgrade/dtos/dto/consistencyRul
 interface IConsistencyDeliveryTimelineProps {
     consistencyRuleDeliveryList: Array<ConsistencyRuleDeliveryResponseDTO>;
 }
+
+const dateFormat = new Intl.DateTimeFormat("pt-BR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+});
 
 const consistencyStatusBagdeMap: Record<
     ConsistencyRuleDeliveryStatus,
@@ -127,7 +137,9 @@ export default function ConsistencyDeliveryTimeline(
                                               consistencyRuleDelivery.status
                                           ].color,
                                       }
-                                    : {}
+                                    : {
+                                          mb: 4,
+                                      }
                             }
                         >
                             <Box
@@ -165,6 +177,58 @@ export default function ConsistencyDeliveryTimeline(
                                                 .consistencyRule.filePath
                                         }
                                     </Truncate>
+                                </Label>
+                            </Box>
+                            <Box
+                                sx={{
+                                    fontWeight: "bold",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 1,
+                                    my: 1,
+                                }}
+                            >
+                                <Label
+                                    variant={
+                                        consistencyStatusBagdeMap[
+                                            consistencyRuleDelivery.status
+                                        ].labelVariant
+                                    }
+                                >
+                                    <Octicon
+                                        icon={MoonIcon}
+                                        sx={{ mr: 2 }}
+                                    />
+                                    <Truncate
+                                        maxWidth={100}
+                                        title={
+                                            consistencyRuleDelivery
+                                                .consistencyRule.sprint.name
+                                        }
+                                    >
+                                        {
+                                            consistencyRuleDelivery
+                                                .consistencyRule.sprint.name
+                                        }
+                                    </Truncate>
+                                </Label>
+                                <Label
+                                    variant={
+                                        consistencyStatusBagdeMap[
+                                            consistencyRuleDelivery.status
+                                        ].labelVariant
+                                    }
+                                >
+                                    <Octicon
+                                        icon={CalendarIcon}
+                                        sx={{ mr: 2 }}
+                                    />
+                                    Término em{" "}
+                                    {dateFormat.format(
+                                        new Date(
+                                            consistencyRuleDelivery.consistencyRule.sprint.end_date
+                                        )
+                                    )}
                                 </Label>
                             </Box>
                             <Box>

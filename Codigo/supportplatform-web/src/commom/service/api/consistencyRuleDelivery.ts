@@ -23,6 +23,9 @@ export class ConsistencyRuleDeliveryService {
         if (search?.status)
             searchParams.set("status", search.status.toString());
 
+        if (search?.sprintId)
+            searchParams.set("sprintId", search.sprintId.toString());
+
         if (search?.page) searchParams.set("page", search.page.toString());
         if (search?.limit) searchParams.set("limit", search.limit.toString());
 

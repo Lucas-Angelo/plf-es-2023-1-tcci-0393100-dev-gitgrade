@@ -5,6 +5,7 @@ import { useRepositoryById } from "../../../../commom/data/repo";
 import { Box, Pagination } from "@primer/react";
 import { RepositoryConsistencyRuleDeliveryListLoaderData } from "./loader";
 import ConsistencyDeliveryTimeline from "./components/consistencyDeliveryTimeline";
+import ConsistencyDeliveryFilter from "./components/consistencyDeliveryFilter";
 
 const pageRouteParams = appRoutes.repo.detail.params;
 type PageRouteParams = (typeof pageRouteParams)[number];
@@ -36,21 +37,18 @@ export default function RepositoryConsitencyRuleDeliveriesPage() {
 
     return (
         <Box>
-            <Box
-                sx={{
-                    mt: 4,
-                }}
-            >
-                <ConsistencyDeliveryTimeline
-                    consistencyRuleDeliveryList={results}
-                />
-                <Pagination
-                    currentPage={page}
-                    pageCount={totalPages}
-                    onPageChange={handlePageChange}
-                    hrefBuilder={(n) => `?${pageSearchParams.page}=${n}`}
-                />
-            </Box>
+            <ConsistencyDeliveryFilter
+                evaluationMethodId={repositoryData.evaluationMethod?.id}
+            />
+            <ConsistencyDeliveryTimeline
+                consistencyRuleDeliveryList={results}
+            />
+            <Pagination
+                currentPage={page}
+                pageCount={totalPages}
+                onPageChange={handlePageChange}
+                hrefBuilder={(n) => `?${pageSearchParams.page}=${n}`}
+            />
         </Box>
     );
 }

@@ -18,6 +18,7 @@ import { sequelizePagination } from "../utils/pagination";
 import ConsistencyRuleService from "./ConsistencyRuleService";
 import RepositoryService from "./RepositoryService";
 import { ConsistencyRule } from "../model/ConsistencyRule";
+import { Sprint } from "../model/Sprint";
 
 export default class ConsistencyRuleDeliveryService {
     private sequelizeUtil: SequelizeUtil;
@@ -180,6 +181,13 @@ export default class ConsistencyRuleDeliveryService {
                         {
                             model: ConsistencyRule,
                             as: "consistencyRule",
+                            include: [
+                                {
+                                    model: Sprint,
+                                    as: "sprint",
+                                    attributes: ["id", "name", "end_date"],
+                                },
+                            ],
                         },
                     ],
                     order: [["id", "DESC"]],
@@ -236,6 +244,13 @@ export default class ConsistencyRuleDeliveryService {
                         {
                             model: ConsistencyRule,
                             as: "consistencyRule",
+                            include: [
+                                {
+                                    model: Sprint,
+                                    as: "sprint",
+                                    attributes: ["id", "name", "end_date"],
+                                },
+                            ],
                         },
                     ],
                     paranoid: false,
@@ -315,6 +330,9 @@ export default class ConsistencyRuleDeliveryService {
         if (filter.evaluationMethodId)
             whereClause["$consistencyRule.evaluation_method_id$"] =
                 filter.evaluationMethodId;
+
+        if (filter.sprintId)
+            whereClause["$consistencyRule.sprint_id$"] = filter.sprintId;
 
         if (filter.consistencyRuleId)
             whereClause.consistencyRuleId = filter.consistencyRuleId;

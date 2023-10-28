@@ -381,6 +381,39 @@
 				],
 				"type": "string"
 			},
+			"SprintResponseDTO": {
+				"description": "SprintResponseDTO - Could be used to structure the response object when sending Sprints to the client.",
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"name": {
+						"type": "string"
+					},
+					"start_date": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"end_date": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"evaluationMethodId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"start_date",
+					"end_date",
+					"evaluationMethodId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ConsistencyRuleDeliveryResponseDTO": {
 				"description": "ConsistencyRuleDeliveryResponseDTO - Could be used to structure the response object when sending ConsistencyRuleDeliveries to the client.",
 				"properties": {
@@ -405,7 +438,22 @@
 						"$ref": "#/components/schemas/ConsistencyRuleDeliveryStatus"
 					},
 					"consistencyRule": {
-						"$ref": "#/components/schemas/ConsistencyRuleResponseDTO"
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/ConsistencyRuleResponseDTO"
+							},
+							{
+								"properties": {
+									"sprint": {
+										"$ref": "#/components/schemas/SprintResponseDTO"
+									}
+								},
+								"required": [
+									"sprint"
+								],
+								"type": "object"
+							}
+						]
 					}
 				},
 				"required": [
@@ -512,6 +560,11 @@
 						"minimum": 1
 					},
 					"consistencyRuleId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"sprintId": {
 						"type": "integer",
 						"format": "int32",
 						"minimum": 1
@@ -1370,39 +1423,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"SprintResponseDTO": {
-				"description": "SprintResponseDTO - Could be used to structure the response object when sending Sprints to the client.",
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"name": {
-						"type": "string"
-					},
-					"start_date": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"end_date": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"evaluationMethodId": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"id",
-					"name",
-					"start_date",
-					"end_date",
-					"evaluationMethodId"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"SprintCreateDTO": {
 				"description": "SprintCreateDTO - Used for creating a new Sprint.",
 				"properties": {
@@ -2209,7 +2229,14 @@
 												"standardizedIssueId": 1,
 												"description": "ConsistencyRule 1 description",
 												"filePath": "/Documentacao/DocumentoDoProjeto.pdf",
-												"validationType": "DEFAULT"
+												"validationType": "DEFAULT",
+												"sprint": {
+													"name": "Sprint 1",
+													"start_date": "2023-01-01T00:00:00.000Z",
+													"end_date": "2023-01-07T00:00:00.000Z",
+													"id": 1,
+													"evaluationMethodId": 1
+												}
 											}
 										}
 									}
@@ -2269,7 +2296,14 @@
 														"standardizedIssueId": 1,
 														"description": "ConsistencyRule 1 description",
 														"filePath": "/Documentacao/DocumentoDoProjeto.pdf",
-														"validationType": "DEFAULT"
+														"validationType": "DEFAULT",
+														"sprint": {
+															"name": "Sprint 1",
+															"start_date": "2023-01-01T00:00:00.000Z",
+															"end_date": "2023-01-07T00:00:00.000Z",
+															"id": 1,
+															"evaluationMethodId": 1
+														}
 													}
 												}
 											]
@@ -2315,6 +2349,16 @@
 					{
 						"in": "query",
 						"name": "consistencyRuleId",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "sprintId",
 						"required": false,
 						"schema": {
 							"format": "int32",
@@ -2406,7 +2450,14 @@
 												"standardizedIssueId": 1,
 												"description": "ConsistencyRule 1 description",
 												"filePath": "/Documentacao/DocumentoDoProjeto.pdf",
-												"validationType": "DEFAULT"
+												"validationType": "DEFAULT",
+												"sprint": {
+													"name": "Sprint 1",
+													"start_date": "2023-01-01T00:00:00.000Z",
+													"end_date": "2023-01-07T00:00:00.000Z",
+													"id": 1,
+													"evaluationMethodId": 1
+												}
 											}
 										}
 									}
@@ -2473,7 +2524,14 @@
 												"standardizedIssueId": 1,
 												"description": "ConsistencyRule 1 description",
 												"filePath": "/Documentacao/DocumentoDoProjeto.pdf",
-												"validationType": "DEFAULT"
+												"validationType": "DEFAULT",
+												"sprint": {
+													"name": "Sprint 1",
+													"start_date": "2023-01-01T00:00:00.000Z",
+													"end_date": "2023-01-07T00:00:00.000Z",
+													"id": 1,
+													"evaluationMethodId": 1
+												}
 											}
 										}
 									}

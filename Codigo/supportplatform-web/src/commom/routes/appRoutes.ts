@@ -237,6 +237,7 @@ const appRoutes = {
                     page: "page",
                     consistencyRuleId: "consistencyRuleId",
                     status: "status",
+                    sprint: "sprint",
                 },
             },
             config: {

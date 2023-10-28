@@ -1,5 +1,5 @@
 import { SprintResponseDTO } from "@gitgrade/dtos";
-import { useEvaluationMethodSprintList } from "../../../../../../commom/data/sprint";
+import { useEvaluationMethodSprintList } from "../../data/sprint";
 import { Select, Box } from "@primer/react";
 
 interface ISprintFilterProps {

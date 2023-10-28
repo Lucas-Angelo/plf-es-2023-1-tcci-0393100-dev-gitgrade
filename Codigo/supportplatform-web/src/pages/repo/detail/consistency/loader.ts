@@ -57,6 +57,8 @@ export default async function repositoryConsitencyRuleDeliveryListPageLoader({
             undefined,
         status,
         evaluationMethodId: repository.evaluationMethod.id,
+        sprintId:
+            Number(searchParams.get(pageSearchParams.sprint)) || undefined,
     });
 
     return loadQueryData(query);

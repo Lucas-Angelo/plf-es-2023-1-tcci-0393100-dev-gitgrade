@@ -57,6 +57,13 @@ export class ConsistencyRuleDeliveryController extends Controller {
             description: "ConsistencyRule 1 description",
             filePath: "/Documentacao/DocumentoDoProjeto.pdf",
             validationType: ValidationType.DEFAULT,
+            sprint: {
+                name: "Sprint 1",
+                start_date: new Date("2023-01-01"),
+                end_date: new Date("2023-01-07"),
+                id: 1,
+                evaluationMethodId: 1,
+            },
         },
     })
     @Post("/")
@@ -90,6 +97,13 @@ export class ConsistencyRuleDeliveryController extends Controller {
             description: "ConsistencyRule 1 description",
             filePath: "/Documentacao/DocumentoDoProjeto.pdf",
             validationType: ValidationType.DEFAULT,
+            sprint: {
+                name: "Sprint 1",
+                start_date: new Date("2023-01-01"),
+                end_date: new Date("2023-01-07"),
+                id: 1,
+                evaluationMethodId: 1,
+            },
         },
     })
     @Put("/{id}")
@@ -126,6 +140,13 @@ export class ConsistencyRuleDeliveryController extends Controller {
                     description: "ConsistencyRule 1 description",
                     filePath: "/Documentacao/DocumentoDoProjeto.pdf",
                     validationType: ValidationType.DEFAULT,
+                    sprint: {
+                        name: "Sprint 1",
+                        start_date: new Date("2023-01-01"),
+                        end_date: new Date("2023-01-07"),
+                        id: 1,
+                        evaluationMethodId: 1,
+                    },
                 },
             },
         ],
@@ -164,6 +185,13 @@ export class ConsistencyRuleDeliveryController extends Controller {
             description: "ConsistencyRule 1 description",
             filePath: "/Documentacao/DocumentoDoProjeto.pdf",
             validationType: ValidationType.DEFAULT,
+            sprint: {
+                name: "Sprint 1",
+                start_date: new Date("2023-01-01"),
+                end_date: new Date("2023-01-07"),
+                id: 1,
+                evaluationMethodId: 1,
+            },
         },
     })
     @Get("/{id}")
