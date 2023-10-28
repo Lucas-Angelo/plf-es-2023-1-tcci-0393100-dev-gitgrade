@@ -2,8 +2,9 @@ import { Box, ToggleSwitch } from "@primer/react";
 import { useFetcher } from "react-router-dom";
 import appRoutes from "../../../../../../../commom/routes/appRoutes";
 import { useToggle } from "../../../../../../../commom/hooks/useToggle";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ErrorResponseDTO } from "@gitgrade/dtos";
+import AlertModal from "../../../../../../../commom/components/alertModal";
 
 interface IRepositoryAutoSyncToggleProps {
     repositoryId: number;
@@ -13,6 +14,7 @@ interface IRepositoryAutoSyncToggleProps {
 export default function RepositoryAutoSyncToggle(
     props: IRepositoryAutoSyncToggleProps
 ) {
+    const [isOpen, setIsOpen] = useState(false);
     const fetcher = useFetcher();
 
     const fetcherError = fetcher.data as
@@ -29,7 +31,7 @@ export default function RepositoryAutoSyncToggle(
         }
     }, [fetcherError, reRender]);
 
-    function handleToggleAutomaticSyncChange(checked: boolean) {
+    function submitAutomaticSyncSubmit(checked: boolean) {
         fetcher.submit(
             {
                 automaticSynchronization: checked,
@@ -40,6 +42,24 @@ export default function RepositoryAutoSyncToggle(
                 action: appRoutes.repo.detail.link(props.repositoryId),
             }
         );
+    }
+
+    function handleToggleAutomaticSyncChange(checked: boolean) {
+        if (checked) {
+            setIsOpen(true);
+        } else {
+            submitAutomaticSyncSubmit(checked);
+        }
+    }
+
+    function handleAlertModalCloseOrCancel() {
+        setIsOpen(false);
+        reRender();
+    }
+
+    function handleAlertModalConfirm() {
+        setIsOpen(false);
+        submitAutomaticSyncSubmit(true);
     }
 
     return (
@@ -61,6 +81,28 @@ export default function RepositoryAutoSyncToggle(
                     onChange={handleToggleAutomaticSyncChange}
                 />
             </Box>
+
+            <AlertModal
+                onCancel={handleAlertModalCloseOrCancel}
+                onClose={handleAlertModalCloseOrCancel}
+                onConfirm={handleAlertModalConfirm}
+                header="Ativar sincronização automática?"
+                isOpen={isOpen}
+            >
+                Ao ativar a sincronização automática, o GitGrade irá sincronizar
+                automaticamente o repositório com as informações do GitHub todos
+                os dias. Ativar essa opção sem necessidade aumentará o tempo
+                total de sincronização de todos os repositórios.
+                <br />
+                <br />
+                <Box
+                    sx={{
+                        fontWeight: "bold",
+                    }}
+                >
+                    Deseja ativar a sincronização automática?
+                </Box>
+            </AlertModal>
         </Box>
     );
 }

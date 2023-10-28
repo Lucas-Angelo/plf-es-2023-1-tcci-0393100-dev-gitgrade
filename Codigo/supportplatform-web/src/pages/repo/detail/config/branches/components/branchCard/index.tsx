@@ -32,7 +32,7 @@ export default function BranchCard(props: IBranchCardProps) {
 
             <Card.Actions>
                 <Box sx={{ flexGrow: 1 }}>
-                    <Box>Sincronizar automaticamente:</Box>
+                    <Box>Sincronizar:</Box>
                     <Box
                         sx={{
                             display: "flex",
@@ -47,6 +47,7 @@ export default function BranchCard(props: IBranchCardProps) {
                             defaultChecked={
                                 props.commit_automatic_synchronization
                             }
+                            isDefaultBranch={props.isDefaultBranch}
                         >
                             Commits
                         </BranchAutomaticSyncToggle>
@@ -58,6 +59,7 @@ export default function BranchCard(props: IBranchCardProps) {
                             defaultChecked={
                                 props.file_automatic_synchronization
                             }
+                            isDefaultBranch={props.isDefaultBranch}
                         >
                             Arquivos
                         </BranchAutomaticSyncToggle>
