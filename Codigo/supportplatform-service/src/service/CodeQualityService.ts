@@ -2,7 +2,7 @@
 // @ts-ignore
 import dirname from "es-dirname";
 import path from "path";
-import { Worker } from "worker_threads";
+// import { Worker } from "worker_threads";
 import logger from "../config/LogConfig";
 import AppError from "../error/AppError";
 import { CodeQuality, CodeQualityStatus } from "../model/CodeQuality";
@@ -50,8 +50,8 @@ export class CodeQualityService {
             const sonarQubeAnalyzer: SonarQubeAnalyzer = new SonarQubeAnalyzer(
                 repository.name
             );
-            const projectKey = sonarQubeAnalyzer.getProjectKey();
-            const projectName = sonarQubeAnalyzer.getProjectName();
+            // const projectKey = sonarQubeAnalyzer.getProjectKey();
+            // const projectName = sonarQubeAnalyzer.getProjectName();
 
             const analysisPath = sonarQubeAnalyzer.buildPath();
 
@@ -67,45 +67,47 @@ export class CodeQualityService {
             }
 
             logger.info("Starting code quality analysis");
-            codeQuality = await CodeQuality.create({
-                repositoryId,
-                path: analysisPath,
-                status: CodeQualityStatus.ANALYZING,
-            });
+            await sonarQubeAnalyzer.run();
+            // codeQuality = await CodeQuality.create({
+            //     repositoryId,
+            //     path: analysisPath,
+            //     status: CodeQualityStatus.ANALYZING,
+            // });
             const sonarQubeWorkerPath = path.join(
                 projectRootPath,
                 projectRootPath.startsWith("/usr/src")
                     ? "dist/src/worker/SonarQubeWorker.ts"
                     : "src/worker/SonarQubeWorker.ts"
             );
+            logger.info("SonarQubeWorker path", { sonarQubeWorkerPath });
 
-            this.isWorkerRunning = true;
-            const worker = new Worker(sonarQubeWorkerPath);
-            const obj = {
-                repositoryName: repository.name,
-                projectKey,
-                projectName,
-            };
-            worker.postMessage(obj);
+            // this.isWorkerRunning = true;
+            // const worker = new Worker(sonarQubeWorkerPath);
+            // const obj = {
+            //     repositoryName: repository.name,
+            //     projectKey,
+            //     projectName,
+            // };
+            // worker.postMessage(obj);
 
-            worker.on("message", async (message) => {
-                if (message === "done") {
-                    this.isWorkerRunning = false;
-                    await codeQuality.update({
-                        status: CodeQualityStatus.ANALYZED,
-                    });
-                }
-            });
+            // worker.on("message", async (message) => {
+            //     if (message === "done") {
+            //         this.isWorkerRunning = false;
+            //         await codeQuality.update({
+            //             status: CodeQualityStatus.ANALYZED,
+            //         });
+            //     }
+            // });
 
-            worker.on("error", async (error) => {
-                logger.error("Error in worker thread:", { error });
-                if (codeQuality) {
-                    this.isWorkerRunning = false;
-                    await codeQuality.update({
-                        status: CodeQualityStatus.ERROR,
-                    });
-                }
-            });
+            // worker.on("error", async (error) => {
+            //     logger.error("Error in worker thread:", { error });
+            //     if (codeQuality) {
+            //         this.isWorkerRunning = false;
+            //         await codeQuality.update({
+            //             status: CodeQualityStatus.ERROR,
+            //         });
+            //     }
+            // });
             logger.info("Code quality analysis finished");
 
             return codeQuality;
