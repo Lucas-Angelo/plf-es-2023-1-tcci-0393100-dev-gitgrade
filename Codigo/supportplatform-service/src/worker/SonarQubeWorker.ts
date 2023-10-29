@@ -12,6 +12,7 @@ if (parentPort) {
                 await sonarQubeAnalyzer.run();
                 if (parentPort) parentPort.postMessage("done");
             } catch (error) {
+                // eslint-disable-next-line no-console
                 console.error("Error in worker thread:", error);
                 if (parentPort) parentPort.postMessage("error");
             }
