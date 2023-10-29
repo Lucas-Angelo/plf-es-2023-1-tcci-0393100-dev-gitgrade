@@ -1,18 +1,20 @@
-import { ToggleSwitch, Box } from "@primer/react";
-import "./styles.css";
+import { Box } from "@primer/react";
+import RepositoryConfigAside from "./components/repositoryConfigAside";
+import { Outlet } from "react-router";
 
 export default function RepositoryConfigPage() {
     return (
         <Box
             sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 2,
+                display: ["block", "block", "block", "table"],
+                tableLayout: "fixed",
+                width: "100%",
             }}
-            className="toggle-switch-wrapper"
         >
-            Sincronização automática
-            <ToggleSwitch aria-labelledby="Sincronização automática" />
+            <RepositoryConfigAside />
+            <Box display={["block", "block", "block", "table-cell"]}>
+                <Outlet />
+            </Box>
         </Box>
     );
 }

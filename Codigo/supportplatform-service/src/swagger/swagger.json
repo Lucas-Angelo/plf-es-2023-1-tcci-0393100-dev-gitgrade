@@ -14,11 +14,24 @@
 					},
 					"name": {
 						"type": "string"
+					},
+					"commitAutomaticSynchronization": {
+						"type": "boolean"
+					},
+					"fileAutomaticSynchronization": {
+						"type": "boolean"
+					},
+					"repositoryId": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
 					"id",
-					"name"
+					"name",
+					"commitAutomaticSynchronization",
+					"fileAutomaticSynchronization",
+					"repositoryId"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -34,6 +47,18 @@
 						"type": "integer",
 						"format": "int32",
 						"minimum": 1
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BranchPatchDTO": {
+				"properties": {
+					"commitAutomaticSynchronization": {
+						"type": "boolean"
+					},
+					"fileAutomaticSynchronization": {
+						"type": "boolean"
 					}
 				},
 				"type": "object",
@@ -421,6 +446,39 @@
 				],
 				"type": "string"
 			},
+			"SprintResponseDTO": {
+				"description": "SprintResponseDTO - Could be used to structure the response object when sending Sprints to the client.",
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"name": {
+						"type": "string"
+					},
+					"start_date": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"end_date": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"evaluationMethodId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"start_date",
+					"end_date",
+					"evaluationMethodId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ConsistencyRuleDeliveryResponseDTO": {
 				"description": "ConsistencyRuleDeliveryResponseDTO - Could be used to structure the response object when sending ConsistencyRuleDeliveries to the client.",
 				"properties": {
@@ -443,6 +501,24 @@
 					},
 					"status": {
 						"$ref": "#/components/schemas/ConsistencyRuleDeliveryStatus"
+					},
+					"consistencyRule": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/ConsistencyRuleResponseDTO"
+							},
+							{
+								"properties": {
+									"sprint": {
+										"$ref": "#/components/schemas/SprintResponseDTO"
+									}
+								},
+								"required": [
+									"sprint"
+								],
+								"type": "object"
+							}
+						]
 					}
 				},
 				"required": [
@@ -450,7 +526,8 @@
 					"consistencyRuleId",
 					"repositoryId",
 					"deliveryAt",
-					"status"
+					"status",
+					"consistencyRule"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -548,6 +625,16 @@
 						"minimum": 1
 					},
 					"consistencyRuleId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"sprintId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"evaluationMethodId": {
 						"type": "integer",
 						"format": "int32",
 						"minimum": 1
@@ -734,6 +821,86 @@
 						"default": "false"
 					}
 				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PaginationResponseDTO__path-string__": {
+				"properties": {
+					"results": {
+						"items": {
+							"properties": {
+								"path": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"path"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"totalPages": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"results",
+					"totalPages"
+				],
+				"type": "object"
+			},
+			"FileSearchDTO": {
+				"description": "FileSearchDTO - Used for searching through Files with pagination and filters.",
+				"properties": {
+					"page": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"limit": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"path": {
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 255
+					},
+					"startedAt": {
+						"type": "string",
+						"format": "date"
+					},
+					"endedAt": {
+						"type": "string",
+						"format": "date"
+					},
+					"repositoryId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"branchName": {
+						"type": "string"
+					},
+					"contributor": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"filterWithNoContributor": {
+						"type": "boolean"
+					},
+					"shouldGetContributors": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"repositoryId"
+				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -1321,39 +1488,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"SprintResponseDTO": {
-				"description": "SprintResponseDTO - Could be used to structure the response object when sending Sprints to the client.",
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"name": {
-						"type": "string"
-					},
-					"start_date": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"end_date": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"evaluationMethodId": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"id",
-					"name",
-					"start_date",
-					"end_date",
-					"evaluationMethodId"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"SprintCreateDTO": {
 				"description": "SprintCreateDTO - Used for creating a new Sprint.",
 				"properties": {
@@ -1698,6 +1832,63 @@
 				]
 			}
 		},
+		"/repository/{repositoryId}/branch/{id}": {
+			"patch": {
+				"operationId": "Patch",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BranchDTO"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"branch"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/BranchPatchDTO"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/code-quality/repository/{repositoryId}": {
 			"post": {
 				"operationId": "Create",
@@ -1837,7 +2028,10 @@
 													"committedDate": "2023-01-01T00:00:00.000Z",
 													"branch": {
 														"id": 1,
-														"name": "master"
+														"name": "master",
+														"commitAutomaticSynchronization": true,
+														"fileAutomaticSynchronization": true,
+														"repositoryId": 1
 													},
 													"sha": "1234567890",
 													"contributor": {
@@ -2269,7 +2463,23 @@
 											"consistencyRuleId": 1,
 											"repositoryId": 1,
 											"deliveryAt": "2023-01-01T00:00:00.000Z",
-											"status": "DELIVERED_ON_TIME"
+											"status": "DELIVERED_ON_TIME",
+											"consistencyRule": {
+												"id": 1,
+												"evaluationMethodId": 1,
+												"sprintId": 1,
+												"standardizedIssueId": 1,
+												"description": "ConsistencyRule 1 description",
+												"filePath": "/Documentacao/DocumentoDoProjeto.pdf",
+												"validationType": "DEFAULT",
+												"sprint": {
+													"name": "Sprint 1",
+													"start_date": "2023-01-01T00:00:00.000Z",
+													"end_date": "2023-01-07T00:00:00.000Z",
+													"id": 1,
+													"evaluationMethodId": 1
+												}
+											}
 										}
 									}
 								}
@@ -2320,7 +2530,23 @@
 													"consistencyRuleId": 1,
 													"repositoryId": 1,
 													"deliveryAt": "2023-01-01T00:00:00.000Z",
-													"status": "DELIVERED_ON_TIME"
+													"status": "DELIVERED_ON_TIME",
+													"consistencyRule": {
+														"id": 1,
+														"evaluationMethodId": 1,
+														"sprintId": 1,
+														"standardizedIssueId": 1,
+														"description": "ConsistencyRule 1 description",
+														"filePath": "/Documentacao/DocumentoDoProjeto.pdf",
+														"validationType": "DEFAULT",
+														"sprint": {
+															"name": "Sprint 1",
+															"start_date": "2023-01-01T00:00:00.000Z",
+															"end_date": "2023-01-07T00:00:00.000Z",
+															"id": 1,
+															"evaluationMethodId": 1
+														}
+													}
 												}
 											]
 										}
@@ -2365,6 +2591,26 @@
 					{
 						"in": "query",
 						"name": "consistencyRuleId",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "sprintId",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "evaluationMethodId",
 						"required": false,
 						"schema": {
 							"format": "int32",
@@ -2438,7 +2684,23 @@
 											"consistencyRuleId": 1,
 											"repositoryId": 1,
 											"deliveryAt": "2023-01-02T00:00:00.000Z",
-											"status": "DELIVERED_ON_TIME"
+											"status": "DELIVERED_ON_TIME",
+											"consistencyRule": {
+												"id": 1,
+												"evaluationMethodId": 1,
+												"sprintId": 1,
+												"standardizedIssueId": 1,
+												"description": "ConsistencyRule 1 description",
+												"filePath": "/Documentacao/DocumentoDoProjeto.pdf",
+												"validationType": "DEFAULT",
+												"sprint": {
+													"name": "Sprint 1",
+													"start_date": "2023-01-01T00:00:00.000Z",
+													"end_date": "2023-01-07T00:00:00.000Z",
+													"id": 1,
+													"evaluationMethodId": 1
+												}
+											}
 										}
 									}
 								}
@@ -2496,7 +2758,23 @@
 											"consistencyRuleId": 1,
 											"repositoryId": 1,
 											"deliveryAt": "2023-01-01T00:00:00.000Z",
-											"status": "DELIVERED_ON_TIME"
+											"status": "DELIVERED_ON_TIME",
+											"consistencyRule": {
+												"id": 1,
+												"evaluationMethodId": 1,
+												"sprintId": 1,
+												"standardizedIssueId": 1,
+												"description": "ConsistencyRule 1 description",
+												"filePath": "/Documentacao/DocumentoDoProjeto.pdf",
+												"validationType": "DEFAULT",
+												"sprint": {
+													"name": "Sprint 1",
+													"start_date": "2023-01-01T00:00:00.000Z",
+													"end_date": "2023-01-07T00:00:00.000Z",
+													"id": 1,
+													"evaluationMethodId": 1
+												}
+											}
 										}
 									}
 								}
@@ -2902,6 +3180,129 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/file": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Found files",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PaginationResponseDTO__path-string__"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all Files with pagination and filter.\nCan filter by start_date, end_date, and evaluationMethodId.",
+				"tags": [
+					"file"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "path",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"minLength": 1,
+							"maxLength": 255
+						}
+					},
+					{
+						"in": "query",
+						"name": "startedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "endedAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "branchName",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "contributor",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "filterWithNoContributor",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "shouldGetContributors",
+						"required": false,
+						"schema": {
+							"type": "boolean"
 						}
 					}
 				]

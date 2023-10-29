@@ -1,4 +1,4 @@
-import { Box, Button, Label, Link, Octicon } from "@primer/react";
+import { Box, Button, Link as PrimerLink, Octicon } from "@primer/react";
 import { RepoIcon, PaperclipIcon } from "@primer/octicons-react";
 
 import "./styles.css";
@@ -6,11 +6,17 @@ import ContributorFilter from "../contributorFilter";
 import RepoHeadNavigation from "../repoHeadNavigation";
 import { useSearchParams } from "react-router-dom";
 import appRoutes from "../../../../../commom/routes/appRoutes";
+import EvaluationMethodLink from "../../../../../commom/components/evaluationMethodLink";
 
 interface IRepoHeadProps {
     orgName: string;
     repoName: string;
-    evaluationMethodName?: string;
+    evaluationMethod?: {
+        id: number;
+        description: string;
+        semester: number;
+        year: number;
+    };
     contributors?: Array<{
         id: number;
         githubName?: string | null;
@@ -51,7 +57,7 @@ export default function RepoHead(props: IRepoHeadProps) {
                         icon={RepoIcon}
                         color="fg.muted"
                     />
-                    <Link
+                    <PrimerLink
                         target="_blank"
                         href={`https://github.com/${props.orgName}/${props.repoName}`}
                         sx={{
@@ -65,7 +71,7 @@ export default function RepoHead(props: IRepoHeadProps) {
                             sx={{ ml: 4 }}
                             color="fg.muted"
                         />
-                    </Link>
+                    </PrimerLink>
                 </Box>
                 <Box
                     sx={{
@@ -85,9 +91,14 @@ export default function RepoHead(props: IRepoHeadProps) {
                     />
                 </Box>
 
-                <Box>
-                    <Label variant="accent">método_avaliativo</Label>
-                </Box>
+                {props.evaluationMethod && (
+                    <EvaluationMethodLink
+                        description={props.evaluationMethod.description}
+                        semester={props.evaluationMethod.semester}
+                        year={props.evaluationMethod.year}
+                        id={props.evaluationMethod.id}
+                    />
+                )}
 
                 <Box>
                     <Button variant="primary">Sincronizar</Button>

@@ -169,7 +169,7 @@ class Repository extends Model<IRepositoryAttributes> {
                 collate: EnvConfig.DB_COLLATE,
                 timestamps: true, // Enable default timestamps (createdAt and updatedAt)
                 createdAt: false, // Disable createdAt field if not needed
-                updatedAt: "lastSyncAt", // Use lastSyncAt as the updatedAt field
+                updatedAt: false, // "lastSyncAt", // Use lastSyncAt as the updatedAt field only in job-scheduler
                 sequelize,
             }
         );

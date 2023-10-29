@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getRepositoryByIdQuery } from "../repo";
-import { CommitService } from "../../service/api/commit";
+import { CommitService } from "../../service/api/commits";
 import { CommitSearchDTO } from "@gitgrade/dtos";
 
 export const getRepositoryCommitQuery = (

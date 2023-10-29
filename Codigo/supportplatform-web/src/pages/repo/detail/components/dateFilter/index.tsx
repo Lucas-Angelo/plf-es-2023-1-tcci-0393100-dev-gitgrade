@@ -8,7 +8,7 @@ import {
     getIfDateIsValid,
 } from "../../../../../commom/utils/date";
 import appRoutes from "../../../../../commom/routes/appRoutes";
-import SprintFilter from "../../metrics/components/sprintFilter";
+import SprintFilter from "../../../../../commom/components/sprintFilter";
 import { SprintResponseDTO } from "@gitgrade/dtos";
 
 interface IDateFilterProps {
@@ -27,22 +27,24 @@ const dateTimeFormat = new Intl.DateTimeFormat("pt-BR", {
 
 export function formatDateRange(
     startedAt: Date | undefined,
-    endedAt: Date | undefined,
-    fallbackStartedAt: Date,
-    fallbackEndedAt: Date
+    endedAt: Date | undefined
 ) {
     const isStartedAtAValidDate = startedAt && getIfDateIsValid(startedAt);
     const isEndedAtAValidDate = endedAt && getIfDateIsValid(endedAt);
     const isRangeValid =
-        !isStartedAtAValidDate ||
-        !isEndedAtAValidDate ||
+        isStartedAtAValidDate &&
+        isEndedAtAValidDate &&
         getIfDateRangeIsValid(startedAt, endedAt);
-    const finalStartedAt =
-        isStartedAtAValidDate && isRangeValid ? startedAt : fallbackStartedAt;
-    const finalEndedAt =
-        isEndedAtAValidDate && isRangeValid ? endedAt : fallbackEndedAt;
 
-    return dateTimeFormat.formatRange(finalStartedAt, finalEndedAt);
+    if (isRangeValid) {
+        return dateTimeFormat.formatRange(startedAt, endedAt);
+    } else if (isStartedAtAValidDate && !isEndedAtAValidDate) {
+        return `a partir de ${dateTimeFormat.format(startedAt)}`;
+    } else if (isEndedAtAValidDate && !isStartedAtAValidDate) {
+        return `até ${dateTimeFormat.format(endedAt)}`;
+    } else {
+        return "Todo o período";
+    }
 }
 
 const pageRouteSearchParams = appRoutes.repo["detail"].search;
@@ -75,11 +77,6 @@ export default function DateFilter(props: IDateFilterProps) {
         endedAt ||
         isEndedAtAValidDate ||
         getIfDateRangeIsValid(startedAtDate, endedAtDate);
-
-    const fallbackStartedAt = props.repositoryGithubCreatedAt
-        ? new Date(props.repositoryGithubCreatedAt)
-        : new Date("2008-11-15");
-    const fallbackEndedAt = new Date();
 
     function handleDateFilterFormSubmit(startedAt: string, endedAt: string) {
         setSearchParams((previousSearchParams) => {
@@ -150,12 +147,7 @@ export default function DateFilter(props: IDateFilterProps) {
                             aria-labelledby="filtro"
                             sx={{ mr: 2, mb: 1 }}
                         />
-                        {formatDateRange(
-                            startedAtDate,
-                            endedAtDate,
-                            fallbackStartedAt,
-                            fallbackEndedAt
-                        )}
+                        {formatDateRange(startedAtDate, endedAtDate)}
                     </Box>
                 )}
             >

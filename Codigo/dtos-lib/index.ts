@@ -32,6 +32,7 @@ import {
   EvaluationMethodSearchDTO,
   EvaluationMethodUpdateDTO,
 } from "./dto/evaluationMethod";
+import { FileResponseDTO, FileSearchDTO } from "./dto/file";
 import { FileChangeMetricsDTO } from "./dto/fileMetrics";
 import {
   GetAllRepositoryQueryDTO,
@@ -81,6 +82,8 @@ export type {
   EvaluationMethodResponseDTO,
   EvaluationMethodSearchDTO,
   EvaluationMethodUpdateDTO,
+  FileResponseDTO,
+  FileSearchDTO,
   FileChangeMetricsDTO,
   FileTypeMetricDTO,
   FileTypeMetricsDTO,

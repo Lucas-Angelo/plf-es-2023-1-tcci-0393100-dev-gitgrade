@@ -1,14 +1,20 @@
 import { Link } from "react-router-dom";
 import Card from "../card";
-import { Button, Label, Link as PrimerLink, Octicon } from "@primer/react";
+import { Button, Link as PrimerLink, Octicon } from "@primer/react";
 import { RepoIcon } from "@primer/octicons-react";
 import appRoutes from "../../routes/appRoutes";
 import React from "react";
+import EvaluationMethodLink from "../evaluationMethodLink";
 
 interface IRepoCardProps {
     id: number;
     name: string;
-    evaluationMethodName?: string;
+    evaluationMethod?: {
+        id: number;
+        description: string;
+        semester: number;
+        year: number;
+    };
     children?: React.ReactNode;
 }
 
@@ -27,10 +33,13 @@ export default function RepoCard(props: IRepoCardProps) {
                     <PrimerLink as="span">{props.name}</PrimerLink>
                 </Link>
             </Card.Title>
-            {props.evaluationMethodName && (
-                <Card.Labels>
-                    <Label variant="accent">{props.evaluationMethodName}</Label>
-                </Card.Labels>
+            {props.evaluationMethod && (
+                <EvaluationMethodLink
+                    description={props.evaluationMethod.description}
+                    semester={props.evaluationMethod.semester}
+                    year={props.evaluationMethod.year}
+                    id={props.evaluationMethod.id}
+                />
             )}
             <Card.Actions>
                 {props.children}

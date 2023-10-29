@@ -66,7 +66,6 @@ export default function MobileMenu() {
                             <ActionList.Item
                                 tabIndex={-1}
                                 sx={{ color: "grayText" }}
-                                onSelect={() => console.log("Em breve")}
                             >
                                 Repositórios de trabalhos
                             </ActionList.Item>
