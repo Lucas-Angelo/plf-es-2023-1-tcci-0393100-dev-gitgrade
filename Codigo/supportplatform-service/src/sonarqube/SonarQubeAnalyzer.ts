@@ -2,6 +2,7 @@ import axios from "axios";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import dirname from "es-dirname";
+import fs from "fs";
 import path from "path";
 import qs from "qs";
 import sonarqubeScanner from "sonarqube-scanner";
@@ -58,6 +59,8 @@ class SonarQubeAnalyzer {
     public async run() {
         await this.cloneRepo();
         logger.info("Repository cloned");
+        await this.cleanRepository(); // Adicionando a chamada ao método de limpeza
+        logger.info("Repository cleaned");
         await this.createSonarProject();
         logger.info("Sonar project created");
         const token = await this.generateToken();
@@ -68,6 +71,43 @@ class SonarQubeAnalyzer {
 
     private async cloneRepo(): Promise<void> {
         await this.gitHubRepositoryService.cloneRepository(this.repositoryName);
+    }
+
+    private async cleanRepository(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const isFilenameValid = (filename: string) => {
+                return /^[\x20-\x7E]+$/.test(filename);
+            };
+
+            const processDirectory = (directory: string) => {
+                fs.readdir(directory, (err, files) => {
+                    if (err) return reject(err);
+
+                    files.forEach((file) => {
+                        const filePath = path.join(directory, file);
+
+                        fs.stat(filePath, (err, stats) => {
+                            if (err) return reject(err);
+
+                            if (stats.isDirectory()) {
+                                processDirectory(filePath);
+                            } else {
+                                if (!isFilenameValid(file)) {
+                                    fs.unlink(filePath, (err) => {
+                                        if (err) return reject(err);
+                                        // eslint-disable-next-line no-console
+                                        console.log(`Deleted: ${filePath}`);
+                                    });
+                                }
+                            }
+                        });
+                    });
+                });
+            };
+
+            processDirectory(this.repositoryPath);
+            resolve();
+        });
     }
 
     private async createSonarProject() {
