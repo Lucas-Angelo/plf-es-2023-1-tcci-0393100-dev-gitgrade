@@ -240,6 +240,7 @@ jobs:
             - **JOBSCHEDULER_SERVICE_NODE_PORT**: ${{ env.JOBSCHEDULER_SERVICE_NODE_PORT }}
             - **SUPPORTPLATFORM_SERVICE_NODE_PORT**: ${{ env.SUPPORTPLATFORM_SERVICE_NODE_PORT }}
             - **SUPPORTPLATAFORM_WEB_NODE_PORT**: ${{ env.SUPPORTPLATAFORM_WEB_NODE_PORT }}
+            - **SONARQUBE_PORT**: ${{ env.SONARQUBE_PORT }}
 
       - name: Deploy to VM on Pull Request if OPENED, UPDATED or REOPENED
         if: github.event.action != 'closed'
