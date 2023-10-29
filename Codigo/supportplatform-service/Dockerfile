@@ -6,6 +6,15 @@ RUN apt-get update && \
   apt-get upgrade -y && \
   apt-get install -y git bash inotify-tools tzdata
 
+# Install locales
+RUN apt-get install -y locales
+# Generate locale en_US.CP1252
+RUN locale-gen en_US.CP1252
+# Configure default locale
+ENV LANG en_US.CP1252
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.CP1252
+
 # Set timezone
 RUN ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && \
   echo "America/Sao_Paulo" > /etc/timezone

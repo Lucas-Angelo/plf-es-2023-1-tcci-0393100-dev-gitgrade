@@ -167,7 +167,7 @@ class SonarQubeAnalyzer {
                             "sonar.projectName": this.projectName,
                             "sonar.login": token,
                             "sonar.exclusions": "**/node_modules/**",
-                            "sonar.sourceEncoding": "UTF-8",
+                            "sonar.sourceEncoding": "CP1252",
                         },
                     },
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any

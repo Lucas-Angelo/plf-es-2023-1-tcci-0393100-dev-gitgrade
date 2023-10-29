@@ -84,6 +84,7 @@ services:
       - SONAR_JDBC_USERNAME=$SONARQUBE_POSTGRES_USERNAME
       - SONAR_JDBC_PASSWORD=$SONARQUBE_POSTGRES_PASSWORD
       - sonar.es.bootstrap.checks.disable=true # don't remove this line, or app will crash without memory
+      - SONAR_SOURCEENCODING=CP1252
     volumes:
       - gitgrade-sonarqube-data:/opt/sonarqube/data
       - gitgrade-sonarqube-logs:/opt/sonarqube/logs
