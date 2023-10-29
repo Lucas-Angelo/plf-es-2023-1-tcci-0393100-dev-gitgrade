@@ -4,11 +4,12 @@ FROM node:18-buster
 # Update and install dependencies
 RUN apt-get update && \
   apt-get upgrade -y && \
-  apt-get install -y git bash inotify-tools tzdata locales
+  apt-get install -y git bash inotify-tools tzdata locales && \
+  localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 
 # Generate and configure locale for UTF-8
-RUN locale-gen en_US.UTF-8 && \
-  update-locale LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
+RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
+  locale-gen
 
 # Set environment variables for locale
 ENV LANG en_US.UTF-8
