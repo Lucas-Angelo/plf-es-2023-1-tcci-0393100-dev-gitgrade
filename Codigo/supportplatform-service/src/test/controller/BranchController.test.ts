@@ -158,3 +158,247 @@ describe("GET repository/{repositoryId}/branch", () => {
         expect(response.body.message).toBe("Invalid token");
     });
 });
+
+describe("PATCH /repository/{id}/branch/{branchId}", () => {
+    const authUser = generateToken(1);
+
+    beforeAll(async () => {
+        await new Database().connect();
+    });
+
+    it("should return 200 when update the branch with commit automatic synchronization true", async () => {
+        const response = await supertest(app)
+            .patch("/repository/1/branch/2")
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send({
+                commitAutomaticSynchronization: true,
+            });
+
+        // Keep same fields
+        expect(response.body.id).toBe("2");
+        expect(response.body.name).toBe("dev");
+        expect(response.body.repositoryId).toBe("1");
+
+        // Updatable fields
+        expect(response.body.fileAutomaticSynchronization).toBe(false);
+
+        // Updated fields
+        expect(response.body.commitAutomaticSynchronization).toBe(true);
+    });
+
+    it("should return 200 when update the branch with commit automatic synchronization false", async () => {
+        const response = await supertest(app)
+            .patch("/repository/1/branch/2")
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send({
+                commitAutomaticSynchronization: false,
+            });
+
+        // Keep same fields
+        expect(response.body.id).toBe("2");
+        expect(response.body.name).toBe("dev");
+        expect(response.body.repositoryId).toBe("1");
+
+        // Updatable fields
+        expect(response.body.fileAutomaticSynchronization).toBe(false);
+
+        // Updated fields
+        expect(response.body.commitAutomaticSynchronization).toBe(false);
+    });
+
+    it("should return 200 when update the branch with file automatic synchronization true", async () => {
+        const response = await supertest(app)
+            .patch("/repository/1/branch/2")
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send({
+                fileAutomaticSynchronization: true,
+            });
+
+        // Keep same fields
+        expect(response.body.id).toBe("2");
+        expect(response.body.name).toBe("dev");
+        expect(response.body.repositoryId).toBe("1");
+
+        // Updatable fields
+        expect(response.body.commitAutomaticSynchronization).toBe(false);
+
+        // Updated fields
+        expect(response.body.fileAutomaticSynchronization).toBe(true);
+    });
+
+    it("should return 200 when update the branch with file automatic synchronization false", async () => {
+        const response = await supertest(app)
+            .patch("/repository/1/branch/2")
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send({
+                fileAutomaticSynchronization: false,
+            });
+
+        // Keep same fields
+        expect(response.body.id).toBe("2");
+        expect(response.body.name).toBe("dev");
+        expect(response.body.repositoryId).toBe("1");
+
+        // Updatable fields
+        expect(response.body.fileAutomaticSynchronization).toBe(false);
+
+        // Updated fields
+        expect(response.body.commitAutomaticSynchronization).toBe(false);
+    });
+
+    it("should return 200 when update the branch with commit and file automatic synchronization true", async () => {
+        const response = await supertest(app)
+            .patch("/repository/1/branch/2")
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send({
+                fileAutomaticSynchronization: true,
+                commitAutomaticSynchronization: true,
+            });
+
+        // Keep same fields
+        expect(response.body.id).toBe("2");
+        expect(response.body.name).toBe("dev");
+        expect(response.body.repositoryId).toBe("1");
+
+        // Updatable fields
+        // Updated fields
+        expect(response.body.fileAutomaticSynchronization).toBe(true);
+        expect(response.body.commitAutomaticSynchronization).toBe(true);
+    });
+
+    it("should return 200 when update the branch with commit and file automatic synchronization false", async () => {
+        const response = await supertest(app)
+            .patch("/repository/1/branch/2")
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send({
+                fileAutomaticSynchronization: false,
+                commitAutomaticSynchronization: false,
+            });
+
+        // Keep same fields
+        expect(response.body.id).toBe("2");
+        expect(response.body.name).toBe("dev");
+        expect(response.body.repositoryId).toBe("1");
+
+        // Updatable fields
+        // Updated fields
+        expect(response.body.commitAutomaticSynchronization).toBe(false);
+        expect(response.body.fileAutomaticSynchronization).toBe(false);
+    });
+
+    it("should return 200 when update passing nothing and nothing should change", async () => {
+        const response = await supertest(app)
+            .patch("/repository/1/branch/2")
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send({});
+
+        // Keep same fields
+        expect(response.body.id).toBe("2");
+        expect(response.body.name).toBe("dev");
+        expect(response.body.repositoryId).toBe("1");
+
+        // Updatable fields
+        expect(response.body.fileAutomaticSynchronization).toBe(false);
+        expect(response.body.commitAutomaticSynchronization).toBe(false);
+    });
+
+    it("should return 422 when tries to update name", async () => {
+        const response = await supertest(app)
+            .patch("/repository/1/branch/2")
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(422)
+            .send({
+                name: "new-name",
+            });
+
+        expect(response.body.error?.["body.name"]?.message).toBe(
+            '"name" is an excess property and therefore is not allowed'
+        );
+    });
+
+    it("should return 422 when tries to update repositoryId", async () => {
+        const response = await supertest(app)
+            .patch("/repository/1/branch/2")
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(422)
+            .send({
+                repositoryId: 2,
+            });
+
+        expect(response.body.error?.["body.repositoryId"]?.message).toBe(
+            '"repositoryId" is an excess property and therefore is not allowed'
+        );
+    });
+
+    it("should return 404 when repository does not exists", async () => {
+        const response = await supertest(app)
+            .patch("/repository/8888888/branch/2")
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(404)
+            .send({
+                fileAutomaticSynchronization: false,
+                commitAutomaticSynchronization: false,
+            });
+
+        expect(response.body.message).toContain("Repository not found");
+    });
+
+    it("should return 404 when branch does not exists", async () => {
+        const response = await supertest(app)
+            .patch("/repository/1/branch/222222")
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(404)
+            .send({
+                fileAutomaticSynchronization: false,
+                commitAutomaticSynchronization: false,
+            });
+
+        expect(response.body.message).toContain("Branch not found");
+    });
+
+    it("should return 404 when branch does not belong to repository id", async () => {
+        const response = await supertest(app)
+            .patch("/repository/1/branch/4")
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(404)
+            .send({});
+
+        expect(response.body.message).toBe("Branch not found");
+    });
+
+    it("should return 401 when no token is provided", async () => {
+        const response = await supertest(app)
+            .patch("/repository/1/branch/2")
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("No authorization header provided");
+    });
+
+    it("should return 401 when token is not Bearer", async () => {
+        const response = await supertest(app)
+            .patch("/repository/1/branch/2")
+            .set("Authorization", `Basic ${authUser.token}`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid authorization header");
+    });
+
+    it("should return 401 when token is invalid", async () => {
+        const response = await supertest(app)
+            .patch("/repository/1/branch/2")
+            .set("Authorization", `Bearer invalid-token`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid token");
+    });
+});

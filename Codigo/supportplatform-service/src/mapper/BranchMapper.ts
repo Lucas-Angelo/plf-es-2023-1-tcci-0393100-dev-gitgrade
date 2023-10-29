@@ -6,6 +6,10 @@ export class BranchMapper {
         return {
             id: model.id,
             name: model.name,
+            commitAutomaticSynchronization:
+                model.commitAutomaticSynchronization,
+            fileAutomaticSynchronization: model.fileAutomaticSynchronization,
+            repositoryId: model.repositoryId,
         };
     }
 }
