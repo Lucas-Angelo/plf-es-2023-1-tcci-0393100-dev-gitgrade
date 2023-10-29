@@ -6,4 +6,6 @@ export type ConsistencyRuleDeliveryWhereClauseType = {
     consistencyRuleId?: number;
     repositoryId?: number;
     status?: ConsistencyRuleDeliveryStatus;
+    "$consistencyRule.evaluation_method_id$"?: number;
+    "$consistencyRule.sprint_id$"?: number;
 };

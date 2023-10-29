@@ -25,14 +25,16 @@ export const getEvaluationMethodConsistencyRuleQuery = (
 
 export const useEvaluationMethodConsistencyRuleList = (
     evaluationMethodId: number,
-    filterOptions?: ConsistencyRuleSearchDTO
+    filterOptions?: ConsistencyRuleSearchDTO,
+    enabled?: boolean
 ) =>
-    useQuery(
-        getEvaluationMethodConsistencyRuleQuery(
+    useQuery({
+        ...getEvaluationMethodConsistencyRuleQuery(
             evaluationMethodId,
             filterOptions
-        )
-    );
+        ),
+        enabled,
+    });
 
 export const getEvaluationMethodConsistencyRuleByIdQuery = (
     evaluationMethodId: number,
