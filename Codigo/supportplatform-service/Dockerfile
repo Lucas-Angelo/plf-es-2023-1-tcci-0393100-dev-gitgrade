@@ -5,16 +5,27 @@ FROM node:18-buster
 RUN apt-get update && \
   apt-get upgrade -y && \
   apt-get install -y git bash inotify-tools tzdata locales && \
-  localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
-
-# Generate and configure locale for UTF-8
-RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
-  locale-gen
+  sed -i '/pt_BR.UTF-8/s/^# //g' /etc/locale.gen && \
+  locale-gen && \
+  update-locale LC_ALL="pt_BR.UTF-8" \
+  LANG="pt_BR.UTF-8" \
+  LANGUAGE="pt_BR:pt:en" \
+  LC_CTYPE="pt_BR.UTF-8" \
+  LC_NUMERIC="pt_BR.UTF-8" \
+  LC_TIME="pt_BR.UTF-8" \
+  LC_COLLATE="pt_BR.UTF-8" \
+  LC_MONETARY="pt_BR.UTF-8" \
+  LC_MESSAGES="pt_BR.UTF-8" \
+  LC_PAPER="pt_BR.UTF-8" \
+  LC_NAME="pt_BR.UTF-8" \
+  LC_ADDRESS="pt_BR.UTF-8" \
+  LC_TELEPHONE="pt_BR.UTF-8" \
+  LC_MEASUREMENT="pt_BR.UTF-8" \
+  LC_IDENTIFICATION="pt_BR.UTF-8" \
+  LC_ALL="pt_BR.UTF-8"
 
 # Set environment variables for locale
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
+ENV LANG=pt_BR.UTF-8 LC_ALL=pt_BR.UTF-8
 
 # Set timezone
 RUN ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && \
