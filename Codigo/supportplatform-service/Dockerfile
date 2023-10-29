@@ -4,16 +4,16 @@ FROM node:18-buster
 # Update and install dependencies
 RUN apt-get update && \
   apt-get upgrade -y && \
-  apt-get install -y git bash inotify-tools tzdata
+  apt-get install -y git bash inotify-tools tzdata locales
 
-# Install locales
-RUN apt-get install -y locales
-# Generate locale en_US.CP1252
-RUN locale-gen en_US.CP1252
-# Configure default locale
-ENV LANG en_US.CP1252
+# Generate and configure locale for UTF-8
+RUN locale-gen en_US.UTF-8 && \
+  update-locale LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
+
+# Set environment variables for locale
+ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.CP1252
+ENV LC_ALL en_US.UTF-8
 
 # Set timezone
 RUN ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && \

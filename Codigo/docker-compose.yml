@@ -84,9 +84,9 @@ services:
       - SONAR_JDBC_USERNAME=$SONARQUBE_POSTGRES_USERNAME
       - SONAR_JDBC_PASSWORD=$SONARQUBE_POSTGRES_PASSWORD
       - sonar.es.bootstrap.checks.disable=true # don't remove this line, or app will crash without memory
-      - SONAR_SOURCEENCODING=CP1252
-      - LANG=C.CP1252
-      - LC_ALL=C.CP1252
+      - SONAR_SOURCEENCODING=UTF-8
+      - LANG=UTF-8
+      - LC_ALL=UTF-8
     volumes:
       - gitgrade-sonarqube-data:/opt/sonarqube/data
       - gitgrade-sonarqube-logs:/opt/sonarqube/logs
@@ -131,9 +131,9 @@ services:
       - SONARQUBE_PORT=$SONARQUBE_DOCKER_PORT
       - SONARQUBE_ADMIN_USERNAME=$SONARQUBE_ADMIN_USERNAME
       - SONARQUBE_ADMIN_PASSWORD=$SONARQUBE_ADMIN_PASSWORD
-      - SONAR_SOURCEENCODING=CP1252
-      - LANG=C.CP1252
-      - LC_ALL=C.CP1252
+      - SONAR_SOURCEENCODING=UTF-8
+      - LANG=UTF-8
+      - LC_ALL=UTF-8
     command: /bin/bash -c "./wait-for-it.sh --timeout=600 mysql_gitgrade:$DB_DOCKER_PORT && ./wait-for-it.sh --timeout=600 sonarqube:$SONARQUBE_DOCKER_PORT && npm run start:prod"
     ports:
       - $SUPPORTPLATFORM_SERVICE_NODE_PORT:$SUPPORTPLATFORM_SERVICE_NODE_PORT
