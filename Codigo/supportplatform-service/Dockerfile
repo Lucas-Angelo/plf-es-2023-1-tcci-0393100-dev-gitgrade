@@ -26,6 +26,7 @@ RUN apt-get update && \
 
 # Set environment variables for locale
 ENV LANG=pt_BR.UTF-8 LC_ALL=pt_BR.UTF-8
+ENV LC_ALL=C
 
 # Set timezone
 RUN ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && \
