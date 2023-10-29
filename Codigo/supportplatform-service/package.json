@@ -30,8 +30,9 @@
     "dependencies": {
         "@gitgrade/dtos": "file:../dtos-lib",
         "@octokit/rest": "^20.0.1",
-        "axios": "^1.5.1",
+        "axios": "^1.6.0",
         "cors": "^2.8.5",
+        "dirname": "^0.1.0",
         "dotenv": "^16.3.1",
         "es-dirname": "^0.1.0",
         "express": "^4.18.2",
@@ -41,12 +42,14 @@
         "octokit": "^3.1.0",
         "passport": "^0.6.0",
         "passport-github": "^1.1.0",
+        "path": "^0.12.7",
         "qs": "^6.11.2",
         "sequelize": "^6.32.1",
         "sonarqube-scanner": "^2.9.1",
         "swagger-ui-express": "^5.0.0",
         "tsoa": "^5.1.1",
-        "winston": "^3.10.0"
+        "winston": "^3.10.0",
+        "worker-thread": "^1.1.0"
     },
     "devDependencies": {
         "@octokit/types": "^11.1.0",

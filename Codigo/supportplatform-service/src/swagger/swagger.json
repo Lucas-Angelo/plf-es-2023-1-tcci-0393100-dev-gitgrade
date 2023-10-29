@@ -39,6 +39,14 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"CodeQualityStatusDto": {
+				"enum": [
+					"ANALYZING",
+					"ANALYZED",
+					"ERROR"
+				],
+				"type": "string"
+			},
 			"CodeQualityResponseDTO": {
 				"description": "CodeQualityResponseDTO - DTO for code quality analysis response.",
 				"properties": {
@@ -53,6 +61,9 @@
 					"path": {
 						"type": "string"
 					},
+					"status": {
+						"$ref": "#/components/schemas/CodeQualityStatusDto"
+					},
 					"createdAt": {
 						"type": "string",
 						"format": "date-time"
@@ -62,6 +73,7 @@
 					"id",
 					"repositoryId",
 					"path",
+					"status",
 					"createdAt"
 				],
 				"type": "object",
@@ -1686,7 +1698,7 @@
 				]
 			}
 		},
-		"/code-quality/{repositoryId}": {
+		"/code-quality/repository/{repositoryId}": {
 			"post": {
 				"operationId": "Create",
 				"responses": {
@@ -1703,6 +1715,7 @@
 											"id": 1,
 											"path": "/dashboard?id=repositoryNameTimeStamp",
 											"repositoryId": 1,
+											"status": "ANALYZING",
 											"createdAt": "2023-01-01T00:00:00.000Z"
 										}
 									}
@@ -1712,6 +1725,73 @@
 					}
 				},
 				"description": "Create a code quality analysis for a repository.",
+				"tags": [
+					"code-quality"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Found code quality analysis",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/CodeQualityResponseDTO"
+									},
+									"type": "array"
+								},
+								"examples": {
+									"Example 1": {
+										"value": [
+											{
+												"id": 1,
+												"path": "/dashboard?id=repositoryNameTimeStamp",
+												"repositoryId": 1,
+												"status": "ANALYZING",
+												"createdAt": "2023-01-01T00:00:00.000Z"
+											},
+											{
+												"id": 2,
+												"path": "/dashboard?id=repositoryNameTimeStamp",
+												"repositoryId": 1,
+												"status": "ANALYZED",
+												"createdAt": "2023-01-01T00:00:00.000Z"
+											},
+											{
+												"id": 3,
+												"path": "/dashboard?id=repositoryNameTimeStamp",
+												"repositoryId": 1,
+												"status": "ERROR",
+												"createdAt": "2023-01-01T00:00:00.000Z"
+											}
+										]
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "/**\nGet an existing Sprint by id.",
 				"tags": [
 					"code-quality"
 				],

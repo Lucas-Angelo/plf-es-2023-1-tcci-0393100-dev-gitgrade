@@ -1,22 +1,41 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import dirname from "es-dirname";
+import path from "path";
+import { Worker } from "worker_threads";
 import logger from "../config/LogConfig";
 import AppError from "../error/AppError";
 import { CodeQuality, CodeQualityStatus } from "../model/CodeQuality";
 import SonarQubeAnalyzer from "../sonarqube/SonarQubeAnalyzer";
 import RepositoryService from "./RepositoryService";
 
-export default class CodeQualityService {
+const projectRootPath = path.join(dirname(), "../../").replace("/dist", "");
+
+export class CodeQualityService {
     private repositoryService: RepositoryService;
+    private isWorkerRunning: boolean;
 
     constructor() {
         this.repositoryService = new RepositoryService();
+        this.isWorkerRunning = false;
     }
 
     /**
      * Create a new CodeQuality.
      */
     async create(repositoryId: number): Promise<CodeQuality> {
-        let codeQuality: CodeQuality | undefined = undefined;
+        let codeQuality: CodeQuality;
         try {
+            if (this.isWorkerRunning) {
+                logger.error(
+                    "Another code quality analysis is already running"
+                );
+                throw new AppError(
+                    "Another code quality analysis is already running",
+                    429
+                );
+            }
+
             logger.info("Creating a new code quality");
 
             const repository = await this.repositoryService.findOneBy({
@@ -31,6 +50,8 @@ export default class CodeQualityService {
             const sonarQubeAnalyzer: SonarQubeAnalyzer = new SonarQubeAnalyzer(
                 repository.name
             );
+            const projectKey = sonarQubeAnalyzer.getProjectKey();
+            const projectName = sonarQubeAnalyzer.getProjectName();
 
             const analysisPath = sonarQubeAnalyzer.buildPath();
 
@@ -40,22 +61,56 @@ export default class CodeQualityService {
                 status: CodeQualityStatus.ANALYZING,
             });
 
-            logger.info("Starting code quality analysis");
-            await sonarQubeAnalyzer.run();
-            logger.info("Code quality analysis finished");
+            if (!codeQuality) {
+                logger.error("Failed to create a new code quality");
+                throw new AppError("Failed to create a new code quality", 500);
+            }
 
-            await codeQuality.update({
-                status: CodeQualityStatus.ANALYZED,
+            logger.info("Starting code quality analysis");
+            codeQuality = await CodeQuality.create({
+                repositoryId,
+                path: analysisPath,
+                status: CodeQualityStatus.ANALYZING,
             });
+            const sonarQubeWorkerPath = path.join(
+                projectRootPath,
+                projectRootPath.startsWith("/usr/src")
+                    ? "dist/src/worker/SonarQubeWorker.ts"
+                    : "src/worker/SonarQubeWorker.ts"
+            );
+
+            this.isWorkerRunning = true;
+            const worker = new Worker(sonarQubeWorkerPath);
+            const obj = {
+                repositoryName: repository.name,
+                projectKey,
+                projectName,
+            };
+            worker.postMessage(obj);
+
+            worker.on("message", async (message) => {
+                if (message === "done") {
+                    this.isWorkerRunning = false;
+                    await codeQuality.update({
+                        status: CodeQualityStatus.ANALYZED,
+                    });
+                }
+            });
+
+            worker.on("error", async (error) => {
+                logger.error("Error in worker thread:", { error });
+                if (codeQuality) {
+                    this.isWorkerRunning = false;
+                    await codeQuality.update({
+                        status: CodeQualityStatus.ERROR,
+                    });
+                }
+            });
+            logger.info("Code quality analysis finished");
 
             return codeQuality;
         } catch (error) {
             logger.error("Error creating a new code quality:", { error });
-            if (codeQuality) {
-                await codeQuality.update({
-                    status: CodeQualityStatus.ERROR,
-                });
-            }
             throw new AppError(
                 "Failed to create a new code quality",
                 500,
@@ -64,33 +119,24 @@ export default class CodeQualityService {
         }
     }
 
-    // /**
-    //  * Find all CodeQualitys based on given filters.
-    //  */
-    // async findAll(
-    //     search: CodeQualitySearchDTO
-    // ): Promise<PaginationResponseDTO<CodeQuality>> {
-    //     try {
-    //         logger.info("Searching for all codeQualitys");
-
-    //         const whereClause = this._constructWhereClause(search);
-
-    //         const { rows, count } = await CodeQuality.findAndCountAll({
-    //             ...sequelizePagination(search.page || 1, search.limit || 10),
-    //             where: whereClause,
-    //         });
-
-    //         logger.info("Successfully found all codeQualitys: ", {
-    //             count,
-    //         });
-
-    //         return {
-    //             results: rows,
-    //             totalPages: Math.ceil(count / (search.limit || 10)) || 1,
-    //         };
-    //     } catch (error) {
-    //         logger.error("Error finding all codeQualitys:", { error });
-    //         throw new AppError("Failed to find all codeQualitys", 500, error);
-    //     }
-    // }
+    async findAllByRepositoryId(repositoryId: number): Promise<CodeQuality[]> {
+        try {
+            logger.info("Finding all code quality analysis by repository id");
+            const codeQualities = await CodeQuality.findAll({
+                where: {
+                    repositoryId,
+                },
+            });
+            return codeQualities;
+        } catch (error) {
+            logger.error("Error finding all code quality analysis:", { error });
+            throw new AppError(
+                "Failed to find all code quality analysis",
+                500,
+                error
+            );
+        }
+    }
 }
+
+export default new CodeQualityService();

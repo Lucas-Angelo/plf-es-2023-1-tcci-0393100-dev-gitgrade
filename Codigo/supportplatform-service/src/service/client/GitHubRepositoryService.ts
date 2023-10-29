@@ -16,7 +16,7 @@ import { Endpoints } from "@octokit/types";
 import dirname from "es-dirname";
 import AppError from "../../error/AppError";
 
-const projectRootPath = path.join(dirname(), "../../../");
+const projectRootPath = path.join(dirname(), "../../../").replace("/dist", "");
 const repositoriesTempDirectory = path.join(
     projectRootPath,
     "./temp/repositories"

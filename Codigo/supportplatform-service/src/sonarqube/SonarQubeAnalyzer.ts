@@ -10,7 +10,7 @@ import logger from "../config/LogConfig";
 import AppError from "../error/AppError";
 import { GitHubRepositoryService } from "../service/client/GitHubRepositoryService";
 
-const projectRootPath = path.join(dirname(), "../../");
+const projectRootPath = path.join(dirname(), "../../").replace("/dist", "");
 
 class SonarQubeAnalyzer {
     private repositoryName: string;
@@ -156,9 +156,6 @@ class SonarQubeAnalyzer {
 
     private async analyzeWithSonarQube(token: string): Promise<void> {
         try {
-            // Go to repository path to run sonarqube scanner (for sonar.sources property capture files)
-            process.chdir(this.repositoryPath);
-
             await new Promise<void>((resolve, reject) => {
                 sonarqubeScanner(
                     {
@@ -166,7 +163,7 @@ class SonarQubeAnalyzer {
                         token: token,
                         options: {
                             "sonar.projectKey": this.projectKey,
-                            "sonar.sources": ".",
+                            "sonar.sources": this.repositoryPath,
                             "sonar.projectName": this.projectName,
                             "sonar.login": token,
                             "sonar.exclusions": "**/node_modules/**",
@@ -197,6 +194,22 @@ class SonarQubeAnalyzer {
 
     buildPath(): string {
         return `/dashboard?id=${this.projectKey}`;
+    }
+
+    getProjectKey(): string {
+        return this.projectKey;
+    }
+
+    getProjectName(): string {
+        return this.projectName;
+    }
+
+    setProjectKey(projectKey: string): void {
+        this.projectKey = projectKey;
+    }
+
+    setProjectName(projectName: string): void {
+        this.projectName = projectName;
     }
 }
 

@@ -50,12 +50,18 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CodeQualityStatusDto": {
+        "dataType": "refEnum",
+        "enums": ["ANALYZING","ANALYZED","ERROR"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "CodeQualityResponseDTO": {
         "dataType": "refObject",
         "properties": {
             "id": {"dataType":"double","required":true},
             "repositoryId": {"dataType":"double","required":true},
             "path": {"dataType":"string","required":true},
+            "status": {"ref":"CodeQualityStatusDto","required":true},
             "createdAt": {"dataType":"datetime","required":true},
         },
         "additionalProperties": false,
@@ -558,7 +564,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/code-quality/:repositoryId',
+        app.post('/code-quality/repository/:repositoryId',
             authenticateMiddleware([{"bearer":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(CodeQualityController)),
             ...(fetchMiddlewares<RequestHandler>(CodeQualityController.prototype.create)),
@@ -579,6 +585,32 @@ export function RegisterRoutes(app: Router) {
 
               const promise = controller.create.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, 201, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/code-quality/repository/:repositoryId',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(CodeQualityController)),
+            ...(fetchMiddlewares<RequestHandler>(CodeQualityController.prototype.getAll)),
+
+            function CodeQualityController_getAll(request: any, response: any, next: any) {
+            const args = {
+                    repositoryId: {"in":"path","name":"repositoryId","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new CodeQualityController();
+
+
+              const promise = controller.getAll.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 200, next);
             } catch (err) {
                 return next(err);
             }
