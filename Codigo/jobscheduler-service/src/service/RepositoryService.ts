@@ -97,6 +97,29 @@ class RepositoryService {
         }
     }
 
+    async findAllByField(
+        field: keyof IRepositoryAttributes,
+        value:
+            | IRepositoryAttributes[keyof IRepositoryAttributes]
+            | Array<IRepositoryAttributes[keyof IRepositoryAttributes]>
+    ): Promise<Array<Repository>> {
+        try {
+            logger.info(`Searching for repositories by ${field} ${value}`);
+            const repositories = await Repository.findAll({
+                where: { [field]: value },
+            });
+            logger.info(`Repositories found by ${field} ${value}:`, {
+                repositories,
+            });
+            return repositories;
+        } catch (error) {
+            logger.error(`Error finding repositories by ${field} ${value}:`, {
+                error,
+            });
+            throw error;
+        }
+    }
+
     async findAllWithAutomaticSynchronizationEnable(): Promise<Repository[]> {
         try {
             logger.info(
@@ -144,6 +167,35 @@ class RepositoryService {
         }
     }
 
+    async setAllRepositoriesByIdToSynchronizingTrue(
+        repositoryIds: number[]
+    ): Promise<Repository[]> {
+        try {
+            logger.info(
+                "Setting all repositories to synchronizing true...",
+                repositoryIds
+            );
+            await Repository.update(
+                { synchronizing: true },
+                { where: { id: repositoryIds } }
+            );
+            logger.info("Repositories set to synchronizing true.", {
+                repositoryIds,
+            });
+            return Repository.findAll({
+                where: { id: repositoryIds },
+            });
+        } catch (error) {
+            logger.error(
+                "Error setting all repositories to synchronizing true:",
+                {
+                    error,
+                }
+            );
+            throw error;
+        }
+    }
+
     async setAllRepositoriesToSynchronizingFalse(
         repositories: Repository[]
     ): Promise<void> {
@@ -163,7 +215,9 @@ class RepositoryService {
         }
     }
 
-    async findAllRepositoriesWithEvaluationMethod(): Promise<Repository[]> {
+    async findAllRepositoriesWithEvaluationMethod(where?: {
+        id?: number | number[];
+    }): Promise<Repository[]> {
         try {
             logger.info("Searching for repositories with evaluation method...");
             const repositories = await Repository.findAll({
@@ -177,6 +231,7 @@ class RepositoryService {
                         required: true,
                     },
                 ],
+                where,
             });
             logger.info(
                 "Quantity of repositories found with evaluation method:",

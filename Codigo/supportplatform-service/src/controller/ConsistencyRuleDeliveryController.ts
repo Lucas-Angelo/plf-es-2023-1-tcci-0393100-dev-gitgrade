@@ -25,7 +25,7 @@ import ConsistencyRuleDeliveryService from "../service/ConsistencyRuleDeliverySe
 
 @Route("consistency-rule-delivery")
 @Security("bearer", ["admin"])
-@Tags("ConsistencyRuleDelivery")
+@Tags("consistency-rule-delivery")
 export class ConsistencyRuleDeliveryController extends Controller {
     private consistencyRuleDeliveryService: ConsistencyRuleDeliveryService;
     private consistencyRuleDeliveryMapper: ConsistencyRuleDeliveryMapper;

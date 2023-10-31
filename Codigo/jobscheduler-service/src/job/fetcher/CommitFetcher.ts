@@ -1,6 +1,7 @@
 import logger from "../../config/LogConfig";
 import { ICommitAttributes } from "../../model/Commit";
 import { IContributorAttributes } from "../../model/Contributor";
+import { Repository } from "../../model/Repository";
 import { BranchService } from "../../service/BranchService";
 import { CommitService } from "../../service/CommitService";
 import { ContributorService } from "../../service/ContributorService";
@@ -38,13 +39,21 @@ class CommitFetcher {
         this.fetchUtil = new FetchUtil();
     }
 
-    async fetchCommitsForRepositories() {
+    async fetchCommitsForRepositories(repositoryIds?: Array<number>) {
         try {
             logger.info("Starting Commit Fetcher...");
 
-            // TODO: Fetch only repositories with automatic sync enabled
-            const repositories =
-                await this.repositoryService.findAllWithAutomaticSynchronizationEnable();
+            let repositories: Repository[];
+
+            if (repositoryIds && repositoryIds.length > 0) {
+                repositories = await this.repositoryService.findAllByField(
+                    "id",
+                    repositoryIds
+                );
+            } else {
+                repositories =
+                    await this.repositoryService.findAllWithAutomaticSynchronizationEnable();
+            }
 
             for (const repository of repositories) {
                 const branches = await this.branchService.findAllByFields({

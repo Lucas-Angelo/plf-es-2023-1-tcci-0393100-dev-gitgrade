@@ -1,7 +1,7 @@
 import logger from "../../config/LogConfig";
 import { IContributorAttributes } from "../../model/Contributor";
 import { IIssueAttributes } from "../../model/Issue"; // Assuming you have a similar structure for Issues
-import { IRepositoryAttributes } from "../../model/Repository";
+import { IRepositoryAttributes, Repository } from "../../model/Repository";
 import {
     GitHubIssueService,
     IssueGitHub, // New model
@@ -39,13 +39,21 @@ class IssueFetcher {
         this.fetchUtil = new FetchUtil();
     }
 
-    async fetchIssuesForRepositories() {
+    async fetchIssuesForRepositories(repositoryIds?: Array<number>) {
         try {
             logger.info("Starting Issue Fetcher...");
 
-            // TODO: Fetch only repositories with automatic sync enabled
-            const repositories =
-                await this.repositoryService.findAllWithAutomaticSynchronizationEnable();
+            let repositories: Repository[];
+
+            if (repositoryIds && repositoryIds.length > 0) {
+                repositories = await this.repositoryService.findAllByField(
+                    "id",
+                    repositoryIds
+                );
+            } else {
+                repositories =
+                    await this.repositoryService.findAllWithAutomaticSynchronizationEnable();
+            }
 
             for (const repository of repositories) {
                 const issues = await this.fetchIssuesWithRetry(

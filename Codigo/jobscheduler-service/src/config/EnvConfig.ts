@@ -52,6 +52,8 @@ class EnvironmentConfig {
             GITHUB_ORGANIZATION_NAME: process.env.GITHUB_ORGANIZATION_NAME,
             TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN,
             TELEGRAM_CHAT_ID: process.env.TELEGRAM_CHAT_ID,
+            SUPPORT_PLATFORM_URL: process.env.SUPPORT_PLATFORM_URL,
+            PORT: process.env.PORT,
         };
     }
 

@@ -1,0 +1,80 @@
+{
+    "components": {
+        "examples": {},
+        "headers": {},
+        "parameters": {},
+        "requestBodies": {},
+        "responses": {},
+        "schemas": {},
+        "securitySchemes": {
+            "bearer": {
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
+    "info": {
+        "title": "jobscheduler-service",
+        "version": "1.0.0",
+        "description": "Job Scheduler service to sync data with GitHub",
+        "license": {
+            "name": "CC-BY-4.0"
+        },
+        "contact": {
+            "name": "Lucas Ângelo Oliveira Martins Rocha ",
+            "url": "https://lucasangelo.com/"
+        }
+    },
+    "openapi": "3.0.0",
+    "paths": {
+        "/sync": {
+            "patch": {
+                "operationId": "SyncRepositories",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "required": ["success"],
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": ["sync"],
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "repositoryId",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "number",
+                                "format": "double"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "servers": [
+        {
+            "url": "/"
+        }
+    ]
+}

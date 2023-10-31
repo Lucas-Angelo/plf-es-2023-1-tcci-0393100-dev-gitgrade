@@ -6,6 +6,18 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"GetPublicKeyResponseDTO": {
+				"properties": {
+					"publicKey": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"publicKey"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"BranchDTO": {
 				"properties": {
 					"id": {
@@ -1664,6 +1676,35 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
+		"/auth/public-key": {
+			"get": {
+				"operationId": "GetPublicKey",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetPublicKeyResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"publicKey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn2fmVWFPteAviIyPDI6Y\nYqvYpqDf8Sr4rcCjVc1eBPXwhc8V9ybxc/9ajlWLD9AG9hmtnZQKRhA+2Gqjar9M\n3XHSW0Q7uAmrUudT8mx31w/0lhx0lzbDzCIPY46Avk7ptjKc2SDbEOmKGg7CgqND\nYd3OWV96SCJSuWudXHpGOZRqztXyQVrJ0200bLgL/e1SdspV7FheIJvqgWonTHnv\n0WOzhn7WyiiOkTtmYiktk9W/tSO8vhaAK/GWgTwcX0HzUaabE599itZAMDLWlM2I\nt/SebZkZ5URzuLDakkWUYPb0Hj1B3Jmon6WGRJ6bRRkKdObWT5OaEEtnmrdmKNuN\nGwIDAQAB\n-----END PUBLIC KEY-----"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"auth"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
 		"/repository/{repositoryId}/branch": {
 			"get": {
 				"operationId": "GetByRepositoryId",
@@ -2202,7 +2243,7 @@
 				},
 				"description": "Create a new ConsistencyRuleDelivery.",
 				"tags": [
-					"ConsistencyRuleDelivery"
+					"consistency-rule-delivery"
 				],
 				"security": [
 					{
@@ -2255,7 +2296,7 @@
 				},
 				"description": "Get all ConsistencyRuleDeliveries with pagination and filter.\nCan filter by deliveryAt, consistencyRuleId, and repositoryId.",
 				"tags": [
-					"ConsistencyRuleDelivery"
+					"consistency-rule-delivery"
 				],
 				"security": [
 					{
@@ -2371,7 +2412,7 @@
 				},
 				"description": "Update an existing ConsistencyRuleDelivery by id.\nNeed body with all fields.",
 				"tags": [
-					"ConsistencyRuleDelivery"
+					"consistency-rule-delivery"
 				],
 				"security": [
 					{
@@ -2429,7 +2470,7 @@
 				},
 				"description": "Get an existing ConsistencyRuleDelivery by id.",
 				"tags": [
-					"ConsistencyRuleDelivery"
+					"consistency-rule-delivery"
 				],
 				"security": [
 					{
@@ -4064,6 +4105,55 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/sync": {
+			"patch": {
+				"operationId": "Sync",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"sync"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "number",
+								"format": "double"
+							}
 						}
 					}
 				]

@@ -1,4 +1,5 @@
 import logger from "../config/LogConfig";
+import { Repository } from "../model/Repository";
 import { RepositoryService } from "../service/RepositoryService";
 import { BranchFetcher } from "./fetcher/BranchFetcher";
 import { CommitFetcher } from "./fetcher/CommitFetcher";
@@ -37,24 +38,46 @@ class JobExecutor {
             new ConsistencyRuleDeliverySynchronizer();
     }
 
-    async runFetchers() {
+    async runFetchers(repositoryIds?: Array<number>) {
         try {
             logger.info("Starting JobExecutor...");
 
             const startTime = new Date();
 
-            const repositoriesSyncing =
-                await this.repositoryService.setAllAutomaticSynchronizationEnableRepositoriesToSynchronizingTrue();
+            let repositoriesSyncing: Array<Repository>;
+            if (repositoryIds && repositoryIds.length > 0) {
+                repositoriesSyncing =
+                    await this.repositoryService.setAllRepositoriesByIdToSynchronizingTrue(
+                        repositoryIds
+                    );
+            } else {
+                repositoriesSyncing =
+                    await this.repositoryService.setAllAutomaticSynchronizationEnableRepositoriesToSynchronizingTrue();
+            }
 
-            await this.repositoryFetcher.createOrUpdateRepositories();
-            await this.contributorFetcher.fetchContributorsForOrgAndRepositories();
-            await this.issueFetcher.fetchIssuesForRepositories();
-            await this.pullRequestFetcher.fetchPullRequestsForRepositories();
-            await this.branchFetcher.fetchBranchesForRepositories();
-            await this.commitFetcher.fetchCommitsForRepositories();
-            await this.fileFetcher.fetchFilesForRepositories();
+            if (repositoryIds && repositoryIds.length > 0) {
+                await this.repositoryFetcher.updateRepositoriesById(
+                    repositoryIds
+                );
+            } else {
+                await this.repositoryFetcher.createOrUpdateRepositories();
+            }
+            await this.contributorFetcher.fetchContributorsForOrgAndRepositories(
+                repositoryIds
+            );
+            await this.issueFetcher.fetchIssuesForRepositories(repositoryIds);
+            await this.pullRequestFetcher.fetchPullRequestsForRepositories(
+                repositoryIds
+            );
+            await this.branchFetcher.fetchBranchesForRepositories(
+                repositoryIds
+            );
+            await this.commitFetcher.fetchCommitsForRepositories(repositoryIds);
+            await this.fileFetcher.fetchFilesForRepositories(repositoryIds);
 
-            await this.consistencyRuleDeliverySynchronizer.syncConsistencyRuleDeliveriesAndStdIssues();
+            await this.consistencyRuleDeliverySynchronizer.syncConsistencyRuleDeliveriesAndStdIssues(
+                repositoryIds
+            );
 
             await this.repositoryService.setAllRepositoriesToSynchronizingFalse(
                 repositoriesSyncing

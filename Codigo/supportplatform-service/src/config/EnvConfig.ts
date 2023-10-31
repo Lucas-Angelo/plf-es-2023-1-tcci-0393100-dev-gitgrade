@@ -52,10 +52,12 @@ class EnvironmentConfig {
             GITHUB_ORGANIZATION_NAME: process.env.GITHUB_ORGANIZATION_NAME,
             GITHUB_APP_CLIENT_ID: process.env.GITHUB_APP_CLIENT_ID,
             GITHUB_APP_CLIENT_SECRET: process.env.GITHUB_APP_CLIENT_SECRET,
-            JWT_SECRET: process.env.JWT_SECRET,
             SESSION_SECRET: process.env.SESSION_SECRET,
             OAUTH_SUCCESS_REDIRECT_URL: process.env.OAUTH_SUCCESS_REDIRECT_URL,
             OAUTH_FAILURE_SEARCH_PARAM: process.env.OAUTH_FAILURE_SEARCH_PARAM,
+            JWT_PUBLIC_KEY: process.env.JWT_PUBLIC_KEY ?? "",
+            JWT_PRIVATE_KEY: process.env.JWT_PRIVATE_KEY ?? "",
+            JOB_SCHEDULER_API_URL: process.env.JOB_SCHEDULER_API_URL,
         };
     }
 

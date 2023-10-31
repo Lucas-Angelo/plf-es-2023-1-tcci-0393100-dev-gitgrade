@@ -1,0 +1,20 @@
+{
+    "entryFile": "src/api/index.ts",
+    "noImplicitAdditionalProperties": "throw-on-extras",
+    "controllerPathGlobs": ["src/**/*Controller.ts"],
+    "spec": {
+        "outputDirectory": "src/swagger",
+        "specVersion": 3,
+        "securityDefinitions": {
+            "bearer": {
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
+    "routes": {
+        "routesDir": "src/swagger",
+        "authenticationModule": "src/middleware/ExpressAuthentication.ts"
+    }
+}

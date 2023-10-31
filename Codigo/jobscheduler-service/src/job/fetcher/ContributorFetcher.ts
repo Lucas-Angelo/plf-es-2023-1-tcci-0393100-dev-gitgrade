@@ -37,7 +37,9 @@ class ContributorFetcher {
         this.organizationMembersCache = [];
     }
 
-    async fetchContributorsForOrgAndRepositories() {
+    async fetchContributorsForOrgAndRepositories(
+        repositoryIds?: Array<number>
+    ) {
         try {
             logger.info("Starting Contributor Fetcher...");
 
@@ -45,9 +47,17 @@ class ContributorFetcher {
                 ...(await this.fetchAndCreateContributorsForOrganization())
             );
 
-            // TODO: Fetch only repositories with automatic sync enabled
-            const repositories: Repository[] =
-                await this.repositoryService.findAllWithAutomaticSynchronizationEnable();
+            let repositories: Repository[];
+
+            if (repositoryIds && repositoryIds.length > 0) {
+                repositories = await this.repositoryService.findAllByField(
+                    "id",
+                    repositoryIds
+                );
+            } else {
+                repositories =
+                    await this.repositoryService.findAllWithAutomaticSynchronizationEnable();
+            }
 
             for (const repository of repositories)
                 try {

@@ -6,6 +6,7 @@ import { IssueMetricQueryDTO, IssueMetricsDTO } from "./dto/issueMetrics";
 import { CommitResponseDTO, CommitSearchDTO } from "./dto/commit";
 import { RepositoryMetricQueryDTO } from "./dto/repositoryMetrics";
 
+import { GetPublicKeyResponseDTO } from "./dto/auth";
 import { CommitMetricsDTO } from "./dto/commitMetrics";
 import {
   ConsistencyRuleCreateDTO,
@@ -79,6 +80,7 @@ export type {
   FileChangeMetricsDTO,
   FileTypeMetricDTO,
   FileTypeMetricsDTO,
+  GetPublicKeyResponseDTO,
   GetAllBranchQueryDTO,
   GetAllContributorQueryDTO,
   GetAllRepositoryQueryDTO,

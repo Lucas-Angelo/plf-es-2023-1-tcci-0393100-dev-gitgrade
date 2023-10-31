@@ -48,6 +48,24 @@ class GitHubRepositoryService {
             );
         }
     }
+
+    async getRepositoryByGitHubId(githubId: string): Promise<RepositoryGitHub> {
+        try {
+            const response = await GitHubApi.request(
+                "GET /repositories/{repository_id}",
+                {
+                    repository_id: githubId,
+                }
+            );
+
+            return response.data;
+        } catch (error: unknown) {
+            logger.error("Error fetching repository:", { error });
+            throw new Error(
+                "Error fetching repository: " + (error as Error).message
+            );
+        }
+    }
 }
 
 export { GitHubRepositoryService, RepositoryGitHub };

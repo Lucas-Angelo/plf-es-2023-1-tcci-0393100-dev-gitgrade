@@ -28,10 +28,16 @@ class ConsistencyRuleDeliverySynchronizer {
         this.fetchUtil = new FetchUtil();
     }
 
-    async syncConsistencyRuleDeliveriesAndStdIssues() {
+    async syncConsistencyRuleDeliveriesAndStdIssues(
+        repositoryIds?: Array<number>
+    ) {
         try {
             const repositoriesWithEvaluationMethod =
-                await this.repositoryService.findAllRepositoriesWithEvaluationMethod();
+                await this.repositoryService.findAllRepositoriesWithEvaluationMethod(
+                    repositoryIds && repositoryIds.length > 0
+                        ? { id: repositoryIds }
+                        : undefined
+                );
 
             for (const repository of repositoriesWithEvaluationMethod) {
                 const consistencyRulesWithSprintAndStdIssue =
