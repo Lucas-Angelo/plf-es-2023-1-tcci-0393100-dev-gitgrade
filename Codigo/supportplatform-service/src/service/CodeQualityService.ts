@@ -12,7 +12,7 @@ import RepositoryService from "./RepositoryService";
 const projectRootPath = path.join(dirname(), "../../");
 
 export class CodeQualityService {
-    private static timeoutTimeInMinutes = 3;
+    private static timeoutTimeInMinutes = 30;
     private static isWorkerRunning: boolean;
 
     private repositoryService: RepositoryService;
