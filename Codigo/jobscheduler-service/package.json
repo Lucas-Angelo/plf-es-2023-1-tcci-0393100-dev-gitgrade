@@ -27,6 +27,7 @@
     "dependencies": {
         "@octokit/core": "^5.0.0",
         "@octokit/rest": "^20.0.1",
+        "@gitgrade/dtos": "file:../dtos-lib",
         "ajv": "^8.12.0",
         "axios": "^1.6.0",
         "cors": "^2.8.5",
@@ -49,7 +50,6 @@
         "winston-transport": "^4.5.0"
     },
     "devDependencies": {
-        "@gitgrade/dtos": "file:../dtos-lib",
         "@octokit/types": "^11.1.0",
         "@types/cors": "^2.8.15",
         "@types/jest": "^29.5.6",
