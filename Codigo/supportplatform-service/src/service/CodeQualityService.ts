@@ -2,7 +2,6 @@
 // @ts-ignore
 import dirname from "es-dirname";
 import path from "path";
-// import { Worker } from "worker_threads";
 import { Worker } from "worker_threads";
 import logger from "../config/LogConfig";
 import AppError from "../error/AppError";
@@ -13,12 +12,14 @@ import RepositoryService from "./RepositoryService";
 const projectRootPath = path.join(dirname(), "../../");
 
 export class CodeQualityService {
+    private static timeoutTimeInMinutes = 3;
+    private static isWorkerRunning: boolean;
+
     private repositoryService: RepositoryService;
-    private isWorkerRunning: boolean;
 
     constructor() {
         this.repositoryService = new RepositoryService();
-        this.isWorkerRunning = false;
+        CodeQualityService.isWorkerRunning = false;
     }
 
     /**
@@ -27,7 +28,7 @@ export class CodeQualityService {
     async create(repositoryId: number): Promise<CodeQuality> {
         let codeQuality: CodeQuality;
         try {
-            if (this.isWorkerRunning) {
+            if (CodeQualityService.isWorkerRunning) {
                 logger.error(
                     "Another code quality analysis is already running"
                 );
@@ -38,7 +39,6 @@ export class CodeQualityService {
             }
 
             logger.info("Creating a new code quality");
-
             const repository = await this.repositoryService.findOneBy({
                 id: repositoryId,
             });
@@ -53,7 +53,6 @@ export class CodeQualityService {
             );
             const projectKey = sonarQubeAnalyzer.getProjectKey();
             const projectName = sonarQubeAnalyzer.getProjectName();
-
             const analysisPath = sonarQubeAnalyzer.buildPath();
 
             codeQuality = await CodeQuality.create({
@@ -76,7 +75,7 @@ export class CodeQualityService {
             );
             logger.info("SonarQubeWorker path", { sonarQubeWorkerPath });
 
-            this.isWorkerRunning = true;
+            CodeQualityService.isWorkerRunning = true;
             const worker = new Worker(sonarQubeWorkerPath);
             const obj = {
                 repositoryName: repository.name,
@@ -85,9 +84,25 @@ export class CodeQualityService {
             };
             worker.postMessage(obj);
 
+            // Set the timeout for the worker to ensure that it will not run forever
+            const timeout = setTimeout(
+                async () => {
+                    logger.error(
+                        "SonarQube analysis timed out. Terminating worker."
+                    );
+                    worker.terminate();
+                    CodeQualityService.isWorkerRunning = false;
+                    await codeQuality.update({
+                        status: CodeQualityStatus.ERROR,
+                    });
+                },
+                CodeQualityService.timeoutTimeInMinutes * 60 * 1000
+            );
+
             worker.on("message", async (message) => {
                 if (message === "done") {
-                    this.isWorkerRunning = false;
+                    clearTimeout(timeout);
+                    CodeQualityService.isWorkerRunning = false;
                     await codeQuality.update({
                         status: CodeQualityStatus.ANALYZED,
                     });
@@ -95,16 +110,23 @@ export class CodeQualityService {
             });
 
             worker.on("error", async (error) => {
+                clearTimeout(timeout);
                 logger.error("Error in worker thread:", { error });
                 if (codeQuality) {
-                    this.isWorkerRunning = false;
+                    CodeQualityService.isWorkerRunning = false;
                     await codeQuality.update({
                         status: CodeQualityStatus.ERROR,
                     });
                 }
             });
-            logger.info("Code quality analysis finished");
 
+            worker.on("exit", async (code) => {
+                if (code !== 0) {
+                    logger.error(`Worker stopped with exit code ${code}`);
+                }
+            });
+
+            logger.info("Code quality analysis finished");
             return codeQuality;
         } catch (error) {
             logger.error("Error creating a new code quality:", { error });

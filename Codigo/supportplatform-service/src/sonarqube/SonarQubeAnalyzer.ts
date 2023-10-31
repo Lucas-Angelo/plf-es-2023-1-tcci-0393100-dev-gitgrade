@@ -59,7 +59,7 @@ class SonarQubeAnalyzer {
     public async run() {
         await this.cloneRepo();
         logger.info("Repository cloned");
-        await this.cleanRepository(); // Adicionando a chamada ao método de limpeza
+        await this.cleanRepository();
         logger.info("Repository cleaned");
         await this.createSonarProject();
         logger.info("Sonar project created");

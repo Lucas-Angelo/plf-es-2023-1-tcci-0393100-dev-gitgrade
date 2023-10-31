@@ -1,6 +1,8 @@
 import { parentPort } from "worker_threads";
 import SonarQubeAnalyzer from "../sonarqube/SonarQubeAnalyzer";
 
+let isDone = false;
+
 if (parentPort) {
     parentPort.once(
         "message",
@@ -11,6 +13,7 @@ if (parentPort) {
                 sonarQubeAnalyzer.setProjectName(projectName);
                 await sonarQubeAnalyzer.run();
                 if (parentPort) parentPort.postMessage("done");
+                isDone = true;
             } catch (error) {
                 // eslint-disable-next-line no-console
                 console.error("Error in worker thread:", error);
@@ -19,3 +22,10 @@ if (parentPort) {
         }
     );
 }
+
+// Notify the main thread if the worker is being terminated.
+process.on("exit", () => {
+    if (!isDone) {
+        if (parentPort) parentPort.postMessage("terminated");
+    }
+});
