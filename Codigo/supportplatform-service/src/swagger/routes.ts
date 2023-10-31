@@ -49,6 +49,9 @@ const models: TsoaRoute.Models = {
         "properties": {
             "id": {"dataType":"double","required":true},
             "name": {"dataType":"string","required":true},
+            "commitAutomaticSynchronization": {"dataType":"boolean","required":true},
+            "fileAutomaticSynchronization": {"dataType":"boolean","required":true},
+            "repositoryId": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
@@ -58,6 +61,15 @@ const models: TsoaRoute.Models = {
         "properties": {
             "page": {"dataType":"integer","validators":{"isInt":{"errorMsg":"page must be an integer"},"minimum":{"errorMsg":"page must be greater than or equal to 1","value":1}}},
             "limit": {"dataType":"integer","validators":{"isInt":{"errorMsg":"limit must be an integer"},"minimum":{"errorMsg":"limit must be greater than or equal to 1","value":1}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BranchPatchDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "commitAutomaticSynchronization": {"dataType":"boolean"},
+            "fileAutomaticSynchronization": {"dataType":"boolean"},
         },
         "additionalProperties": false,
     },
@@ -178,6 +190,18 @@ const models: TsoaRoute.Models = {
         "enums": ["AWAITING_DELIVERY","DELIVERED_ON_TIME","DELIVERED_LATE","NOT_DELIVERED","DELIVERED_WITH_INVALIDITY"],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SprintResponseDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "name": {"dataType":"string","required":true},
+            "start_date": {"dataType":"datetime","required":true},
+            "end_date": {"dataType":"datetime","required":true},
+            "evaluationMethodId": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ConsistencyRuleDeliveryResponseDTO": {
         "dataType": "refObject",
         "properties": {
@@ -186,6 +210,7 @@ const models: TsoaRoute.Models = {
             "repositoryId": {"dataType":"double","required":true},
             "deliveryAt": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}],"required":true},
             "status": {"ref":"ConsistencyRuleDeliveryStatus","required":true},
+            "consistencyRule": {"dataType":"intersection","subSchemas":[{"ref":"ConsistencyRuleResponseDTO"},{"dataType":"nestedObjectLiteral","nestedProperties":{"sprint":{"ref":"SprintResponseDTO","required":true}}}],"required":true},
         },
         "additionalProperties": false,
     },
@@ -223,6 +248,8 @@ const models: TsoaRoute.Models = {
             "page": {"dataType":"integer","validators":{"isInt":{"errorMsg":"page must be an integer"},"minimum":{"errorMsg":"page must be greater than or equal to 1","value":1}}},
             "limit": {"dataType":"integer","validators":{"isInt":{"errorMsg":"limit must be an integer"},"minimum":{"errorMsg":"limit must be greater than or equal to 1","value":1}}},
             "consistencyRuleId": {"dataType":"integer","validators":{"isInt":{"errorMsg":"consistencyRuleId must be an integer"},"minimum":{"errorMsg":"consistencyRuleId must be greater than or equal to 1","value":1}}},
+            "sprintId": {"dataType":"integer","validators":{"isInt":{"errorMsg":"sprintId must be an integer"},"minimum":{"errorMsg":"sprintId must be greater than or equal to 1","value":1}}},
+            "evaluationMethodId": {"dataType":"integer","validators":{"isInt":{"errorMsg":"evaluationMethodId must be an integer"},"minimum":{"errorMsg":"evaluationMethodId must be greater than or equal to 1","value":1}}},
             "repositoryId": {"dataType":"integer","validators":{"isInt":{"errorMsg":"repositoryId must be an integer"},"minimum":{"errorMsg":"repositoryId must be greater than or equal to 1","value":1}}},
             "deliveryAt": {"dataType":"date","validators":{"isDate":{"errorMsg":"deliveryAt must be a Date"}}},
             "deliveryAtStart": {"dataType":"date","validators":{"isDate":{"errorMsg":"deliveryAtStart must be a Date"}}},
@@ -444,18 +471,6 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "SprintResponseDTO": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "name": {"dataType":"string","required":true},
-            "start_date": {"dataType":"datetime","required":true},
-            "end_date": {"dataType":"datetime","required":true},
-            "evaluationMethodId": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "SprintCreateDTO": {
         "dataType": "refObject",
         "properties": {
@@ -599,6 +614,34 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.getByRepositoryId.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.patch('/repository/:repositoryId/branch/:id',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(BranchController)),
+            ...(fetchMiddlewares<RequestHandler>(BranchController.prototype.patch)),
+
+            function BranchController_patch(request: any, response: any, next: any) {
+            const args = {
+                    repositoryId: {"in":"path","name":"repositoryId","required":true,"dataType":"double"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                    body: {"in":"body","name":"body","required":true,"ref":"BranchPatchDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new BranchController();
+
+
+              const promise = controller.patch.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);

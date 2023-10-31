@@ -44,6 +44,9 @@ export class CommitController extends Controller {
                 branch: {
                     id: 1,
                     name: "master",
+                    commitAutomaticSynchronization: true,
+                    fileAutomaticSynchronization: true,
+                    repositoryId: 1,
                 },
                 sha: "1234567890",
                 contributor: {

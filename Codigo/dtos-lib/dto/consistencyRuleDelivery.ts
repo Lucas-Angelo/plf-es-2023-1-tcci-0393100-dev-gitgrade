@@ -1,3 +1,6 @@
+import { ConsistencyRuleResponseDTO } from "./consistencyRule";
+import { SprintResponseDTO } from "./sprint";
+
 export enum ConsistencyRuleDeliveryStatus {
   AWAITING_DELIVERY = "AWAITING_DELIVERY",
   DELIVERED_ON_TIME = "DELIVERED_ON_TIME",
@@ -80,6 +83,18 @@ export interface ConsistencyRuleDeliverySearchDTO {
    */
   consistencyRuleId?: number;
   /**
+   * @isInt sprintId must be an integer
+   * @minimum 1 sprintId must be greater than or equal to 1
+   * @isOptional sprintId is optional
+   */
+  sprintId?: number;
+  /**
+   * @isInt evaluationMethodId must be an integer
+   * @minimum 1 evaluationMethodId must be greater than or equal to 1
+   * @isOptional evaluationMethodId is optional
+   */
+  evaluationMethodId?: number;
+  /**
    * @isInt repositoryId must be an integer
    * @minimum 1 repositoryId must be greater than or equal to 1
    * @isOptional repositoryId is optional
@@ -123,11 +138,23 @@ export interface ConsistencyRuleDeliveryFindOneDTO {
    */
   consistencyRuleId?: number;
   /**
+   * @isInt evaluationMethodId must be an integer
+   * @minimum 1 evaluationMethodId must be greater than or equal to 1
+   * @isOptional evaluationMethodId is optional
+   */
+  evaluationMethodId?: number;
+  /**
    * @isInt repositoryId must be an integer
    * @minimum 1 repositoryId must be greater than or equal to 1
    * @isOptional repositoryId is optional
    */
   repositoryId?: number;
+  /**
+   * @isInt sprintId must be an integer
+   * @minimum 1 sprintId must be greater than or equal to 1
+   * @isOptional sprintId is optional
+   */
+  sprintId?: number;
   /**
    * @isDate deliveryAt must be a Date
    * @isOptional deliveryAt is optional
@@ -159,4 +186,5 @@ export interface ConsistencyRuleDeliveryResponseDTO {
   repositoryId: number;
   deliveryAt: Date | null;
   status: ConsistencyRuleDeliveryStatus;
+  consistencyRule: ConsistencyRuleResponseDTO & { sprint: SprintResponseDTO };
 }

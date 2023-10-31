@@ -28,6 +28,10 @@ class ConsistencyRule extends Model<IConsistencyRuleAttributes> {
     public filePath!: string;
     public validationType!: "DEFAULT" | "CFF";
 
+    public evaluationMethod!: EvaluationMethod;
+    public sprint!: Sprint;
+    public standardizedIssue!: StandardizedIssue | null;
+
     static initModel(sequelize: Sequelize): void {
         this.init(
             {

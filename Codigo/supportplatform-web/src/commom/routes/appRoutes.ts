@@ -231,11 +231,63 @@ const appRoutes = {
                 link(id: number) {
                     return `${appRoutes.repo.detail.link(id)}/${this.path}`;
                 },
+
+                // necessary to map query string param name per a trustable variable
+                search: {
+                    page: "page",
+                    consistencyRuleId: "consistencyRuleId",
+                    status: "status",
+                    sprint: "sprint",
+                },
             },
             config: {
                 path: "config" as const,
                 link(id: number) {
                     return `${appRoutes.repo.detail.link(id)}/${this.path}`;
+                },
+
+                // nested routes
+                general: {
+                    path: "general" as const,
+                    link(id: number) {
+                        return `${appRoutes.repo.detail.config.link(id)}/${
+                            this.path
+                        }`;
+                    },
+                },
+                branches: {
+                    path: "branches" as const,
+                    link(id: number) {
+                        return `${appRoutes.repo.detail.config.link(id)}/${
+                            this.path
+                        }`;
+                    },
+
+                    // necessary to map query string param name per a trustable variable
+                    search: {
+                        page: "page",
+                    },
+
+                    // nested routes
+                    detail: {
+                        path: ":branchId" as const,
+                        link(id: number, branchId: number) {
+                            const path = this.path.replace(
+                                ":branchId",
+                                branchId.toString()
+                            );
+                            return `${appRoutes.repo.detail.config.branches.link(
+                                id
+                            )}/${path}`;
+                        },
+                        params: ["branchId"] as const,
+                        getParams() {
+                            return [
+                                ...appRoutes.repo.detail.params,
+                                ...this.params,
+                            ] as const;
+                        },
+                    },
                 },
             },
         },

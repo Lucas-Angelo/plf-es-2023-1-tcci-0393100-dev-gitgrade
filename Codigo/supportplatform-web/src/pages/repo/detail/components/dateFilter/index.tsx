@@ -8,7 +8,7 @@ import {
     getIfDateIsValid,
 } from "../../../../../commom/utils/date";
 import appRoutes from "../../../../../commom/routes/appRoutes";
-import SprintFilter from "../../metrics/components/sprintFilter";
+import SprintFilter from "../../../../../commom/components/sprintFilter";
 import { SprintResponseDTO } from "@gitgrade/dtos";
 
 interface IDateFilterProps {
