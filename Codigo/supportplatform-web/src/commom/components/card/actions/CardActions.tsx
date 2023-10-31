@@ -11,6 +11,7 @@ export default function CardActions(props: ICardActionsProps) {
                 gap: 2,
                 justifyContent: "flex-end",
                 width: ["100%", "100%", "auto"],
+                flexWrap: "wrap",
             }}
         >
             {props.children}

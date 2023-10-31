@@ -1,8 +1,12 @@
 import { LoaderFunctionArgs } from "react-router";
-import { getRepositoryQuery } from "../../../commom/data/repo";
+import {
+    getRepositoryByIdQuery,
+    getRepositoryQuery,
+} from "../../../commom/data/repo";
 import appRoutes from "../../../commom/routes/appRoutes";
 import { PaginationResponseDTO, RepositoryResponseDTO } from "@gitgrade/dtos";
 import { loadQueryData } from "../../../commom/data/utils/load";
+import queryClient from "../../../commom/data/client";
 
 const pageSearchParams = appRoutes.repo.list.search;
 
@@ -19,5 +23,14 @@ export default async function repoListPageLoader({
         limit: 10,
     });
 
-    return await loadQueryData(query);
+    const repositoryList = await loadQueryData(query);
+
+    for (const repository of repositoryList.results) {
+        queryClient.setQueryData(
+            getRepositoryByIdQuery(Number(repository.id)).queryKey,
+            repository
+        );
+    }
+
+    return repositoryList;
 }

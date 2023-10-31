@@ -1,8 +1,12 @@
 import { LoaderFunctionArgs } from "react-router";
 import appRoutes from "../../../../commom/routes/appRoutes";
-import { getRepositoryQuery } from "../../../../commom/data/repo";
+import {
+    getRepositoryByIdQuery,
+    getRepositoryQuery,
+} from "../../../../commom/data/repo";
 import { loadQueryData } from "../../../../commom/data/utils/load";
 import { PaginationResponseDTO, RepositoryResponseDTO } from "@gitgrade/dtos";
+import queryClient from "../../../../commom/data/client";
 
 type PagePathParam = (typeof appRoutes.evaluationMethod.detail.params)[number];
 const pageSearchParams = appRoutes.evaluationMethod.detail.repo.search;
@@ -10,7 +14,7 @@ const pageSearchParams = appRoutes.evaluationMethod.detail.repo.search;
 export type EvaluationMethodRepoListPageLoaderData =
     PaginationResponseDTO<RepositoryResponseDTO>;
 
-export default function EvaluationMethodRepositoryListLoader({
+export default async function EvaluationMethodRepositoryListLoader({
     params,
     request,
 }: LoaderFunctionArgs) {
@@ -29,5 +33,14 @@ export default function EvaluationMethodRepositoryListLoader({
         filter: searchParams.get(pageSearchParams.filter) || undefined,
     });
 
-    return loadQueryData(query);
+    const repositoryList = await loadQueryData(query);
+
+    for (const repository of repositoryList.results) {
+        queryClient.setQueryData(
+            getRepositoryByIdQuery(Number(repository.id)).queryKey,
+            repository
+        );
+    }
+
+    return repositoryList;
 }

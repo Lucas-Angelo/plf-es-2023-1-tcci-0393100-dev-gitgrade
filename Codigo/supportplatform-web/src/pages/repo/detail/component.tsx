@@ -28,6 +28,8 @@ export default function RepoPage() {
                 repoName={repositoryData!.name}
                 contributors={repositoryContributorsData!.results}
                 evaluationMethod={repositoryData?.evaluationMethod ?? undefined}
+                id={id}
+                synchronizing={repositoryData!.synchronizing}
             />
 
             <Box

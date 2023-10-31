@@ -4317,15 +4317,10 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"properties": {
-										"success": {
-											"type": "boolean"
-										}
+									"items": {
+										"$ref": "#/components/schemas/RepositoryResponseDTO"
 									},
-									"required": [
-										"success"
-									],
-									"type": "object"
+									"type": "array"
 								}
 							}
 						}

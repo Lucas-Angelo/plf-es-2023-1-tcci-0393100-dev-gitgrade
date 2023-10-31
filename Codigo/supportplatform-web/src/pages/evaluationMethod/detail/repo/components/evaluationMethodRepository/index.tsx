@@ -1,24 +1,45 @@
-import { Box, Button } from "@primer/react";
+import { Box, Button, Checkbox } from "@primer/react";
 import RepoCard from "../../../../../../commom/components/repoCard";
 import { useFetcher } from "react-router-dom";
 import { XIcon } from "@primer/octicons-react";
+import { useRepositoryById } from "../../../../../../commom/data/repo";
 
 interface IEvaluationMethodRepositoryProps {
     name: string;
     id: number;
+
+    checked?: boolean;
+    onChecked?: (checked: boolean) => void;
+
+    synchronizing: boolean | undefined;
 }
 
 export default function EvaluationMethodRepository(
     props: IEvaluationMethodRepositoryProps
 ) {
+    const synchronizing =
+        useRepositoryById(props.id).data?.synchronizing || props.synchronizing;
     const fetcher = useFetcher();
 
     return (
-        <Box sx={{ mb: 3 }}>
+        <Box sx={{ mb: 3, display: "flex", gap: 3, alignItems: "center" }}>
+            <Checkbox
+                checked={props.checked}
+                disabled={synchronizing}
+                sx={{
+                    cursor: synchronizing ? "not-allowed" : "pointer",
+                }}
+                onChange={(e) => {
+                    if (props.onChecked) {
+                        props.onChecked(e.target.checked);
+                    }
+                }}
+            />
             <RepoCard
                 name={props.name}
                 id={props.id}
                 key={props.id}
+                synchronizing={synchronizing}
             >
                 <fetcher.Form
                     method="delete"
