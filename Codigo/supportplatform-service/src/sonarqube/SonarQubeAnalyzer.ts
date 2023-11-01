@@ -35,7 +35,7 @@ class SonarQubeAnalyzer {
             SonarQubeAnalyzer.repositoriesTempDirectory,
             this.repositoryName
         );
-        this.sonarUrl = `http://${EnvConfig.SONARQUBE_HOST}:${EnvConfig.SONARQUBE_PORT}`;
+        this.sonarUrl = `http://${EnvConfig.SONARQUBE_HOST}:${EnvConfig.SONARQUBE_DOCKER_PORT}`;
         this.sonarAdminUsername = EnvConfig.SONARQUBE_ADMIN_USERNAME!;
         this.sonarAdminPassword = EnvConfig.SONARQUBE_ADMIN_PASSWORD!;
 

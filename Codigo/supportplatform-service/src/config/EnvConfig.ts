@@ -26,6 +26,7 @@ type EnvConfigType = {
     OAUTH_FAILURE_SEARCH_PARAM: string | undefined;
     SONARQUBE_HOST: string | undefined;
     SONARQUBE_PORT: number | undefined;
+    SONARQUBE_DOCKER_PORT: number | undefined;
     SONARQUBE_ADMIN_USERNAME: string | undefined;
     SONARQUBE_ADMIN_PASSWORD: string | undefined;
 };
@@ -91,6 +92,7 @@ class EnvironmentConfig {
             OAUTH_FAILURE_SEARCH_PARAM: process.env.OAUTH_FAILURE_SEARCH_PARAM,
             SONARQUBE_HOST: process.env.SONARQUBE_HOST,
             SONARQUBE_PORT: Number(process.env.SONARQUBE_PORT),
+            SONARQUBE_DOCKER_PORT: Number(process.env.SONARQUBE_DOCKER_PORT),
             SONARQUBE_ADMIN_USERNAME: process.env.SONARQUBE_ADMIN_USERNAME,
             SONARQUBE_ADMIN_PASSWORD: process.env.SONARQUBE_ADMIN_PASSWORD,
         };
