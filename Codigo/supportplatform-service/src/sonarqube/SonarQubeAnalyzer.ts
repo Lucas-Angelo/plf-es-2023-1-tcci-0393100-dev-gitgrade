@@ -234,7 +234,7 @@ class SonarQubeAnalyzer {
     }
 
     buildUrl(): string {
-        const analysisUrl = `http://${EnvConfig.SONARQUBE_HOST}:${EnvConfig.SONARQUBE_PORT}/dashboard?id=${this.projectKey}`;
+        const analysisUrl = `http://${EnvConfig.HOST}:${EnvConfig.SONARQUBE_PORT}/dashboard?id=${this.projectKey}`;
         return analysisUrl;
     }
 
