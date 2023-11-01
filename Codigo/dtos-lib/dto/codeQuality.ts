@@ -1,6 +1,4 @@
-import { CodeQualityStatus } from "../../supportplatform-service/src/model/CodeQuality";
-
-export enum CodeQualityStatusDto {
+export enum CodeQualityStatus {
   ANALYZING = "ANALYZING",
   ANALYZED = "ANALYZED",
   ERROR = "ERROR",
@@ -51,6 +49,6 @@ export interface CodeQualityResponseDTO {
   id: number;
   repositoryId: number;
   url: string;
-  status: CodeQualityStatusDto;
+  status: CodeQualityStatus;
   createdAt: Date;
 }
