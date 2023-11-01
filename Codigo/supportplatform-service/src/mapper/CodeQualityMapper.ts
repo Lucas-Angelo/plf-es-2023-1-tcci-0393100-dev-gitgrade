@@ -13,7 +13,7 @@ export class CodeQualityMapper {
         return {
             id: model.id,
             repositoryId: model.repositoryId,
-            path: model.path,
+            url: model.url,
             status: this.codeQualityStatusMapper.toDto(model.status),
             createdAt: model.createdAt,
         };

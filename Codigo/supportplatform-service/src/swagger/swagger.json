@@ -83,7 +83,7 @@
 						"type": "number",
 						"format": "double"
 					},
-					"path": {
+					"url": {
 						"type": "string"
 					},
 					"status": {
@@ -97,10 +97,70 @@
 				"required": [
 					"id",
 					"repositoryId",
-					"path",
+					"url",
 					"status",
 					"createdAt"
 				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PaginationResponseDTO_CodeQualityResponseDTO_": {
+				"properties": {
+					"results": {
+						"items": {
+							"$ref": "#/components/schemas/CodeQualityResponseDTO"
+						},
+						"type": "array"
+					},
+					"totalPages": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"results",
+					"totalPages"
+				],
+				"type": "object"
+			},
+			"CodeQualityStatus": {
+				"enum": [
+					"ANALYZING",
+					"ANALYZED",
+					"ERROR"
+				],
+				"type": "string"
+			},
+			"CodeQualitySearchDTO": {
+				"properties": {
+					"page": {
+						"type": "integer",
+						"format": "int32",
+						"default": "1",
+						"minimum": 1
+					},
+					"limit": {
+						"type": "integer",
+						"format": "int32",
+						"default": "10",
+						"minimum": 1
+					},
+					"repositoryId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"url": {
+						"type": "string"
+					},
+					"status": {
+						"$ref": "#/components/schemas/CodeQualityStatus"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date"
+					}
+				},
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -1904,7 +1964,7 @@
 									"Example 1": {
 										"value": {
 											"id": 1,
-											"path": "/dashboard?id=repositoryNameTimeStamp",
+											"url": "/dashboard?id=repositoryNameTimeStamp",
 											"repositoryId": 1,
 											"status": "ANALYZING",
 											"createdAt": "2023-01-01T00:00:00.000Z"
@@ -1946,31 +2006,28 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/CodeQualityResponseDTO"
-									},
-									"type": "array"
+									"$ref": "#/components/schemas/PaginationResponseDTO_CodeQualityResponseDTO_"
 								},
 								"examples": {
 									"Example 1": {
 										"value": [
 											{
 												"id": 1,
-												"path": "/dashboard?id=repositoryNameTimeStamp",
+												"url": "/dashboard?id=repositoryNameTimeStamp",
 												"repositoryId": 1,
 												"status": "ANALYZING",
 												"createdAt": "2023-01-01T00:00:00.000Z"
 											},
 											{
 												"id": 2,
-												"path": "/dashboard?id=repositoryNameTimeStamp",
+												"url": "/dashboard?id=repositoryNameTimeStamp",
 												"repositoryId": 1,
 												"status": "ANALYZED",
 												"createdAt": "2023-01-01T00:00:00.000Z"
 											},
 											{
 												"id": 3,
-												"path": "/dashboard?id=repositoryNameTimeStamp",
+												"url": "/dashboard?id=repositoryNameTimeStamp",
 												"repositoryId": 1,
 												"status": "ERROR",
 												"createdAt": "2023-01-01T00:00:00.000Z"
@@ -1982,7 +2039,7 @@
 						}
 					}
 				},
-				"description": "/**\nGet an existing Sprint by id.",
+				"description": "Get all CodeQuality by repositoryId.",
 				"tags": [
 					"code-quality"
 				],
@@ -2001,6 +2058,63 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": "1",
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"default": "10",
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "repositoryId",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "url",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/CodeQualityStatus"
+						}
+					},
+					{
+						"in": "query",
+						"name": "createdAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
 						}
 					}
 				]

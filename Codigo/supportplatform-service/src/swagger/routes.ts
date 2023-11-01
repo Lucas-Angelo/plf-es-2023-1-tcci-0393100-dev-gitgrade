@@ -74,9 +74,32 @@ const models: TsoaRoute.Models = {
         "properties": {
             "id": {"dataType":"double","required":true},
             "repositoryId": {"dataType":"double","required":true},
-            "path": {"dataType":"string","required":true},
+            "url": {"dataType":"string","required":true},
             "status": {"ref":"CodeQualityStatusDto","required":true},
             "createdAt": {"dataType":"datetime","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PaginationResponseDTO_CodeQualityResponseDTO_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"results":{"dataType":"array","array":{"dataType":"refObject","ref":"CodeQualityResponseDTO"},"required":true},"totalPages":{"dataType":"double","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CodeQualityStatus": {
+        "dataType": "refEnum",
+        "enums": ["ANALYZING","ANALYZED","ERROR"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CodeQualitySearchDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "page": {"dataType":"integer","default":"1","validators":{"isInt":{"errorMsg":"page must be an integer"},"minimum":{"errorMsg":"page must be greater than or equal to 1","value":1}}},
+            "limit": {"dataType":"integer","default":"10","validators":{"isInt":{"errorMsg":"limit must be an integer"},"minimum":{"errorMsg":"limit must be greater than or equal to 1","value":1}}},
+            "repositoryId": {"dataType":"integer","validators":{"isInt":{"errorMsg":"repositoryId must be an integer"},"minimum":{"errorMsg":"repositoryId must be greater than or equal to 1","value":1}}},
+            "url": {"dataType":"string","validators":{"isString":{"errorMsg":"url must be a string"}}},
+            "status": {"ref":"CodeQualityStatus"},
+            "createdAt": {"dataType":"date","validators":{"isDate":{"errorMsg":"createdAt must be a Date"}}},
         },
         "additionalProperties": false,
     },
@@ -665,6 +688,7 @@ export function RegisterRoutes(app: Router) {
             function CodeQualityController_getAll(request: any, response: any, next: any) {
             const args = {
                     repositoryId: {"in":"path","name":"repositoryId","required":true,"dataType":"double"},
+                    query: {"in":"queries","name":"query","required":true,"ref":"CodeQualitySearchDTO"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

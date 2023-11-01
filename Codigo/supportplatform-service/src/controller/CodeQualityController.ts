@@ -1,11 +1,15 @@
-import { CodeQualityResponseDTO } from "@gitgrade/dtos";
-import { CodeQualityStatusDto } from "@gitgrade/dtos/dto/codeQuality";
+import { CodeQualityResponseDTO, PaginationResponseDTO } from "@gitgrade/dtos";
+import {
+    CodeQualitySearchDTO,
+    CodeQualityStatusDto,
+} from "@gitgrade/dtos/dto/codeQuality";
 import {
     Controller,
     Example,
     Get,
     Path,
     Post,
+    Queries,
     Route,
     Security,
     SuccessResponse,
@@ -33,7 +37,7 @@ export class CodeQualityController extends Controller {
      */
     @Example<CodeQualityResponseDTO>({
         id: 1,
-        path: "/dashboard?id=repositoryNameTimeStamp",
+        url: "/dashboard?id=repositoryNameTimeStamp",
         repositoryId: 1,
         status: CodeQualityStatusDto.ANALYZING,
         createdAt: new Date("2023-01-01"),
@@ -52,25 +56,26 @@ export class CodeQualityController extends Controller {
     /**
      * Get all CodeQuality by repositoryId.
      * @path repositoryId Id of the repository to get all code quality analysis.
+     * @query query CodeQualitySearchDTO query to filter results.
      */
     @Example<CodeQualityResponseDTO[]>([
         {
             id: 1,
-            path: "/dashboard?id=repositoryNameTimeStamp",
+            url: "/dashboard?id=repositoryNameTimeStamp",
             repositoryId: 1,
             status: CodeQualityStatusDto.ANALYZING,
             createdAt: new Date("2023-01-01"),
         },
         {
             id: 2,
-            path: "/dashboard?id=repositoryNameTimeStamp",
+            url: "/dashboard?id=repositoryNameTimeStamp",
             repositoryId: 1,
             status: CodeQualityStatusDto.ANALYZED,
             createdAt: new Date("2023-01-01"),
         },
         {
             id: 3,
-            path: "/dashboard?id=repositoryNameTimeStamp",
+            url: "/dashboard?id=repositoryNameTimeStamp",
             repositoryId: 1,
             status: CodeQualityStatusDto.ERROR,
             createdAt: new Date("2023-01-01"),
@@ -79,11 +84,18 @@ export class CodeQualityController extends Controller {
     @Get("/repository/{repositoryId}")
     @SuccessResponse("200", "Found code quality analysis")
     public async getAll(
-        @Path() repositoryId: number
-    ): Promise<CodeQualityResponseDTO[]> {
+        @Path() repositoryId: number,
+        @Queries() query: CodeQualitySearchDTO
+    ): Promise<PaginationResponseDTO<CodeQualityResponseDTO>> {
         this.setStatus(200);
         const serviceResponse =
-            await this.codeQualityService.findAllByRepositoryId(repositoryId);
-        return serviceResponse.map(this.codeQualityMapper.toDto);
+            await this.codeQualityService.findAllByRepositoryId(
+                repositoryId,
+                query
+            );
+        return {
+            totalPages: serviceResponse.totalPages,
+            results: serviceResponse.results.map(this.codeQualityMapper.toDto),
+        };
     }
 }

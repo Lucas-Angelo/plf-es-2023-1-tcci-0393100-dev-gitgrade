@@ -1,12 +1,16 @@
+import { CodeQualitySearchDTO, PaginationResponseDTO } from "@gitgrade/dtos";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import dirname from "es-dirname";
 import path from "path";
+import { Op } from "sequelize";
 import { Worker } from "worker_threads";
 import logger from "../config/LogConfig";
 import AppError from "../error/AppError";
+import { CodeQualityWhereClauseType } from "../interface/CodeQuality";
 import { CodeQuality, CodeQualityStatus } from "../model/CodeQuality";
 import SonarQubeAnalyzer from "../sonarqube/SonarQubeAnalyzer";
+import { sequelizePagination } from "../utils/pagination";
 import RepositoryService from "./RepositoryService";
 
 const projectRootPath = path.join(dirname(), "../../");
@@ -53,11 +57,11 @@ export class CodeQualityService {
             );
             const projectKey = sonarQubeAnalyzer.getProjectKey();
             const projectName = sonarQubeAnalyzer.getProjectName();
-            const analysisPath = sonarQubeAnalyzer.buildPath();
+            const analysisUrl = sonarQubeAnalyzer.buildUrl();
 
             codeQuality = await CodeQuality.create({
                 repositoryId,
-                path: analysisPath,
+                url: analysisUrl,
                 status: CodeQualityStatus.ANALYZING,
             });
 
@@ -138,23 +142,64 @@ export class CodeQualityService {
         }
     }
 
-    async findAllByRepositoryId(repositoryId: number): Promise<CodeQuality[]> {
+    async findAllByRepositoryId(
+        repositoryId: number,
+        query: CodeQualitySearchDTO
+    ): Promise<PaginationResponseDTO<CodeQuality>> {
         try {
-            logger.info("Finding all code quality analysis by repository id");
-            const codeQualities = await CodeQuality.findAll({
-                where: {
-                    repositoryId,
-                },
+            logger.info(
+                "Searching for all code quality analysis by repositoryId"
+            );
+
+            const whereClause = this._constructWhereClause(repositoryId, query);
+
+            const { rows, count } = await CodeQuality.findAndCountAll({
+                ...sequelizePagination(query.page || 1, query.limit || 10),
+                where: Object.keys(whereClause).length
+                    ? whereClause
+                    : undefined,
+                order: [["createdAt", "DESC"]],
             });
-            return codeQualities;
+
+            logger.info(
+                "Successfully found all code quality analysis by repositoryId: ",
+                { count }
+            );
+
+            return {
+                results: rows,
+                totalPages: Math.ceil(count / (query.limit || 10)) || 1,
+            };
         } catch (error) {
-            logger.error("Error finding all code quality analysis:", { error });
+            logger.error(
+                "Error finding all code quality analysis by repositoryId:",
+                { error }
+            );
             throw new AppError(
-                "Failed to find all code quality analysis",
+                "Failed to find all code quality analysis by repositoryId",
                 500,
                 error
             );
         }
+    }
+
+    private _constructWhereClause(
+        repositoryId: number,
+        filter: CodeQualitySearchDTO
+    ): CodeQualityWhereClauseType {
+        const whereClause: CodeQualityWhereClauseType = {
+            repositoryId,
+        };
+
+        if (filter.url)
+            whereClause.url = {
+                [Op.like]: `%${filter.url}%`,
+            };
+        if (filter.status) whereClause.status = filter.status;
+        if (filter.createdAt) whereClause.createdAt = filter.createdAt;
+
+        logger.info("Constructed where clause: ", { whereClause });
+        return whereClause;
     }
 }
 

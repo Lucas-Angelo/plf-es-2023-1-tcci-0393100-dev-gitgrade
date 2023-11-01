@@ -233,8 +233,9 @@ class SonarQubeAnalyzer {
         }
     }
 
-    buildPath(): string {
-        return `/dashboard?id=${this.projectKey}`;
+    buildUrl(): string {
+        const analysisUrl = `http://${EnvConfig.SONARQUBE_HOST}:${EnvConfig.SONARQUBE_PORT}/dashboard?id=${this.projectKey}`;
+        return analysisUrl;
     }
 
     getProjectKey(): string {

@@ -8,6 +8,7 @@ import { RepositoryMetricQueryDTO } from "./dto/repositoryMetrics";
 
 import {
   CodeQualityResponseDTO,
+  CodeQualitySearchDTO,
   CodeQualityStatusDto,
 } from "./dto/codeQuality";
 import { CommitMetricsDTO } from "./dto/commitMetrics";
@@ -60,6 +61,7 @@ import { PaginationResponseDTO } from "./utils/pagination";
 export type {
   BranchDTO,
   CodeQualityResponseDTO,
+  CodeQualitySearchDTO,
   CodeQualityStatusDto,
   CommitMetricsDTO,
   CommitQualityMetricsDTO,
@@ -82,9 +84,9 @@ export type {
   EvaluationMethodResponseDTO,
   EvaluationMethodSearchDTO,
   EvaluationMethodUpdateDTO,
+  FileChangeMetricsDTO,
   FileResponseDTO,
   FileSearchDTO,
-  FileChangeMetricsDTO,
   FileTypeMetricDTO,
   FileTypeMetricsDTO,
   GetAllBranchQueryDTO,

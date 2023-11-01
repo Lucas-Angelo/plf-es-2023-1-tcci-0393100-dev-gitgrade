@@ -11,7 +11,7 @@ enum CodeQualityStatus {
 interface ICodeQualityAttributes {
     id?: number;
     repositoryId?: number;
-    path?: string;
+    url?: string;
     status?: CodeQualityStatus;
     createdAt?: Date;
 }
@@ -19,7 +19,7 @@ interface ICodeQualityAttributes {
 class CodeQuality extends Model<ICodeQualityAttributes> {
     public id!: number;
     public repositoryId!: number;
-    public path!: string;
+    public url!: string;
     public status!: "ANALYZING" | "ANALYZED" | "ERROR";
     public createdAt!: Date;
 
@@ -43,8 +43,8 @@ class CodeQuality extends Model<ICodeQualityAttributes> {
                         key: "id",
                     },
                 },
-                path: {
-                    field: "path",
+                url: {
+                    field: "url",
                     type: DataTypes.STRING(1000),
                     allowNull: false,
                     validate: {
