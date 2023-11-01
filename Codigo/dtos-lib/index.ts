@@ -9,7 +9,6 @@ import { RepositoryMetricQueryDTO } from "./dto/repositoryMetrics";
 import {
   CodeQualityResponseDTO,
   CodeQualitySearchDTO,
-  CodeQualityStatusDto,
 } from "./dto/codeQuality";
 import { CommitMetricsDTO } from "./dto/commitMetrics";
 import {
@@ -62,7 +61,6 @@ export type {
   BranchDTO,
   CodeQualityResponseDTO,
   CodeQualitySearchDTO,
-  CodeQualityStatusDto,
   CommitMetricsDTO,
   CommitQualityMetricsDTO,
   CommitResponseDTO,

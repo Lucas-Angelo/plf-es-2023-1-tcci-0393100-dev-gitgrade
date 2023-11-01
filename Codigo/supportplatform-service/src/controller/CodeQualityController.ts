@@ -1,8 +1,9 @@
-import { CodeQualityResponseDTO, PaginationResponseDTO } from "@gitgrade/dtos";
 import {
+    CodeQualityResponseDTO,
     CodeQualitySearchDTO,
-    CodeQualityStatusDto,
-} from "@gitgrade/dtos/dto/codeQuality";
+    PaginationResponseDTO,
+} from "@gitgrade/dtos";
+import { CodeQualityStatusDto } from "@gitgrade/dtos/dto/codeQuality";
 import {
     Controller,
     Example,
