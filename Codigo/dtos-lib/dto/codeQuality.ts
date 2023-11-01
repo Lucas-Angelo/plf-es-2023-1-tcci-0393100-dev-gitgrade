@@ -1,5 +1,3 @@
-import { CodeQualityStatus } from "../../supportplatform-service/src/model/CodeQuality";
-
 export enum CodeQualityStatusDto {
   ANALYZING = "ANALYZING",
   ANALYZED = "ANALYZED",
@@ -36,7 +34,7 @@ export interface CodeQualitySearchDTO {
    * @isOptional description is optional
    * @isEnum status must be one of ['ANALYZING', 'ANALYZED', 'ERROR']
    */
-  status?: CodeQualityStatus;
+  status?: CodeQualityStatusDto;
   /**
    * @isOptional description is optional
    * @isDate createdAt must be a Date

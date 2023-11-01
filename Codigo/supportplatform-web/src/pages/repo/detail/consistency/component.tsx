@@ -10,7 +10,7 @@ import ConsistencyDeliveryFilter from "./components/consistencyDeliveryFilter";
 const pageRouteParams = appRoutes.repo.detail.params;
 type PageRouteParams = (typeof pageRouteParams)[number];
 
-const pageSearchParams = appRoutes.repo.detail.commits.search;
+const pageSearchParams = appRoutes.repo.detail.consistency.search;
 
 export default function RepositoryConsitencyRuleDeliveriesPage() {
     const params = useParams<PageRouteParams>();
