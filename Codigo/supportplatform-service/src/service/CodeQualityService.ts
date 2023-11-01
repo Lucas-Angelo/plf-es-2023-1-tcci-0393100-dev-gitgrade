@@ -195,7 +195,8 @@ export class CodeQualityService {
             whereClause.url = {
                 [Op.like]: `%${filter.url}%`,
             };
-        if (filter.status) whereClause.status = filter.status;
+        if (filter.status)
+            whereClause.status = filter.status as string as CodeQualityStatus;
         if (filter.createdAt) whereClause.createdAt = filter.createdAt;
 
         logger.info("Constructed where clause: ", { whereClause });
