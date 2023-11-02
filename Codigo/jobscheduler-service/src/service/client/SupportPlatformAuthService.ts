@@ -1,8 +1,11 @@
 import axios from "axios";
 import EnvConfig from "../../config/EnvConfig";
-import { GetPublicKeyResponseDTO } from "@gitgrade/dtos";
 import logger from "../../config/LogConfig";
 import AppError from "../../error/AppError";
+
+interface GetPublicKeyResponseDTO {
+    publicKey: string;
+}
 
 export class SupportPlatformAuthService {
     async getPublicKey() {
