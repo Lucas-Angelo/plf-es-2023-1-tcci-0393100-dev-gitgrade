@@ -2,7 +2,7 @@ import appRoutes from "../../../../commom/routes/appRoutes";
 import { Box, Pagination } from "@primer/react";
 import CommitQualityAnalisysTimeline from "./components/commitQualityAnalisysTimeline";
 import CreateQualityAnalisysButton from "./components/createQualityAnalisysButton";
-import { CodeQualityStatusDto } from "@gitgrade/dtos/dto/codeQuality";
+import { CodeQualityStatus } from "@gitgrade/dtos/dto/codeQuality";
 import { useSearchParams } from "react-router-dom";
 import CodeQualityStatusFilter from "./components/codeQualityStatusFilter";
 import { useRepositoryCodeQualityPageData } from "./hooks/useRepositoryCodeQualityPageData";
@@ -18,7 +18,7 @@ export default function RepositoryCodeQualityPage() {
     const someCodeQualityAnalisysIsAnalyzing =
         codeQualityAnalisysResponse?.results.some(
             (codeQualityAnalisys) =>
-                codeQualityAnalisys.status === CodeQualityStatusDto.ANALYZING
+                codeQualityAnalisys.status === CodeQualityStatus.ANALYZING
         );
 
     function handlePageChange(e: React.MouseEvent, page: number) {

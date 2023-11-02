@@ -1,6 +1,6 @@
 import {
     CodeQualityResponseDTO,
-    CodeQualityStatusDto,
+    CodeQualityStatus,
 } from "@gitgrade/dtos/dto/codeQuality";
 import { Link as PrimerLink, Octicon, Timeline, Box } from "@primer/react";
 import { Icon, XIcon, LogIcon, HourglassIcon } from "@primer/octicons-react";
@@ -17,7 +17,7 @@ const dateFormater = new Intl.DateTimeFormat("pt-BR", {
 });
 
 const codeQualityStatusBagdeMap: Record<
-    CodeQualityStatusDto,
+    CodeQualityStatus,
     {
         icon: Icon;
         color?: string;
@@ -87,7 +87,7 @@ export default function CommitQualityAnalisysTimeline(
                             Executado em{" "}
                             {dateFormater.format(new Date(analisys.createdAt))}
                         </Box>
-                        {analisys.status === CodeQualityStatusDto.ANALYZED && (
+                        {analisys.status === CodeQualityStatus.ANALYZED && (
                             <PrimerLink
                                 href={analisys.url}
                                 target="_blank"

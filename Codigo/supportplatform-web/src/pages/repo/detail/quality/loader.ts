@@ -1,4 +1,5 @@
-import { CodeQualityResponseDTO, CodeQualityStatusDto } from "@gitgrade/dtos";
+import { CodeQualityResponseDTO } from "@gitgrade/dtos";
+import { CodeQualityStatus } from "@gitgrade/dtos/dto/codeQuality";
 import appRoutes from "../../../../commom/routes/appRoutes";
 import { LoaderFunctionArgs } from "react-router";
 import { loadQueryData } from "../../../../commom/data/utils/load";
@@ -24,7 +25,7 @@ export default async function repositoryCodeQualityPageLoader({
     const query = getRepositoryCodeQualityQuery(repositoryId, {
         page: Number(searchParams.get(pageSearchParams.page)) || 1,
         status: searchParams.get(pageSearchParams.status) as
-            | CodeQualityStatusDto
+            | CodeQualityStatus
             | undefined,
     });
 

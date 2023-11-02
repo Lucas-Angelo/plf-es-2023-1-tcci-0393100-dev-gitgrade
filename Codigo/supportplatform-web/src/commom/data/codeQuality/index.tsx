@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { CodeQualityService } from "../../service/api/codeQuality";
 import {
     CodeQualitySearchDTO,
-    CodeQualityStatusDto,
+    CodeQualityStatus,
 } from "@gitgrade/dtos/dto/codeQuality";
 
 export const getRepositoryCodeQualityQuery = (
@@ -30,7 +30,7 @@ export const useRepositoryCodeQualityList = (
         refetchInterval: (data) => {
             if (
                 data?.results.some(
-                    (d) => d.status === CodeQualityStatusDto.ANALYZING
+                    (d) => d.status === CodeQualityStatus.ANALYZING
                 )
             ) {
                 return 60 * 1000;

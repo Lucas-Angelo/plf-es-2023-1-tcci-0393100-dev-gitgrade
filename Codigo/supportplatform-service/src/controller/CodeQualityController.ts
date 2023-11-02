@@ -1,8 +1,9 @@
-import { CodeQualityResponseDTO, PaginationResponseDTO } from "@gitgrade/dtos";
 import {
+    CodeQualityResponseDTO,
     CodeQualitySearchDTO,
-    CodeQualityStatusDto,
-} from "@gitgrade/dtos/dto/codeQuality";
+    PaginationResponseDTO,
+} from "@gitgrade/dtos";
+import { CodeQualityStatus } from "@gitgrade/dtos/dto/codeQuality";
 import {
     Controller,
     Example,
@@ -39,7 +40,7 @@ export class CodeQualityController extends Controller {
         id: 1,
         url: "/dashboard?id=repositoryNameTimeStamp",
         repositoryId: 1,
-        status: CodeQualityStatusDto.ANALYZING,
+        status: CodeQualityStatus.ANALYZING,
         createdAt: new Date("2023-01-01"),
     })
     @Post("/repository/{repositoryId}")
@@ -63,21 +64,21 @@ export class CodeQualityController extends Controller {
             id: 1,
             url: "/dashboard?id=repositoryNameTimeStamp",
             repositoryId: 1,
-            status: CodeQualityStatusDto.ANALYZING,
+            status: CodeQualityStatus.ANALYZING,
             createdAt: new Date("2023-01-01"),
         },
         {
             id: 2,
             url: "/dashboard?id=repositoryNameTimeStamp",
             repositoryId: 1,
-            status: CodeQualityStatusDto.ANALYZED,
+            status: CodeQualityStatus.ANALYZED,
             createdAt: new Date("2023-01-01"),
         },
         {
             id: 3,
             url: "/dashboard?id=repositoryNameTimeStamp",
             repositoryId: 1,
-            status: CodeQualityStatusDto.ERROR,
+            status: CodeQualityStatus.ERROR,
             createdAt: new Date("2023-01-01"),
         },
     ])

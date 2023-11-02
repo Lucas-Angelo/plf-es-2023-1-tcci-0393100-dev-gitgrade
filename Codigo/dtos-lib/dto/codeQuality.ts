@@ -1,4 +1,4 @@
-export enum CodeQualityStatusDto {
+export enum CodeQualityStatus {
   ANALYZING = "ANALYZING",
   ANALYZED = "ANALYZED",
   ERROR = "ERROR",
@@ -34,7 +34,7 @@ export interface CodeQualitySearchDTO {
    * @isOptional description is optional
    * @isEnum status must be one of ['ANALYZING', 'ANALYZED', 'ERROR']
    */
-  status?: CodeQualityStatusDto;
+  status?: CodeQualityStatus;
   /**
    * @isOptional description is optional
    * @isDate createdAt must be a Date
@@ -49,6 +49,6 @@ export interface CodeQualityResponseDTO {
   id: number;
   repositoryId: number;
   url: string;
-  status: CodeQualityStatusDto;
+  status: CodeQualityStatus;
   createdAt: Date;
 }

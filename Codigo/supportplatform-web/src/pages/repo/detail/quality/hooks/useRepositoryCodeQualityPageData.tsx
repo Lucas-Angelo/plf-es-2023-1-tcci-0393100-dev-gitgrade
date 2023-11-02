@@ -2,7 +2,7 @@ import { useParams } from "react-router";
 import { useRepositoryCodeQualityList } from "../../../../../commom/data/codeQuality";
 import appRoutes from "../../../../../commom/routes/appRoutes";
 import { useSearchParams } from "react-router-dom";
-import { CodeQualityStatusDto } from "@gitgrade/dtos";
+import { CodeQualityStatus } from "@gitgrade/dtos/dto/codeQuality";
 
 type PagePathParam = (typeof appRoutes.repo.detail.params)[number];
 const pageSearchParams = appRoutes.repo.detail.quality.search;
@@ -18,7 +18,7 @@ export function useRepositoryCodeQualityPageData() {
         {
             page: Number(searchParams.get(pageSearchParams.page)) || 1,
             status: searchParams.get(pageSearchParams.status) as
-                | CodeQualityStatusDto
+                | CodeQualityStatus
                 | undefined,
         }
     );

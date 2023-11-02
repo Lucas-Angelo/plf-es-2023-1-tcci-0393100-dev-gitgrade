@@ -2,24 +2,24 @@ import { Box, Select } from "@primer/react";
 import appRoutes from "../../../../../../commom/routes/appRoutes";
 import { useSearchParams } from "react-router-dom";
 import React from "react";
-import { CodeQualityStatusDto } from "@gitgrade/dtos/dto/codeQuality";
+import { CodeQualityStatus } from "@gitgrade/dtos/dto/codeQuality";
 
 const pageRouteSearchParams = appRoutes.repo.detail.quality.search;
 
 const codeQualityStatusArray: Array<{
-    status: CodeQualityStatusDto;
+    status: CodeQualityStatus;
     name: string;
 }> = [
     {
-        status: CodeQualityStatusDto.ANALYZING,
+        status: CodeQualityStatus.ANALYZING,
         name: "Análise em andamento",
     },
     {
-        status: CodeQualityStatusDto.ANALYZED,
+        status: CodeQualityStatus.ANALYZED,
         name: "Análise concluída",
     },
     {
-        status: CodeQualityStatusDto.ERROR,
+        status: CodeQualityStatus.ERROR,
         name: "Erro na análise",
     },
 ];
