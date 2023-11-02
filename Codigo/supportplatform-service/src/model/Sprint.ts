@@ -69,7 +69,6 @@ class Sprint extends Model<ISprintAttributes> {
             foreignKey: "evaluationMethodId",
             as: "evaluation_method",
         });
-        // hasMany CodeQuality
     }
 }
 

@@ -13,3 +13,4 @@ env/
 package-lock.json
 .dockerignore
 src/swagger/
+temp/repositories/**

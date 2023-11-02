@@ -123,6 +123,7 @@ jobs:
             echo "DB_COLLATE=${{ secrets.DB_COLLATE }}" >> "$CODE_DIR/.env"
             echo "DB_TIMEZONE=${{ secrets.DB_TIMEZONE }}" >> "$CODE_DIR/.env"
             echo "GITHUB_ORGANIZATION_NAME=${{ secrets.GH_ORGANIZATION_NAME }}" >> "$CODE_DIR/.env"
+            echo "GITHUB_PERSONAL_ACCESS_TOKEN=${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}" >> "$CODE_DIR/.env"
 
             echo "# MySQL docker service envs" >> "$CODE_DIR/.env"
             echo "DB_HOST=${{ secrets.DB_HOST }}" >> "$CODE_DIR/.env"
@@ -135,7 +136,6 @@ jobs:
             echo "# Jobscheduler docker service envs" >> "$CODE_DIR/.env"
             echo "JOBSCHEDULER_SERVICE_NODE_PORT=${{ secrets.JOBSCHEDULER_SERVICE_NODE_PORT }}" >> "$CODE_DIR/.env"
             echo "SYNC_TIME=${{ secrets.SYNC_TIME }}" >> "$CODE_DIR/.env"
-            echo "GITHUB_PERSONAL_ACCESS_TOKEN=${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}" >> "$CODE_DIR/.env"
             echo "TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}" >> "$CODE_DIR/.env"
             echo "TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}" >> "$CODE_DIR/.env"
 
@@ -153,6 +153,14 @@ jobs:
             echo "VITE_API_URL=http://${{ secrets.HOST }}:${{ secrets.SUPPORTPLATFORM_SERVICE_NODE_PORT }}" >> "$CODE_DIR/.env"
             echo "SUPPORTPLATFORM_WEB_HOST=0.0.0.0" >> "$CODE_DIR/.env"
             echo "VITE_OAUTH_FAILURE_SEARCH_PARAM=$OAUTH_FAILURE_SEARCH_PARAM" >> "$CODE_DIR/.env"
+
+            echo "SONARQUBE_HOST=${{ secrets.SONARQUBE_HOST }}" >> "$CODE_DIR/.env"
+            echo "SONARQUBE_PORT=${{ secrets.SONARQUBE_PORT }}" >> "$CODE_DIR/.env"
+            echo "SONARQUBE_DOCKER_PORT=9000" >> "$CODE_DIR/.env"
+            echo "SONARQUBE_ADMIN_USERNAME=${{ secrets.SONARQUBE_ADMIN_USERNAME }}" >> "$CODE_DIR/.env"
+            echo "SONARQUBE_ADMIN_PASSWORD=${{ secrets.SONARQUBE_ADMIN_PASSWORD }}" >> "$CODE_DIR/.env"
+            echo "SONARQUBE_POSTGRES_USERNAME=${{ secrets.SONARQUBE_POSTGRES_USERNAME }}" >> "$CODE_DIR/.env"
+            echo "SONARQUBE_POSTGRES_PASSWORD=${{ secrets.SONARQUBE_POSTGRES_PASSWORD }}" >> "$CODE_DIR/.env"
 
       - name: Copy project files to VPS based on Pull Request branch if OPENED, UPDATED or REOPENED
         uses: appleboy/scp-action@master

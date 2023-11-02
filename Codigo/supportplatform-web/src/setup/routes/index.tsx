@@ -247,7 +247,9 @@ const routes = createRoutesFromElements(
                         </Route>
                         <Route
                             path={appRoutes.repo.detail.quality.path}
-                            element={<>quality</>}
+                            lazy={() =>
+                                import("../../pages/repo/detail/quality/index")
+                            }
                         />
                         <Route
                             path={appRoutes.repo.detail.commits.path}

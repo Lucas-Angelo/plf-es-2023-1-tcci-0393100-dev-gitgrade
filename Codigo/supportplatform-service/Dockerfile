@@ -1,16 +1,38 @@
 # Base image
-FROM node:18-alpine3.17
+FROM node:18-buster
 
-# Update and install dependency
-RUN apk update && \
-    apk upgrade && \
-    apk add --no-cache git bash inotify-tools tzdata
+# Update and install dependencies
+RUN apt-get update && \
+  apt-get upgrade -y && \
+  apt-get install -y git bash inotify-tools tzdata locales && \
+  sed -i '/pt_BR.UTF-8/s/^# //g' /etc/locale.gen && \
+  locale-gen && \
+  update-locale LC_ALL="pt_BR.UTF-8" \
+  LANG="pt_BR.UTF-8" \
+  LANGUAGE="pt_BR:pt:en" \
+  LC_CTYPE="pt_BR.UTF-8" \
+  LC_NUMERIC="pt_BR.UTF-8" \
+  LC_TIME="pt_BR.UTF-8" \
+  LC_COLLATE="pt_BR.UTF-8" \
+  LC_MONETARY="pt_BR.UTF-8" \
+  LC_MESSAGES="pt_BR.UTF-8" \
+  LC_PAPER="pt_BR.UTF-8" \
+  LC_NAME="pt_BR.UTF-8" \
+  LC_ADDRESS="pt_BR.UTF-8" \
+  LC_TELEPHONE="pt_BR.UTF-8" \
+  LC_MEASUREMENT="pt_BR.UTF-8" \
+  LC_IDENTIFICATION="pt_BR.UTF-8" \
+  LC_ALL="pt_BR.UTF-8"
+
+# Set environment variables for locale
+ENV LANG=pt_BR.UTF-8 LC_ALL=pt_BR.UTF-8
+ENV LC_ALL=C
 
 # Set timezone
 RUN ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && \
-    echo "America/Sao_Paulo" > /etc/timezone
+  echo "America/Sao_Paulo" > /etc/timezone
 
-# create destination directories
+# Create destination directories
 RUN mkdir -p /usr/src/gitgrade/supportplatform_service
 RUN mkdir -p /usr/src/gitgrade/dtos-lib
 

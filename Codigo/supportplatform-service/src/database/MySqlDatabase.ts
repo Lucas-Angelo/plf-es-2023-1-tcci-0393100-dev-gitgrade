@@ -1,4 +1,4 @@
-import { createConnection, Connection } from "mysql2/promise";
+import { Connection, createConnection } from "mysql2/promise";
 import EnvConfig from "../config/EnvConfig";
 import logger from "../config/LogConfig";
 
@@ -15,7 +15,7 @@ class MySqlDatabase {
     constructor() {
         this.connectionConfig = {
             host: EnvConfig.DB_HOST,
-            port: parseInt(EnvConfig.DB_PORT ?? "3306"),
+            port: EnvConfig.DB_PORT,
             user: EnvConfig.DB_USER,
             password: EnvConfig.DB_PASSWORD,
         };

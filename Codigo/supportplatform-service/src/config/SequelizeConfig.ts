@@ -13,7 +13,7 @@ const logging: LoggingFunction | false = EnvConfig.APP_DEBUG
 // Common options used for all environments
 const commonOptions: Options = {
     host: EnvConfig.DB_HOST || "error",
-    port: parseInt(EnvConfig.DB_PORT || "0") || 0,
+    port: EnvConfig.DB_PORT || 0,
     dialect: EnvConfig.DB_DIALECT == "mysql" ? "mysql" : "sqlite",
     logging: logging,
     dialectOptions: {
