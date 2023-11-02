@@ -59,29 +59,32 @@ export class CodeQualityController extends Controller {
      * @path repositoryId Id of the repository to get all code quality analysis.
      * @query query CodeQualitySearchDTO query to filter results.
      */
-    @Example<CodeQualityResponseDTO[]>([
-        {
-            id: 1,
-            url: "/dashboard?id=repositoryNameTimeStamp",
-            repositoryId: 1,
-            status: CodeQualityStatus.ANALYZING,
-            createdAt: new Date("2023-01-01"),
-        },
-        {
-            id: 2,
-            url: "/dashboard?id=repositoryNameTimeStamp",
-            repositoryId: 1,
-            status: CodeQualityStatus.ANALYZED,
-            createdAt: new Date("2023-01-01"),
-        },
-        {
-            id: 3,
-            url: "/dashboard?id=repositoryNameTimeStamp",
-            repositoryId: 1,
-            status: CodeQualityStatus.ERROR,
-            createdAt: new Date("2023-01-01"),
-        },
-    ])
+    @Example<PaginationResponseDTO<CodeQualityResponseDTO>>({
+        totalPages: 1,
+        results: [
+            {
+                id: 1,
+                url: "/dashboard?id=repositoryNameTimeStamp",
+                repositoryId: 1,
+                status: CodeQualityStatus.ANALYZING,
+                createdAt: new Date("2023-01-01"),
+            },
+            {
+                id: 2,
+                url: "/dashboard?id=repositoryNameTimeStamp",
+                repositoryId: 1,
+                status: CodeQualityStatus.ANALYZED,
+                createdAt: new Date("2023-01-01"),
+            },
+            {
+                id: 3,
+                url: "/dashboard?id=repositoryNameTimeStamp",
+                repositoryId: 1,
+                status: CodeQualityStatus.ERROR,
+                createdAt: new Date("2023-01-01"),
+            },
+        ],
+    })
     @Get("/repository/{repositoryId}")
     @SuccessResponse("200", "Found code quality analysis")
     public async getAll(

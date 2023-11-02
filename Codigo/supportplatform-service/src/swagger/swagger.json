@@ -64,7 +64,7 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"CodeQualityStatusDto": {
+			"CodeQualityStatus": {
 				"enum": [
 					"ANALYZING",
 					"ANALYZED",
@@ -87,7 +87,7 @@
 						"type": "string"
 					},
 					"status": {
-						"$ref": "#/components/schemas/CodeQualityStatusDto"
+						"$ref": "#/components/schemas/CodeQualityStatus"
 					},
 					"createdAt": {
 						"type": "string",
@@ -122,14 +122,6 @@
 					"totalPages"
 				],
 				"type": "object"
-			},
-			"CodeQualityStatus": {
-				"enum": [
-					"ANALYZING",
-					"ANALYZED",
-					"ERROR"
-				],
-				"type": "string"
 			},
 			"CodeQualitySearchDTO": {
 				"properties": {
@@ -2010,29 +2002,32 @@
 								},
 								"examples": {
 									"Example 1": {
-										"value": [
-											{
-												"id": 1,
-												"url": "/dashboard?id=repositoryNameTimeStamp",
-												"repositoryId": 1,
-												"status": "ANALYZING",
-												"createdAt": "2023-01-01T00:00:00.000Z"
-											},
-											{
-												"id": 2,
-												"url": "/dashboard?id=repositoryNameTimeStamp",
-												"repositoryId": 1,
-												"status": "ANALYZED",
-												"createdAt": "2023-01-01T00:00:00.000Z"
-											},
-											{
-												"id": 3,
-												"url": "/dashboard?id=repositoryNameTimeStamp",
-												"repositoryId": 1,
-												"status": "ERROR",
-												"createdAt": "2023-01-01T00:00:00.000Z"
-											}
-										]
+										"value": {
+											"totalPages": 1,
+											"results": [
+												{
+													"id": 1,
+													"url": "/dashboard?id=repositoryNameTimeStamp",
+													"repositoryId": 1,
+													"status": "ANALYZING",
+													"createdAt": "2023-01-01T00:00:00.000Z"
+												},
+												{
+													"id": 2,
+													"url": "/dashboard?id=repositoryNameTimeStamp",
+													"repositoryId": 1,
+													"status": "ANALYZED",
+													"createdAt": "2023-01-01T00:00:00.000Z"
+												},
+												{
+													"id": 3,
+													"url": "/dashboard?id=repositoryNameTimeStamp",
+													"repositoryId": 1,
+													"status": "ERROR",
+													"createdAt": "2023-01-01T00:00:00.000Z"
+												}
+											]
+										}
 									}
 								}
 							}

@@ -64,7 +64,7 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "CodeQualityStatusDto": {
+    "CodeQualityStatus": {
         "dataType": "refEnum",
         "enums": ["ANALYZING","ANALYZED","ERROR"],
     },
@@ -75,7 +75,7 @@ const models: TsoaRoute.Models = {
             "id": {"dataType":"double","required":true},
             "repositoryId": {"dataType":"double","required":true},
             "url": {"dataType":"string","required":true},
-            "status": {"ref":"CodeQualityStatusDto","required":true},
+            "status": {"ref":"CodeQualityStatus","required":true},
             "createdAt": {"dataType":"datetime","required":true},
         },
         "additionalProperties": false,
@@ -84,11 +84,6 @@ const models: TsoaRoute.Models = {
     "PaginationResponseDTO_CodeQualityResponseDTO_": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"results":{"dataType":"array","array":{"dataType":"refObject","ref":"CodeQualityResponseDTO"},"required":true},"totalPages":{"dataType":"double","required":true}},"validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "CodeQualityStatus": {
-        "dataType": "refEnum",
-        "enums": ["ANALYZING","ANALYZED","ERROR"],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "CodeQualitySearchDTO": {
