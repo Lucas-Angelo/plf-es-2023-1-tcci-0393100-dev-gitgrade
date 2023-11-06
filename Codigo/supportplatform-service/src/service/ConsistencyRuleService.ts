@@ -30,39 +30,39 @@ export default class ConsistencyRuleService {
     }
 
     async create(data: ConsistencyRuleCreateDTO): Promise<ConsistencyRule> {
+        this.validateNotNullAndEmptyFields(data);
+
+        await this.evaluationMethodService.findOneBy({
+            id: data.evaluationMethodId,
+        });
+
+        await this.sprintService.findOneBy({
+            id: data.sprintId,
+        });
+
         try {
-            logger.info("Creating a new consistency rule");
-
-            this.validateNotNullAndEmptyFields(data);
-
-            await this.evaluationMethodService.findOneBy({
-                id: data.evaluationMethodId,
-            });
-
             await this.sprintService.findOneBy({
                 id: data.sprintId,
+                evaluationMethodId: data.evaluationMethodId,
+            });
+        } catch (error) {
+            logger.error(
+                "Sprint not found for the provided evaluation method",
+                { error }
+            );
+            throw new AppError(
+                "Sprint not found for the provided evaluation method",
+                404
+            );
+        }
+
+        if (data.standardizedIssueId)
+            await this.standardizedIssueService.findOneBy({
+                id: data.standardizedIssueId,
             });
 
-            try {
-                await this.sprintService.findOneBy({
-                    id: data.sprintId,
-                    evaluationMethodId: data.evaluationMethodId,
-                });
-            } catch (error) {
-                logger.error(
-                    "Sprint not found for the provided evaluation method",
-                    { error }
-                );
-                throw new AppError(
-                    "Sprint not found for the provided evaluation method",
-                    404
-                );
-            }
-
-            if (data.standardizedIssueId)
-                await this.standardizedIssueService.findOneBy({
-                    id: data.standardizedIssueId,
-                });
+        try {
+            logger.info("Creating a new consistency rule");
 
             const consistencyRule = await ConsistencyRule.create(data);
 
@@ -85,43 +85,42 @@ export default class ConsistencyRuleService {
         id: number,
         data: ConsistencyRuleUpdateDTO
     ): Promise<ConsistencyRule> {
+        if (!id) {
+            logger.error("Id not provided", { id });
+            throw new AppError("Id not provided", 400);
+        }
+
+        this.validateNotNullAndEmptyFields(data);
+
+        await this.evaluationMethodService.findOneBy({
+            id: data.evaluationMethodId,
+        });
+
+        await this.sprintService.findOneBy({
+            id: data.sprintId,
+        });
+
         try {
-            if (!id) {
-                logger.error("Id not provided", { id });
-                throw new AppError("Id not provided", 400);
-            }
-
-            this.validateNotNullAndEmptyFields(data);
-
-            await this.evaluationMethodService.findOneBy({
-                id: data.evaluationMethodId,
-            });
-
             await this.sprintService.findOneBy({
                 id: data.sprintId,
+                evaluationMethodId: data.evaluationMethodId,
             });
+        } catch (error) {
+            logger.error(
+                "Sprint not found for the provided evaluation method",
+                { error }
+            );
+            throw new AppError(
+                "Sprint not found for the provided evaluation method",
+                404
+            );
+        }
 
-            try {
-                await this.sprintService.findOneBy({
-                    id: data.sprintId,
-                    evaluationMethodId: data.evaluationMethodId,
-                });
-            } catch (error) {
-                logger.error(
-                    "Sprint not found for the provided evaluation method",
-                    { error }
-                );
-                throw new AppError(
-                    "Sprint not found for the provided evaluation method",
-                    404
-                );
-            }
-
-            if (data.standardizedIssueId)
-                await this.standardizedIssueService.findOneBy({
-                    id: data.standardizedIssueId,
-                });
-
+        if (data.standardizedIssueId)
+            await this.standardizedIssueService.findOneBy({
+                id: data.standardizedIssueId,
+            });
+        try {
             logger.info(`Updating consistency rule with id: ${id}`);
             const consistencyRule = await this.findOneBy({ id });
 

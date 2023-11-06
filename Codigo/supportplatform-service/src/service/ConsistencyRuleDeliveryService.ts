@@ -9,16 +9,16 @@ import { Op } from "sequelize";
 import logger from "../config/LogConfig";
 import AppError from "../error/AppError";
 import { ConsistencyRuleDeliveryWhereClauseType } from "../interface/ConsistencyRuleDelivery";
+import { ConsistencyRule } from "../model/ConsistencyRule";
 import {
     ConsistencyRuleDelivery,
     ConsistencyRuleDeliveryStatus,
 } from "../model/ConsistencyRuleDelivery";
+import { Sprint } from "../model/Sprint";
 import { SequelizeUtil } from "../utils/SequelizeUtil";
 import { sequelizePagination } from "../utils/pagination";
 import ConsistencyRuleService from "./ConsistencyRuleService";
 import RepositoryService from "./RepositoryService";
-import { ConsistencyRule } from "../model/ConsistencyRule";
-import { Sprint } from "../model/Sprint";
 
 export default class ConsistencyRuleDeliveryService {
     private sequelizeUtil: SequelizeUtil;
@@ -37,30 +37,29 @@ export default class ConsistencyRuleDeliveryService {
     async create(
         data: ConsistencyRuleDeliveryCreateDTO
     ): Promise<ConsistencyRuleDelivery> {
+        this.validateNotNullAndEmptyFields(data);
+
+        if (data.status && data.deliveryAt)
+            this.checkIfStatusAndDeliveryAtAreValid(
+                data.status,
+                data.deliveryAt
+            );
+
+        await this.consistencyRuleService.findOneBy({
+            id: data.consistencyRuleId,
+        });
+
+        await this.repositoryService.findOneBy({ id: data.repositoryId });
+
+        logger.info("Checking if consistency rule delivery already exists");
+
+        await this.checkIfAlreadyExistsConsistencyRuleDelivery(
+            data.repositoryId,
+            data.consistencyRuleId,
+            data.status
+        );
         try {
             logger.info("Creating a new consistency rule delivery");
-
-            this.validateNotNullAndEmptyFields(data);
-
-            if (data.status && data.deliveryAt)
-                this.checkIfStatusAndDeliveryAtAreValid(
-                    data.status,
-                    data.deliveryAt
-                );
-
-            await this.consistencyRuleService.findOneBy({
-                id: data.consistencyRuleId,
-            });
-
-            await this.repositoryService.findOneBy({ id: data.repositoryId });
-
-            logger.info("Checking if consistency rule delivery already exists");
-
-            await this.checkIfAlreadyExistsConsistencyRuleDelivery(
-                data.repositoryId,
-                data.consistencyRuleId,
-                data.status
-            );
 
             const consistencyRuleDelivery =
                 await ConsistencyRuleDelivery.create(data);
@@ -72,7 +71,34 @@ export default class ConsistencyRuleDeliveryService {
                 }
             );
 
-            return consistencyRuleDelivery;
+            const newConsistencyRuleDelivery =
+                await ConsistencyRuleDelivery.findOne({
+                    where: { id: consistencyRuleDelivery.id },
+                    include: [
+                        {
+                            model: ConsistencyRule,
+                            as: "consistencyRule",
+                            include: [
+                                {
+                                    model: Sprint,
+                                    as: "sprint",
+                                },
+                            ],
+                        },
+                    ],
+                });
+
+            if (!newConsistencyRuleDelivery) {
+                logger.error(
+                    `ConsistencyRuleDelivery with id: ${consistencyRuleDelivery.id} not found`
+                );
+                throw new AppError(
+                    `ConsistencyRuleDelivery with id: ${consistencyRuleDelivery.id} not found`,
+                    404
+                );
+            }
+
+            return newConsistencyRuleDelivery;
         } catch (error) {
             logger.error("Error creating a new consistency rule delivery:", {
                 error,
@@ -92,29 +118,28 @@ export default class ConsistencyRuleDeliveryService {
         id: number,
         data: ConsistencyRuleDeliveryUpdateDTO
     ): Promise<ConsistencyRuleDelivery> {
+        if (!id) {
+            logger.error("Id not provided", { id });
+            throw new AppError("Id not provided", 400);
+        }
+
+        this.validateNotNullAndEmptyFields(data);
+
+        if (data.status && data.deliveryAt)
+            this.checkIfStatusAndDeliveryAtAreValid(
+                data.status,
+                data.deliveryAt
+            );
+
+        await this.consistencyRuleService.findOneBy({
+            id: data.consistencyRuleId,
+        });
+
+        await this.repositoryService.findOneBy({ id: data.repositoryId });
+
+        logger.info(`Updating consistency rule delivery with id: ${id}`);
+        const consistencyRuleDelivery = await this.findOneBy({ id });
         try {
-            if (!id) {
-                logger.error("Id not provided", { id });
-                throw new AppError("Id not provided", 400);
-            }
-
-            this.validateNotNullAndEmptyFields(data);
-
-            if (data.status && data.deliveryAt)
-                this.checkIfStatusAndDeliveryAtAreValid(
-                    data.status,
-                    data.deliveryAt
-                );
-
-            await this.consistencyRuleService.findOneBy({
-                id: data.consistencyRuleId,
-            });
-
-            await this.repositoryService.findOneBy({ id: data.repositoryId });
-
-            logger.info(`Updating consistency rule delivery with id: ${id}`);
-            const consistencyRuleDelivery = await this.findOneBy({ id });
-
             logger.info("Current and new consistency rule delivery data: ", {
                 current: consistencyRuleDelivery,
                 new: data,
@@ -125,6 +150,18 @@ export default class ConsistencyRuleDeliveryService {
             const newConsistencyRuleDelivery =
                 await ConsistencyRuleDelivery.findOne({
                     where: { id },
+                    include: [
+                        {
+                            model: ConsistencyRule,
+                            as: "consistencyRule",
+                            include: [
+                                {
+                                    model: Sprint,
+                                    as: "sprint",
+                                },
+                            ],
+                        },
+                    ],
                 });
 
             if (!newConsistencyRuleDelivery) {

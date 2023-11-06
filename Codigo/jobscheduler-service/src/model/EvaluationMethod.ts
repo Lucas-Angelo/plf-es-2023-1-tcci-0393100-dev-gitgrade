@@ -1,7 +1,9 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 import EnvConfig from "../config/EnvConfig";
+import { ConsistencyRule } from "./ConsistencyRule";
 import { Repository } from "./Repository";
 import { Sprint } from "./Sprint";
+import { StandardizedIssue } from "./StandardizedIssue";
 
 interface IEvaluationMethodAttributes {
     id?: number;
@@ -17,6 +19,10 @@ class EvaluationMethod extends Model<IEvaluationMethodAttributes> {
     public semester!: number;
     public year!: number;
     public disabledAt!: Date | null;
+
+    public consistencyRules!: ConsistencyRule[];
+    public sprints!: Sprint[];
+    public standardizedIssues!: StandardizedIssue[];
 
     static initModel(sequelize: Sequelize): void {
         this.init(
@@ -70,6 +76,8 @@ class EvaluationMethod extends Model<IEvaluationMethodAttributes> {
     static associate(models: {
         Repository: typeof Repository;
         Sprint: typeof Sprint;
+        ConsistencyRule: typeof ConsistencyRule;
+        StandardizedIssue: typeof StandardizedIssue;
     }): void {
         this.hasMany(models.Repository, {
             foreignKey: "evaluationMethodId",
@@ -79,8 +87,14 @@ class EvaluationMethod extends Model<IEvaluationMethodAttributes> {
             foreignKey: "evaluationMethodId",
             as: "sprints",
         });
-        // ConsistenceRule association
-        // StandardizedIssue association
+        this.hasMany(models.ConsistencyRule, {
+            foreignKey: "evaluationMethodId",
+            as: "consistencyRules",
+        });
+        this.hasMany(models.StandardizedIssue, {
+            foreignKey: "evaluationMethodId",
+            as: "standardizedIssues",
+        });
     }
 }
 

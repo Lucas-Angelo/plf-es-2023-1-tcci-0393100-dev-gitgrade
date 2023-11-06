@@ -9,7 +9,10 @@ import { Op } from "sequelize";
 import logger from "../config/LogConfig";
 import AppError from "../error/AppError";
 import { EvaluationMethodWhereClauseType } from "../interface/EvaluationMethod";
+import { ConsistencyRule } from "../model/ConsistencyRule";
 import { EvaluationMethod } from "../model/EvaluationMethod";
+import { Sprint } from "../model/Sprint";
+import { StandardizedIssue } from "../model/StandardizedIssue";
 import { SequelizeUtil } from "../utils/SequelizeUtil";
 import { sequelizePagination } from "../utils/pagination";
 
@@ -22,6 +25,8 @@ export default class EvaluationMethodService {
 
     /**
      * Create a new EvaluationMethod.
+     * @param data Data to be created.
+     * @returns The created EvaluationMethod.
      */
     async create(data: EvaluationMethodCreateDTO): Promise<EvaluationMethod> {
         try {
@@ -50,6 +55,9 @@ export default class EvaluationMethodService {
 
     /**
      * Update an existing EvaluationMethod.
+     * @param id Id of the EvaluationMethod to be updated.
+     * @param data Data to be updated.
+     * @returns The updated EvaluationMethod.
      */
     async update(
         id: number,
@@ -107,6 +115,8 @@ export default class EvaluationMethodService {
 
     /**
      * Find all EvaluationMethods based on given filters.
+     * @param search Fields to be used in the search.
+     * @returns The found EvaluationMethods.
      */
     async findAll(
         search: EvaluationMethodSearchDTO
@@ -144,6 +154,8 @@ export default class EvaluationMethodService {
 
     /**
      * Find a single EvaluationMethod based on given filters.
+     * @param fields Fields to be used in the search.
+     * @returns The found EvaluationMethod.
      */
     async findOneBy(
         fields: Partial<EvaluationMethodFindOneDTO>
@@ -188,6 +200,10 @@ export default class EvaluationMethodService {
         }
     }
 
+    /**
+     * Delete an existing EvaluationMethod.
+     * @param id
+     */
     async delete(id: number): Promise<void> {
         try {
             logger.info(`Deleting evaluation method with id: ${id}`);
@@ -219,6 +235,89 @@ export default class EvaluationMethodService {
             });
             throw new AppError(
                 `Failed to delete evaluation method with id: ${id}`,
+                500,
+                error
+            );
+        }
+    }
+
+    /**
+     * Clone an existing EvaluationMethod.
+     * @param evaluationMethodId id of the evaluation method to be cloned
+     * @returns The cloned EvaluationMethod.
+     */
+    async clone(evaluationMethodId: number): Promise<EvaluationMethod> {
+        try {
+            logger.info(
+                `Cloning evaluation method with id: ${evaluationMethodId}`
+            );
+            const evaluationMethod = await EvaluationMethod.findOne({
+                where: { id: evaluationMethodId },
+                include: ["consistencyRules", "sprints", "standardizedIssues"], // Use the association aliases defined earlier
+                paranoid: false,
+            });
+
+            if (!evaluationMethod) {
+                logger.error(
+                    `Evaluation method with id: ${evaluationMethodId} not found`
+                );
+                throw new AppError(
+                    `Evaluation method with id: ${evaluationMethodId} not found`,
+                    404
+                );
+            }
+
+            logger.info("Current evaluation method data: ", {
+                current: evaluationMethod,
+            });
+
+            const onlyDate = new Date().toISOString().split("T")[0];
+            const clonedEvaluationMethod = await EvaluationMethod.create({
+                description:
+                    evaluationMethod.description + " (Cópia) " + onlyDate,
+                semester: evaluationMethod.semester,
+                year: evaluationMethod.year,
+                disabledAt: null,
+            });
+
+            // Clone related ConsistencyRules, Sprints, and StandardizedIssues
+            await Promise.all([
+                ...evaluationMethod.consistencyRules.map((rule) =>
+                    ConsistencyRule.create({
+                        ...rule.get({ plain: true }),
+                        id: undefined,
+                        evaluationMethodId: clonedEvaluationMethod.id,
+                    })
+                ),
+                ...evaluationMethod.sprints.map((sprint) =>
+                    Sprint.create({
+                        ...sprint.get({ plain: true }),
+                        id: undefined,
+                        evaluationMethodId: clonedEvaluationMethod.id,
+                    })
+                ),
+                ...evaluationMethod.standardizedIssues.map((issue) =>
+                    StandardizedIssue.create({
+                        ...issue.get({ plain: true }),
+                        id: undefined,
+                        evaluationMethodId: clonedEvaluationMethod.id,
+                    })
+                ),
+            ]);
+
+            logger.info(
+                "Successfully cloned evaluation method and its relations: ",
+                { clonedEvaluationMethod }
+            );
+
+            return clonedEvaluationMethod;
+        } catch (error) {
+            logger.error(
+                `Error cloning evaluation method with id: ${evaluationMethodId}`,
+                { error }
+            );
+            throw new AppError(
+                `Failed to clone evaluation method with id: ${evaluationMethodId}`,
                 500,
                 error
             );

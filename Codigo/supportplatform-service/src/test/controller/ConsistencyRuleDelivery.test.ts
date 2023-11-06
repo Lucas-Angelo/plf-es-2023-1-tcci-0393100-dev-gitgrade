@@ -484,9 +484,9 @@ describe(`POST ${baseRoute}`, () => {
                 status: "AWAITING_DELIVERY",
             });
 
-        expect(response.body.id).toBe(11);
-        expect(response.body.consistencyRuleId).toBe(3);
-        expect(response.body.repositoryId).toBe(2);
+        expect(response.body.id).toBe("11");
+        expect(response.body.consistencyRuleId).toBe("3");
+        expect(response.body.repositoryId).toBe("2");
         expect(response.body.deliveryAt).toBe(null);
         expect(response.body.status).toBe("AWAITING_DELIVERY");
     });
@@ -503,9 +503,9 @@ describe(`POST ${baseRoute}`, () => {
                 status: "DELIVERED_ON_TIME",
             });
 
-        expect(response.body.id).toBe(12);
-        expect(response.body.consistencyRuleId).toBe(3);
-        expect(response.body.repositoryId).toBe(2);
+        expect(response.body.id).toBe("12");
+        expect(response.body.consistencyRuleId).toBe("3");
+        expect(response.body.repositoryId).toBe("2");
         expect(response.body.deliveryAt).toBe("2023-10-01T00:00:00.000Z");
         expect(response.body.status).toBe("DELIVERED_ON_TIME");
     });
@@ -522,9 +522,9 @@ describe(`POST ${baseRoute}`, () => {
                 status: "DELIVERED_LATE",
             });
 
-        expect(response.body.id).toBe(13);
-        expect(response.body.consistencyRuleId).toBe(3);
-        expect(response.body.repositoryId).toBe(2);
+        expect(response.body.id).toBe("13");
+        expect(response.body.consistencyRuleId).toBe("3");
+        expect(response.body.repositoryId).toBe("2");
         expect(response.body.deliveryAt).toBe("2023-10-01T00:00:00.000Z");
         expect(response.body.status).toBe("DELIVERED_LATE");
     });
@@ -541,9 +541,9 @@ describe(`POST ${baseRoute}`, () => {
                 status: "NOT_DELIVERED",
             });
 
-        expect(response.body.id).toBe(14);
-        expect(response.body.consistencyRuleId).toBe(3);
-        expect(response.body.repositoryId).toBe(2);
+        expect(response.body.id).toBe("14");
+        expect(response.body.consistencyRuleId).toBe("3");
+        expect(response.body.repositoryId).toBe("2");
         expect(response.body.deliveryAt).toBe(null);
         expect(response.body.status).toBe("NOT_DELIVERED");
     });
@@ -560,9 +560,9 @@ describe(`POST ${baseRoute}`, () => {
                 status: "DELIVERED_WITH_INVALIDITY",
             });
 
-        expect(response.body.id).toBe(15);
-        expect(response.body.consistencyRuleId).toBe(3);
-        expect(response.body.repositoryId).toBe(2);
+        expect(response.body.id).toBe("15");
+        expect(response.body.consistencyRuleId).toBe("3");
+        expect(response.body.repositoryId).toBe("2");
         expect(response.body.deliveryAt).toBe("2023-10-01T00:00:00.000Z");
         expect(response.body.status).toBe("DELIVERED_WITH_INVALIDITY");
     });
@@ -579,9 +579,9 @@ describe(`POST ${baseRoute}`, () => {
                 status: "DELIVERED_ON_TIME",
             });
 
-        expect(response.body.id).toBe(16);
-        expect(response.body.consistencyRuleId).toBe(3);
-        expect(response.body.repositoryId).toBe(3);
+        expect(response.body.id).toBe("16");
+        expect(response.body.consistencyRuleId).toBe("3");
+        expect(response.body.repositoryId).toBe("3");
         expect(response.body.deliveryAt).toBe("2023-10-01T00:00:00.000Z");
         expect(response.body.status).toBe("DELIVERED_ON_TIME");
     });
@@ -598,9 +598,9 @@ describe(`POST ${baseRoute}`, () => {
                 status: "DELIVERED_LATE",
             });
 
-        expect(response.body.id).toBe(17);
-        expect(response.body.consistencyRuleId).toBe(3);
-        expect(response.body.repositoryId).toBe(4);
+        expect(response.body.id).toBe("17");
+        expect(response.body.consistencyRuleId).toBe("3");
+        expect(response.body.repositoryId).toBe("4");
         expect(response.body.deliveryAt).toBe("2023-10-01T00:00:00.000Z");
         expect(response.body.status).toBe("DELIVERED_LATE");
     });
@@ -617,9 +617,9 @@ describe(`POST ${baseRoute}`, () => {
                 status: "DELIVERED_WITH_INVALIDITY",
             });
 
-        expect(response.body.id).toBe(18);
-        expect(response.body.consistencyRuleId).toBe(3);
-        expect(response.body.repositoryId).toBe(5);
+        expect(response.body.id).toBe("18");
+        expect(response.body.consistencyRuleId).toBe("3");
+        expect(response.body.repositoryId).toBe("5");
         expect(response.body.deliveryAt).toBe("2023-10-01T00:00:00.000Z");
         expect(response.body.status).toBe("DELIVERED_WITH_INVALIDITY");
     });
