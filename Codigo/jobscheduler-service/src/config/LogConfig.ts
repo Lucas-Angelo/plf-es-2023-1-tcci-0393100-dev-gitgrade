@@ -1,5 +1,5 @@
 import { createLogger, format, Logger, transports } from "winston";
-// import { TelegramTransport } from "../util/TelegramTransportOptions";
+import { TelegramTransport } from "../util/TelegramTransportOptions";
 import EnvConfig from "./EnvConfig";
 
 class AppLogger {
@@ -38,11 +38,11 @@ class AppLogger {
         ),
     });
 
-    // private telegramTransport = new TelegramTransport({
-    //     level: "error",
-    //     chatId: EnvConfig.TELEGRAM_CHAT_ID || "missing-telegram-chat-id",
-    //     token: EnvConfig.TELEGRAM_BOT_TOKEN || "missing-telegram-bot-token",
-    // });
+    private telegramTransport = new TelegramTransport({
+        level: "error",
+        chatId: EnvConfig.TELEGRAM_CHAT_ID || "missing-telegram-chat-id",
+        token: EnvConfig.TELEGRAM_BOT_TOKEN || "missing-telegram-bot-token",
+    });
 
     public getLogger(): Logger {
         const logLevel: string = EnvConfig.APP_DEBUG ? "debug" : "warn"; // debug, info, warn, error
@@ -52,7 +52,7 @@ class AppLogger {
             transports: [
                 this.fileTransport,
                 this.consoleTransport,
-                // this.telegramTransport,
+                this.telegramTransport,
             ],
         });
     }

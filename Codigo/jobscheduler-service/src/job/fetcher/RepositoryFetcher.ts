@@ -63,7 +63,7 @@ class RepositoryFetcher {
                         continue;
                     }
                     const githubRepository: RepositoryGitHub =
-                        await this.gitHubRepositoryService.getRepositoryByGitHubId(
+                        await this.fetchRepositoryByIdWithRetry(
                             existingRepository.githubId
                         );
                     await this.fetchAndCreateOrUpdateRepository(
@@ -77,6 +77,18 @@ class RepositoryFetcher {
             logger.error("Error fetching repositories:", { error });
             throw error;
         }
+    }
+
+    private async fetchRepositoryByIdWithRetry(
+        githubRepositoryId: string
+    ): Promise<RepositoryGitHub> {
+        return await this.fetchUtil.retry(
+            () =>
+                this.gitHubRepositoryService.getRepositoryByGitHubId(
+                    githubRepositoryId
+                ),
+            `Error fetching repository with id "${githubRepositoryId}"`
+        );
     }
 
     private async fetchAndCreateOrUpdateRepository(repoData: RepositoryGitHub) {
