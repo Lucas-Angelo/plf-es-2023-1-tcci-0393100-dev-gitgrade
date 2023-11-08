@@ -53,6 +53,12 @@ class CommitFetcher {
                 });
 
                 for (const branch of branches) {
+                    const allCommitsFromDatabase =
+                        await this.commitService.findAllByField(
+                            "branchId",
+                            branch.id!
+                        );
+
                     const commits = await this.fetchCommitsFromBranchWithRetry(
                         repository.name!,
                         branch.name
@@ -66,6 +72,7 @@ class CommitFetcher {
                         continue;
                     }
 
+                    const allCommitsFromGitHubUpdated = [];
                     for (const commitData of commits) {
                         if (!commitData.sha || !commitData.commit) {
                             logger.error(
@@ -103,10 +110,18 @@ class CommitFetcher {
                                 commitData,
                                 authorContributorId
                             );
+                        allCommitsFromGitHubUpdated.push(commitAttributes);
                         await this.createOrUpdateCommitWithRetry(
                             commitAttributes
                         );
                     }
+
+                    await this.compareCommitsFromDatabaseAndGitHubAndDetectMissingOnGitHub(
+                        repository.name!,
+                        branch.name,
+                        allCommitsFromGitHubUpdated,
+                        allCommitsFromDatabase
+                    );
                 }
             }
 
@@ -114,6 +129,50 @@ class CommitFetcher {
         } catch (error) {
             logger.error("Error fetching or creating commits:", { error });
             throw error;
+        }
+    }
+
+    private async compareCommitsFromDatabaseAndGitHubAndDetectMissingOnGitHub(
+        repositoryName: string,
+        branchName: string,
+        commitsFromGitHub: ICommitAttributes[],
+        commitsFromDatabase: ICommitAttributes[]
+    ): Promise<void> {
+        const commitsFromGitHubSha = commitsFromGitHub.map(
+            (commit) => commit.sha
+        );
+        const commitsFromDatabaseSha = commitsFromDatabase.map(
+            (commit) => commit.sha!
+        );
+
+        const missingCommitsSha = commitsFromDatabaseSha.filter(
+            (sha) => !commitsFromGitHubSha.includes(sha)
+        );
+
+        if (missingCommitsSha.length > 0) {
+            logger.warn(
+                `There are commits missing on GitHub for repository "${repositoryName}" and branch "${branchName}":`,
+                { missingCommitsSha }
+            );
+            for (const commitSha of missingCommitsSha) {
+                const commit = await this.commitService.findOneByFields({
+                    sha: commitSha,
+                });
+                if (commit) {
+                    commit.possiblyAffectedByForcePush = true;
+                    const newCommitAttributes = {
+                        branchId: commit.branchId,
+                        contributorId: commit.contributorId,
+                        sha: commit.sha,
+                        message: commit.message,
+                        committedDate: commit.committedDate,
+                        possiblyAffectedByForcePush: true,
+                    };
+                    await this.commitService.createOrUpdate(
+                        newCommitAttributes
+                    );
+                }
+            }
         }
     }
 
@@ -208,6 +267,7 @@ class CommitFetcher {
             sha: commitData.sha,
             message: commitData.commit.message,
             committedDate: commitedDate,
+            possiblyAffectedByForcePush: undefined,
         };
         this.commitCache.set(commitData.sha, commitAttributes);
         return commitAttributes;

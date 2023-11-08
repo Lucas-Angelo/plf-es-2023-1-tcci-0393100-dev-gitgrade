@@ -13,6 +13,7 @@ interface ICommitAttributes {
     sha?: string;
     message?: string | null;
     committedDate?: Date;
+    possiblyAffectedByForcePush?: boolean;
 }
 
 class Commit extends Model<ICommitAttributes> {
@@ -22,7 +23,7 @@ class Commit extends Model<ICommitAttributes> {
     public sha!: string;
     public message!: string | null;
     public committedDate!: Date;
-
+    public possiblyAffectedByForcePush!: boolean;
     public branch!: Branch;
     public contributor!: Contributor | null;
     public files!: File[];
@@ -77,6 +78,12 @@ class Commit extends Model<ICommitAttributes> {
                     validate: {
                         notEmpty: true,
                     },
+                },
+                possiblyAffectedByForcePush: {
+                    field: "possibly_affected_by_force_push",
+                    type: DataTypes.BOOLEAN,
+                    allowNull: false,
+                    defaultValue: false,
                 },
             },
             {

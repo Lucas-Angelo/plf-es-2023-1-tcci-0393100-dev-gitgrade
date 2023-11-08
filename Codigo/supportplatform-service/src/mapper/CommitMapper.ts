@@ -14,6 +14,7 @@ export class CommitMapper {
                 : undefined,
             message: model.message,
             sha: model.sha,
+            possiblyAffectedByForcePush: model.possiblyAffectedByForcePush,
         };
     }
 }

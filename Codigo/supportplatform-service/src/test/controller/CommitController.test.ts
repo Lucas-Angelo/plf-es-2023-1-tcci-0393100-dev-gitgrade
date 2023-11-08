@@ -1,7 +1,7 @@
 import supertest from "supertest";
+import app from "../..";
 import { generateToken } from "../../config/JwtConfig";
 import Database from "../../database";
-import app from "../..";
 
 const baseRoute = "/commit";
 
@@ -153,6 +153,17 @@ describe(`GET ${baseRoute}`, () => {
             .send();
 
         expect(response.body.results).toHaveLength(4);
+        expect(response.body.totalPages).toBe(1);
+    });
+
+    it("should return 200 when filtering possiblyAffectedByForcePush equal 'true' and return 1 results and 1 pages", async () => {
+        const response = await supertest(app)
+            .get(`${baseRoute}?possiblyAffectedByForcePush=true`)
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(200)
+            .send();
+
+        expect(response.body.results).toHaveLength(1);
         expect(response.body.totalPages).toBe(1);
     });
 

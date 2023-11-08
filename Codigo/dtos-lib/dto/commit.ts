@@ -31,6 +31,8 @@ export interface CommitSearchDTO extends PaginationRequestDTO {
   contributor?: Array<string>;
   /** @isBool  filterWithNoContributor must be a boolean */
   filterWithNoContributor?: boolean;
+  /** @isBool  possiblyAffectedByForcePush must be a boolean */
+  possiblyAffectedByForcePush?: boolean;
 }
 
 /**
@@ -43,4 +45,5 @@ export interface CommitResponseDTO {
   branch: BranchDTO;
   contributor?: ContributorDTO;
   sha: string;
+  possiblyAffectedByForcePush: boolean;
 }
