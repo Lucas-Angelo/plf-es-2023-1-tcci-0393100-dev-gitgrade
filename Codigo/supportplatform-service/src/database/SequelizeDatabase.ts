@@ -104,7 +104,12 @@ class SequelizeDatabase {
                 EvaluationMethod,
                 ConsistencyRuleDelivery,
             });
-            EvaluationMethod.associate({ Repository, Sprint });
+            EvaluationMethod.associate({
+                Repository,
+                Sprint,
+                ConsistencyRule,
+                StandardizedIssue,
+            });
             Sprint.associate({ EvaluationMethod });
             StandardizedIssue.associate({ EvaluationMethod });
             ConsistencyRule.associate({

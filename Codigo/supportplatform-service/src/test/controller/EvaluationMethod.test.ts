@@ -911,3 +911,80 @@ describe(`DELETE ${baseRoute}/{id}`, () => {
         expect(response.body.message).toBe("Invalid token");
     });
 });
+
+describe(`POST ${baseRoute}/{id}/clone`, () => {
+    const authUser = generateToken(1);
+
+    beforeAll(async () => {
+        await new Database().connect();
+    });
+
+    it("should return 201 when cloning a evaluation method", async () => {
+        const response = await supertest(app)
+            .post(`${baseRoute}/13/clone`)
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(201)
+            .send();
+
+        expect(response.body.id).toBe(39);
+        expect(response.body.description).toContain(
+            "Interdisciplinary Work 1 (Cópia) "
+        );
+        expect(response.body.semester).toBe(1);
+        expect(response.body.year).toBe(2022);
+        expect(response.body.disabledAt).toBe(null);
+    });
+
+    it("should return 404 when evaluation method is not found", async () => {
+        const response = await supertest(app)
+            .post(`${baseRoute}/9999/clone`)
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(404)
+            .send();
+
+        expect(response.body.message).toBe(
+            "Evaluation method with id: 9999 not found"
+        );
+    });
+
+    it("should return 422 when id is not a number", async () => {
+        const response = await supertest(app)
+            .post(`${baseRoute}/abc/clone`)
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(422)
+            .send();
+
+        expect(response.body.error?.["id"]?.message).toBe(
+            "invalid float number"
+        );
+    });
+
+    it("should return 401 when no token is provided", async () => {
+        const response = await supertest(app)
+            .post(`${baseRoute}/1/clone`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("No authorization header provided");
+    });
+
+    it("should return 401 when token is not Bearer", async () => {
+        const response = await supertest(app)
+            .post(`${baseRoute}/1/clone`)
+            .set("Authorization", `Basic ${authUser.token}`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid authorization header");
+    });
+
+    it("should return 401 when token is invalid", async () => {
+        const response = await supertest(app)
+            .post(`${baseRoute}/1/clone`)
+            .set("Authorization", `Bearer invalid-token`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid token");
+    });
+});

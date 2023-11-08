@@ -1096,6 +1096,32 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/evaluation-method/:id/clone',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(EvaluationMethodController)),
+            ...(fetchMiddlewares<RequestHandler>(EvaluationMethodController.prototype.clone)),
+
+            function EvaluationMethodController_clone(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new EvaluationMethodController();
+
+
+              const promise = controller.clone.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 201, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/file',
             authenticateMiddleware([{"bearer":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(FileController)),

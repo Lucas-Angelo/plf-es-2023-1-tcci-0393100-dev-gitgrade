@@ -3294,6 +3294,45 @@
 				]
 			}
 		},
+		"/evaluation-method/{id}/clone": {
+			"post": {
+				"operationId": "Clone",
+				"responses": {
+					"201": {
+						"description": "EvaluationMethod cloned",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/EvaluationMethodResponseDTO"
+								}
+							}
+						}
+					}
+				},
+				"description": "Clone an existing EvaluationMethod by id.",
+				"tags": [
+					"evaluation-method"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
 		"/file": {
 			"get": {
 				"operationId": "GetAll",

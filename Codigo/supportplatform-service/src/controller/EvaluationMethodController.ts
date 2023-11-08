@@ -157,4 +157,20 @@ export class EvaluationMethodController extends Controller {
         this.setStatus(204);
         await this.evaluationMethodService.delete(id);
     }
+
+    /**
+     * Clone an existing EvaluationMethod by id.
+     * @path id Id of the EvaluationMethod to clone.
+     * @return EvaluationMethodResponseDTO The cloned EvaluationMethod.
+     */
+    @Post("/{id}/clone")
+    @SuccessResponse("201", "EvaluationMethod cloned")
+    public async clone(
+        @Path() id: number
+    ): Promise<EvaluationMethodResponseDTO> {
+        this.setStatus(201);
+        const serviceResponse = await this.evaluationMethodService.clone(id);
+        const mapper = new EvaluationMethodMapper();
+        return mapper.toDto(serviceResponse);
+    }
 }
