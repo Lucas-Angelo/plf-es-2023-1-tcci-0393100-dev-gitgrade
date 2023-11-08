@@ -76,6 +76,98 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"CodeQualityStatus": {
+				"enum": [
+					"ANALYZING",
+					"ANALYZED",
+					"ERROR"
+				],
+				"type": "string"
+			},
+			"CodeQualityResponseDTO": {
+				"description": "CodeQualityResponseDTO - DTO for code quality analysis response.",
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"repositoryId": {
+						"type": "number",
+						"format": "double"
+					},
+					"url": {
+						"type": "string"
+					},
+					"status": {
+						"$ref": "#/components/schemas/CodeQualityStatus"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"repositoryId",
+					"url",
+					"status",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PaginationResponseDTO_CodeQualityResponseDTO_": {
+				"properties": {
+					"results": {
+						"items": {
+							"$ref": "#/components/schemas/CodeQualityResponseDTO"
+						},
+						"type": "array"
+					},
+					"totalPages": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"results",
+					"totalPages"
+				],
+				"type": "object"
+			},
+			"CodeQualitySearchDTO": {
+				"properties": {
+					"page": {
+						"type": "integer",
+						"format": "int32",
+						"default": "1",
+						"minimum": 1
+					},
+					"limit": {
+						"type": "integer",
+						"format": "int32",
+						"default": "10",
+						"minimum": 1
+					},
+					"repositoryId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1
+					},
+					"url": {
+						"type": "string"
+					},
+					"status": {
+						"$ref": "#/components/schemas/CodeQualityStatus"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ContributorDTO": {
 				"properties": {
 					"id": {
@@ -1888,6 +1980,180 @@
 						}
 					}
 				}
+			}
+		},
+		"/code-quality/repository/{repositoryId}": {
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"201": {
+						"description": "Code quality analysis for repository created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CodeQualityResponseDTO"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": 1,
+											"url": "/dashboard?id=repositoryNameTimeStamp",
+											"repositoryId": 1,
+											"status": "ANALYZING",
+											"createdAt": "2023-01-01T00:00:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a code quality analysis for a repository.",
+				"tags": [
+					"code-quality"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Found code quality analysis",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PaginationResponseDTO_CodeQualityResponseDTO_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"totalPages": 1,
+											"results": [
+												{
+													"id": 1,
+													"url": "/dashboard?id=repositoryNameTimeStamp",
+													"repositoryId": 1,
+													"status": "ANALYZING",
+													"createdAt": "2023-01-01T00:00:00.000Z"
+												},
+												{
+													"id": 2,
+													"url": "/dashboard?id=repositoryNameTimeStamp",
+													"repositoryId": 1,
+													"status": "ANALYZED",
+													"createdAt": "2023-01-01T00:00:00.000Z"
+												},
+												{
+													"id": 3,
+													"url": "/dashboard?id=repositoryNameTimeStamp",
+													"repositoryId": 1,
+													"status": "ERROR",
+													"createdAt": "2023-01-01T00:00:00.000Z"
+												}
+											]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all CodeQuality by repositoryId.",
+				"tags": [
+					"code-quality"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "repositoryId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": "1",
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"default": "10",
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "repositoryId",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "url",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/CodeQualityStatus"
+						}
+					},
+					{
+						"in": "query",
+						"name": "createdAt",
+						"required": false,
+						"schema": {
+							"format": "date",
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/commit": {

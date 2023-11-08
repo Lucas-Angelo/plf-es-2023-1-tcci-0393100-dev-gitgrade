@@ -15,7 +15,7 @@ class MySqlDatabase {
     constructor() {
         this.connectionConfig = {
             host: EnvConfig.DB_HOST,
-            port: parseInt(EnvConfig.DB_PORT ?? "3306"),
+            port: EnvConfig.DB_PORT ?? 3306,
             user: EnvConfig.DB_USER,
             password: EnvConfig.DB_PASSWORD,
         };
