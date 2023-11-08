@@ -1,7 +1,7 @@
 import logger from "../../config/LogConfig";
 import { IContributorAttributes } from "../../model/Contributor";
 import { IPullRequestAttributes } from "../../model/PullRequest";
-import { IRepositoryAttributes } from "../../model/Repository";
+import { IRepositoryAttributes, Repository } from "../../model/Repository";
 import {
     GitHubPullRequestService,
     PullRequestGitHub,
@@ -39,13 +39,22 @@ class PullRequestFetcher {
         this.fetchUtil = new FetchUtil();
     }
 
-    async fetchPullRequestsForRepositories() {
+    async fetchPullRequestsForRepositories(repositoryIds?: Array<number>) {
         try {
             logger.info("Starting Pull Request Fetcher...");
 
             // TODO: Fetch only repositories with automatic sync enabled
-            const repositories =
-                await this.repositoryService.findAllWithAutomaticSynchronizationEnable();
+            let repositories: Repository[];
+
+            if (repositoryIds && repositoryIds.length > 0) {
+                repositories = await this.repositoryService.findAllByField(
+                    "id",
+                    repositoryIds
+                );
+            } else {
+                repositories =
+                    await this.repositoryService.findAllWithAutomaticSynchronizationEnable();
+            }
 
             for (const repository of repositories) {
                 const pullRequests = await this.fetchPullRequestsWithRetry(

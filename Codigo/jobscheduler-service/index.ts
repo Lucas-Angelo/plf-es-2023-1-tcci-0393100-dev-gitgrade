@@ -1,6 +1,9 @@
 import logger from "./src/config/LogConfig";
 import { JobScheduler } from "./src/cron/JobScheduler";
 import SequelizeDatabase from "./src/database/SequelizeDatabase";
+import { Express } from "express";
+import app from "./src/api";
+import EnvConfig from "./src/config/EnvConfig";
 
 class Database {
     private sequelizeDatabase: SequelizeDatabase;
@@ -34,10 +37,12 @@ class Database {
 class ApplicationInitializer {
     private database: Database;
     private jobScheduler: JobScheduler;
+    private app: Express;
 
     constructor() {
         this.database = new Database();
         this.jobScheduler = new JobScheduler();
+        this.app = app;
     }
 
     async initializeApp() {
@@ -47,6 +52,9 @@ class ApplicationInitializer {
             await this.database.connect();
 
             this.jobScheduler.start();
+            this.app.listen(EnvConfig.PORT, () => {
+                logger.info(`Server running on port ${EnvConfig.PORT}!`);
+            });
 
             // The database disconnection is not called here because
             // the app should remain running for the scheduler to execute the tasks.

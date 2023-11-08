@@ -46,6 +46,51 @@ class RepositoryFetcher {
         }
     }
 
+    async updateRepositoriesById(repositoryIds: Array<number>) {
+        try {
+            logger.info("Starting Repository Fetcher...");
+            for (const repositoryId of repositoryIds) {
+                try {
+                    const existingRepository =
+                        await this.repositoryService.findOneByField(
+                            "id",
+                            repositoryId
+                        );
+                    if (!existingRepository) {
+                        logger.error("Repository not found:", {
+                            repositoryId,
+                        });
+                        continue;
+                    }
+                    const githubRepository: RepositoryGitHub =
+                        await this.fetchRepositoryByIdWithRetry(
+                            existingRepository.githubId
+                        );
+                    await this.fetchAndCreateOrUpdateRepository(
+                        githubRepository
+                    );
+                } catch (error) {
+                    logger.error("Error fetching repository:", { error });
+                }
+            }
+        } catch (error) {
+            logger.error("Error fetching repositories:", { error });
+            throw error;
+        }
+    }
+
+    private async fetchRepositoryByIdWithRetry(
+        githubRepositoryId: string
+    ): Promise<RepositoryGitHub> {
+        return await this.fetchUtil.retry(
+            () =>
+                this.gitHubRepositoryService.getRepositoryByGitHubId(
+                    githubRepositoryId
+                ),
+            `Error fetching repository with id "${githubRepositoryId}"`
+        );
+    }
+
     private async fetchAndCreateOrUpdateRepository(repoData: RepositoryGitHub) {
         let repositoryAttributes: IRepositoryAttributes;
         try {

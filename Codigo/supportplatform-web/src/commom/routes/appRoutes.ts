@@ -297,6 +297,18 @@ const appRoutes = {
                 },
             },
         },
+
+        sync: {
+            path: "sync" as const,
+            link() {
+                return `${appRoutes.repo.link()}/${this.path}`;
+            },
+
+            // necessary to map query string param name per a trustable variable
+            search: {
+                repositoryId: "repositoryId",
+            },
+        },
     },
 
     evaluationMethod: {

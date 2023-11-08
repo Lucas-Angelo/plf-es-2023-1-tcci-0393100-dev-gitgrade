@@ -336,6 +336,10 @@ const routes = createRoutesFromElements(
                         />
                     </Route>
                     <Route
+                        path={appRoutes.repo.sync.path}
+                        lazy={() => import("../../pages/repo/sync/index")}
+                    />
+                    <Route
                         path=""
                         element={
                             <Navigate

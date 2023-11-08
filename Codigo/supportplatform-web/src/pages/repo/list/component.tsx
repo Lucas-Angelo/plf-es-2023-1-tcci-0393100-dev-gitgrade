@@ -1,9 +1,9 @@
 import { PageLayout, Pagination, Box } from "@primer/react";
 import { useLoaderData, useSearchParams } from "react-router-dom";
 import appRoutes from "../../../commom/routes/appRoutes";
-import RepoCard from "../../../commom/components/repoCard";
 import { RepoListPageLoaderData } from "./loader";
 import RepoFilter from "./components/repoFilter";
+import RepositoryRow from "./components/repositoryRow";
 
 const pageSearchParams = appRoutes.repo.list.search;
 
@@ -31,19 +31,12 @@ export default function RepoListPage() {
                     </Box>
                 )}
                 {loaderData.results.map((repo) => (
-                    <Box
-                        sx={{ mb: 3 }}
+                    <RepositoryRow
                         key={repo.id}
-                    >
-                        <RepoCard
-                            name={repo.name}
-                            evaluationMethod={
-                                repo.evaluationMethod ?? undefined
-                            }
-                            id={repo.id}
-                            key={repo.id}
-                        />
-                    </Box>
+                        id={repo.id}
+                        name={repo.name}
+                        evaluationMethod={repo.evaluationMethod ?? undefined}
+                    />
                 ))}
             </Box>
 

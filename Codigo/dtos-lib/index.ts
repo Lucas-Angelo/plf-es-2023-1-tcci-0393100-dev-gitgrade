@@ -6,6 +6,7 @@ import { FileTypeMetricDTO, FileTypeMetricsDTO } from "./dto/fileMetrics";
 import { IssueMetricQueryDTO, IssueMetricsDTO } from "./dto/issueMetrics";
 import { RepositoryMetricQueryDTO } from "./dto/repositoryMetrics";
 
+import { GetPublicKeyResponseDTO } from "./dto/auth";
 import {
   CodeQualityResponseDTO,
   CodeQualitySearchDTO,
@@ -87,6 +88,7 @@ export type {
   FileSearchDTO,
   FileTypeMetricDTO,
   FileTypeMetricsDTO,
+  GetPublicKeyResponseDTO,
   GetAllBranchQueryDTO,
   GetAllContributorQueryDTO,
   GetAllRepositoryQueryDTO,

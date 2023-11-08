@@ -1,5 +1,6 @@
 import logger from "../../config/LogConfig";
 import { IBranchAttributes } from "../../model/Branch";
+import { Repository } from "../../model/Repository";
 import { BranchService } from "../../service/BranchService";
 import { RepositoryService } from "../../service/RepositoryService";
 import {
@@ -21,13 +22,21 @@ class BranchFetcher {
         this.fetchUtil = new FetchUtil();
     }
 
-    async fetchBranchesForRepositories() {
+    async fetchBranchesForRepositories(repositoryIds?: Array<number>) {
         try {
             logger.info("Starting Branch Fetcher...");
 
-            // TODO: Fetch only repositories with automatic sync enabled
-            const repositories =
-                await this.repositoryService.findAllWithAutomaticSynchronizationEnable();
+            let repositories: Repository[];
+
+            if (repositoryIds && repositoryIds.length > 0) {
+                repositories = await this.repositoryService.findAllByField(
+                    "id",
+                    repositoryIds
+                );
+            } else {
+                repositories =
+                    await this.repositoryService.findAllWithAutomaticSynchronizationEnable();
+            }
 
             for (const repository of repositories) {
                 const branches = await this.fetchBranchesWithRetry(

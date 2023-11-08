@@ -5,6 +5,7 @@ import { RepoIcon } from "@primer/octicons-react";
 import appRoutes from "../../routes/appRoutes";
 import React from "react";
 import EvaluationMethodLink from "../evaluationMethodLink";
+import SyncRepositoryButton from "../syncRepositoryButton";
 
 interface IRepoCardProps {
     id: number;
@@ -16,6 +17,8 @@ interface IRepoCardProps {
         year: number;
     };
     children?: React.ReactNode;
+
+    synchronizing: boolean | undefined;
 }
 
 export default function RepoCard(props: IRepoCardProps) {
@@ -43,7 +46,11 @@ export default function RepoCard(props: IRepoCardProps) {
             )}
             <Card.Actions>
                 {props.children}
-                <Button>Sincronizar</Button>
+                <SyncRepositoryButton
+                    repositoryId={props.id}
+                    synchronizing={props.synchronizing ?? false}
+                    variant="default"
+                />
                 <Link
                     to={appRoutes.repo["detail"].link(props.id)}
                     style={{ textDecoration: "none" }}

@@ -1,4 +1,4 @@
-import { Box, Button } from "@primer/react";
+import { Button } from "@primer/react";
 import SearchParamControlledModal from "../../../../../../commom/components/searchParamControlledModal";
 import LinkRepositoryModal from "../linkRepositoryModal";
 import appRoutes from "../../../../../../commom/routes/appRoutes";
@@ -16,13 +16,7 @@ export default function LinkRepositoryButton() {
     }
 
     return (
-        <Box
-            sx={{
-                display: "flex",
-                justifyContent: "flex-end",
-                mb: 3,
-            }}
-        >
+        <>
             <Button
                 variant="primary"
                 onClick={handleLinkRepositoryButtonClick}
@@ -40,6 +34,6 @@ export default function LinkRepositoryButton() {
             >
                 <LinkRepositoryModal />
             </SearchParamControlledModal>
-        </Box>
+        </>
     );
 }

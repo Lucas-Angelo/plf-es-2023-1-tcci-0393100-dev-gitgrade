@@ -15,11 +15,20 @@ export const useRepositoryList = (filterOptions?: GetAllRepositoryQueryDTO) =>
     useQuery(getRepositoryQuery(filterOptions));
 
 export const getRepositoryByIdQuery = (id: number) => ({
-    queryKey: ["repo", id],
+    queryKey: ["repo", id.toString()],
     queryFn: async () =>
         new RepositoryService().getById(id).then((res) => res.data),
     staleTime: Number.MAX_VALUE,
 });
 
 export const useRepositoryById = (id: number) =>
-    useQuery(getRepositoryByIdQuery(id));
+    useQuery({
+        ...getRepositoryByIdQuery(id),
+        refetchInterval(data) {
+            if (data?.synchronizing) {
+                // refetch every minute
+                return 60 * 1000;
+            }
+            return false;
+        },
+    });

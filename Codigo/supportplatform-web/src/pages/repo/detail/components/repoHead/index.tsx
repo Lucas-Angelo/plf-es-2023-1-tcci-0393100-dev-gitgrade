@@ -1,4 +1,4 @@
-import { Box, Button, Link as PrimerLink, Octicon } from "@primer/react";
+import { Box, Link as PrimerLink, Octicon } from "@primer/react";
 import { RepoIcon, PaperclipIcon } from "@primer/octicons-react";
 
 import "./styles.css";
@@ -7,8 +7,11 @@ import RepoHeadNavigation from "../repoHeadNavigation";
 import { useSearchParams } from "react-router-dom";
 import appRoutes from "../../../../../commom/routes/appRoutes";
 import EvaluationMethodLink from "../../../../../commom/components/evaluationMethodLink";
+import SyncRepositoryButton from "../../../../../commom/components/syncRepositoryButton";
 
 interface IRepoHeadProps {
+    id: number;
+    synchronizing: boolean;
     orgName: string;
     repoName: string;
     evaluationMethod?: {
@@ -100,9 +103,10 @@ export default function RepoHead(props: IRepoHeadProps) {
                     />
                 )}
 
-                <Box>
-                    <Button variant="primary">Sincronizar</Button>
-                </Box>
+                <SyncRepositoryButton
+                    repositoryId={props.id}
+                    synchronizing={props.synchronizing}
+                />
             </Box>
 
             <Box className="underline-nav-wrapper">

@@ -1,4 +1,5 @@
 import logger from "../../config/LogConfig";
+import { Repository } from "../../model/Repository";
 import { BranchService } from "../../service/BranchService";
 import { CommitService } from "../../service/CommitService";
 import { FileService } from "../../service/FileService";
@@ -23,10 +24,18 @@ class FileFetcher {
         this.fetchUtil = new FetchUtil();
     }
 
-    async fetchFilesForRepositories() {
-        // TODO: Fetch only repositories with automatic sync enabled
-        const repositories =
-            await this.repositoryService.findAllWithAutomaticSynchronizationEnable();
+    async fetchFilesForRepositories(repositoryIds?: Array<number>) {
+        let repositories: Repository[];
+
+        if (repositoryIds && repositoryIds.length > 0) {
+            repositories = await this.repositoryService.findAllByField(
+                "id",
+                repositoryIds
+            );
+        } else {
+            repositories =
+                await this.repositoryService.findAllWithAutomaticSynchronizationEnable();
+        }
 
         for (const repository of repositories) {
             const branches = await this.branchService.findAllByFields({
