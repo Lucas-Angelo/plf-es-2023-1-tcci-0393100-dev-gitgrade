@@ -72,6 +72,8 @@ services:
 
   sonarqube:
     image: sonarqube:8.2-community # sonarqube:7.7-community sonarqube:8.2-community sonarqube:9.8.0-community
+    security_opt:
+      - seccomp:unconfined 
     restart: unless-stopped
     depends_on:
       - postgresql-sonarqube
@@ -84,6 +86,7 @@ services:
       - SONAR_JDBC_USERNAME=$SONARQUBE_POSTGRES_USERNAME
       - SONAR_JDBC_PASSWORD=$SONARQUBE_POSTGRES_PASSWORD
       - sonar.es.bootstrap.checks.disable=true # don't remove this line, or app will crash without memory
+      - sonar.search.javaAdditionalOpts=-Dbootstrap.system_call_filter=false
     volumes:
       - gitgrade-sonarqube-data:/opt/sonarqube/data
       - gitgrade-sonarqube-logs:/opt/sonarqube/logs

@@ -206,7 +206,10 @@ class SonarQubeAnalyzer {
                             "sonar.sources": this.repositoryPath,
                             "sonar.projectName": this.projectName,
                             "sonar.login": token,
-                            "sonar.exclusions": "**/node_modules/**",
+                            "sonar.analysisCache.enabled": "false",
+                            "sonar.java.binaries": ".",
+                            "sonar.exclusions":
+                                "**/node_modules/**,**/*.jpeg,**/*.jpg,**/*.png,**/*.gif,**/*.svg,**/*.mp3,**/*.mp4,**/*.avi,**/*.mov,**/*.wav,**/*.docx,**/*.doc,**/*.pdf,**/*.zip,**/*.rar,**/*.xls,**/*.xlsx,**/*.csv,**/*.ppt,**/*.pptx,**/*.sql,**/*.ico,**/*.bmp,**/*.tiff,**/*.psd,**/*.flv,**/*.mkv,**/*.webm,**/*.ogg,**/*.aac,**/*.flac,**/*.ttf,**/*.woff,**/*.woff2,**/*.eot,**/*.exe,**/*.dll,**/*.obj,**/*.lib,**/*.apk,**/*.ipa,**/.DS_Store,**/.vscode/**,**/.idea/**,**/*.iml,**/*.log,**/tmp/**,**/.tmp/**,**/.cache/**,**/*.db,**/*.sqlite",
                             "sonar.sourceEncoding": "UTF-8",
                         },
                     },
