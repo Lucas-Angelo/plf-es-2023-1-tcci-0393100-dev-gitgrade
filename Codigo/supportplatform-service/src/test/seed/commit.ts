@@ -9,6 +9,7 @@ const commitTestingSeed = [
         sha: "sha1",
         message: "first commit",
         committedDate: new Date("2023-01-10T02:01:00-03:00"),
+        possiblyAffectedByForcePush: false,
     },
     {
         id: 2,
@@ -17,6 +18,7 @@ const commitTestingSeed = [
         sha: "sha2",
         message: "message2",
         committedDate: new Date("2023-02-03T23:52:12-03:00"),
+        possiblyAffectedByForcePush: false,
     },
     {
         id: 3,
@@ -25,6 +27,7 @@ const commitTestingSeed = [
         sha: "sha3",
         message: "message3",
         committedDate: new Date("2023-02-04T23:12:00-03:00"),
+        possiblyAffectedByForcePush: false,
     },
     {
         id: 4,
@@ -33,6 +36,7 @@ const commitTestingSeed = [
         sha: "sha4",
         message: "message4",
         committedDate: new Date("2023-02-07T12:00:00-03:00"),
+        possiblyAffectedByForcePush: false,
     },
     {
         id: 5,
@@ -41,6 +45,7 @@ const commitTestingSeed = [
         sha: "sha5",
         message: "message5",
         committedDate: new Date("2023-03-01T12:00:00-03:00"),
+        possiblyAffectedByForcePush: false,
     },
     {
         id: 6,
@@ -49,6 +54,7 @@ const commitTestingSeed = [
         sha: "sha1",
         message: "first commit",
         committedDate: new Date("2023-01-10T02:01:00-03:00"),
+        possiblyAffectedByForcePush: false,
     },
     {
         id: 7,
@@ -57,6 +63,7 @@ const commitTestingSeed = [
         sha: "sha2",
         message: "message2",
         committedDate: new Date("2023-02-03T15:52:12-03:00"),
+        possiblyAffectedByForcePush: false,
     },
     {
         id: 8,
@@ -65,6 +72,7 @@ const commitTestingSeed = [
         sha: "sha3",
         message: "message3",
         committedDate: new Date("2023-02-04T23:12:00-03:00"),
+        possiblyAffectedByForcePush: false,
     },
     {
         id: 9,
@@ -73,6 +81,7 @@ const commitTestingSeed = [
         sha: "sha4",
         message: "message4",
         committedDate: new Date("2023-02-07T12:00:00-03:00"),
+        possiblyAffectedByForcePush: false,
     },
 
     {
@@ -82,6 +91,7 @@ const commitTestingSeed = [
         sha: "el-sha1",
         message: "awful",
         committedDate: new Date("2023-01-10T02:01:00-03:00"),
+        possiblyAffectedByForcePush: false,
     },
     {
         id: 11,
@@ -90,6 +100,7 @@ const commitTestingSeed = [
         sha: "el-sha2",
         message: "bad commit message",
         committedDate: new Date("2023-02-03T15:52:12-03:00"),
+        possiblyAffectedByForcePush: false,
     },
     {
         id: 12,
@@ -98,6 +109,7 @@ const commitTestingSeed = [
         sha: "el-sha3",
         message: "regular commit message ( > 20 < 40)",
         committedDate: new Date("2023-02-04T23:12:00-03:00"),
+        possiblyAffectedByForcePush: false,
     },
     {
         id: 13,
@@ -106,6 +118,7 @@ const commitTestingSeed = [
         sha: "el-sha4",
         message: "another regular commit message",
         committedDate: new Date("2023-02-07T12:00:00-03:00"),
+        possiblyAffectedByForcePush: false,
     },
     {
         id: 14,
@@ -114,6 +127,7 @@ const commitTestingSeed = [
         sha: "el-sha5",
         message: "another regular commit message",
         committedDate: new Date("2023-03-01T12:00:00-03:00"),
+        possiblyAffectedByForcePush: false,
     },
     {
         id: 15,
@@ -122,6 +136,7 @@ const commitTestingSeed = [
         sha: "el-sha6",
         message: "an ideal commit message with more than 40 caracteres",
         committedDate: new Date("2023-03-01T12:00:00-03:00"),
+        possiblyAffectedByForcePush: false,
     },
     {
         id: 16,
@@ -130,6 +145,7 @@ const commitTestingSeed = [
         sha: "el-sha7",
         message: "an ideal commit message with more than 40 caracteres",
         committedDate: new Date("2023-03-01T12:00:00-03:00"),
+        possiblyAffectedByForcePush: false,
     },
     {
         id: 17,
@@ -139,6 +155,7 @@ const commitTestingSeed = [
         message:
             "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean ma",
         committedDate: new Date("2023-03-01T12:00:00-03:00"),
+        possiblyAffectedByForcePush: false,
     },
     {
         id: 18,
@@ -148,6 +165,7 @@ const commitTestingSeed = [
         message:
             "Merge branch 'master' of https://github.com/icei-pucminas/plf-es-2020-2-tiiv-8499100-conectivo into master",
         committedDate: new Date("2023-03-01T12:00:00-03:00"),
+        possiblyAffectedByForcePush: false,
     },
     {
         id: 19,
@@ -157,6 +175,7 @@ const commitTestingSeed = [
         message:
             "Merge remote-tracking branch 'refs/remotes/origin/frontPages&Changes",
         committedDate: new Date("2023-03-01T12:00:00-03:00"),
+        possiblyAffectedByForcePush: false,
     },
     {
         id: 20,
@@ -165,6 +184,7 @@ const commitTestingSeed = [
         sha: "el-sha11",
         message: "Merge pull request #4 from rafaelbotazini/authentication",
         committedDate: new Date("2023-03-01T12:00:00-03:00"),
+        possiblyAffectedByForcePush: false,
     },
     {
         id: 5001,
@@ -172,6 +192,7 @@ const commitTestingSeed = [
         sha: "sha-la-la-la",
         message: "no contributor",
         committedDate: new Date("2023-02-10T02:00:00-03:00"),
+        possiblyAffectedByForcePush: false,
     },
     {
         id: 5002,
@@ -179,6 +200,7 @@ const commitTestingSeed = [
         sha: "sha-la hein sha-la",
         message: "no contributor 2",
         committedDate: new Date("2023-02-10T03:30:00-03:00"),
+        possiblyAffectedByForcePush: false,
     },
     {
         id: 2001,
@@ -186,6 +208,7 @@ const commitTestingSeed = [
         sha: "el-sha12",
         message: "an ideal commit message with more than 40 caracteres",
         committedDate: new Date("2023-02-02T12:00:00-03:00"),
+        possiblyAffectedByForcePush: false,
     },
     {
         id: 2002,
@@ -193,6 +216,7 @@ const commitTestingSeed = [
         sha: "el-sha13",
         message: "bad one",
         committedDate: new Date("2023-02-02T16:00:00-03:00"),
+        possiblyAffectedByForcePush: true,
     },
 ];
 

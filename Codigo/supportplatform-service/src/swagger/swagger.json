@@ -224,6 +224,9 @@
 					},
 					"sha": {
 						"type": "string"
+					},
+					"possiblyAffectedByForcePush": {
+						"type": "boolean"
 					}
 				},
 				"required": [
@@ -231,7 +234,8 @@
 					"message",
 					"committedDate",
 					"branch",
-					"sha"
+					"sha",
+					"possiblyAffectedByForcePush"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -296,6 +300,9 @@
 						"type": "array"
 					},
 					"filterWithNoContributor": {
+						"type": "boolean"
+					},
+					"possiblyAffectedByForcePush": {
 						"type": "boolean"
 					}
 				},
@@ -2190,7 +2197,8 @@
 														"githubLogin": "octocat",
 														"githubEmail": "pessoa@email.com",
 														"githubName": "Octo Cat"
-													}
+													},
+													"possiblyAffectedByForcePush": false
 												}
 											]
 										}
@@ -2292,6 +2300,14 @@
 					{
 						"in": "query",
 						"name": "filterWithNoContributor",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "possiblyAffectedByForcePush",
 						"required": false,
 						"schema": {
 							"type": "boolean"

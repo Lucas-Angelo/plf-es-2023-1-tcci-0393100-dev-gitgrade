@@ -57,6 +57,7 @@ export class CommitController extends Controller {
                     githubEmail: "pessoa@email.com",
                     githubName: "Octo Cat",
                 },
+                possiblyAffectedByForcePush: false,
             },
         ],
     })

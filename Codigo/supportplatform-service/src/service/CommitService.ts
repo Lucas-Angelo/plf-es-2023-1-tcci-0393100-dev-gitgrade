@@ -1,19 +1,18 @@
-import sequelize, { Sequelize } from "sequelize";
-import { Branch } from "../model/Branch";
-import { Commit } from "../model/Commit";
-import { Contributor } from "../model/Contributor";
+import { CommitSearchDTO, PaginationResponseDTO } from "@gitgrade/dtos";
+import sequelize, { Op, Sequelize } from "sequelize";
+import logger from "../config/LogConfig";
+import AppError from "../error/AppError";
+import { CommitWhereClauseType } from "../interface/Commit";
 import {
     CommitMetricsServiceQueryDataValues,
     CommitMetricsServiceResponse,
     CommitQualityMetricsServiceQueryDataValues,
     CommitQualityMetricsServiceResponse,
 } from "../interface/CommitMetrics";
-import { Op } from "sequelize";
+import { Branch } from "../model/Branch";
+import { Commit } from "../model/Commit";
+import { Contributor } from "../model/Contributor";
 import { getContributorWhere } from "../utils/contributorFilter";
-import { CommitSearchDTO, PaginationResponseDTO } from "@gitgrade/dtos";
-import logger from "../config/LogConfig";
-import AppError from "../error/AppError";
-import { CommitWhereClauseType } from "../interface/Commit";
 import { sequelizePagination } from "../utils/pagination";
 
 export default class CommitService {
@@ -352,6 +351,12 @@ export default class CommitService {
                     `%${filter.message.toLowerCase()}%`
                 )
             );
+        }
+
+        if (filter.possiblyAffectedByForcePush) {
+            whereConditions.push({
+                possiblyAffectedByForcePush: filter.possiblyAffectedByForcePush,
+            });
         }
 
         logger.info("Constructed where conditions: ", { whereConditions });
