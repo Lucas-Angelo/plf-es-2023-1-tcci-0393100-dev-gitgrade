@@ -73,6 +73,18 @@ const standardizedIssueTestingSeed: IStandardizedIssueAttributes[] = [
         title: "Issue 12",
         description: "Issue 12 description",
     },
+    {
+        id: 13,
+        evaluationMethodId: 14,
+        title: "Issue 13 TO DELETE",
+        description: "Issue 13 description",
+    },
+    {
+        id: 14,
+        evaluationMethodId: 14,
+        title: "Issue 14 TO BROKE DELETION WITH ASSOCIATION",
+        description: "Issue 14 description",
+    },
 ];
 
 export { standardizedIssueTestingSeed };

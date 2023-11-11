@@ -9,6 +9,7 @@ import { Op, Sequelize } from "sequelize";
 import logger from "../config/LogConfig";
 import AppError from "../error/AppError";
 import { SprintWhereClauseType } from "../interface/Sprint";
+import { ConsistencyRule } from "../model/ConsistencyRule";
 import { EvaluationMethod } from "../model/EvaluationMethod";
 import { Sprint } from "../model/Sprint";
 import { SequelizeUtil } from "../utils/SequelizeUtil";
@@ -168,6 +169,33 @@ export default class SprintService {
                 { error }
             );
             throw error;
+        }
+    }
+
+    /**
+     * Delete a Sprint.
+     * Checks for associated ConsistencyRules before deleting.
+     */
+    async delete(id: number): Promise<void> {
+        const sprint = await this.findOneBy({ id });
+
+        // Check if there are any associated ConsistencyRules before deleting the Sprint
+        const consistencyRules = await ConsistencyRule.count({
+            where: { sprintId: id },
+        });
+        if (consistencyRules > 0) {
+            throw new AppError(
+                "Sprint cannot be deleted because it has associated evaluations",
+                400
+            );
+        }
+
+        try {
+            await sprint.destroy();
+            logger.info("Sprint successfully deleted");
+        } catch (error) {
+            logger.error("Error deleting sprint:", { error });
+            throw new AppError("Failed to delete sprint", 500, error);
         }
     }
 

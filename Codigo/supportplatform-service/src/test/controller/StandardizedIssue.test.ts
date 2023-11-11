@@ -29,7 +29,7 @@ describe(`GET ${baseRoute}`, () => {
             .expect(200)
             .send();
 
-        expect(response.body.results).toHaveLength(2);
+        expect(response.body.results).toHaveLength(4);
         expect(response.body.totalPages).toBe(2);
     });
 
@@ -41,7 +41,7 @@ describe(`GET ${baseRoute}`, () => {
             .send();
 
         expect(response.body.results).toHaveLength(2);
-        expect(response.body.totalPages).toBe(6);
+        expect(response.body.totalPages).toBe(7);
     });
 
     it("should return 200 when filtering evaluationMethodId equal '14' and return 8 results and 1 page", async () => {
@@ -51,7 +51,7 @@ describe(`GET ${baseRoute}`, () => {
             .expect(200)
             .send();
 
-        expect(response.body.results).toHaveLength(8);
+        expect(response.body.results).toHaveLength(10);
         expect(response.body.totalPages).toBe(1);
     });
 
@@ -408,7 +408,7 @@ describe(`POST ${baseRoute}`, () => {
                 description: "Issue 13 description",
             });
 
-        expect(response.body.id).toBe(13);
+        expect(response.body.id).toBe(15);
         expect(response.body.evaluationMethodId).toBe(13);
         expect(response.body.title).toBe("Issue 13");
         expect(response.body.description).toBe("Issue 13 description");
@@ -424,7 +424,7 @@ describe(`POST ${baseRoute}`, () => {
                 title: "Issue 14",
             });
 
-        expect(response.body.id).toBe(14);
+        expect(response.body.id).toBe(16);
         expect(response.body.evaluationMethodId).toBe(13);
         expect(response.body.title).toBe("Issue 14");
         expect(response.body.description).toBe(null);
@@ -902,5 +902,88 @@ describe(`PUT ${baseRoute}/{id}`, () => {
             .send();
 
         expect(response.body.message).toBe("No authorization header provided");
+    });
+});
+
+describe(`DELETE ${baseRoute}`, () => {
+    const authUser = generateToken(1);
+
+    beforeAll(async () => {
+        await new Database().connect();
+    });
+
+    it("should return 204 when deleting standardized issue without associations with consistency rules", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/13`)
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(204)
+            .send();
+
+        expect(response.body).toStrictEqual({});
+    });
+
+    it("should return 400 when deleting a standardized issue with associations with consistency rules", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/14`)
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(400)
+            .send();
+
+        expect(response.body.message).toBe(
+            "StandardizedIssue cannot be deleted because it has associated evaluations"
+        );
+    });
+
+    it("should return 404 when standardized issue is not found", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/9999`)
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(404)
+            .send();
+
+        expect(response.body.message).toBe(
+            'Standardized issue not found by fields {"id":9999}'
+        );
+    });
+
+    it("should return 422 when id is not a number", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/abc`)
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(422)
+            .send();
+
+        expect(response.body.error?.["id"]?.message).toBe(
+            "invalid float number"
+        );
+    });
+
+    it("should return 401 when no token is provided", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/1`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("No authorization header provided");
+    });
+
+    it("should return 401 when token is not Bearer", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/1`)
+            .set("Authorization", `Basic ${authUser.token}`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid authorization header");
+    });
+
+    it("should return 401 when token is invalid", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/1`)
+            .set("Authorization", `Bearer invalid-token`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid token");
     });
 });

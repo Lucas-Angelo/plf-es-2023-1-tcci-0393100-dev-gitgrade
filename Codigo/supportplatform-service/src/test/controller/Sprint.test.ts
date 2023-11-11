@@ -20,7 +20,7 @@ describe(`GET ${baseRoute}`, () => {
             .send();
 
         expect(response.body.results).toHaveLength(10);
-        expect(response.body.totalPages).toBe(2);
+        expect(response.body.totalPages).toBe(3);
     });
 
     it("should return 200 when page is 2 and return just 10 evaluation methods (the rest)", async () => {
@@ -31,7 +31,7 @@ describe(`GET ${baseRoute}`, () => {
             .send();
 
         expect(response.body.results).toHaveLength(10);
-        expect(response.body.totalPages).toBe(2);
+        expect(response.body.totalPages).toBe(3);
     });
 
     it("should return 200 when limit is 5 and return 5 evaluation methods", async () => {
@@ -42,7 +42,7 @@ describe(`GET ${baseRoute}`, () => {
             .send();
 
         expect(response.body.results).toHaveLength(5);
-        expect(response.body.totalPages).toBe(4);
+        expect(response.body.totalPages).toBe(5);
     });
 
     it("should return 200 when filtering start_date greater than '2023-01-01' and return 10 results and 2 pages", async () => {
@@ -134,7 +134,7 @@ describe(`GET ${baseRoute}`, () => {
             .send();
 
         expect(response.body.results).toHaveLength(0);
-        expect(response.body.totalPages).toBe(2);
+        expect(response.body.totalPages).toBe(3);
     });
 
     it("should return 200 when search param start_date is not found and return 0 results", async () => {
@@ -378,7 +378,7 @@ describe(`POST ${baseRoute}`, () => {
                 evaluationMethodId: 13,
             });
 
-        expect(response.body.id).toBe(21);
+        expect(response.body.id).toBe(23);
         expect(response.body.name).toBe("New sprint");
         expect(response.body.start_date).toBe("2023-01-01T00:00:00.000Z");
         expect(response.body.end_date).toBe("2023-01-15T00:00:00.000Z");
@@ -915,6 +915,89 @@ describe(`PUT ${baseRoute}/{id}`, () => {
     it("should return 401 when token is invalid", async () => {
         const response = await supertest(app)
             .put(`${baseRoute}/1`)
+            .set("Authorization", `Bearer invalid-token`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid token");
+    });
+});
+
+describe(`DELETE ${baseRoute}`, () => {
+    const authUser = generateToken(1);
+
+    beforeAll(async () => {
+        await new Database().connect();
+    });
+
+    it("should return 204 when deleting a sprint without any associations with consistency rules", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/21`)
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(204)
+            .send();
+
+        expect(response.body).toEqual({});
+    });
+
+    it("should return 400 when deleting a sprint with associations with consistency rules", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/22`)
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(400)
+            .send();
+
+        expect(response.body.message).toBe(
+            "Sprint cannot be deleted because it has associated evaluations"
+        );
+    });
+
+    it("should return 404 when sprint is not found", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/9999`)
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(404)
+            .send();
+
+        expect(response.body.message).toBe(
+            'Sprint not found by fields {"id":9999}'
+        );
+    });
+
+    it("should return 422 when id is not a number", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/abc`)
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(422)
+            .send();
+
+        expect(response.body.error?.["id"]?.message).toBe(
+            "invalid float number"
+        );
+    });
+
+    it("should return 401 when no token is provided", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/1`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("No authorization header provided");
+    });
+
+    it("should return 401 when token is not Bearer", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/1`)
+            .set("Authorization", `Basic ${authUser.token}`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid authorization header");
+    });
+
+    it("should return 401 when token is invalid", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/1`)
             .set("Authorization", `Bearer invalid-token`)
             .expect(401)
             .send();
