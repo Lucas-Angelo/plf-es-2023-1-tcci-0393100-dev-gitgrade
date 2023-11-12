@@ -12,6 +12,7 @@ interface IRepositoryRowProps {
         semester: number;
         year: number;
     };
+    lastSyncAt: Date | undefined;
 }
 
 export default function RepositoryRow(props: IRepositoryRowProps) {
@@ -26,6 +27,7 @@ export default function RepositoryRow(props: IRepositoryRowProps) {
                 synchronizing={synchronizing}
                 id={repo.id}
                 key={repo.id}
+                lastSyncAt={repo.lastSyncAt}
             />
         </Box>
     );
