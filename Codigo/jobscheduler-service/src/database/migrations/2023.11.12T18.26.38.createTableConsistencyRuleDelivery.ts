@@ -23,6 +23,7 @@ export const up: Migration = async ({ context: sequelize }) => {
                     model: "consistency_rule",
                     key: "id",
                 },
+                onDelete: "CASCADE",
             },
             repositoryId: {
                 field: "repository_id",
@@ -32,6 +33,7 @@ export const up: Migration = async ({ context: sequelize }) => {
                     model: "repository",
                     key: "id",
                 },
+                onDelete: "CASCADE",
             },
             deliveryAt: {
                 field: "delivery_at",

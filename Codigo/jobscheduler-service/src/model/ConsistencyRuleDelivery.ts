@@ -111,6 +111,7 @@ class ConsistencyRuleDelivery extends Model<IConsistencyRuleDeliveryAttributes> 
         this.belongsTo(models.Repository, {
             foreignKey: "repositoryId",
             as: "repository",
+            onDelete: "CASCADE",
         });
     }
 }
