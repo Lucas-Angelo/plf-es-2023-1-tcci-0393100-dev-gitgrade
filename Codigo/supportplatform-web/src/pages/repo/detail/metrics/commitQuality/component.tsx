@@ -14,7 +14,7 @@ export default function RepositoryCommitQualityMetricsPage() {
                 Qualidade (tamanho) de descrição de commits por contribuidor
                 <Tooltip
                     wrap
-                    aria-label='As descrições de commit que inciam com "Merge branch", "Merge remote-tracking branch" e "Merge pull request" são ignoradas, por serem descrições comumente geradas automaticamente pelo GitHub'
+                    aria-label='As descrições de commit que iniciam com "Merge branch", "Merge remote-tracking branch" e "Merge pull request" são ignoradas, por serem descrições comumente geradas automaticamente pelo GitHub'
                 >
                     <Octicon
                         sx={{ mb: 1, ml: 2 }}
