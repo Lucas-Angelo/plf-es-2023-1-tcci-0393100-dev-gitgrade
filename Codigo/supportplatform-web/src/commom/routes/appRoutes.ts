@@ -343,6 +343,19 @@ const appRoutes = {
             params: ["id"] as const,
 
             // nested routes
+            clone: {
+                path: "clone" as const,
+                link(id: number) {
+                    return `${appRoutes.evaluationMethod.detail.link(id)}/${
+                        this.path
+                    }`;
+                },
+                getParams() {
+                    return [
+                        ...appRoutes.evaluationMethod.detail.params,
+                    ] as const;
+                },
+            },
             repo: {
                 path: "repo" as const,
                 link(id: number) {

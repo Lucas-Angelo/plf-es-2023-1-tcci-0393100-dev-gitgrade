@@ -367,6 +367,14 @@ const routes = createRoutesFromElements(
                         }
                     >
                         <Route
+                            path={appRoutes.evaluationMethod.detail.clone.path}
+                            lazy={() =>
+                                import(
+                                    "../../pages/evaluationMethod/detail/clone/index"
+                                )
+                            }
+                        />
+                        <Route
                             path={appRoutes.evaluationMethod.detail.repo.path}
                             lazy={() =>
                                 import(

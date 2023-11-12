@@ -43,6 +43,12 @@ export class EvaluationMethodService {
         );
     }
 
+    async clone(id: number) {
+        return api.post<EvaluationMethodResponseDTO>(
+            `evaluation-method/${id}/clone`
+        );
+    }
+
     async delete(id: number) {
         return api.delete(`evaluation-method/${id}`);
     }

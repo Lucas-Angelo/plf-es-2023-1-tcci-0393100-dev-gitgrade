@@ -3,6 +3,7 @@ import Card from "../../../../../commom/components/card";
 import { Button, Link as PrimerLink, Octicon } from "@primer/react";
 import { ArchiveIcon } from "@primer/octicons-react";
 import appRoutes from "../../../../../commom/routes/appRoutes";
+import CloneEvaluationMethodButton from "../../../../../commom/components/cloneEvaluationMethodButton";
 
 interface IEvaluationMethodCardProps {
     id: number;
@@ -31,7 +32,7 @@ export default function EvaluationMethodCard(
                 </Link>
             </Card.Title>
             <Card.Actions>
-                <Button>Duplicar</Button>
+                <CloneEvaluationMethodButton evaluationMethodId={props.id} />
                 <Link
                     to={appRoutes.evaluationMethod["detail"].link(props.id)}
                     style={{ textDecoration: "none" }}
