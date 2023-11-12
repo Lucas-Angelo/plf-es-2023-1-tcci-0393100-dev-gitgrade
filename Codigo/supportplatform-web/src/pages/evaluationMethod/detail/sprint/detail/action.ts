@@ -12,28 +12,23 @@ import { ErrorResponseDTO, SprintCreateDTO } from "@gitgrade/dtos";
 import { SprintValidator } from "../../../../../commom/validation/SprintValidator";
 import ErrorMapper from "../../../../../commom/mapping/ErrorMapper";
 
-const pageUrlParams = appRoutes.evaluationMethod.detail.params;
+const pageUrlParams =
+    appRoutes.evaluationMethod.detail.sprint.detail.getParams();
 type PageUrlParam = (typeof pageUrlParams)[number];
-const pageSearchParams = appRoutes.evaluationMethod.detail.sprint.detail.search;
 
 export default async function EvaluationMethodSprintDetailAction({
     request,
     params,
 }: ActionFunctionArgs) {
-    const { id: evaluationMethodIdParam } = params as Params<PageUrlParam>;
-
-    if (evaluationMethodIdParam === undefined) throw new Error("Invalid URL");
-
+    const { id: evaluationMethodIdParam, sprintId: sprintIdParam } =
+        params as Params<PageUrlParam>;
+    if (evaluationMethodIdParam === undefined || sprintIdParam === undefined)
+        throw new Error("Invalid URL");
     const evaluationMethodId = Number(evaluationMethodIdParam);
     if (Number.isNaN(evaluationMethodId))
         throw new Error("Invalid evaluation method id");
 
-    const searchParams = new URL(request.url).searchParams;
-    const sprintIdQuery = Number(searchParams.get(pageSearchParams.id));
-
-    if (!sprintIdQuery) throw new Error("Invalid URL");
-
-    const sprintId = Number(sprintIdQuery);
+    const sprintId = Number(sprintIdParam);
     if (Number.isNaN(sprintId)) throw new Error("Invalid sprint id");
 
     if (request.method === "put" || request.method === "PUT") {
@@ -100,6 +95,32 @@ export default async function EvaluationMethodSprintDetailAction({
                 ...axiosResponse.response?.data,
                 ...processedError,
             };
+        }
+    } else if (request.method === "delete" || request.method === "DELETE") {
+        try {
+            await new SprintService().delete(sprintId);
+            await queryClient.invalidateQueries(
+                getEvaluationMethodSprintQuery(evaluationMethodId).queryKey
+            );
+            await queryClient.invalidateQueries(
+                getEvaluationMethodSprintByIdQuery(evaluationMethodId, sprintId)
+            );
+
+            toast.success("Sprint deletada com sucesso!");
+
+            return { success: true };
+        } catch (error) {
+            const axiosResponse = error as AxiosError<ErrorResponseDTO>;
+            if (!axiosResponse.response) {
+                toast.error("Não foi possível se conectar ao servidor...");
+            } else {
+                toast.error(
+                    axiosResponse.response?.data.message ??
+                        "Não foi possível deletar a sprint"
+                );
+            }
+
+            return { error: axiosResponse.response?.data.message };
         }
     } else {
         return null;

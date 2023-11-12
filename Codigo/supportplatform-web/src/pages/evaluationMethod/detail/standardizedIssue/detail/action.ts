@@ -12,31 +12,30 @@ import { ErrorResponseDTO, StandardizedIssueCreateDTO } from "@gitgrade/dtos";
 import { StandardizedIssueValidator } from "../../../../../commom/validation/StandardizedIssueValidator";
 import ErrorMapper from "../../../../../commom/mapping/ErrorMapper";
 
-const pageUrlParams = appRoutes.evaluationMethod.detail.params;
+const pageUrlParams =
+    appRoutes.evaluationMethod.detail.standardizedIssue.detail.getParams();
 type PageUrlParam = (typeof pageUrlParams)[number];
-const pageSearchParams =
-    appRoutes.evaluationMethod.detail.standardizedIssue.detail.search;
 
 export default async function EvaluationMethodStandardizedIssueDetailAction({
     request,
     params,
 }: ActionFunctionArgs) {
-    const { id: evaluationMethodIdParam } = params as Params<PageUrlParam>;
+    const {
+        id: evaluationMethodIdParam,
+        standardizedIssueId: standardizedIssueIdParam,
+    } = params as Params<PageUrlParam>;
 
-    if (evaluationMethodIdParam === undefined) throw new Error("Invalid URL");
+    if (
+        evaluationMethodIdParam === undefined ||
+        standardizedIssueIdParam === undefined
+    )
+        throw new Error("Invalid URL");
 
     const evaluationMethodId = Number(evaluationMethodIdParam);
     if (Number.isNaN(evaluationMethodId))
         throw new Error("Invalid evaluation method id");
 
-    const searchParams = new URL(request.url).searchParams;
-    const standardizedIssueIdQuery = Number(
-        searchParams.get(pageSearchParams.id)
-    );
-
-    if (!standardizedIssueIdQuery) throw new Error("Invalid URL");
-
-    const standardizedIssueId = Number(standardizedIssueIdQuery);
+    const standardizedIssueId = Number(standardizedIssueIdParam);
     if (Number.isNaN(standardizedIssueId))
         throw new Error("Invalid standardizedIssue id");
 
@@ -106,6 +105,36 @@ export default async function EvaluationMethodStandardizedIssueDetailAction({
                 ...axiosResponse.response?.data,
                 ...processedError,
             };
+        }
+    } else if (request.method === "delete" || request.method === "DELETE") {
+        try {
+            await new StandardizedIssueService().delete(standardizedIssueId);
+            await queryClient.invalidateQueries(
+                getEvaluationMethodStandardizedIssueQuery(evaluationMethodId)
+                    .queryKey
+            );
+            await queryClient.invalidateQueries(
+                getEvaluationMethodStandardizedIssueByIdQuery(
+                    evaluationMethodId,
+                    standardizedIssueId
+                ).queryKey
+            );
+
+            toast.success("Issue padronizada removida com sucesso!");
+
+            return { success: true };
+        } catch (error) {
+            const axiosResponse = error as AxiosError<ErrorResponseDTO>;
+            if (!axiosResponse.response) {
+                toast.error("Não foi possível se conectar ao servidor...");
+            } else {
+                toast.error(
+                    axiosResponse.response?.data.message ??
+                        "Não foi possível remover a issue padronizada"
+                );
+            }
+
+            return { error: axiosResponse.response?.data.message };
         }
     } else {
         return null;

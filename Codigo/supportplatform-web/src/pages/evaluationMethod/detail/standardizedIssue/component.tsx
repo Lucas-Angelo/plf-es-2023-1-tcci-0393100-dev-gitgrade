@@ -69,6 +69,7 @@ export default function EvaluationMethodStandardizedIssueListPage() {
                         <StandardizedIssueCard
                             id={standardizedIssue.id}
                             title={standardizedIssue.title}
+                            evaluationMethodId={Number(evaluationMethodIdParam)}
                         />
                     </Box>
                 ))}
