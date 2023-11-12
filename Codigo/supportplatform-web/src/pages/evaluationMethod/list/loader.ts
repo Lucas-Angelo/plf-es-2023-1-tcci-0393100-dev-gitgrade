@@ -20,6 +20,9 @@ export default async function evaluationMethodListPageLoader({
         description:
             searchParams.get(pageSearchParams.description) ?? undefined,
         page: Number(searchParams.get(pageSearchParams.page)) || 1,
+        semester:
+            Number(searchParams.get(pageSearchParams.semester)) || undefined,
+        year: Number(searchParams.get(pageSearchParams.year)) || undefined,
         limit: 10,
     });
 

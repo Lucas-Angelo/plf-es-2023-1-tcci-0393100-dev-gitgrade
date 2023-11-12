@@ -25,7 +25,7 @@ const routes = createRoutesFromElements(
                     element={
                         <Navigate
                             replace
-                            to={appRoutes.repo.link()}
+                            to={appRoutes.evaluationMethod.link()}
                         />
                     }
                 />

@@ -42,3 +42,11 @@ body {
 .toggle-switch-wrapper:not(a) > div > span {
     display: none;
 }
+
+.select-with-placeholder[value=""] {
+    color: #a0aec0;
+}
+
+.select-with-placeholder option[value=""] {
+    color: #a0aec0;
+}

@@ -330,6 +330,8 @@ const appRoutes = {
             search: {
                 page: "page",
                 description: "description",
+                year: "year",
+                semester: "semester",
             },
         },
         detail: {
