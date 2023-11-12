@@ -69,7 +69,6 @@ class SequelizeDatabase {
             Branch.initModel(this.sequelize);
             Commit.initModel(this.sequelize);
             File.initModel(this.sequelize);
-            EvaluationMethod.initModel(this.sequelize);
             Sprint.initModel(this.sequelize);
             StandardizedIssue.initModel(this.sequelize);
             ConsistencyRule.initModel(this.sequelize);
@@ -146,6 +145,13 @@ class SequelizeDatabase {
     async close() {
         await this.sequelize.close();
     }
+
+    public getSequelizeInstance(): Sequelize {
+        return this.sequelize;
+    }
 }
 
 export default SequelizeDatabase;
+
+const sequelizeDatabase = new SequelizeDatabase();
+export const sequelize = sequelizeDatabase.getSequelizeInstance();
