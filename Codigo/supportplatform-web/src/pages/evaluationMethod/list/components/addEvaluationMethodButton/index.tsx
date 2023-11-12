@@ -9,11 +9,13 @@ const pageModalSearchParamsValues = appRoutes.base.searchValues.modal;
 export default function AddEvaluationMethodButton() {
     const [, setSearchParams] = useSearchParams();
     function handleAddEvaluationMethodButtonClick() {
-        setSearchParams((previousSearchParams) => ({
-            ...previousSearchParams,
-            [basePageSearchParams.modal]:
-                pageModalSearchParamsValues.createEvaluationMethod,
-        }));
+        setSearchParams((previousSearchParams) => {
+            previousSearchParams.set(
+                basePageSearchParams.modal,
+                pageModalSearchParamsValues.createEvaluationMethod
+            );
+            return previousSearchParams;
+        });
     }
     return (
         <Button
@@ -21,6 +23,9 @@ export default function AddEvaluationMethodButton() {
             leadingIcon={PlusIcon}
             type="button"
             onClick={handleAddEvaluationMethodButtonClick}
+            sx={{
+                width: ["100%", "auto"],
+            }}
         >
             Novo
         </Button>

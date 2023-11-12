@@ -7,11 +7,7 @@ import {
     TextInput,
 } from "@primer/react";
 import { EvaluationMethodCreateDTO } from "@gitgrade/dtos";
-
-const listOfYears = [
-    // generate more 99 years
-    ...Array.from({ length: 99 }, (_, index) => `${index + 2022}`),
-];
+import { listOfYears } from "../../utils/year";
 
 interface IEvaluationMethodFormProps {
     defaultYear?: string;

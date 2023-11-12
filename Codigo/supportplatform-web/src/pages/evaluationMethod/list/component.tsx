@@ -30,6 +30,7 @@ export default function EvaluationMethodListPage() {
                     alignItems: "center",
                     width: "100%",
                     gap: 2,
+                    flexDirection: ["column", "row"],
                 }}
             >
                 <RepoFilter />
