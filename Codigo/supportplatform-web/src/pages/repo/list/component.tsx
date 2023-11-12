@@ -36,6 +36,7 @@ export default function RepoListPage() {
                         id={repo.id}
                         name={repo.name}
                         evaluationMethod={repo.evaluationMethod ?? undefined}
+                        lastSyncAt={repo.lastSyncAt ?? undefined}
                     />
                 ))}
             </Box>

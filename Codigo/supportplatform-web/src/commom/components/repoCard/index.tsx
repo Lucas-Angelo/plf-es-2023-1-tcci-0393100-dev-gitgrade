@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import Card from "../card";
-import { Button, Link as PrimerLink, Octicon } from "@primer/react";
+import { Button, Link as PrimerLink, Octicon, Box } from "@primer/react";
 import { RepoIcon } from "@primer/octicons-react";
 import appRoutes from "../../routes/appRoutes";
 import React from "react";
@@ -19,7 +19,17 @@ interface IRepoCardProps {
     children?: React.ReactNode;
 
     synchronizing: boolean | undefined;
+
+    lastSyncAt?: Date;
 }
+
+const dateFormat = new Intl.DateTimeFormat("pt-BR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+});
 
 export default function RepoCard(props: IRepoCardProps) {
     return (
@@ -35,6 +45,18 @@ export default function RepoCard(props: IRepoCardProps) {
                 >
                     <PrimerLink as="span">{props.name}</PrimerLink>
                 </Link>
+
+                {props.lastSyncAt && (
+                    <Box
+                        sx={{
+                            fontSize: "12px",
+                            color: "gray",
+                        }}
+                    >
+                        Última sincronização:{" "}
+                        {dateFormat.format(new Date(props.lastSyncAt))}
+                    </Box>
+                )}
             </Card.Title>
             {props.evaluationMethod && (
                 <EvaluationMethodLink

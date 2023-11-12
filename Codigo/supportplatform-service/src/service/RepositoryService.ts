@@ -65,6 +65,10 @@ export default class RepositoryService {
             const { rows, count } = await Repository.findAndCountAll({
                 ...sequelizePagination(search.page, search.limit),
                 where: whereClause,
+                order: [
+                    ["lastSyncAt", "DESC"],
+                    ["name", "ASC"],
+                ],
                 include: [
                     {
                         model: EvaluationMethod,

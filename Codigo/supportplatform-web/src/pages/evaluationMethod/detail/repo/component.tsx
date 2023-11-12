@@ -105,6 +105,7 @@ export default function EvaluationMethodRepositoryListPage() {
                 )}
                 {loaderData.results.map((repo) => (
                     <EvaluationMethodRepository
+                        lastSyncAt={repo.lastSyncAt ?? undefined}
                         key={repo.id}
                         id={repo.id}
                         name={repo.name}
