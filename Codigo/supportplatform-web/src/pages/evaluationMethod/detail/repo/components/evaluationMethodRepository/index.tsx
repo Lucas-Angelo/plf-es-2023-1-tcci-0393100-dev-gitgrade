@@ -12,6 +12,7 @@ interface IEvaluationMethodRepositoryProps {
     onChecked?: (checked: boolean) => void;
 
     synchronizing: boolean | undefined;
+    lastSyncAt: Date | undefined;
 }
 
 export default function EvaluationMethodRepository(
@@ -40,6 +41,7 @@ export default function EvaluationMethodRepository(
                 id={props.id}
                 key={props.id}
                 synchronizing={synchronizing}
+                lastSyncAt={props.lastSyncAt}
             >
                 <fetcher.Form
                     method="delete"

@@ -58,6 +58,42 @@ const consistencyRuleTestingSeed: IConsistencyRuleAttributes[] = [
         filePath: "Documentacao/DocumentoDoProjeto.md",
         validationType: ValidationType.DEFAULT,
     },
+    {
+        id: 7,
+        evaluationMethodId: 14,
+        sprintId: 11,
+        standardizedIssueId: null,
+        description: "Consistency Rule 7 TO DELETE",
+        filePath: "Documentacao/DocumentoDoProjeto.md",
+        validationType: ValidationType.DEFAULT,
+    },
+    {
+        id: 8,
+        evaluationMethodId: 14,
+        sprintId: 11,
+        standardizedIssueId: null,
+        description: "Consistency Rule 8 TO DELETE",
+        filePath: "Documentacao/DocumentoDoProjeto.md",
+        validationType: ValidationType.DEFAULT,
+    },
+    {
+        id: 9,
+        evaluationMethodId: 14,
+        sprintId: 22,
+        standardizedIssueId: null,
+        description: "Consistency Rule 9 TO BLOCK SPRINT DELETION",
+        filePath: "Documentacao/DocumentoDoProjeto.md",
+        validationType: ValidationType.DEFAULT,
+    },
+    {
+        id: 10,
+        evaluationMethodId: 14,
+        sprintId: 11,
+        standardizedIssueId: 14,
+        description: "Consistency Rule 10 TO BLOCK STANDARDIZED ISSUE DELETION",
+        filePath: "Documentacao/DocumentoDoProjeto.md",
+        validationType: ValidationType.DEFAULT,
+    },
 ];
 
 export { consistencyRuleTestingSeed };

@@ -2609,6 +2609,36 @@
 						}
 					}
 				]
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"204": {
+						"description": "ConsistencyRule deleted"
+					}
+				},
+				"description": "Delete an existing ConsistencyRule by id.",
+				"tags": [
+					"consistency-rule"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			}
 		},
 		"/consistency-rule-delivery": {
@@ -4382,6 +4412,36 @@
 						}
 					}
 				]
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"204": {
+						"description": "Sprint deleted"
+					}
+				},
+				"description": "Delete a Sprint by id.\nDeletion is blocked if the Sprint is associated with any ConsistencyRule.",
+				"tags": [
+					"sprint"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			}
 		},
 		"/standardized-issue": {
@@ -4606,6 +4666,36 @@
 						}
 					}
 				},
+				"tags": [
+					"standardized-issue"
+				],
+				"security": [
+					{
+						"bearer": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"204": {
+						"description": "StandardizedIssue deleted"
+					}
+				},
+				"description": "Delete a StandardizedIssue by id.\nDeletion is blocked if the StandardizedIssue is associated with any ConsistencyRule.",
 				"tags": [
 					"standardized-issue"
 				],

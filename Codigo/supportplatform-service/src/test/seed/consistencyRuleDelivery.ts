@@ -75,6 +75,13 @@ const consistencyRuleDeliveryTestingSeed: IConsistencyRuleDeliveryAttributes[] =
             deliveryAt: new Date("2023-10-10"),
             status: ConsistencyRuleDeliveryStatus.DELIVERED_WITH_INVALIDITY,
         },
+        {
+            id: 11,
+            consistencyRuleId: 8,
+            repositoryId: 2,
+            deliveryAt: null,
+            status: ConsistencyRuleDeliveryStatus.AWAITING_DELIVERY,
+        },
     ];
 
 export { consistencyRuleDeliveryTestingSeed };

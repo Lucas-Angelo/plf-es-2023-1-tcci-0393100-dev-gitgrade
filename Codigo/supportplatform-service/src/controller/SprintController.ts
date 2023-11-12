@@ -8,6 +8,7 @@ import {
 import {
     Body,
     Controller,
+    Delete,
     Example,
     Get,
     Path,
@@ -131,5 +132,17 @@ export class SprintController extends Controller {
         });
         const mapper = new SprintMapper();
         return mapper.toDto(serviceResponse);
+    }
+
+    /**
+     * Delete a Sprint by id.
+     * Deletion is blocked if the Sprint is associated with any ConsistencyRule.
+     * @path id Id of the Sprint to delete.
+     */
+    @Delete("/{id}")
+    @SuccessResponse("204", "Sprint deleted")
+    public async delete(@Path() id: number): Promise<void> {
+        this.setStatus(204);
+        await this.sprintService.delete(id);
     }
 }

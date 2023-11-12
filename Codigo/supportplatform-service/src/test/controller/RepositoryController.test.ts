@@ -194,7 +194,7 @@ describe("PATCH /repository/{id}", () => {
             "Collection of utility functions for TypeScript"
         );
         expect(response.body.forkCount).toBe("25");
-        expect(response.body.githubCreatedAt).toBe("2023-01-10T00:00:00.000Z");
+        expect(response.body.githubCreatedAt).toBe("2023-02-01T00:00:00.000Z");
         expect(response.body.githubId).toBe("repo1");
         expect(response.body.hasIssuesEnabled).toBe(true);
         expect(response.body.hasProjectsEnabled).toBe(true);
@@ -232,7 +232,7 @@ describe("PATCH /repository/{id}", () => {
             "Collection of utility functions for TypeScript"
         );
         expect(response.body.forkCount).toBe("25");
-        expect(response.body.githubCreatedAt).toBe("2023-01-10T00:00:00.000Z");
+        expect(response.body.githubCreatedAt).toBe("2023-02-01T00:00:00.000Z");
         expect(response.body.githubId).toBe("repo1");
         expect(response.body.hasIssuesEnabled).toBe(true);
         expect(response.body.hasProjectsEnabled).toBe(true);
@@ -264,7 +264,7 @@ describe("PATCH /repository/{id}", () => {
             "Collection of utility functions for TypeScript"
         );
         expect(response.body.forkCount).toBe("25");
-        expect(response.body.githubCreatedAt).toBe("2023-01-10T00:00:00.000Z");
+        expect(response.body.githubCreatedAt).toBe("2023-02-01T00:00:00.000Z");
         expect(response.body.githubId).toBe("repo1");
         expect(response.body.hasIssuesEnabled).toBe(true);
         expect(response.body.hasProjectsEnabled).toBe(true);
@@ -295,7 +295,7 @@ describe("PATCH /repository/{id}", () => {
             "Collection of utility functions for TypeScript"
         );
         expect(response.body.forkCount).toBe("25");
-        expect(response.body.githubCreatedAt).toBe("2023-01-10T00:00:00.000Z");
+        expect(response.body.githubCreatedAt).toBe("2023-02-01T00:00:00.000Z");
         expect(response.body.githubId).toBe("repo1");
         expect(response.body.hasIssuesEnabled).toBe(true);
         expect(response.body.hasProjectsEnabled).toBe(true);
@@ -333,7 +333,7 @@ describe("PATCH /repository/{id}", () => {
             "Collection of utility functions for TypeScript"
         );
         expect(response.body.forkCount).toBe("25");
-        expect(response.body.githubCreatedAt).toBe("2023-01-10T00:00:00.000Z");
+        expect(response.body.githubCreatedAt).toBe("2023-02-01T00:00:00.000Z");
         expect(response.body.githubId).toBe("repo1");
         expect(response.body.hasIssuesEnabled).toBe(true);
         expect(response.body.hasProjectsEnabled).toBe(true);

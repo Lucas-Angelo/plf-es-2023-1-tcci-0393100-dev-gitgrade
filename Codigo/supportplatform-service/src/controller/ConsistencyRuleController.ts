@@ -9,6 +9,7 @@ import { ValidationType } from "@gitgrade/dtos/dto/consistencyRule";
 import {
     Body,
     Controller,
+    Delete,
     Example,
     Get,
     Path,
@@ -154,5 +155,16 @@ export class ConsistencyRuleController extends Controller {
             id: id,
         });
         return this.consistencyRuleMapper.toDto(serviceResponse);
+    }
+
+    /**
+     * Delete an existing ConsistencyRule by id.
+     * @path id Id of the ConsistencyRule to delete.
+     */
+    @Delete("/{id}")
+    @SuccessResponse("204", "ConsistencyRule deleted")
+    public async delete(@Path() id: number): Promise<void> {
+        this.setStatus(204);
+        await this.consistencyRuleService.delete(id);
     }
 }

@@ -246,6 +246,25 @@ export default class ConsistencyRuleService {
         }
     }
 
+    async delete(id: number): Promise<void> {
+        logger.info(`Deleting consistency rule with id: ${id}`);
+        const consistencyRule = await this.findOneBy({ id });
+
+        try {
+            await consistencyRule.destroy();
+            logger.info(`Consistency rule with id: ${id} successfully deleted`);
+        } catch (error) {
+            logger.error(`Error deleting consistency rule with id: ${id}`, {
+                error,
+            });
+            throw new AppError(
+                `Failed to delete consistency rule with id: ${id}`,
+                500,
+                error
+            );
+        }
+    }
+
     private validateNotNullAndEmptyFields(
         data: ConsistencyRuleCreateDTO | ConsistencyRuleUpdateDTO
     ): void {

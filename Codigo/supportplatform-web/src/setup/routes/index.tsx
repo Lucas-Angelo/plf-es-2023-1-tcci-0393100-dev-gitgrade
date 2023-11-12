@@ -25,7 +25,7 @@ const routes = createRoutesFromElements(
                     element={
                         <Navigate
                             replace
-                            to={appRoutes.repo.link()}
+                            to={appRoutes.evaluationMethod.link()}
                         />
                     }
                 />
@@ -366,6 +366,14 @@ const routes = createRoutesFromElements(
                             import("../../pages/evaluationMethod/detail/index")
                         }
                     >
+                        <Route
+                            path={appRoutes.evaluationMethod.detail.clone.path}
+                            lazy={() =>
+                                import(
+                                    "../../pages/evaluationMethod/detail/clone/index"
+                                )
+                            }
+                        />
                         <Route
                             path={appRoutes.evaluationMethod.detail.repo.path}
                             lazy={() =>

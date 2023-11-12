@@ -1,9 +1,4 @@
-import {
-    ActionList,
-    ActionMenu,
-    FilteredSearch,
-    TextInput,
-} from "@primer/react";
+import { Box, TextInput } from "@primer/react";
 import { SearchIcon } from "@primer/octicons-react";
 import { useRef } from "react";
 import appRoutes from "../../../../../commom/routes/appRoutes";
@@ -30,31 +25,19 @@ export default function RepoFilter() {
     }
 
     return (
-        <FilteredSearch sx={{ width: "100%", alignItems: "stretch" }}>
-            <ActionMenu>
-                <ActionMenu.Button sx={{ height: "100%" }}>
-                    Filtrar
-                </ActionMenu.Button>
-                <ActionMenu.Overlay>
-                    <ActionList>
-                        <ActionList.Item>Filtro 1</ActionList.Item>
-                        <ActionList.Item>Filtro 2</ActionList.Item>
-                        <ActionList.Item>Filtro 3</ActionList.Item>
-                    </ActionList>
-                </ActionMenu.Overlay>
-            </ActionMenu>
+        <Box sx={{ width: "100%", alignItems: "stretch" }}>
             <form
                 onSubmit={handleSearch}
                 style={{ flexGrow: 1 }}
             >
                 <TextInput
                     leadingVisual={SearchIcon}
-                    placeholder="ma:TI5-2023"
+                    placeholder="nome do repositório"
                     sx={{ width: "100%" }}
                     ref={inputRef}
                     defaultValue={defaultFilter}
                 />
             </form>
-        </FilteredSearch>
+        </Box>
     );
 }

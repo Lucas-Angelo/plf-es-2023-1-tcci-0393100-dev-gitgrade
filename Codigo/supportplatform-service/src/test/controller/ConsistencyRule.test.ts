@@ -12,20 +12,20 @@ describe(`GET ${baseRoute}`, () => {
         await new Database().connect();
     });
 
-    it("should return 200 when no limit and page is provided and return by default 6 consistency rules", async () => {
+    it("should return 200 when no limit and page is provided and return by default 10 consistency rules", async () => {
         const response = await supertest(app)
             .get(`${baseRoute}`)
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
             .send();
 
-        expect(response.body.results).toHaveLength(6);
+        expect(response.body.results).toHaveLength(10);
         expect(response.body.totalPages).toBe(1);
     });
 
-    it("should return 200 when page is 2 and return 0 consistency rules", async () => {
+    it("should return 200 when page is 3 and return 0 consistency rules", async () => {
         const response = await supertest(app)
-            .get(`${baseRoute}?page=2`)
+            .get(`${baseRoute}?page=3`)
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
             .send();
@@ -34,7 +34,7 @@ describe(`GET ${baseRoute}`, () => {
         expect(response.body.totalPages).toBe(1);
     });
 
-    it("should return 200 when limit is 2 and return 2 consistency rules", async () => {
+    it("should return 200 when limit is 2 and return 5 consistency rules", async () => {
         const response = await supertest(app)
             .get(`${baseRoute}?limit=2`)
             .set("Authorization", `Bearer ${authUser.token}`)
@@ -42,28 +42,28 @@ describe(`GET ${baseRoute}`, () => {
             .send();
 
         expect(response.body.results).toHaveLength(2);
-        expect(response.body.totalPages).toBe(3);
+        expect(response.body.totalPages).toBe(5);
     });
 
-    it("should return 200 when filtering evaluationMethodId equal '14' and return 2 results and 1 pages", async () => {
+    it("should return 200 when filtering evaluationMethodId equal '14' and return 6 results and 1 pages", async () => {
         const response = await supertest(app)
             .get(`${baseRoute}?evaluationMethodId=14`)
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
             .send();
 
-        expect(response.body.results).toHaveLength(2);
+        expect(response.body.results).toHaveLength(6);
         expect(response.body.totalPages).toBe(1);
     });
 
-    it("should return 200 when filtering sprintId equal '11' and return 2 results and 1 pages", async () => {
+    it("should return 200 when filtering sprintId equal '11' and return 5 results and 1 pages", async () => {
         const response = await supertest(app)
             .get(`${baseRoute}?sprintId=11`)
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
             .send();
 
-        expect(response.body.results).toHaveLength(2);
+        expect(response.body.results).toHaveLength(5);
         expect(response.body.totalPages).toBe(1);
     });
 
@@ -89,7 +89,7 @@ describe(`GET ${baseRoute}`, () => {
         expect(response.body.totalPages).toBe(1);
     });
 
-    it("should return 200 when filtering filePath contains 'Documentacao/' and return 5 results and 1 pages", async () => {
+    it("should return 200 when filtering filePath contains 'Documentacao/' and return 9 results and 1 pages", async () => {
         const encodedQuery = encodeURIComponent("Documentacao/");
         const response = await supertest(app)
             .get(`${baseRoute}?filePath=${encodedQuery}`)
@@ -97,18 +97,18 @@ describe(`GET ${baseRoute}`, () => {
             .expect(200)
             .send();
 
-        expect(response.body.results).toHaveLength(5);
+        expect(response.body.results).toHaveLength(9);
         expect(response.body.totalPages).toBe(1);
     });
 
-    it("should return 200 when filtering validationType equal 'DEFAULT' and return 5 results and 1 pages", async () => {
+    it("should return 200 when filtering validationType equal 'DEFAULT' and return 9 results and 1 pages", async () => {
         const response = await supertest(app)
             .get(`${baseRoute}?validationType=DEFAULT`)
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
             .send();
 
-        expect(response.body.results).toHaveLength(5);
+        expect(response.body.results).toHaveLength(9);
         expect(response.body.totalPages).toBe(1);
     });
 
@@ -491,7 +491,7 @@ describe(`POST ${baseRoute}`, () => {
                 validationType: "DEFAULT",
             });
 
-        expect(response.body.id).toBe(7);
+        expect(response.body.id).toBe(15);
         expect(response.body.evaluationMethodId).toBe(14);
         expect(response.body.sprintId).toBe(11);
         expect(response.body.standardizedIssueId).toBe(null);
@@ -519,7 +519,7 @@ describe(`POST ${baseRoute}`, () => {
                 validationType: "CFF",
             });
 
-        expect(response.body.id).toBe(8);
+        expect(response.body.id).toBe(16);
         expect(response.body.evaluationMethodId).toBe(14);
         expect(response.body.sprintId).toBe(11);
         expect(response.body.standardizedIssueId).toBe(null);
@@ -546,7 +546,7 @@ describe(`POST ${baseRoute}`, () => {
             })
             .expect(201);
 
-        expect(response.body.id).toBe(9);
+        expect(response.body.id).toBe(17);
         expect(response.body.evaluationMethodId).toBe(14);
         expect(response.body.sprintId).toBe(11);
         expect(response.body.standardizedIssueId).toBe(null);
@@ -572,7 +572,7 @@ describe(`POST ${baseRoute}`, () => {
             })
             .expect(201);
 
-        expect(response.body.id).toBe(10);
+        expect(response.body.id).toBe(18);
         expect(response.body.evaluationMethodId).toBe(14);
         expect(response.body.sprintId).toBe(11);
         expect(response.body.standardizedIssueId).toBe(null);
@@ -1299,5 +1299,86 @@ describe(`PUT ${baseRoute}/{id}`, () => {
             .send();
 
         expect(response.body.message).toBe("No authorization header provided");
+    });
+});
+
+describe(`DELETE ${baseRoute}`, () => {
+    const authUser = generateToken(1);
+
+    beforeAll(async () => {
+        await new Database().connect();
+    });
+
+    it("should return 204 when deleting consistency rule", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/7`)
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(204)
+            .send();
+
+        expect(response.body).toEqual({});
+    });
+
+    it("should return 204 when deleting consistency rule with consistency rule deliveries", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/8`)
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(204)
+            .send();
+
+        expect(response.body).toEqual({});
+    });
+
+    it("should return 404 when consistency rule is not found", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/9999`)
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(404)
+            .send();
+
+        expect(response.body.message).toBe(
+            'Consistency rule not found by fields {"id":9999}'
+        );
+    });
+
+    it("should return 422 when id is not a number", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/abc`)
+            .set("Authorization", `Bearer ${authUser.token}`)
+            .expect(422)
+            .send();
+
+        expect(response.body.error?.["id"]?.message).toBe(
+            "invalid float number"
+        );
+    });
+
+    it("should return 401 when no token is provided", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/1`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("No authorization header provided");
+    });
+
+    it("should return 401 when token is not Bearer", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/1`)
+            .set("Authorization", `Basic ${authUser.token}`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid authorization header");
+    });
+
+    it("should return 401 when token is invalid", async () => {
+        const response = await supertest(app)
+            .delete(`${baseRoute}/1`)
+            .set("Authorization", `Bearer invalid-token`)
+            .expect(401)
+            .send();
+
+        expect(response.body.message).toBe("Invalid token");
     });
 });

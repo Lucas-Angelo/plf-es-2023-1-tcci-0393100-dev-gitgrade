@@ -1,4 +1,4 @@
-import { Avatar, Header, TextInput, Truncate } from "@primer/react";
+import { Avatar, Header, Truncate } from "@primer/react";
 import { Link } from "react-router-dom";
 import GitGradeLogoPng from "../../../../assets/logo.png";
 import appRoutes from "../../../../commom/routes/appRoutes";
@@ -39,20 +39,25 @@ export default function PageHeader() {
             </Header.Item>
             <Header.Item
                 sx={{
-                    display: ["none", "none", "block"],
+                    display: ["none", "none", "flex"],
                 }}
             >
-                <TextInput
-                    name="search-repo"
-                    placeholder="Buscar trabalho..."
-                    sx={{
-                        background: "none",
-                        borderColor: "gray",
-                        color: "white",
-                    }}
-                />
+                <Link
+                    to={appRoutes.evaluationMethod.link()}
+                    style={{ textDecoration: "none" }}
+                >
+                    <Header.Link
+                        as="span"
+                        sx={{
+                            fontSize: [0, 0, 12, 14],
+                        }}
+                    >
+                        Métodos avaliativos
+                    </Header.Link>
+                </Link>
             </Header.Item>
             <Header.Item
+                full
                 sx={{
                     display: ["none", "none", "flex"],
                 }}
@@ -69,26 +74,6 @@ export default function PageHeader() {
                         }}
                     >
                         Repositórios de trabalhos
-                    </Header.Link>
-                </Link>
-            </Header.Item>
-            <Header.Item
-                full
-                sx={{
-                    display: ["none", "none", "flex"],
-                }}
-            >
-                <Link
-                    to={appRoutes.evaluationMethod.link()}
-                    style={{ textDecoration: "none" }}
-                >
-                    <Header.Link
-                        as="span"
-                        sx={{
-                            fontSize: [0, 0, 12, 14],
-                        }}
-                    >
-                        Métodos avaliativos
                     </Header.Link>
                 </Link>
             </Header.Item>

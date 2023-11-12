@@ -16,6 +16,9 @@ export class EvaluationMethodService {
             searchParams.set("limit", queryDto.limit.toString());
         if (queryDto?.description)
             searchParams.set("description", queryDto.description);
+        if (queryDto?.year) searchParams.set("year", queryDto.year.toString());
+        if (queryDto?.semester)
+            searchParams.set("semester", queryDto.semester.toString());
 
         return api.get<PaginationResponseDTO<EvaluationMethodResponseDTO>>(
             "evaluation-method?".concat(searchParams.toString())
@@ -37,6 +40,12 @@ export class EvaluationMethodService {
         return api.put<EvaluationMethodResponseDTO>(
             `evaluation-method/${id}`,
             evaluationMethod
+        );
+    }
+
+    async clone(id: number) {
+        return api.post<EvaluationMethodResponseDTO>(
+            `evaluation-method/${id}/clone`
         );
     }
 

@@ -871,6 +871,32 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.delete('/consistency-rule/:id',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(ConsistencyRuleController)),
+            ...(fetchMiddlewares<RequestHandler>(ConsistencyRuleController.prototype.delete)),
+
+            function ConsistencyRuleController_delete(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new ConsistencyRuleController();
+
+
+              const promise = controller.delete.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 204, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/consistency-rule-delivery',
             authenticateMiddleware([{"bearer":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(ConsistencyRuleDeliveryController)),
@@ -1506,6 +1532,32 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.delete('/sprint/:id',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(SprintController)),
+            ...(fetchMiddlewares<RequestHandler>(SprintController.prototype.delete)),
+
+            function SprintController_delete(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new SprintController();
+
+
+              const promise = controller.delete.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 204, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/standardized-issue',
             authenticateMiddleware([{"bearer":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(StandardizedIssueController)),
@@ -1606,6 +1658,32 @@ export function RegisterRoutes(app: Router) {
 
               const promise = controller.getOne.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, 200, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.delete('/standardized-issue/:id',
+            authenticateMiddleware([{"bearer":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(StandardizedIssueController)),
+            ...(fetchMiddlewares<RequestHandler>(StandardizedIssueController.prototype.delete)),
+
+            function StandardizedIssueController_delete(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new StandardizedIssueController();
+
+
+              const promise = controller.delete.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 204, next);
             } catch (err) {
                 return next(err);
             }

@@ -8,6 +8,7 @@ import {
 import {
     Body,
     Controller,
+    Delete,
     Example,
     Get,
     Path,
@@ -115,5 +116,17 @@ export class StandardizedIssueController extends Controller {
             id: id,
         });
         return this.standardizedIssueMapper.toDto(serviceResponse);
+    }
+
+    /**
+     * Delete a StandardizedIssue by id.
+     * Deletion is blocked if the StandardizedIssue is associated with any ConsistencyRule.
+     * @path id Id of the StandardizedIssue to delete.
+     */
+    @Delete("/{id}")
+    @SuccessResponse("204", "StandardizedIssue deleted")
+    public async delete(@Path() id: number): Promise<void> {
+        this.setStatus(204);
+        await this.standardizedIssueService.delete(id);
     }
 }

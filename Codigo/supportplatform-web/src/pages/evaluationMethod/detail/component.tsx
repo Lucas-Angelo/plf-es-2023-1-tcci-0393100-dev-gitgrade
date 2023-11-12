@@ -10,6 +10,7 @@ import EditEvaluationMethodModal from "./editEvaluatioMethodModal";
 import { useSearchParams } from "react-router-dom";
 import { ArchiveIcon } from "@primer/octicons-react";
 import InactivateEvaluationMethodButton from "./components/inactivateEvaluationMethodButton";
+import CloneEvaluationMethodButton from "../../../commom/components/cloneEvaluationMethodButton";
 
 const basePageSearchParams = appRoutes.base.search;
 const pageModalSearchParamsValues = appRoutes.base.searchValues.modal;
@@ -81,7 +82,9 @@ export default function EvaluationMethodDetailPage() {
                         year={evaluationMethod.year}
                         disabledAt={evaluationMethod.disabledAt}
                     />
-                    <Button disabled>Duplicar</Button>
+                    <CloneEvaluationMethodButton
+                        evaluationMethodId={evaluationMethod.id}
+                    />
                 </Box>
             </Box>
             <Divider />
