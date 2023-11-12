@@ -1,9 +1,9 @@
-import logger from "./src/config/LogConfig";
-import { JobScheduler } from "./src/cron/JobScheduler";
-import SequelizeDatabase from "./src/database/SequelizeDatabase";
 import { Express } from "express";
 import app from "./src/api";
 import EnvConfig from "./src/config/EnvConfig";
+import logger from "./src/config/LogConfig";
+import { JobScheduler } from "./src/cron/JobScheduler";
+import SequelizeDatabase from "./src/database/SequelizeDatabase";
 
 class Database {
     private sequelizeDatabase: SequelizeDatabase;

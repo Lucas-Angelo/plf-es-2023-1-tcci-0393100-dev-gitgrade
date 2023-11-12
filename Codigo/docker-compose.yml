@@ -104,6 +104,7 @@ services:
     depends_on:
       - mysql_gitgrade
       - sonarqube
+      - jobscheduler-service
     environment:
       - TZ=$APP_TIMEZONE
       - DB_HOST=mysql_gitgrade
@@ -135,7 +136,12 @@ services:
       - SONARQUBE_DOCKER_PORT=$SONARQUBE_DOCKER_PORT
       - SONARQUBE_ADMIN_USERNAME=$SONARQUBE_ADMIN_USERNAME
       - SONARQUBE_ADMIN_PASSWOR
-    command: /bin/bash -c "./wait-for-it.sh --timeout=600 mysql_gitgrade:$DB_DOCKER_PORT && ./wait-for-it.sh --timeout=600 sonarqube:$SONARQUBE_DOCKER_PORT && npm run start:prod"
+    command: >
+      /bin/bash -c "
+      ./wait-for-it.sh --timeout=600 mysql_gitgrade:$DB_DOCKER_PORT &&
+      ./wait-for-it.sh --timeout=600 sonarqube:$SONARQUBE_DOCKER_PORT &&
+      ./wait-for-it.sh --timeout=600 jobscheduler-service:$JOBSCHEDULER_SERVICE_NODE_PORT &&
+      npm run start:prod"
     ports:
       - $SUPPORTPLATFORM_SERVICE_NODE_PORT:$SUPPORTPLATFORM_SERVICE_NODE_PORT
     volumes:

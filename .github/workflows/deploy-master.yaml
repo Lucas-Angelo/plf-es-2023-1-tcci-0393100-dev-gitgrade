@@ -42,48 +42,49 @@ jobs:
         run: |
           echo "BRANCH_FILTER=gitgrade_${{ env.BRANCH_NAME }}" >> $GITHUB_ENV
 
-      - name: Stop and remove containers, images, volumes and project files from VPS based on master branch
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          port: ${{ secrets.SSH_PORT }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          script: |
-            BRANCH_FILTER=${{ env.BRANCH_FILTER }}
+          - name: Stop and remove containers, images, volumes and project files from VPS based on master branch
+          uses: appleboy/ssh-action@master
+          with:
+            host: ${{ secrets.SSH_HOST }}
+            username: ${{ secrets.SSH_USER }}
+            port: ${{ secrets.SSH_PORT }}
+            password: ${{ secrets.SSH_PASSWORD }}
+            script: |
+              BRANCH_FILTER=${{ env.BRANCH_FILTER }}
+              EXCLUDE_CONTAINER_PATTERN="mysql_gitgrade"
 
-            # Stop and remove containers
-            CONTAINERS=$(sudo docker ps -a -q --filter="name=$BRANCH_FILTER")
-            if [ "$CONTAINERS" != "" ]; then
-                sudo docker stop $CONTAINERS
-                sudo docker rm -vf $CONTAINERS
-            fi
+              # Stop and remove containers, excluding containers related to mysql_gitgrade
+              CONTAINERS=$(sudo docker ps -a -q --filter="name=$BRANCH_FILTER" | grep -v "$EXCLUDE_CONTAINER_PATTERN")
+              if [ "$CONTAINERS" != "" ]; then
+                  sudo docker stop $CONTAINERS
+                  sudo docker rm -vf $CONTAINERS
+              fi
 
-            # Remove images
-            IMAGES=$(sudo docker images -q -f "dangling=true" $BRANCH_FILTER)
-            if [ "$IMAGES" != "" ]; then
-                sudo docker rmi -f $IMAGES
-            fi
+              # Remove images, excluding containers related to mysql_gitgrade
+              IMAGES=$(sudo docker images -q -f "dangling=true" --filter="reference=$BRANCH_FILTER*" | grep -v "$(sudo docker images -q mysql:8.1.0)")
+              if [ "$IMAGES" != "" ]; then
+                  sudo docker rmi -f $IMAGES
+              fi
 
-            # Remove volumes
-            VOLUMES=$(sudo docker volume ls -q --filter="name=$BRANCH_FILTER")
-            if [ "$VOLUMES" != "" ]; then
-                sudo docker volume rm $VOLUMES
-            fi
+              # Remove volumes, excluding containers related to mysql_gitgrade
+              VOLUMES=$(sudo docker volume ls -q --filter="name=$BRANCH_FILTER*" | grep -v "gitgrade-mysql-data")
+              if [ "$VOLUMES" != "" ]; then
+                  sudo docker volume rm $VOLUMES
+              fi
 
-            # Remove networks
-            NETWORKS=$(sudo docker network ls -q --filter="name=$BRANCH_FILTER")
-            if [ "$NETWORKS" != "" ]; then
-                sudo docker network rm $NETWORKS
-            fi
+              # Remove networks
+              NETWORKS=$(sudo docker network ls -q --filter="name=$BRANCH_FILTER")
+              if [ "$NETWORKS" != "" ]; then
+                  sudo docker network rm $NETWORKS
+              fi
 
-            # Clean Dangling networks
-            DANGLING_NETWORKS=$(sudo docker network ls -q -f "dangling=true" --filter="name=$BRANCH_FILTER")
-            if [ "$DANGLING_NETWORKS" != "" ]; then
-                sudo docker network rm $DANGLING_NETWORKS
-            fi
+              # Clean Dangling networks
+              DANGLING_NETWORKS=$(sudo docker network ls -q -f "dangling=true" --filter="name=$BRANCH_FILTER")
+              if [ "$DANGLING_NETWORKS" != "" ]; then
+                  sudo docker network rm $DANGLING_NETWORKS
+              fi
 
-            sudo rm -rf /${{ secrets.SSH_USER }}/app/gitgrade/branch-${{ env.BRANCH_NAME }}
+              sudo rm -rf /${{ secrets.SSH_USER }}/app/gitgrade/branch-${{ env.BRANCH_NAME }}
 
       - name: Mkdir CODE_DIR
         uses: appleboy/ssh-action@master
