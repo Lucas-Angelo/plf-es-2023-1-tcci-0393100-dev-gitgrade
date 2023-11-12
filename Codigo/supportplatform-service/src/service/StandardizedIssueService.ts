@@ -9,6 +9,7 @@ import { Op } from "sequelize";
 import logger from "../config/LogConfig";
 import AppError from "../error/AppError";
 import { StandardizedIssueWhereClauseType } from "../interface/StandardizedIssue"; // Ajuste de acordo
+import { ConsistencyRule } from "../model/ConsistencyRule";
 import { StandardizedIssue } from "../model/StandardizedIssue"; // Asegure-se de ter este modelo
 import { SequelizeUtil } from "../utils/SequelizeUtil";
 import { sequelizePagination } from "../utils/pagination";
@@ -191,6 +192,37 @@ export default class StandardizedIssueService {
                 { error }
             );
             throw error;
+        }
+    }
+
+    /**
+     * Delete a StandardizedIssue.
+     * Checks for associated ConsistencyRules before deleting.
+     */
+    async delete(id: number): Promise<void> {
+        const standardizedIssue = await this.findOneBy({ id });
+
+        // Check if there are any associated ConsistencyRules before deleting the StandardizedIssue
+        const consistencyRules = await ConsistencyRule.count({
+            where: { standardizedIssueId: id },
+        });
+        if (consistencyRules > 0) {
+            throw new AppError(
+                "StandardizedIssue cannot be deleted because it has associated evaluations",
+                400
+            );
+        }
+
+        try {
+            await standardizedIssue.destroy();
+            logger.info("StandardizedIssue successfully deleted");
+        } catch (error) {
+            logger.error("Error deleting standardizedIssue:", { error });
+            throw new AppError(
+                "Failed to delete standardizedIssue",
+                500,
+                error
+            );
         }
     }
 

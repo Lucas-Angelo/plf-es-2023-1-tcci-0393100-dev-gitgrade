@@ -20,18 +20,18 @@ describe(`GET ${baseRoute}`, () => {
             .send();
 
         expect(response.body.results).toHaveLength(10);
-        expect(response.body.totalPages).toBe(1);
+        expect(response.body.totalPages).toBe(2);
     });
 
-    it("should return 200 when page is 2 and return 0 consistency rules deliveries", async () => {
+    it("should return 200 when page is 3 and return 0 consistency rules deliveries", async () => {
         const response = await supertest(app)
-            .get(`${baseRoute}?page=2`)
+            .get(`${baseRoute}?page=3`)
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
             .send();
 
         expect(response.body.results).toHaveLength(0);
-        expect(response.body.totalPages).toBe(1);
+        expect(response.body.totalPages).toBe(2);
     });
 
     it("should return 200 when limit is 2 and return 2 consistency rules deliveries", async () => {
@@ -42,7 +42,7 @@ describe(`GET ${baseRoute}`, () => {
             .send();
 
         expect(response.body.results).toHaveLength(2);
-        expect(response.body.totalPages).toBe(5);
+        expect(response.body.totalPages).toBe(6);
     });
 
     it("should return 200 when filtering consistencyRuleId equal '1' and return 6 results and 1 pages", async () => {
@@ -113,14 +113,14 @@ describe(`GET ${baseRoute}`, () => {
         expect(response.body.totalPages).toBe(1);
     });
 
-    it("should return 200 when filtering status equal 'AWAITING_DELIVERY' and return 2 results and 1 pages", async () => {
+    it("should return 200 when filtering status equal 'AWAITING_DELIVERY' and return 3 results and 1 pages", async () => {
         const response = await supertest(app)
             .get(`${baseRoute}?status=AWAITING_DELIVERY`)
             .set("Authorization", `Bearer ${authUser.token}`)
             .expect(200)
             .send();
 
-        expect(response.body.results).toHaveLength(2);
+        expect(response.body.results).toHaveLength(3);
         expect(response.body.totalPages).toBe(1);
     });
 
@@ -158,7 +158,7 @@ describe(`GET ${baseRoute}`, () => {
             .send();
 
         expect(response.body.results).toHaveLength(0);
-        expect(response.body.totalPages).toBe(1);
+        expect(response.body.totalPages).toBe(2);
     });
 
     it("should return 200 when search param consistencyRuleId is not found and return 0 results", async () => {
@@ -484,7 +484,7 @@ describe(`POST ${baseRoute}`, () => {
                 status: "AWAITING_DELIVERY",
             });
 
-        expect(response.body.id).toBe("11");
+        expect(response.body.id).toBe("12");
         expect(response.body.consistencyRuleId).toBe("3");
         expect(response.body.repositoryId).toBe("2");
         expect(response.body.deliveryAt).toBe(null);
@@ -503,7 +503,7 @@ describe(`POST ${baseRoute}`, () => {
                 status: "DELIVERED_ON_TIME",
             });
 
-        expect(response.body.id).toBe("12");
+        expect(response.body.id).toBe("13");
         expect(response.body.consistencyRuleId).toBe("3");
         expect(response.body.repositoryId).toBe("2");
         expect(response.body.deliveryAt).toBe("2023-10-01T00:00:00.000Z");
@@ -522,7 +522,7 @@ describe(`POST ${baseRoute}`, () => {
                 status: "DELIVERED_LATE",
             });
 
-        expect(response.body.id).toBe("13");
+        expect(response.body.id).toBe("14");
         expect(response.body.consistencyRuleId).toBe("3");
         expect(response.body.repositoryId).toBe("2");
         expect(response.body.deliveryAt).toBe("2023-10-01T00:00:00.000Z");
@@ -541,7 +541,7 @@ describe(`POST ${baseRoute}`, () => {
                 status: "NOT_DELIVERED",
             });
 
-        expect(response.body.id).toBe("14");
+        expect(response.body.id).toBe("15");
         expect(response.body.consistencyRuleId).toBe("3");
         expect(response.body.repositoryId).toBe("2");
         expect(response.body.deliveryAt).toBe(null);
@@ -560,7 +560,7 @@ describe(`POST ${baseRoute}`, () => {
                 status: "DELIVERED_WITH_INVALIDITY",
             });
 
-        expect(response.body.id).toBe("15");
+        expect(response.body.id).toBe("16");
         expect(response.body.consistencyRuleId).toBe("3");
         expect(response.body.repositoryId).toBe("2");
         expect(response.body.deliveryAt).toBe("2023-10-01T00:00:00.000Z");
@@ -579,7 +579,7 @@ describe(`POST ${baseRoute}`, () => {
                 status: "DELIVERED_ON_TIME",
             });
 
-        expect(response.body.id).toBe("16");
+        expect(response.body.id).toBe("17");
         expect(response.body.consistencyRuleId).toBe("3");
         expect(response.body.repositoryId).toBe("3");
         expect(response.body.deliveryAt).toBe("2023-10-01T00:00:00.000Z");
@@ -598,7 +598,7 @@ describe(`POST ${baseRoute}`, () => {
                 status: "DELIVERED_LATE",
             });
 
-        expect(response.body.id).toBe("17");
+        expect(response.body.id).toBe("18");
         expect(response.body.consistencyRuleId).toBe("3");
         expect(response.body.repositoryId).toBe("4");
         expect(response.body.deliveryAt).toBe("2023-10-01T00:00:00.000Z");
@@ -617,7 +617,7 @@ describe(`POST ${baseRoute}`, () => {
                 status: "DELIVERED_WITH_INVALIDITY",
             });
 
-        expect(response.body.id).toBe("18");
+        expect(response.body.id).toBe("19");
         expect(response.body.consistencyRuleId).toBe("3");
         expect(response.body.repositoryId).toBe("5");
         expect(response.body.deliveryAt).toBe("2023-10-01T00:00:00.000Z");

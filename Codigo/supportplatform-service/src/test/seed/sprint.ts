@@ -141,6 +141,20 @@ const sprintTestingSeed: ISprintAttributes[] = [
         end_date: new Date("2025-03-15"),
         evaluationMethodId: 15,
     },
+    {
+        id: 21,
+        name: "Sprint 6 TO DELETE",
+        start_date: new Date("2025-03-01"),
+        end_date: new Date("2025-03-15"),
+        evaluationMethodId: 15,
+    },
+    {
+        id: 22,
+        name: "Sprint 6 TO BROKE DELETION WITH ASSOCIATION",
+        start_date: new Date("2025-03-01"),
+        end_date: new Date("2025-03-15"),
+        evaluationMethodId: 15,
+    },
 ];
 
 export { sprintTestingSeed };

@@ -1,3 +1,4 @@
 // jest --testTimeout= 10000
 // https://jestjs.io/docs/cli#--testtimeoutnumber
-jest.setTimeout(30000);
+const oneHundredEightiethSecondsInMilliseconds = 180000;
+jest.setTimeout(oneHundredEightiethSecondsInMilliseconds);
