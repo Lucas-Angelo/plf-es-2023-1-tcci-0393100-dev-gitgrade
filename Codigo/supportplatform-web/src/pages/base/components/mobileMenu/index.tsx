@@ -1,4 +1,4 @@
-import { IconButton, ActionList, Box, TextInput } from "@primer/react";
+import { IconButton, ActionList, Box } from "@primer/react";
 import { ThreeBarsIcon, XIcon } from "@primer/octicons-react";
 import { useState } from "react";
 import Drawer from "../../../../commom/components/drawer";
@@ -42,35 +42,6 @@ export default function MobileMenu() {
                                 as="button"
                             />
                         </Box>
-
-                        <Box
-                            sx={{
-                                display: "flex",
-                                pb: 2,
-                                m: 2,
-                                borderBottom: "1px solid #d0d0d0",
-                            }}
-                        >
-                            <TextInput
-                                name="search-repo"
-                                placeholder="Buscar trabalho..."
-                                sx={{
-                                    width: "100%",
-                                }}
-                            />
-                        </Box>
-                        <Link
-                            to={appRoutes.repo.link()}
-                            style={{ textDecoration: "none" }}
-                        >
-                            <ActionList.Item
-                                tabIndex={-1}
-                                sx={{ color: "grayText" }}
-                            >
-                                Repositórios de trabalhos
-                            </ActionList.Item>
-                        </Link>
-
                         <Link
                             to={appRoutes.evaluationMethod.link()}
                             style={{ textDecoration: "none" }}
@@ -80,6 +51,17 @@ export default function MobileMenu() {
                                 sx={{ color: "grayText" }}
                             >
                                 Métodos avaliativos
+                            </ActionList.Item>
+                        </Link>
+                        <Link
+                            to={appRoutes.repo.link()}
+                            style={{ textDecoration: "none" }}
+                        >
+                            <ActionList.Item
+                                tabIndex={-1}
+                                sx={{ color: "grayText" }}
+                            >
+                                Repositórios de trabalhos
                             </ActionList.Item>
                         </Link>
                     </ActionList>
