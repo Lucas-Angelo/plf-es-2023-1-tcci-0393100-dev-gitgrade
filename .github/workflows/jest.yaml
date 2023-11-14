@@ -17,10 +17,26 @@ jobs:
     name: Jest | OS ${{ matrix.os }} - NodeJs ${{ matrix.node-version }} - MySQL ${{ matrix.mysql-version }}
     runs-on: ${{ matrix.os }}
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: ${{ env.DB_NAME }}
+          MYSQL_USER: ${{ env.DB_USER }}
+          MYSQL_PASSWORD: ${{ env.DB_PASSWORD }}
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=10s
+          --health-retries=5
+
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: [16.x]
+        node-version: [18.x]
         mysql-version: [8.0]
 
     permissions:
@@ -109,19 +125,6 @@ jobs:
           echo "SONARQUBE_ADMIN_PASSWORD=${{ env.SONARQUBE_ADMIN_PASSWORD }}" >> .env.test
           echo "SONARQUBE_POSTGRES_USERNAME=${{ env.SONARQUBE_POSTGRES_USERNAME }}" >> .env.test
           echo "SONARQUBE_POSTGRES_PASSWORD=${{ env.SONARQUBE_POSTGRES_PASSWORD }}" >> .env.test
-
-      - name: Set up MySQL 8.0
-        uses: mirromutth/mysql-action@v1.1
-        with:
-          host port: 3306
-          container port: 3306
-          character set server: ${{ env.DB_CHARSET }}
-          collation server: ${{ env.DB_COLLATE }}
-          mysql version: "8.0"
-          mysql database: ${{ env.DB_NAME }}
-          mysql root password: ${{ env.DB_PASSWORD }}
-          mysql user: ${{ env.DB_USER }}
-          mysql password: ${{ env.DB_PASSWORD }}
 
       - name: npm install, build, and test
         working-directory: ./Codigo/supportplatform-service

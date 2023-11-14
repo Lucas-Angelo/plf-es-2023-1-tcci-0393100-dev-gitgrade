@@ -25,7 +25,8 @@
         "dotenv",
         "editorconfig",
         "mysql",
-        "sequelize"
+        "sequelize",
+        "typescript"
     ],
     "license": "CC-BY-4.0",
     "dependencies": {
