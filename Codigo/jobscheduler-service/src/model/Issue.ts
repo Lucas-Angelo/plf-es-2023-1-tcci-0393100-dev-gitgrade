@@ -30,6 +30,7 @@ class Issue extends Model<IIssueAttributes> {
     public githubUpdatedAt!: Date;
     public githubClosedAt!: Date | null;
     public closed!: boolean;
+
     public author!: Contributor | null;
     public assignees!: Contributor[];
 

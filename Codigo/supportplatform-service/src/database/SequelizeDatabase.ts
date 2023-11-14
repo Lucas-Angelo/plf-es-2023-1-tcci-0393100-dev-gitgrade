@@ -70,7 +70,6 @@ class SequelizeDatabase {
             Branch.initModel(this.sequelize);
             Commit.initModel(this.sequelize);
             File.initModel(this.sequelize);
-            EvaluationMethod.initModel(this.sequelize);
             Sprint.initModel(this.sequelize);
             StandardizedIssue.initModel(this.sequelize);
             ConsistencyRule.initModel(this.sequelize);
