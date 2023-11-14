@@ -4,10 +4,12 @@ import { Button } from "@primer/react";
 import { IssueOpenedIcon } from "@primer/octicons-react";
 import { useSearchParams } from "react-router-dom";
 import appRoutes from "../../../../../../commom/routes/appRoutes";
+import DeleteStandardizedIssueButton from "../deleteStandardizedIssueButton";
 
 interface IStandardizedIssueCardProps {
     id: number;
     title: string;
+    evaluationMethodId: number;
 }
 
 export default function StandardizedIssueCard(
@@ -34,12 +36,10 @@ export default function StandardizedIssueCard(
                 {props.title}
             </Card.Title>
             <Card.Actions>
-                <Button
-                    variant="danger"
-                    disabled
-                >
-                    Excluir
-                </Button>
+                <DeleteStandardizedIssueButton
+                    standardizedIssueId={props.id}
+                    evaluationMethodId={props.evaluationMethodId}
+                />
                 <Button
                     onClick={handleEditStandardizedIssueButtonClick}
                     variant="primary"

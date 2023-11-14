@@ -4,12 +4,14 @@ import { Button, Label } from "@primer/react";
 import { MoonIcon, CalendarIcon } from "@primer/octicons-react";
 import { useSearchParams } from "react-router-dom";
 import appRoutes from "../../../../../../commom/routes/appRoutes";
+import DeleteSprintButton from "../deleteSprintButton";
 
 interface ISprintCardProps {
     id: number;
     name: string;
     start_date: Date;
     end_date: Date;
+    evaluationMethodId: number;
 }
 
 const dateTimeFormat = new Intl.DateTimeFormat("pt-BR", {
@@ -22,14 +24,20 @@ const dateTimeFormat = new Intl.DateTimeFormat("pt-BR", {
 
 export default function SprintCard(props: ISprintCardProps) {
     const [, setSearchParams] = useSearchParams();
+
     function handleEditSprintButtonClick() {
-        setSearchParams((previousSearchParams) => ({
-            ...previousSearchParams,
-            [appRoutes.base.search.modal]:
-                appRoutes.base.searchValues.modal.editSprint,
-            [appRoutes.evaluationMethod.detail.sprint.detail.search.id]:
-                props.id.toString(),
-        }));
+        setSearchParams((previousSearchParams) => {
+            previousSearchParams.set(
+                appRoutes.base.search.modal,
+                appRoutes.base.searchValues.modal.editSprint
+            );
+            previousSearchParams.set(
+                appRoutes.evaluationMethod.detail.sprint.detail.search.id,
+                props.id.toString()
+            );
+
+            return previousSearchParams;
+        });
     }
 
     return (
@@ -62,12 +70,10 @@ export default function SprintCard(props: ISprintCardProps) {
                 </Card.Labels>
             </Card.Title>
             <Card.Actions>
-                <Button
-                    variant="danger"
-                    disabled
-                >
-                    Excluir
-                </Button>
+                <DeleteSprintButton
+                    evaluationMethodId={props.evaluationMethodId}
+                    sprintId={props.id}
+                />
                 <Button
                     onClick={handleEditSprintButtonClick}
                     variant="primary"

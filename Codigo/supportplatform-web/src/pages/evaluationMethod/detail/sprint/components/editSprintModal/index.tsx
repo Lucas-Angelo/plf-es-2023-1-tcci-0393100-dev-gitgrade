@@ -46,10 +46,10 @@ export default function EditSprintModal(props: IEditSprintModalProps) {
     return (
         <fetcher.Form
             method="put"
-            action={`${appRoutes.evaluationMethod.detail.sprint.detail.link(
+            action={appRoutes.evaluationMethod.detail.sprint.detail.link(
                 props.evaluationMethodId,
                 sprintId!
-            )}?${pageSearchParams.id}=${sprintIdParam}`}
+            )}
         >
             {isLoading && (
                 <Box

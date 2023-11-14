@@ -13,31 +13,30 @@ import { ConsistencyRuleValidator } from "../../../../../commom/validation/Consi
 import ErrorMapper from "../../../../../commom/mapping/ErrorMapper";
 import { ValidationType } from "@gitgrade/dtos/dto/consistencyRule";
 
-const pageUrlParams = appRoutes.evaluationMethod.detail.params;
+const pageUrlParams =
+    appRoutes.evaluationMethod.detail.consistencyRule.detail.getParams();
 type PageUrlParam = (typeof pageUrlParams)[number];
-const pageSearchParams =
-    appRoutes.evaluationMethod.detail.consistencyRule.detail.search;
 
 export default async function EvaluationMethodConsistencyRuleDetailAction({
     request,
     params,
 }: ActionFunctionArgs) {
-    const { id: evaluationMethodIdParam } = params as Params<PageUrlParam>;
+    const {
+        id: evaluationMethodIdParam,
+        consistencyRuleId: consistencyRuleIdParam,
+    } = params as Params<PageUrlParam>;
 
-    if (evaluationMethodIdParam === undefined) throw new Error("Invalid URL");
+    if (
+        evaluationMethodIdParam === undefined &&
+        consistencyRuleIdParam === undefined
+    )
+        throw new Error("Invalid URL");
 
     const evaluationMethodId = Number(evaluationMethodIdParam);
     if (Number.isNaN(evaluationMethodId))
         throw new Error("Invalid evaluation method id");
 
-    const searchParams = new URL(request.url).searchParams;
-    const consistencyRuleIdQuery = Number(
-        searchParams.get(pageSearchParams.id)
-    );
-
-    if (!consistencyRuleIdQuery) throw new Error("Invalid URL");
-
-    const consistencyRuleId = Number(consistencyRuleIdQuery);
+    const consistencyRuleId = Number(consistencyRuleIdParam);
     if (Number.isNaN(consistencyRuleId))
         throw new Error("Invalid consistencyRule id");
 
@@ -118,6 +117,36 @@ export default async function EvaluationMethodConsistencyRuleDetailAction({
                 ...axiosResponse.response?.data,
                 ...processedError,
             };
+        }
+    } else if (request.method === "delete" || request.method === "DELETE") {
+        try {
+            await new ConsistencyRuleService().delete(consistencyRuleId);
+            await queryClient.invalidateQueries(
+                getEvaluationMethodConsistencyRuleQuery(evaluationMethodId)
+                    .queryKey
+            );
+            await queryClient.invalidateQueries(
+                getEvaluationMethodConsistencyRuleByIdQuery(
+                    evaluationMethodId,
+                    consistencyRuleId
+                )
+            );
+
+            toast.success("Regra de consistência deletada com sucesso!");
+
+            return { success: true };
+        } catch (error) {
+            const axiosResponse = error as AxiosError<ErrorResponseDTO>;
+            if (!axiosResponse.response) {
+                toast.error("Não foi possível se conectar ao servidor...");
+            } else if (axiosResponse.response.status !== 422) {
+                toast.error(
+                    axiosResponse.response?.data.message ??
+                        "Não foi possível deletar a regra de consistência"
+                );
+            }
+
+            return axiosResponse.response?.data;
         }
     } else {
         return null;

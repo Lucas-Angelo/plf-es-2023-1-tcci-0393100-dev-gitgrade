@@ -10,6 +10,7 @@ import {
 import { useSearchParams } from "react-router-dom";
 import appRoutes from "../../../../../../commom/routes/appRoutes";
 import { useEvaluationMethodSprintById } from "../../../../../../commom/data/sprint";
+import DeleteConsistencyRuleButton from "../deleteConsistencyRuleButton";
 
 interface IConsistencyRuleCardProps {
     id: number;
@@ -93,12 +94,10 @@ export default function ConsistencyRuleCard(props: IConsistencyRuleCardProps) {
                 )}
             </Card.Labels>
             <Card.Actions>
-                <Button
-                    variant="danger"
-                    disabled
-                >
-                    Excluir
-                </Button>
+                <DeleteConsistencyRuleButton
+                    consistencyRuleId={props.id}
+                    evaluationMethodId={props.evaluationMethodId}
+                />
                 <Button
                     onClick={handleEditConsistencyRuleButtonClick}
                     variant="primary"
