@@ -2,6 +2,7 @@ import Card from "../../../../../../commom/components/card";
 import { Avatar, Box, Button, Label, RelativeTime } from "@primer/react";
 import AvatarFallbackLogoImage from "../../../../../../assets/avatar-fallback-logo.png";
 import QuestionMarkImage from "../../../../../../assets/question-mark.png";
+import env from "../../../../../../commom/config/env";
 
 interface ICommitCardProps {
     message: string | undefined | null;
@@ -126,7 +127,7 @@ export default function CommitCard(props: ICommitCardProps) {
                 )}
                 <Button
                     as="a"
-                    href={`https://github.com/ICEI-PUC-Minas-PPLES-TI/${props.repoName}/commit/${props.sha}`}
+                    href={`https://github.com/${env.githubOrganizationName}/${props.repoName}/commit/${props.sha}`}
                     variant="outline"
                     title={props.sha}
                     target="_blank"

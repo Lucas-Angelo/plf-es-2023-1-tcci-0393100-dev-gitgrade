@@ -34,7 +34,7 @@ export default function PossiblyAffectedByForcePushFilter() {
         >
             <ToggleSwitch
                 size="small"
-                aria-labelledby="Filtrar possívelmente afetados por force push"
+                aria-labelledby="Filtrar possivelmente afetados por force push"
                 defaultChecked={
                     searchParams.get(
                         pageSearchParams.possiblyAffectedByForcePush

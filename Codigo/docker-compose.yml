@@ -170,6 +170,7 @@ services:
       - APP_DEBUG=$APP_DEBUG
       - VITE_API_URL=http://$HOST:$SUPPORTPLATFORM_SERVICE_NODE_PORT
       - VITE_OAUTH_FAILURE_SEARCH_PARAM=$OAUTH_FAILURE_SEARCH_PARAM
+      - VITE_GITHUB_ORGANIZATION_NAME=$GITHUB_ORGANIZATION_NAME
     command: /bin/bash -c "mkdir -p /usr/src/gitgrade/supportplatform_service/dist/temp/repositories/ && ./wait-for-it.sh --timeout=600 mysql_gitgrade:$DB_DOCKER_PORT && npm run dev"
     ports:
       - $SUPPORTPLATAFORM_WEB_NODE_PORT:$SUPPORTPLATAFORM_WEB_NODE_PORT

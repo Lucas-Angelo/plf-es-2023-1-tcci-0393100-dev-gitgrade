@@ -4,6 +4,7 @@ import AvatarFallbackLogoImage from "../../../../../../assets/avatar-fallback-lo
 import QuestionMarkImage from "../../../../../../assets/question-mark.png";
 import { fileChangeColors } from "../../../../../../commom/style/colors";
 import { MarkGithubIcon } from "@primer/octicons-react";
+import env from "../../../../../../commom/config/env";
 
 interface IFileCardProps {
     path: string;
@@ -110,7 +111,7 @@ export default function FileCard(props: IFileCardProps) {
             <Card.Actions>
                 <IconButton
                     as="a"
-                    href={`https://github.com/ICEI-PUC-Minas-PPLES-TI/${props.repoName}/blob/${props.branchName}/${props.path}`}
+                    href={`https://github.com/${env.githubOrganizationName}/${props.repoName}/blob/${props.branchName}/${props.path}`}
                     variant="outline"
                     title={props.path}
                     target="_blank"

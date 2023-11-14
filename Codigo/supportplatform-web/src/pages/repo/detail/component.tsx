@@ -4,6 +4,7 @@ import { Box } from "@primer/react";
 import appRoutes from "../../../commom/routes/appRoutes";
 import { useRepositoryById } from "../../../commom/data/repo";
 import { useContributorsByRepositoryId } from "../../../commom/data/contributor";
+import env from "../../../commom/config/env";
 
 const pageRouteParams = appRoutes.repo["detail"].params;
 type PageRouteParams = (typeof pageRouteParams)[number];
@@ -24,7 +25,7 @@ export default function RepoPage() {
             }}
         >
             <RepoHead
-                orgName="ICEI-PUC-Minas-PPLES-TI"
+                orgName={env.githubOrganizationName}
                 repoName={repositoryData!.name}
                 contributors={repositoryContributorsData!.results}
                 evaluationMethod={repositoryData?.evaluationMethod ?? undefined}
