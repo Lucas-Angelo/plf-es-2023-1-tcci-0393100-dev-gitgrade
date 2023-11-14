@@ -52,7 +52,7 @@ jobs:
       DB_COLLATE: utf8mb4_bin
       DB_TIMEZONE: -03:00
       PORT: 3000
-      APP_DEBUG: true
+      APP_DEBUG: false
       DB_HOST: localhost
       DB_USER: testuser
       DB_PASSWORD: testpassword

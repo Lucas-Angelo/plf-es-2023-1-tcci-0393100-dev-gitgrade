@@ -491,7 +491,7 @@ describe(`POST ${baseRoute}`, () => {
                 validationType: "DEFAULT",
             });
 
-        expect(response.body.id).toBe(15);
+        expect(response.body.id).toBe(11);
         expect(response.body.evaluationMethodId).toBe(14);
         expect(response.body.sprintId).toBe(11);
         expect(response.body.standardizedIssueId).toBe(null);
@@ -519,7 +519,7 @@ describe(`POST ${baseRoute}`, () => {
                 validationType: "CFF",
             });
 
-        expect(response.body.id).toBe(16);
+        expect(response.body.id).toBe(12);
         expect(response.body.evaluationMethodId).toBe(14);
         expect(response.body.sprintId).toBe(11);
         expect(response.body.standardizedIssueId).toBe(null);
@@ -546,7 +546,7 @@ describe(`POST ${baseRoute}`, () => {
             })
             .expect(201);
 
-        expect(response.body.id).toBe(17);
+        expect(response.body.id).toBe(13);
         expect(response.body.evaluationMethodId).toBe(14);
         expect(response.body.sprintId).toBe(11);
         expect(response.body.standardizedIssueId).toBe(null);
@@ -572,7 +572,7 @@ describe(`POST ${baseRoute}`, () => {
             })
             .expect(201);
 
-        expect(response.body.id).toBe(18);
+        expect(response.body.id).toBe(14);
         expect(response.body.evaluationMethodId).toBe(14);
         expect(response.body.sprintId).toBe(11);
         expect(response.body.standardizedIssueId).toBe(null);
