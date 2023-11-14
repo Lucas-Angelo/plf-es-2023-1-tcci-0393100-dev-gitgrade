@@ -53,10 +53,10 @@ export default function EditStandardizedIssueModal(
     return (
         <fetcher.Form
             method="put"
-            action={`${appRoutes.evaluationMethod.detail.standardizedIssue.detail.link(
+            action={appRoutes.evaluationMethod.detail.standardizedIssue.detail.link(
                 props.evaluationMethodId,
                 standardizedIssueId!
-            )}?${pageSearchParams.id}=${standardizedIssueIdParam}`}
+            )}
         >
             {isLoading && (
                 <Box

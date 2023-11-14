@@ -31,6 +31,8 @@ class ConsistencyRuleDelivery extends Model<IConsistencyRuleDeliveryAttributes> 
         | "NOT_DELIVERED"
         | "DELIVERED_WITH_INVALIDITY";
 
+    public consistencyRule!: ConsistencyRule;
+
     static initModel(sequelize: Sequelize): void {
         this.init(
             {
@@ -109,6 +111,7 @@ class ConsistencyRuleDelivery extends Model<IConsistencyRuleDeliveryAttributes> 
         this.belongsTo(models.Repository, {
             foreignKey: "repositoryId",
             as: "repository",
+            onDelete: "CASCADE",
         });
     }
 }

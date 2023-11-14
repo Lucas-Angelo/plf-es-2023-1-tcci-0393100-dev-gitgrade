@@ -51,22 +51,23 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             BRANCH_FILTER=${{ env.BRANCH_FILTER }}
+            EXCLUDE_CONTAINER_PATTERN="mysql_gitgrade"
 
-            # Stop and remove containers
-            CONTAINERS=$(sudo docker ps -a -q --filter="name=$BRANCH_FILTER")
+            # Stop and remove containers, excluding containers related to mysql_gitgrade
+            CONTAINERS=$(sudo docker ps -a -q --filter="name=$BRANCH_FILTER" | grep -v "$EXCLUDE_CONTAINER_PATTERN")
             if [ "$CONTAINERS" != "" ]; then
                 sudo docker stop $CONTAINERS
                 sudo docker rm -vf $CONTAINERS
             fi
 
-            # Remove images
-            IMAGES=$(sudo docker images -q -f "dangling=true" $BRANCH_FILTER)
+            # Remove images, excluding containers related to mysql_gitgrade
+            IMAGES=$(sudo docker images -q -f "dangling=true" --filter="reference=$BRANCH_FILTER*" | grep -v "$(sudo docker images -q mysql:8.1.0)")
             if [ "$IMAGES" != "" ]; then
                 sudo docker rmi -f $IMAGES
             fi
 
-            # Remove volumes
-            VOLUMES=$(sudo docker volume ls -q --filter="name=$BRANCH_FILTER")
+            # Remove volumes, excluding containers related to mysql_gitgrade
+            VOLUMES=$(sudo docker volume ls -q --filter="name=$BRANCH_FILTER*" | grep -v "gitgrade-mysql-data")
             if [ "$VOLUMES" != "" ]; then
                 sudo docker volume rm $VOLUMES
             fi
