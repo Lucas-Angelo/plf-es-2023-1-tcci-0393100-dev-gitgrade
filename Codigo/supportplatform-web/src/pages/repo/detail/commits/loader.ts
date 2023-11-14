@@ -55,6 +55,11 @@ export default async function RepositoryCommitsLoader({
             "true"
                 ? true
                 : undefined,
+        possiblyAffectedByForcePush:
+            searchParams.get(pageSearchParams.possiblyAffectedByForcePush) ===
+            "true"
+                ? true
+                : undefined,
         contributor: searchParams
             .getAll(pageSearchParams.contributor)
             .filter((c) => c !== ""),

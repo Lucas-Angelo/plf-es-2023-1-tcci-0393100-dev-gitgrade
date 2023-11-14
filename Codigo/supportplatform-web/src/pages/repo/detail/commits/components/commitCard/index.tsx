@@ -1,5 +1,5 @@
 import Card from "../../../../../../commom/components/card";
-import { Avatar, Box, Button, RelativeTime } from "@primer/react";
+import { Avatar, Box, Button, Label, RelativeTime } from "@primer/react";
 import AvatarFallbackLogoImage from "../../../../../../assets/avatar-fallback-logo.png";
 import QuestionMarkImage from "../../../../../../assets/question-mark.png";
 
@@ -17,6 +17,8 @@ interface ICommitCardProps {
     isLast?: boolean;
 
     repoName: string;
+
+    possiblyAffectedByForcePush?: boolean;
 
     onAvatarClick?: (githubLogin: string | null) => void;
 }
@@ -108,7 +110,20 @@ export default function CommitCard(props: ICommitCardProps) {
                     </Box>
                 </Box>
             </Card.Title>
-            <Card.Actions>
+            <Card.Actions
+                sx={{
+                    alignItems: "center",
+                }}
+            >
+                {props.possiblyAffectedByForcePush && (
+                    <Label
+                        sx={{
+                            fontSize: [10, 12],
+                        }}
+                    >
+                        Possivelmente afetado por force push
+                    </Label>
+                )}
                 <Button
                     as="a"
                     href={`https://github.com/ICEI-PUC-Minas-PPLES-TI/${props.repoName}/commit/${props.sha}`}
