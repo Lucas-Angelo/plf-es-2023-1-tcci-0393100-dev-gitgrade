@@ -38,10 +38,17 @@ class AppLogger {
 
     public getLogger(): Logger {
         const logLevel: string = EnvConfig.APP_DEBUG ? "debug" : "error"; // debug, info, warn, error
+        const transports: (
+            | transports.FileTransportInstance
+            | transports.ConsoleTransportInstance
+        )[] = [];
+        if (!(EnvConfig.NODE_ENV === "test")) {
+            transports.push(this.fileTransport, this.consoleTransport);
+        }
 
         return createLogger({
             level: logLevel,
-            transports: [this.fileTransport, this.consoleTransport],
+            transports: transports,
         });
     }
 }
