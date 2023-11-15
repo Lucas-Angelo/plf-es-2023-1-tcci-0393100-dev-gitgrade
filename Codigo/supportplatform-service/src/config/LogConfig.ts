@@ -42,7 +42,9 @@ class AppLogger {
             | transports.FileTransportInstance
             | transports.ConsoleTransportInstance
         )[] = [];
-        if (!(EnvConfig.NODE_ENV === "test")) {
+        if (EnvConfig.NODE_ENV === "test") {
+            transports.push(this.fileTransport);
+        } else {
             transports.push(this.fileTransport, this.consoleTransport);
         }
 

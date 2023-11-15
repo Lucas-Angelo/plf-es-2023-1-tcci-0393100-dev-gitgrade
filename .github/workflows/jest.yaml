@@ -51,7 +51,7 @@ jobs:
       DB_CHARSET: utf8mb4
       DB_COLLATE: utf8mb4_bin
       DB_TIMEZONE: -03:00
-      PORT: 3000
+      SUPPORTPLATFORM_SERVICE_PORT: 3002
       APP_DEBUG: false
       DB_HOST: localhost
       DB_USER: testuser
@@ -74,6 +74,11 @@ jobs:
       SONARQUBE_ADMIN_PASSWORD: fake_admin_password
       SONARQUBE_POSTGRES_USERNAME: fake_postgres_username
       SONARQUBE_POSTGRES_PASSWORD: fake_postgres_password
+      SYNC_TIME: 01:00
+      JOBSCHEDULER_SERVICE_PORT: 3001
+      TELEGRAM_BOT_TOKEN: fake_telegram_bot_token
+      TELEGRAM_CHAT_ID: fake_telegram_chat_id
+      SUPPORT_PLATFORM_URL: http://localhost:3002
 
     steps:
       - uses: actions/checkout@v1
@@ -102,7 +107,7 @@ jobs:
         working-directory: ./Codigo/supportplatform-service/env
         run: |
           touch .env.test
-          echo "PORT=${{ env.PORT }}" >> .env.test
+          echo "PORT=${{ env.SUPPORTPLATFORM_SERVICE_PORT }}" >> .env.test
           echo "APP_DEBUG=${{ env.APP_DEBUG }}" >> .env.test
           echo "DB_HOST=${{ env.DB_HOST }}" >> .env.test
           echo "DB_USER=${{ env.DB_USER }}" >> .env.test
@@ -126,8 +131,47 @@ jobs:
           echo "SONARQUBE_POSTGRES_USERNAME=${{ env.SONARQUBE_POSTGRES_USERNAME }}" >> .env.test
           echo "SONARQUBE_POSTGRES_PASSWORD=${{ env.SONARQUBE_POSTGRES_PASSWORD }}" >> .env.test
 
+      - name: Create jobscheduler-service .env file
+        working-directory: ./Codigo/jobscheduler-service/env
+        run: |
+          touch .env
+          echo "HOST=${{ env.HOST }}" >> .env
+          echo "NODE_ENV=${{ env.NODE_ENV }}" >> .env
+          echo "APP_TIMEZONE=${{ env.APP_TIMEZONE }}" >> .env
+          echo "DB_DIALECT=${{ env.DB_DIALECT }}" >> .env
+          echo "DB_CHARSET=${{ env.DB_CHARSET }}" >> .env
+          echo "DB_COLLATE=${{ env.DB_COLLATE }}" >> .env
+          echo "DB_TIMEZONE=${{ env.DB_TIMEZONE }}" >> .env
+          echo "SYNC_TIME=${{ env.SYNC_TIME }}" >> .env
+
+      - name: Create jobscheduler-service .env.test file
+        working-directory: ./Codigo/jobscheduler-service/env
+        run: |
+          touch .env.test
+          echo "PORT=${{ env.JOBSCHEDULER_SERVICE_PORT }}" >> .env.test
+          echo "NODE_ENV=${{ env.NODE_ENV }}" >> .env.test
+          echo "APP_DEBUG=${{ env.APP_DEBUG }}" >> .env.test
+          echo "DB_HOST=${{ env.DB_HOST }}" >> .env.test
+          echo "DB_USER=${{ env.DB_USER }}" >> .env.test
+          echo "DB_PASSWORD=${{ env.DB_PASSWORD }}" >> .env.test
+          echo "DB_NAME=${{ env.DB_NAME }}" >> .env.test
+          echo "DB_PORT=${{ env.DB_PORT }}" >> .env.test
+          echo "GITHUB_ORGANIZATION_NAME=${{ env.GITHUB_ORGANIZATION_NAME }}" >> .env.test
+          echo "GITHUB_PERSONAL_ACCESS_TOKEN=${{ env.GITHUB_PERSONAL_ACCESS_TOKEN }}" >> .env.test
+          echo "TELEGRAM_BOT_TOKEN=${{ env.TELEGRAM_BOT_TOKEN }}" >> .env.test
+          echo "TELEGRAM_CHAT_ID=${{ env.TELEGRAM_CHAT_ID }}" >> .env.test
+          echo "SUPPORT_PLATFORM_URL=${{ env.SUPPORT_PLATFORM_URL }}" >> .env.test
+
       - name: npm install, build, and test
         working-directory: ./Codigo/supportplatform-service
+        run: |
+          npm install
+          npm test
+        env:
+          CI: true
+
+      - name: npm install, build, and test
+        working-directory: ./Codigo/jobscheduler-service
         run: |
           npm install
           npm test

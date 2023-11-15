@@ -8,7 +8,7 @@
         "lint:check": "npx eslint . --ext .ts --report-unused-disable-directives --max-warnings 0",
         "lint:watch": "nodemon -x \"npm run lint:check\"",
         "lint:fix": "npx eslint . --fix --ext .ts --report-unused-disable-directives --max-warnings 0",
-        "test": "cross-env NODE_ENV=test jest --runInBand --detectOpenHandles --forceExit",
+        "test": "cross-env NODE_ENV=test jest --no-cache --runInBand --detectOpenHandles --forceExit",
         "start": "npx ts-node index.ts",
         "start:dev": "ts-node-dev index.ts",
         "build": "npm run swagger && npx tsc --outDir dist",
