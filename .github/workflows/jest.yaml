@@ -162,7 +162,7 @@ jobs:
           echo "TELEGRAM_CHAT_ID=${{ env.TELEGRAM_CHAT_ID }}" >> .env.test
           echo "SUPPORT_PLATFORM_URL=${{ env.SUPPORT_PLATFORM_URL }}" >> .env.test
 
-      - name: npm install, build, and test
+      - name: npm install, build, and test for supportplatform-service
         working-directory: ./Codigo/supportplatform-service
         run: |
           npm install
@@ -170,7 +170,7 @@ jobs:
         env:
           CI: true
 
-      - name: npm install, build, and test
+      - name: npm install, build, and test for jobscheduler-service
         working-directory: ./Codigo/jobscheduler-service
         run: |
           npm install
