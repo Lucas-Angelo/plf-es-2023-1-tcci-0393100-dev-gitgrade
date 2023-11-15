@@ -7,6 +7,7 @@ import BranchQueryNavigationMenu from "../components/branchQueryNavigationMenu";
 import { RepositoryCommitListLoaderData } from "./loader";
 import { useSearchParams } from "react-router-dom";
 import CommitListGroupByDate from "./components/commitListGroupByDate";
+import PossiblyAffectedByForcePushFilter from "./components/possiblyAffectedByForcePushFilter";
 
 const pageRouteParams = appRoutes.repo["detail"].params;
 type PageRouteParams = (typeof pageRouteParams)[number];
@@ -42,6 +43,7 @@ export default function RepositoryCommitsPage() {
                     repositoryId={id}
                     defaultBranchName={repositoryData?.defaultBranch}
                 />
+                <PossiblyAffectedByForcePushFilter />
             </DateFilter>
 
             <Box

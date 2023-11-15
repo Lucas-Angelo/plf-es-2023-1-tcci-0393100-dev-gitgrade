@@ -87,6 +87,9 @@ export default function CommitListGroupByDate(
                                 isFirst={index === 0}
                                 isLast={index === commits.length - 1}
                                 repoName={props.repoName}
+                                possiblyAffectedByForcePush={
+                                    commit.possiblyAffectedByForcePush
+                                }
                                 onAvatarClick={handleAvatarClick}
                             />
                         ))}

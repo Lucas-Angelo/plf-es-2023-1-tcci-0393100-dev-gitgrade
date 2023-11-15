@@ -217,6 +217,7 @@ const appRoutes = {
                 // necessary to map query string param name per a trustable variable
                 search: {
                     page: "page",
+                    possiblyAffectedByForcePush: "possiblyAffectedByForcePush",
                 },
             },
             files: {

@@ -120,6 +120,12 @@ export class CommitService {
         if (query?.repositoryId) {
             searchParams.set("repositoryId", query.repositoryId.toString());
         }
+        if (query?.possiblyAffectedByForcePush) {
+            searchParams.set(
+                "possiblyAffectedByForcePush",
+                query.possiblyAffectedByForcePush.toString()
+            );
+        }
         if (query?.page) searchParams.set("page", query.page.toString());
         if (query?.limit) searchParams.set("limit", query.limit.toString());
 
