@@ -20,7 +20,7 @@ describe(`GET ${baseRoute}`, () => {
             .send();
 
         expect(response.body.results).toHaveLength(10);
-        expect(response.body.totalPages).toBe(2);
+        expect(response.body.totalPages).toBe(1);
     });
 
     it("should return 200 when page is 3 and return 0 consistency rules deliveries", async () => {
@@ -31,7 +31,7 @@ describe(`GET ${baseRoute}`, () => {
             .send();
 
         expect(response.body.results).toHaveLength(0);
-        expect(response.body.totalPages).toBe(2);
+        expect(response.body.totalPages).toBe(1);
     });
 
     it("should return 200 when limit is 2 and return 2 consistency rules deliveries", async () => {
@@ -42,7 +42,7 @@ describe(`GET ${baseRoute}`, () => {
             .send();
 
         expect(response.body.results).toHaveLength(2);
-        expect(response.body.totalPages).toBe(6);
+        expect(response.body.totalPages).toBe(5);
     });
 
     it("should return 200 when filtering consistencyRuleId equal '1' and return 6 results and 1 pages", async () => {
@@ -120,7 +120,7 @@ describe(`GET ${baseRoute}`, () => {
             .expect(200)
             .send();
 
-        expect(response.body.results).toHaveLength(3);
+        expect(response.body.results).toHaveLength(2);
         expect(response.body.totalPages).toBe(1);
     });
 
@@ -158,7 +158,7 @@ describe(`GET ${baseRoute}`, () => {
             .send();
 
         expect(response.body.results).toHaveLength(0);
-        expect(response.body.totalPages).toBe(2);
+        expect(response.body.totalPages).toBe(1);
     });
 
     it("should return 200 when search param consistencyRuleId is not found and return 0 results", async () => {

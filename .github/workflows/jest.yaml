@@ -1,0 +1,179 @@
+name: Jest
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "Codigo/supportplatform-service/**"
+      - "Codigo/jobscheduler-service/**"
+  pull_request:
+    branches: [master]
+    paths:
+      - "Codigo/supportplatform-service/**"
+      - "Codigo/jobscheduler-service/**"
+
+jobs:
+  jest:
+    name: Jest | OS ${{ matrix.os }} - NodeJs ${{ matrix.node-version }} - MySQL ${{ matrix.mysql-version }}
+    runs-on: ${{ matrix.os }}
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: ${{ env.DB_NAME }}
+          MYSQL_USER: ${{ env.DB_USER }}
+          MYSQL_PASSWORD: ${{ env.DB_PASSWORD }}
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=10s
+          --health-retries=5
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [18.x]
+        mysql-version: [8.0]
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+
+    env:
+      HOST: 127.0.0.1
+      NODE_ENV: test
+      APP_TIMEZONE: America/Sao_Paulo
+      DB_DIALECT: mysql
+      DB_CHARSET: utf8mb4
+      DB_COLLATE: utf8mb4_bin
+      DB_TIMEZONE: -03:00
+      SUPPORTPLATFORM_SERVICE_PORT: 3002
+      APP_DEBUG: false
+      DB_HOST: localhost
+      DB_USER: testuser
+      DB_PASSWORD: testpassword
+      DB_NAME: testdb
+      DB_PORT: 3306
+      GITHUB_ORGANIZATION_NAME: FakeOrganization
+      GITHUB_APP_CLIENT_ID: fake_client_id
+      GITHUB_APP_CLIENT_SECRET: fake_client_secret
+      GITHUB_PERSONAL_ACCESS_TOKEN: fake_personal_access_token
+      JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
+      JWT_PUBLIC_KEY: ${{ secrets.JWT_PUBLIC_KEY }}
+      SESSION_SECRET: fake_session_secret
+      JOB_SCHEDULER_API_URL: http://localhost:3002
+      OAUTH_SUCCESS_REDIRECT_URL: http://localhost:3003/login
+      OAUTH_FAILURE_SEARCH_PARAM: message
+      SONARQUBE_HOST: 127.0.0.2
+      SONARQUBE_PORT: 8963
+      SONARQUBE_ADMIN_USERNAME: fake_admin_username
+      SONARQUBE_ADMIN_PASSWORD: fake_admin_password
+      SONARQUBE_POSTGRES_USERNAME: fake_postgres_username
+      SONARQUBE_POSTGRES_PASSWORD: fake_postgres_password
+      SYNC_TIME: 01:00
+      JOBSCHEDULER_SERVICE_PORT: 3001
+      TELEGRAM_BOT_TOKEN: fake_telegram_bot_token
+      TELEGRAM_CHAT_ID: fake_telegram_chat_id
+      SUPPORT_PLATFORM_URL: http://localhost:3002
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Shutdown Ubuntu MySQL (SUDO)
+        run: sudo service mysql stop
+
+      - name: Use NodeJs ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Create supportplatform-service .env file
+        working-directory: ./Codigo/supportplatform-service/env
+        run: |
+          touch .env
+          echo "HOST=${{ env.HOST }}" >> .env
+          echo "NODE_ENV=${{ env.NODE_ENV }}" >> .env
+          echo "APP_TIMEZONE=${{ env.APP_TIMEZONE }}" >> .env
+          echo "DB_DIALECT=${{ env.DB_DIALECT }}" >> .env
+          echo "DB_CHARSET=${{ env.DB_CHARSET }}" >> .env
+          echo "DB_COLLATE=${{ env.DB_COLLATE }}" >> .env
+          echo "DB_TIMEZONE=${{ env.DB_TIMEZONE }}" >> .env
+
+      - name: Create supportplatform-service .env.test file
+        working-directory: ./Codigo/supportplatform-service/env
+        run: |
+          touch .env.test
+          echo "PORT=${{ env.SUPPORTPLATFORM_SERVICE_PORT }}" >> .env.test
+          echo "APP_DEBUG=${{ env.APP_DEBUG }}" >> .env.test
+          echo "DB_HOST=${{ env.DB_HOST }}" >> .env.test
+          echo "DB_USER=${{ env.DB_USER }}" >> .env.test
+          echo "DB_PASSWORD=${{ env.DB_PASSWORD }}" >> .env.test
+          echo "DB_NAME=${{ env.DB_NAME }}" >> .env.test
+          echo "DB_PORT=${{ env.DB_PORT }}" >> .env.test
+          echo "GITHUB_ORGANIZATION_NAME=${{ env.GITHUB_ORGANIZATION_NAME }}" >> .env.test
+          echo "GITHUB_APP_CLIENT_ID=${{ env.GITHUB_APP_CLIENT_ID }}" >> .env.test
+          echo "GITHUB_APP_CLIENT_SECRET=${{ env.GITHUB_APP_CLIENT_SECRET }}" >> .env.test
+          echo "GITHUB_PERSONAL_ACCESS_TOKEN=${{ env.GITHUB_PERSONAL_ACCESS_TOKEN }}" >> .env.test
+          echo "JWT_PRIVATE_KEY=${{ env.JWT_PRIVATE_KEY }}" >> .env.test
+          echo "JWT_PUBLIC_KEY=${{ env.JWT_PUBLIC_KEY }}" >> .env.test
+          echo "SESSION_SECRET=${{ env.SESSION_SECRET }}" >> .env.test
+          echo "JOB_SCHEDULER_API_URL=${{ env.JOB_SCHEDULER_API_URL }}" >> .env.test
+          echo "OAUTH_SUCCESS_REDIRECT_URL=${{ env.OAUTH_SUCCESS_REDIRECT_URL }}" >> .env.test
+          echo "OAUTH_FAILURE_SEARCH_PARAM=${{ env.OAUTH_FAILURE_SEARCH_PARAM }}" >> .env.test
+          echo "SONARQUBE_HOST=${{ env.SONARQUBE_HOST }}" >> .env.test
+          echo "SONARQUBE_PORT=${{ env.SONARQUBE_PORT }}" >> .env.test
+          echo "SONARQUBE_ADMIN_USERNAME=${{ env.SONARQUBE_ADMIN_USERNAME }}" >> .env.test
+          echo "SONARQUBE_ADMIN_PASSWORD=${{ env.SONARQUBE_ADMIN_PASSWORD }}" >> .env.test
+          echo "SONARQUBE_POSTGRES_USERNAME=${{ env.SONARQUBE_POSTGRES_USERNAME }}" >> .env.test
+          echo "SONARQUBE_POSTGRES_PASSWORD=${{ env.SONARQUBE_POSTGRES_PASSWORD }}" >> .env.test
+
+      - name: Create jobscheduler-service .env file
+        working-directory: ./Codigo/jobscheduler-service/env
+        run: |
+          touch .env
+          echo "HOST=${{ env.HOST }}" >> .env
+          echo "NODE_ENV=${{ env.NODE_ENV }}" >> .env
+          echo "APP_TIMEZONE=${{ env.APP_TIMEZONE }}" >> .env
+          echo "DB_DIALECT=${{ env.DB_DIALECT }}" >> .env
+          echo "DB_CHARSET=${{ env.DB_CHARSET }}" >> .env
+          echo "DB_COLLATE=${{ env.DB_COLLATE }}" >> .env
+          echo "DB_TIMEZONE=${{ env.DB_TIMEZONE }}" >> .env
+          echo "SYNC_TIME=${{ env.SYNC_TIME }}" >> .env
+
+      - name: Create jobscheduler-service .env.test file
+        working-directory: ./Codigo/jobscheduler-service/env
+        run: |
+          touch .env.test
+          echo "PORT=${{ env.JOBSCHEDULER_SERVICE_PORT }}" >> .env.test
+          echo "NODE_ENV=${{ env.NODE_ENV }}" >> .env.test
+          echo "APP_DEBUG=${{ env.APP_DEBUG }}" >> .env.test
+          echo "DB_HOST=${{ env.DB_HOST }}" >> .env.test
+          echo "DB_USER=${{ env.DB_USER }}" >> .env.test
+          echo "DB_PASSWORD=${{ env.DB_PASSWORD }}" >> .env.test
+          echo "DB_NAME=${{ env.DB_NAME }}" >> .env.test
+          echo "DB_PORT=${{ env.DB_PORT }}" >> .env.test
+          echo "GITHUB_ORGANIZATION_NAME=${{ env.GITHUB_ORGANIZATION_NAME }}" >> .env.test
+          echo "GITHUB_PERSONAL_ACCESS_TOKEN=${{ env.GITHUB_PERSONAL_ACCESS_TOKEN }}" >> .env.test
+          echo "TELEGRAM_BOT_TOKEN=${{ env.TELEGRAM_BOT_TOKEN }}" >> .env.test
+          echo "TELEGRAM_CHAT_ID=${{ env.TELEGRAM_CHAT_ID }}" >> .env.test
+          echo "SUPPORT_PLATFORM_URL=${{ env.SUPPORT_PLATFORM_URL }}" >> .env.test
+
+      - name: npm install, build, and test for supportplatform-service
+        working-directory: ./Codigo/supportplatform-service
+        run: |
+          npm install
+          npm test
+        env:
+          CI: true
+
+      - name: npm install, build, and test for jobscheduler-service
+        working-directory: ./Codigo/jobscheduler-service
+        run: |
+          npm install
+          npm test
+        env:
+          CI: true
