@@ -100,8 +100,7 @@ alunos efetuarem essa operação em um repositório de código.
 
 ---
 
-## 💻 Tecnologias 
-(Deve-se atualizar ao fim do projeto)
+## 💻 Tecnologias
 
 - Documentação:
   - [Google Docs](https://docs.google.com/document)
