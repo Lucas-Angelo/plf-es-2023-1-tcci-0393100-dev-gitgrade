@@ -7,11 +7,12 @@
     <br><br>
     <p align="center">
       <a href="#-sobre">Sobre</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-      <a href="#-alunos-integrantes-da-equipe">Alunos Integrantes da Equipe</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+      <a href="#-alunos-integrantes-da-equipe">Alunos Integrantes da Equipe</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Implantação
       <a href="#-professores-responsáveis">Professores responsáveis</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
       <a href="#-tecnologias">Tecnologias</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
       <a href="#-padrão-de-commits">Padrão de commits</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
       <a href="#-instruções-de-utilização">Instruções de utilização</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+      <a href="#-implantação">Implantação</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
       <a href="#-licença">Licença</a>
   </p>
 </h3>
@@ -99,7 +100,7 @@ alunos efetuarem essa operação em um repositório de código.
 
 ---
 
-## 🚀 Tecnologias 
+## 💻 Tecnologias 
 (Deve-se atualizar ao fim do projeto)
 
 - Documentação:
@@ -170,7 +171,7 @@ O `type` é obrigatório e deve ser um dos seguintes:
  - perf: Melhoria de performance.
  - refactor: Mudança de código que não corrige um bug e nem adiciona uma feature.
  - style: Mudanças que não afetam o significado do código (espaços em branco, formatação, ponto e vírgula faltando, etc).
-  - test: Adição de testes ou correção de testes existentes.
+ - test: Adição de testes ou correção de testes existentes.
   
 Essas opções são baseadas no [Angular Commit Message Guidelines](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines). 
 
@@ -183,8 +184,6 @@ O `body` é opcional e deve ser usado para explicar a mudança de forma mais det
 O `footer` é opcional e deve ser usado para adicionar informações adicionais como links para issues ou pull requests. Ele deve vir após uma linha em branco do `body`.
 
 ## ⤵ Instruções de utilização 
-(Deve-se atualizar ao fim do projeto)
-
 Essas instruções vão te levar a uma cópia do projeto rodando em sua máquina local para propósitos de testes e desenvolvimento.
 
 ### Passo a passo de: como instalar e iniciar a aplicação utilizando Docker-Compose:
@@ -323,6 +322,13 @@ Pré-requisitos:
 - Sonarqube no ar na porta 9000.
 
 <br>
+
+---
+
+## 🚀 Implantação 
+
+- Este repositório está configurado com uma pipeline para entrega contínua [Deploy-Master-Action](https://github.com/ICEI-PUC-Minas-PPLES-TI/plf-es-2023-1-tcci-0393100-dev-plataformaapoioavaliacoesprojetos/blob/master/.github/workflows/deploy-master.yaml)
+- Para a action de entrega contínua funcionar é necessário preencher corretamente as [Action Secrets](https://github.com/ICEI-PUC-Minas-PPLES-TI/plf-es-2023-1-tcci-0393100-dev-plataformaapoioavaliacoesprojetos/settings/secrets/actions) do repositório de acordo com o que foi especificado na seção 3 das Instruções de utilização e as secrets SSH referindo-se as informações da máquina virtual que hospedará o projeto em nuvem 
 
 ---
 
