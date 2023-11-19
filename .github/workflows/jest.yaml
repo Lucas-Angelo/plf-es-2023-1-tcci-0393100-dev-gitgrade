@@ -81,7 +81,7 @@ jobs:
       SUPPORT_PLATFORM_URL: http://localhost:3002
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
 
       - name: Shutdown Ubuntu MySQL (SUDO)
         run: sudo service mysql stop
