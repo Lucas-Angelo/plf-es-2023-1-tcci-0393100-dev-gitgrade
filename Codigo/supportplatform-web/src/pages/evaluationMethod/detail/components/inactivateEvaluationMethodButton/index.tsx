@@ -22,14 +22,17 @@ export default function InactivateEvaluationMethodButton(
                 <input
                     name="semester"
                     value={props.semester}
+                    readOnly
                 />
                 <input
                     name="year"
                     value={props.year}
+                    readOnly
                 />
                 <input
                     name="description"
                     value={props.description}
+                    readOnly
                 />
             </Box>
             <Button
