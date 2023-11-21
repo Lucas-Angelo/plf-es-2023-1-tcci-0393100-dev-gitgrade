@@ -1,5 +1,5 @@
 import { Box, Link as PrimerLink, Octicon } from "@primer/react";
-import { RepoIcon, PaperclipIcon } from "@primer/octicons-react";
+import { RepoIcon, FilterIcon } from "@primer/octicons-react";
 
 import "./styles.css";
 import ContributorFilter from "../contributorFilter";
@@ -65,15 +65,10 @@ export default function RepoHead(props: IRepoHeadProps) {
                         href={`https://github.com/${props.orgName}/${props.repoName}`}
                         sx={{
                             fontWeight: "bolder",
+                            mx: 2,
                         }}
                     >
-                        {" "}
                         {props.repoName}
-                        <Octicon
-                            icon={PaperclipIcon}
-                            sx={{ ml: 4 }}
-                            color="fg.muted"
-                        />
                     </PrimerLink>
                 </Box>
                 <Box
@@ -84,6 +79,10 @@ export default function RepoHead(props: IRepoHeadProps) {
                         flexGrow: 1,
                     }}
                 >
+                    <Octicon
+                        icon={FilterIcon}
+                        sx={{ mr: 1, color: "gray" }}
+                    />
                     <ContributorFilter
                         key={`${searchParams
                             .getAll(pageSearchParams.contributor)
