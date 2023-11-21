@@ -39,12 +39,13 @@ export default function RepoCard(props: IRepoCardProps) {
                     icon={RepoIcon}
                     sx={{ mr: 2 }}
                 />
-                <Link
+                <PrimerLink
+                    as={Link}
                     to={appRoutes.repo["detail"].link(props.id)}
                     style={{ textDecoration: "none" }}
                 >
-                    <PrimerLink as="span">{props.name}</PrimerLink>
-                </Link>
+                    {props.name}
+                </PrimerLink>
 
                 {props.lastSyncAt && (
                     <Box

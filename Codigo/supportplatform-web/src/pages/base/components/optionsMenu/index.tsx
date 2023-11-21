@@ -1,5 +1,9 @@
 import { ActionMenu, ActionList, Box, Octicon, Avatar } from "@primer/react";
-import { TriangleDownIcon, SignOutIcon } from "@primer/octicons-react";
+import {
+    TriangleDownIcon,
+    SignOutIcon,
+    QuestionIcon,
+} from "@primer/octicons-react";
 import { cleanCookie } from "../../../../commom/utils/cookies";
 import { SessionCookieName } from "../../../../commom/config/session";
 import { useNavigate } from "react-router";
@@ -42,6 +46,18 @@ export default function OptionsMenu() {
                 }}
             >
                 <ActionList>
+                    <ActionList.Item
+                        sx={{ color: "grayText" }}
+                        onSelect={handleSignOutButtonClick}
+                        as="a"
+                        href="https://www.youtube.com/watch?v=djFOZgqRfLo"
+                    >
+                        <Octicon
+                            icon={QuestionIcon}
+                            sx={{ mr: 1 }}
+                        />{" "}
+                        Ajuda
+                    </ActionList.Item>
                     <ActionList.Item
                         sx={{ color: "grayText" }}
                         onSelect={handleSignOutButtonClick}

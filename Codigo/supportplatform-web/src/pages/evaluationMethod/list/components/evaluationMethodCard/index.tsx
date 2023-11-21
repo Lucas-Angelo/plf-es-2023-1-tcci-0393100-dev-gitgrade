@@ -22,14 +22,13 @@ export default function EvaluationMethodCard(
                     icon={ArchiveIcon}
                     sx={{ mr: 2 }}
                 />
-                <Link
+                <PrimerLink
+                    as={Link}
                     to={appRoutes.evaluationMethod["detail"].link(props.id)}
                     style={{ textDecoration: "none" }}
                 >
-                    <PrimerLink as="span">
-                        {props.name} - {props.year}/{props.semester}
-                    </PrimerLink>
-                </Link>
+                    {props.name} - {props.year}/{props.semester}
+                </PrimerLink>
             </Card.Title>
             <Card.Actions>
                 <CloneEvaluationMethodButton evaluationMethodId={props.id} />
