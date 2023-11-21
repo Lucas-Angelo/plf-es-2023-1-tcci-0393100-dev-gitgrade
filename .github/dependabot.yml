@@ -4,7 +4,9 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/.github/workflows"
     schedule:
-      interval: "daily"
+      interval: "monthly"
+    open-pull-requests-limit: 1
+    versioning-strategy: increase
     reviewers:
       - "Lucas-Angelo"
     labels:
@@ -17,7 +19,9 @@ updates:
   - package-ecosystem: "npm"
     directory: "/Codigo/jobscheduler-service"
     schedule:
-      interval: "daily"
+      interval: "monthly"
+    open-pull-requests-limit: 1
+    versioning-strategy: increase
     reviewers:
       - "Lucas-Angelo"
     labels:
@@ -30,7 +34,9 @@ updates:
   - package-ecosystem: "npm"
     directory: "/Codigo/supportplatform-service"
     schedule:
-      interval: "daily"
+      interval: "monthly"
+    open-pull-requests-limit: 1
+    versioning-strategy: increase
     reviewers:
       - "Lucas-Angelo"
     labels:
@@ -43,7 +49,9 @@ updates:
   - package-ecosystem: "npm"
     directory: "/Codigo/supportplatform-web"
     schedule:
-      interval: "daily"
+      interval: "monthly"
+    open-pull-requests-limit: 1
+    versioning-strategy: increase
     reviewers:
       - "guizombas"
     labels:
@@ -56,7 +64,9 @@ updates:
   - package-ecosystem: "docker"
     directory: "/Codigo/jobscheduler-service"
     schedule:
-      interval: "daily"
+      interval: "monthly"
+    open-pull-requests-limit: 1
+    versioning-strategy: increase
     reviewers:
       - "Lucas-Angelo"
     labels:
@@ -70,7 +80,9 @@ updates:
   - package-ecosystem: "docker"
     directory: "/Codigo/supportplatform-service"
     schedule:
-      interval: "daily"
+      interval: "monthly"
+    open-pull-requests-limit: 1
+    versioning-strategy: increase
     reviewers:
       - "Lucas-Angelo"
     labels:
@@ -84,7 +96,9 @@ updates:
   - package-ecosystem: "docker"
     directory: "/Codigo/supportplatform-web"
     schedule:
-      interval: "daily"
+      interval: "monthly"
+    open-pull-requests-limit: 1
+    versioning-strategy: increase
     reviewers:
       - "Lucas-Angelo"
       - "guizombas"
