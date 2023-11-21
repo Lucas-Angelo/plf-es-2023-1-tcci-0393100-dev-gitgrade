@@ -6,7 +6,6 @@ updates:
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 1
-    versioning-strategy: increase
     reviewers:
       - "Lucas-Angelo"
     labels:
@@ -21,7 +20,6 @@ updates:
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 1
-    versioning-strategy: increase
     reviewers:
       - "Lucas-Angelo"
     labels:
@@ -36,7 +34,6 @@ updates:
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 1
-    versioning-strategy: increase
     reviewers:
       - "Lucas-Angelo"
     labels:
@@ -51,7 +48,6 @@ updates:
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 1
-    versioning-strategy: increase
     reviewers:
       - "guizombas"
     labels:
@@ -66,7 +62,6 @@ updates:
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 1
-    versioning-strategy: increase
     reviewers:
       - "Lucas-Angelo"
     labels:
@@ -82,7 +77,6 @@ updates:
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 1
-    versioning-strategy: increase
     reviewers:
       - "Lucas-Angelo"
     labels:
@@ -98,7 +92,6 @@ updates:
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 1
-    versioning-strategy: increase
     reviewers:
       - "Lucas-Angelo"
       - "guizombas"
